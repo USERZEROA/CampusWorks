@@ -30,7 +30,7 @@ services:
 
   mongo-init:
     image: mongo:7
-    entrypoint: ["mongosh", "--quiet", "--file", "/bootstrap/init-mongo-replica.js"]
+    entrypoint: ["mongosh", "--nodb", "--quiet", "--file", "/bootstrap/init-mongo-replica.js"]
     environment:
       MONGO_INITDB_ROOT_USERNAME: campusworks
       MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD:-campusworks-dev}"

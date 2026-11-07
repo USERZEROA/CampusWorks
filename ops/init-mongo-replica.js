@@ -5,7 +5,12 @@ const password = encodeURIComponent(process.env.MONGO_INITDB_ROOT_PASSWORD || ''
 const credentials = username ? `${username}:${password}@` : '';
 const connection = new Mongo(`mongodb://${credentials}${replicaHost}/?authSource=admin&directConnection=true`);
 const adminDatabase = connection.getDB('admin');
-const status = adminDatabase.runCommand({ replSetGetStatus: 1 });
+let status;
+try { status = adminDatabase.runCommand({ replSetGetStatus: 1 }); }
+catch (error) {
+  if (error.code !== 94) throw error;
+  status = { ok: 0, code: 94 };
+}
 if (!status.ok) {
   if (status.code !== 94) throw new Error(`Replica readiness failed: ${status.codeName}`);
   const initiated = adminDatabase.runCommand({ replSetInitiate: { _id: 'rs0', members: [{ _id: 0, host: replicaHost }] } });

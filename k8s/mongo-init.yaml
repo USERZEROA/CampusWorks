@@ -11,7 +11,7 @@ spec:
       containers:
         - name: initialize
           image: mongo:7
-          command: ["mongosh", "--quiet", "--file", "/bootstrap/init-mongo-replica.js"]
+          command: ["mongosh", "--nodb", "--quiet", "--file", "/bootstrap/init-mongo-replica.js"]
           envFrom:
             - secretRef: { name: mongo-auth }
           env:
