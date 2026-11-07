@@ -8,6 +8,14 @@ export async function ok(pending: Promise<APIResponse>) {
   return result;
 }
 export async function json(pending: Promise<APIResponse>): Promise<any> { return (await ok(pending)).json(); }
+export async function activateCycle(admin: Actor, term: any, overrides: Record<string, any> = {}) {
+  const { cycle } = await json(admin.api.get('/api/staffing/cycle'));
+  return (await json(admin.api.put('/api/staffing/cycle', { data: {
+    termId: term.id, expectedVersion: cycle.version, enabled: true,
+    opensAt: new Date(Date.now() - 86400000).toISOString(),
+    closesAt: new Date(Date.now() + 3600000).toISOString(), ...overrides,
+  } }))).cycle;
+}
 export async function database() {
   const uri = process.env.TEST_MONGODB_URI;
   const name = process.env.TEST_MONGODB_DB;
@@ -35,7 +43,6 @@ export const test = base.extend<{ space: StaffingSpace }>({
     const clients: APIRequestContext[] = [];
     const courseIds: string[] = [];
     const opportunityIds: string[] = [];
-    const projectIds: string[] = [];
     let term: any;
     const actor = async (label: string, role: DemoRole = 'student'): Promise<Actor> => {
       const api = await request.newContext({ baseURL });
@@ -54,11 +61,12 @@ export const test = base.extend<{ space: StaffingSpace }>({
       term = (await json(admin.api.post('/api/staffing/terms', { data: {
         name: `Synthetic term ${suffix}`, requiresApproval: false, startDate: new Date(Date.now() - 7 * 86400000).toISOString(), endDate: new Date(Date.now() + 60 * 86400000).toISOString(),
       } }))).term;
+      await activateCycle(admin, term);
       const opportunity = async (overrides: Record<string, any> = {}, owner = instructor) => {
         const input = {
-          type: 'ta', title: `Teaching assistant ${suffix}`, termId: term.id, courseId: code, projectId: '', department: 'Computer Science',
+          type: 'ta', title: `Teaching assistant ${suffix}`, courseId: code, department: 'Computer Science',
           description: 'Synthetic opportunity for local verification.', positions: 1, weeklyHours: 10,
-          appointmentStart: new Date(Date.now() - 3600000).toISOString(), appointmentEnd: new Date(Date.now() + 14 * 86400000).toISOString(), applicationDeadline: new Date(Date.now() + 7 * 86400000).toISOString(),
+          appointmentStart: new Date(Date.now() - 3600000).toISOString(), appointmentEnd: new Date(Date.now() + 14 * 86400000).toISOString(),
           requiresAttendance: true, hasLab: true, hasDiscussion: true, requiresGrading: true, holdsOfficeHours: true,
           duties: [{ kind: 'office_hours', sessionsPerWeek: 2, minutesPerSession: 60 }, { kind: 'grading', sessionsPerWeek: 1, minutesPerSession: 120 }],
           requiredSkills: 'Algorithms and clear explanations', preferredSkills: 'Teaching experience', questions: [{ id: 'motivation', prompt: 'Why this course?', required: true }],
@@ -66,7 +74,6 @@ export const test = base.extend<{ space: StaffingSpace }>({
         };
         const result = (await json(owner.api.post('/api/staffing/opportunities', { data: input }))).opportunity;
         opportunityIds.push(result.id);
-        if (input.type === 'ra' && input.projectId) projectIds.push(input.projectId);
         return (await json(owner.api.post(`/api/staffing/opportunities/${result.id}/publish`, { data: { expectedVersion: result.version } }))).opportunity;
       };
       const application = async (posting: any, candidate = student, overrides: Record<string, any> = {}) => {
@@ -99,7 +106,6 @@ export const test = base.extend<{ space: StaffingSpace }>({
           for (const collection of ['staffingApplications', 'staffingDocuments', 'staffingOffers', 'staffingAppointments', 'staffingAllocations', 'staffingAiTasks', 'staffingAiSubscriptions', 'staffingAiRefreshJobs', 'staffingAiResultCache']) await db.collection(collection).deleteMany({ opportunityId: { $in: opportunityIds } });
           await db.collection('staffingOpportunities').deleteMany({ id: { $in: opportunityIds } });
           await db.collection('staffingCommands').deleteMany({ applicationId: { $in: applicationIds } });
-          await db.collection('researchProjects').deleteMany({ id: { $in: projectIds } });
         } finally { await client.close(); }
       }
       for (const course of courseIds) await admin.api.delete(`/api/courses/${course}`).catch(() => {});

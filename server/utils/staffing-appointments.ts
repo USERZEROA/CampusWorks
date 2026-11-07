@@ -4,6 +4,7 @@ import { isGlobalAdmin } from './auth'
 import { invalidateCandidateRefresh } from './ai-refresh'
 import { releaseStaffClaims } from './queue'
 import { lockStaffingResource } from './staffing-catalog'
+import { assertRecruitmentGate, getRecruitmentCycle } from './staffing-cycle'
 import { actorId, applicationAccess, applicationDto, appointmentDto, assertOpportunityManager, assertVersion, commitmentUnavailable, eligibility, event, fail, findOpportunity, getAppointmentCourseRole, lockApplicantCommitments, number, object, publicRecord, text, uid, type StaffingActor } from './staffing'
 
 const terminalAppointments = ['ended', 'cancelled', 'not_cleared', 'expired']
@@ -26,9 +27,10 @@ async function releaseCommitments(db: Db, session: ClientSession, appointment: D
   const opportunity = await findOpportunity(db, appointment.opportunityId, session)
   const retainBudget = !!appointment.activatedAt || (!!appointment.acceptedAt && appointment.clearance === 'cleared' && appointment.startDate <= new Date())
   const releasedBudget = retainBudget ? 0 : appointment.committedCost
+  const cycle = await getRecruitmentCycle(db, session)
   await db.collection('staffingOpportunities').updateOne({ id: opportunity.id }, {
     $inc: { committedPositions: -1, committedBudget: -releasedBudget, version: 1 },
-    $set: { status: opportunity.status === 'filled' ? (opportunity.applicationDeadline > new Date() ? 'published' : 'applications_closed') : opportunity.status, updatedAt: new Date() }
+    $set: { status: opportunity.status === 'filled' ? (cycle.isOpen && cycle.termId === opportunity.termId ? 'published' : 'applications_closed') : opportunity.status, updatedAt: new Date() }
   }, { session })
   await db.collection('staffingAppointments').updateOne({ id: appointment.id }, { $set: { status, endReason: reason, endedAt: new Date(), budgetStatus: retainBudget ? 'awaiting_settlement' : 'released', releasedBudget }, $inc: { version: 1 } }, { session })
   await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: 'released', releasedAt: new Date() }, $inc: { version: 1 } }, { session })
@@ -38,10 +40,10 @@ async function releaseCommitments(db: Db, session: ClientSession, appointment: D
   await releaseAppointmentAuthority(db, session, appointment)
 }
 
-export async function reconcileStaffing(db: Db, session: ClientSession, resource?: { courseId?: string; projectId?: string }, additionalApplicantIds: string[] = []) {
+export async function reconcileStaffing(db: Db, session: ClientSession, resource?: { courseId?: string; opportunityId?: string }, additionalApplicantIds: string[] = []) {
   const filter: Document = { status: { $nin: terminalAppointments }, $or: [{ endDate: { $lte: new Date() } }, { status: 'pending_start', startDate: { $lte: new Date() } }, { status: 'offered', offerExpiresAt: { $lte: new Date() } }] }
-  if (resource?.courseId) filter.courseId = resource.courseId
-  if (resource?.projectId) filter.projectId = resource.projectId
+  if (resource?.courseId) { filter.courseId = resource.courseId; filter.type = 'ta' }
+  if (resource?.opportunityId) filter.opportunityId = resource.opportunityId
   const appointments = await db.collection('staffingAppointments').find(filter, { session }).limit(500).toArray()
   // A resource may contain several applicants; preserve one shared lock order.
   for (const applicantId of [...new Set([...additionalApplicantIds, ...appointments.map(appointment => appointment.applicantId as string)])].sort()) await lockApplicantCommitments(db, applicantId, session, true)
@@ -75,12 +77,12 @@ export async function reconcileDueStaffing(db: Db) {
   const { withTransaction } = await import('./db')
   const seen = new Set<string>()
   for (const appointment of due) {
-    const key = `${appointment.type}:${appointment.courseId || appointment.projectId}`
+    const key = `${appointment.type}:${appointment.type === 'ta' ? appointment.courseId : appointment.opportunityId}`
     if (seen.has(key)) continue
     seen.add(key)
     await withTransaction(async (database, session) => {
       await lockStaffingResource(database, appointment, session)
-      await reconcileStaffing(database, session, appointment.type === 'ta' ? { courseId: appointment.courseId } : { projectId: appointment.projectId })
+      await reconcileStaffing(database, session, appointment.type === 'ta' ? { courseId: appointment.courseId } : { opportunityId: appointment.opportunityId })
     })
   }
   return { resourcesChecked: seen.size, hasMore: due.length === 100 }
@@ -90,7 +92,7 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
   const initial = await applicationAccess(db, applicationId, user, session)
   await lockStaffingResource(db, initial.opportunity, session)
   await assertOpportunityManager(db, initial.opportunity, user, session)
-  await reconcileStaffing(db, session, initial.opportunity.type === 'ta' ? { courseId: initial.opportunity.courseId } : { projectId: initial.opportunity.projectId }, [initial.application.applicantId])
+  await reconcileStaffing(db, session, initial.opportunity.type === 'ta' ? { courseId: initial.opportunity.courseId } : { opportunityId: initial.opportunity.id }, [initial.application.applicantId])
   const body = object(raw, 'Selection')
   const key = text(body.idempotencyKey, 'Idempotency key', 128, true)
   if (key.length < 8) fail(400, 'Idempotency key must contain at least eight characters')
@@ -101,6 +103,7 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
     const appointment = await db.collection('staffingAppointments').findOne({ id: prior.appointmentId }, { session })
     return { offer: publicRecord(offer), appointment: appointmentDto(appointment, user), replayed: true }
   }
+  await assertRecruitmentGate(db, session, initial.opportunity.termId, 'review')
   const application = await db.collection('staffingApplications').findOne({ id: applicationId }, { session }) || fail(404, 'Application not found')
   const opportunity = await findOpportunity(db, application.opportunityId, session)
   await lockApplicantCommitments(db, application.applicantId, session)
@@ -117,8 +120,8 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
   const offerId = uid()
   const appointmentId = uid()
   const expiresAt = new Date(Math.min(Date.now() + 7 * 86400000, opportunity.appointmentEnd.getTime()))
-  const offer = { id: offerId, applicationId, opportunityId: opportunity.id, appointmentId, applicantId: application.applicantId, applicantEmail: application.applicantEmail, instructorEmail: user.email, status: 'issued', version: 1, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, projectId: opportunity.projectId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, weeklyHours: opportunity.weeklyHours, duties: opportunity.duties, committedCost: opportunity.appointmentCost, expiresAt, createdAt: new Date() }
-  const appointment = { id: appointmentId, offerId, applicationId, opportunityId: opportunity.id, applicantId: application.applicantId, applicantEmail: application.applicantEmail, applicantName: application.applicantName, instructorEmail: user.email, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, projectId: opportunity.projectId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, offerExpiresAt: expiresAt, weeklyHours: opportunity.weeklyHours, committedCost: opportunity.appointmentCost, status: 'offered', clearance: 'not_started', version: 1, acceptedAt: null, activatedAt: null, createdAt: new Date() }
+  const offer = { id: offerId, applicationId, opportunityId: opportunity.id, appointmentId, applicantId: application.applicantId, applicantEmail: application.applicantEmail, instructorEmail: user.email, status: 'issued', version: 1, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, weeklyHours: opportunity.weeklyHours, duties: opportunity.duties, committedCost: opportunity.appointmentCost, expiresAt, createdAt: new Date() }
+  const appointment = { id: appointmentId, offerId, applicationId, opportunityId: opportunity.id, applicantId: application.applicantId, applicantEmail: application.applicantEmail, applicantName: application.applicantName, instructorEmail: user.email, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, offerExpiresAt: expiresAt, weeklyHours: opportunity.weeklyHours, committedCost: opportunity.appointmentCost, status: 'offered', clearance: 'not_started', version: 1, acceptedAt: null, activatedAt: null, createdAt: new Date() }
   await db.collection('staffingAllocations').updateOne({ applicantId: application.applicantId, termId: opportunity.termId }, { $set: { offerId, appointmentId, opportunityId: opportunity.id, status: 'offered', expiresAt, endDate: opportunity.appointmentEnd, updatedAt: new Date() }, $setOnInsert: { _id: safeAllocationId(application.applicantId, opportunity.termId) } as any, $inc: { version: 1 } }, { session, upsert: true })
   await db.collection('staffingOffers').insertOne(offer, { session })
   await db.collection('staffingAppointments').insertOne(appointment, { session })

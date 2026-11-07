@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { test, expect, ok, json, database } from '../staffing-fixtures';
+import { test, expect, ok, json, database, activateCycle } from '../staffing-fixtures';
 
 test('course creation rejects reserved identifiers before storing an unreachable course', async ({ space }) => {
   for (const code of ['null', 'undefined', 'NULL']) {
@@ -13,7 +13,8 @@ test('term policy prevents an instructor from bypassing department publication a
   const term = (await json(space.admin.api.post('/api/staffing/terms', { data: {
     name: `Approval policy ${space.suffix}`, startDate: new Date(Date.now() - 86400000).toISOString(), endDate: new Date(Date.now() + 60 * 86400000).toISOString(),
   } }))).term;
-  const posting = await space.opportunity({ termId: term.id, approvalRequired: false });
+  await activateCycle(space.admin, term);
+  const posting = await space.opportunity({ approvalRequired: false });
   expect(posting.status).toBe('pending_approval');
   expect(posting.approved).toBe(false);
   expect((await space.student.api.post(`/api/staffing/opportunities/${posting.id}/applications`, { data: {} })).status()).toBe(409);

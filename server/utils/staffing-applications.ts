@@ -1,7 +1,8 @@
 import type { ClientSession, Db, Document } from 'mongodb'
 import { isGlobalAdmin } from './auth'
 import { lockStaffingResource } from './staffing-catalog'
-import { actorId, applicationAccess, applicationDto, appointmentDto, assertVersion, eligibility, event, fail, findOpportunity, flag, number, object, options, publicRecord, slots, text, uid, type StaffingActor } from './staffing'
+import { assertRecruitmentGate } from './staffing-cycle'
+import { actorId, applicationAccess, applicationDto, appointmentDto, assertVersion, eligibility, event, fail, findOpportunity, flag, number, object, options, publicRecord, slots, staffingCapabilities, text, uid, type StaffingActor } from './staffing'
 
 export function applicantInput(raw: unknown) {
   const body = object(raw, 'Application')
@@ -41,9 +42,11 @@ export function applicantInput(raw: unknown) {
 export async function createApplication(db: Db, session: ClientSession, user: StaffingActor, opportunityId: string) {
   const opportunity = await findOpportunity(db, opportunityId, session)
   await lockStaffingResource(db, opportunity, session)
-  if (opportunity.status !== 'published' || opportunity.applicationDeadline <= new Date()) fail(409, 'Applications are not open')
+  await assertRecruitmentGate(db, session, opportunity.termId)
+  if (opportunity.status !== 'published') fail(409, 'Applications are not open')
   const existing = await db.collection('staffingApplications').findOne({ opportunityId, applicantId: actorId(user) }, { session })
   if (existing) return { application: applicationDto(existing, true) }
+  if (!(await staffingCapabilities(db, user, session)).canApplyStaffing) fail(403, 'Only students and teaching assistants may submit new applications')
   const application = { id: uid(), opportunityId, termId: opportunity.termId, applicantId: actorId(user), applicantEmail: user.email, applicantName: user.name, status: 'draft', version: 1, opportunityVersion: opportunity.requirementsVersion || 1, profile: {}, answers: {}, qualificationText: '', administrative: {}, cvDocumentId: null, revisions: [], createdAt: new Date(), updatedAt: new Date() }
   await db.collection('staffingApplications').insertOne(application, { session })
   await event(db, session, user, 'ApplicationDraftCreated', application.id, { opportunityId })
@@ -51,8 +54,9 @@ export async function createApplication(db: Db, session: ClientSession, user: St
 }
 
 export async function assertApplicationEditable(db: Db, application: Document, opportunity: Document, session: ClientSession) {
+  await assertRecruitmentGate(db, session, opportunity.termId)
   if (!['draft', 'submitted', 'under_review', 'shortlisted', 'withdrawn', 'not_selected'].includes(application.status)) fail(409, 'Application is not editable')
-  if (opportunity.status !== 'published' || opportunity.applicationDeadline <= new Date()) fail(409, 'The application deadline has passed')
+  if (opportunity.status !== 'published') fail(409, 'Applications are not open')
   if (await db.collection('staffingOffers').findOne({ applicationId: application.id, status: { $in: ['issued', 'accepted'] } }, { session })) fail(409, 'Resolve the current offer before editing this application')
   if ((application.revisions || []).length >= 50) fail(409, 'Application revision limit reached; contact the reviewer')
 }
@@ -133,6 +137,7 @@ export async function reviewApplication(db: Db, session: ClientSession, user: St
   const { application, opportunity, canManage } = await applicationAccess(db, applicationId, user, session)
   await lockStaffingResource(db, opportunity, session)
   if (!canManage) fail(403, 'Only reviewers may change review status')
+  await assertRecruitmentGate(db, session, opportunity.termId, 'review')
   if (!['submitted', 'under_review', 'shortlisted', 'not_selected'].includes(application.status)) fail(409, 'Only submitted applications may be reviewed')
   const body = object(raw || {}, 'Review')
   if (await db.collection('staffingOffers').findOne({ applicationId, status: { $in: ['issued', 'accepted'] } }, { session })) fail(409, 'Resolve the offer before changing review status')

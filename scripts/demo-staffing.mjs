@@ -25,7 +25,7 @@ export async function prepareStaffingDemo(baseURL, course = 'cs101') {
     return api;
   };
   const overview = async api => {
-    const records = { terms: [], managedOpportunities: [], projects: [] };
+    const records = { terms: [], managedOpportunities: [] };
     for (let page = 1; ; page++) {
       const data = await call(api.get(`/api/staffing/overview?page=${page}`));
       for (const key of Object.keys(records)) records[key].push(...(data[key] || []));
@@ -45,19 +45,22 @@ export async function prepareStaffingDemo(baseURL, course = 'cs101') {
     const name = `Local Demonstration ${new Date().getUTCFullYear()}`;
     term ||= adminView.terms.find(item => item.name === name && new Date(item.endDate).getTime() > Date.now() + 7 * 86400000);
     if (!term) term = (await call(admin.post('/api/staffing/terms', { data: { name, requiresApproval: true, startDate: new Date(Date.now() - 7 * 86400000).toISOString(), endDate: new Date(Date.now() + 90 * 86400000).toISOString() } }))).term;
-    let project = view.projects.find(item => item.title === 'Synthetic Research Project');
-    if (!project) project = (await call(instructor.post('/api/staffing/projects', { data: { title: 'Synthetic Research Project', description: 'Local demonstration records for the research assistant workflow.', department: 'Computer Science' } }))).project;
+    const current = (await call(admin.get('/api/staffing/cycle'))).cycle;
+    await call(admin.put('/api/staffing/cycle', { data: {
+      termId: term.id, expectedVersion: current.version, enabled: true,
+      opensAt: new Date(Date.now() - 86400000).toISOString(), closesAt: new Date(Date.now() + 7 * 86400000).toISOString(),
+    } }));
     const definitions = [
-      { type: 'ta', courseId: course, projectId: '', title: `Teaching Assistant Demonstration (${course})` },
-      { type: 'ra', courseId: '', projectId: project.id, title: 'Research Assistant Demonstration' },
+      { type: 'ta', courseId: course, title: `Teaching Assistant Demonstration (${course})` },
+      { type: 'ra', courseId: '', title: 'Research Assistant Demonstration' },
     ];
     const opportunities = [];
     for (const definition of definitions) {
       let opportunity = view.managedOpportunities.find(item => item.title === definition.title && item.termId === term.id);
       if (!opportunity) {
         opportunity = (await call(instructor.post('/api/staffing/opportunities', { data: {
-          ...definition, termId: term.id, department: 'Computer Science', description: 'Synthetic local position. Use the application, review, offer and appointment controls to explore the complete workflow.',
-          positions: 2, weeklyHours: 10, appointmentStart: new Date(Math.max(Date.now() - 86400000, new Date(term.startDate).getTime())).toISOString(), appointmentEnd: new Date(Math.min(Date.now() + 27 * 86400000, new Date(term.endDate).getTime())).toISOString(), applicationDeadline: new Date(Date.now() + 7 * 86400000).toISOString(),
+          ...definition, department: 'Computer Science', description: 'Synthetic local position. Use the application, review, offer and appointment controls to explore the complete workflow.',
+          positions: 2, weeklyHours: 10, appointmentStart: new Date(Math.max(Date.now() - 86400000, new Date(term.startDate).getTime())).toISOString(), appointmentEnd: new Date(Math.min(Date.now() + 27 * 86400000, new Date(term.endDate).getTime())).toISOString(),
           requiredSkills: definition.type === 'ta' ? 'Programming and clear explanations' : 'Data analysis and research documentation', preferredSkills: 'Collaboration',
           requiresAttendance: definition.type === 'ta', hasLab: definition.type === 'ta', hasDiscussion: false, requiresGrading: definition.type === 'ta', holdsOfficeHours: definition.type === 'ta',
           duties: [{ kind: definition.type === 'ta' ? 'office_hours' : 'research', sessionsPerWeek: 2, minutesPerSession: 60 }],
@@ -82,6 +85,6 @@ export async function prepareStaffingDemo(baseURL, course = 'cs101') {
       application = (await call(student.post(`/api/staffing/applications/${application.id}/cv`, { multipart: { expectedVersion: String(application.version), file: { name: 'synthetic-demo-cv.txt', mimeType: 'text/plain', buffer: Buffer.from('Synthetic demonstration CV\nProgramming coursework and collaboration.\nNo real applicant data.\n') } } }))).application;
       await call(student.post(`/api/staffing/applications/${application.id}/submit`, { data: {} }));
     }
-    return { course, termId: term.id, projectId: project.id, opportunityIds: opportunities.map(item => item.id) };
+    return { course, termId: term.id, opportunityIds: opportunities.map(item => item.id) };
   } finally { await Promise.allSettled(contexts.map(api => api.dispose())); }
 }

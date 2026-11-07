@@ -18,15 +18,13 @@ test('interactive staffing setup is repeatable and prepares real submitted candi
     expect(posting.applications.every((item: any) => item.status === 'submitted' && item.submittedSnapshot.cvDocumentId)).toBe(true);
     expect(posting.offers).toHaveLength(0);
     const research = await json(request.get(`/api/staffing/opportunities/${first.opportunityIds[1]}`));
-    expect(research.opportunity).toMatchObject({ type: 'ra', status: 'published', projectId: first.projectId });
+    expect(research.opportunity).toMatchObject({ type: 'ra', status: 'published' });
   } finally {
     const { client, db } = await database();
     try {
       for (const collection of ['staffingApplications', 'staffingDocuments', 'staffingOffers', 'staffingAppointments', 'staffingAllocations', 'staffingAiTasks', 'staffingAiSubscriptions', 'staffingAiRefreshJobs', 'staffingAiResultCache']) await db.collection(collection).deleteMany({ opportunityId: { $in: first.opportunityIds } });
       await db.collection('staffingOpportunities').deleteMany({ id: { $in: first.opportunityIds } });
-      await db.collection('researchProjects').deleteOne({ id: first.projectId });
       await db.collection('staffingTerms').deleteOne({ id: first.termId });
-      await db.collection('courses').updateOne({ id: 'cs101', staffingTermId: first.termId }, { $unset: { staffingTermId: '' } });
     } finally { await client.close(); }
   }
 });

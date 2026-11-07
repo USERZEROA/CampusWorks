@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { test, expect, json, ok, database, type StaffingSpace } from '../staffing-fixtures';
+import { test, expect, json, ok, database, activateCycle, type StaffingSpace } from '../staffing-fixtures';
 
 const day = 86400000;
 const iso = (timestamp: number) => new Date(timestamp).toISOString();
@@ -12,10 +12,8 @@ async function otherTerm(space: StaffingSpace) {
 }
 
 async function research(space: StaffingSpace, termId: string, dates: Record<string, string> = {}) {
-  const project = (await json(space.instructor.api.post('/api/staffing/projects', { data: {
-    title: `Synthetic research ${space.suffix}`, description: 'Isolated appointment overlap verification.', department: 'Computer Science',
-  } }))).project;
-  return space.opportunity({ type: 'ra', courseId: '', projectId: project.id, termId, weeklyHours: 10, ...dates });
+  if ((await json(space.admin.api.get('/api/staffing/cycle'))).cycle.termId !== termId) await activateCycle(space.admin, { id: termId });
+  return space.opportunity({ type: 'ra', courseId: '', weeklyHours: 10, ...dates });
 }
 
 async function removeTerm(id: string) {
@@ -27,11 +25,11 @@ async function selectResponse(space: StaffingSpace, application: any) {
   return space.instructor.api.post(`/api/staffing/applications/${application.id}/select`, { data: { expectedVersion: application.version, idempotencyKey: randomUUID() } });
 }
 
-test('different application instances serialize overlapping half TA and RA offers across distinct terms', async ({ space }) => {
+test('different application instances serialize overlapping half TA and RA offers in the current semester', async ({ space }) => {
   const term = await otherTerm(space);
   try {
     const ta = await space.opportunity({ weeklyHours: 10 });
-    const ra = await research(space, term.id);
+    const ra = await research(space, space.term.id);
     const profile = { firstName: 'Synthetic', lastName: 'Applicant', preferredEmail: space.student.email, undergraduateMajors: 'Computer Science', department: 'Computer Science', positionPreference: 'half', priorTaExperience: false, priorCourses: '', multipleCourses: true, graduationTerm: space.term.name, availability: 'Weekday afternoons', availableHours: 20, skills: 'Algorithms', experience: 'Peer tutoring' };
     const a = await space.application(ta, space.student, { profile });
     const b = await space.application(ra, space.student, { profile });
@@ -58,15 +56,15 @@ test('adjacent cross-term dates are allowed while the same term remains exclusiv
   const boundary = timestamp + 8 * day;
   try {
     const ta = await space.opportunity({ appointmentStart: iso(timestamp + day), appointmentEnd: iso(boundary) });
-    const ra = await research(space, term.id, { appointmentStart: iso(boundary), appointmentEnd: iso(timestamp + 15 * day) });
     const sameTerm = await research(space, space.term.id, { appointmentStart: iso(timestamp + 16 * day), appointmentEnd: iso(timestamp + 23 * day) });
     await space.select(await space.application(ta));
+    const excluded = await space.application(sameTerm);
+    expect((await selectResponse(space, excluded)).status()).toBe(409);
+    const ra = await research(space, term.id, { appointmentStart: iso(boundary), appointmentEnd: iso(timestamp + 15 * day) });
     const adjacent = await space.application(ra);
     const detail = await json(space.instructor.api.get(`/api/staffing/opportunities/${ra.id}`));
     expect(detail.applications[0].availability.unavailable).toBe(false);
     await space.select(adjacent);
-    const excluded = await space.application(sameTerm);
-    expect((await selectResponse(space, excluded)).status()).toBe(409);
   } finally { await removeTerm(term.id); }
 });
 
@@ -74,8 +72,8 @@ test('accepted, future, active and suspended commitments block overlapping work 
   const term = await otherTerm(space);
   try {
     const ta = await space.opportunity({ appointmentStart: iso(Date.now() + day) });
-    const ra = await research(space, term.id);
     const selected = await space.select(await space.application(ta));
+    const ra = await research(space, term.id);
     const other = await space.application(ra);
     await ok(space.student.api.post(`/api/staffing/offers/${selected.offer.id}/accept`, { data: {} }));
     expect((await selectResponse(space, other)).status()).toBe(409);
@@ -99,8 +97,8 @@ test('acceptance, clearance and resume independently reject a conflicting stored
   const timestamp = Date.now();
   try {
     const ta = await space.opportunity({ appointmentStart: iso(timestamp - 1000), appointmentEnd: iso(timestamp + 8 * day) });
-    const ra = await research(space, term.id, { appointmentStart: iso(timestamp + 8 * day), appointmentEnd: iso(timestamp + 15 * day) });
     const a = await space.select(await space.application(ta));
+    const ra = await research(space, term.id, { appointmentStart: iso(timestamp + 8 * day), appointmentEnd: iso(timestamp + 15 * day) });
     const b = await space.select(await space.application(ra));
     const { client, db } = await database();
     const conflicting = async (enabled: boolean) => db.collection('staffingAppointments').updateOne({ id: b.appointment.id }, { $set: { startDate: new Date(enabled ? timestamp + day : timestamp + 8 * day) } });
@@ -149,7 +147,6 @@ test('disabled future appointments suspend without starving eligible activation 
   const { client, db } = await database();
   try {
     const ta = await space.opportunity({ positions: 2, budget: 2400, appointmentStart: iso(Date.now() + day) });
-    const ra = await research(space, term.id);
     const selected = await space.select(await space.application(ta));
     const eligible = await space.actor('eligible-start');
     const second = await space.select(await space.application(ta, eligible));
@@ -157,6 +154,7 @@ test('disabled future appointments suspend without starving eligible activation 
       await ok(candidate.api.post(`/api/staffing/offers/${offer.offer.id}/accept`, { data: {} }));
       await ok(space.admin.api.post(`/api/staffing/appointments/${offer.appointment.id}/clearance`, { data: { status: 'cleared' } }));
     }
+    const ra = await research(space, term.id);
     const application = await space.application(ra);
     await db.collection('users').updateOne({ id: space.student.user.id }, { $set: { disabledAt: new Date() } });
     await db.collection('staffingAppointments').updateMany({ id: { $in: [selected.appointment.id, second.appointment.id] } }, { $set: { startDate: new Date(Date.now() - 1000) } });

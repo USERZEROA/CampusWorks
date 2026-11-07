@@ -192,26 +192,20 @@ test('ending a TA appointment preserves independently granted instructor authori
   expect((await json(space.student.api.get(`/api/courses/${space.code}`)))).toMatchObject({ role: 'instructor', isStaff: true, isManager: true });
 });
 
-test('RA appointments authorize a project without creating a fifth role or course privileges', async ({ space }) => {
-  const project = (await json(space.instructor.api.post('/api/staffing/projects', { data: { title: `Synthetic project ${space.suffix}`, description: 'Local verification project', department: 'Computer Science' } }))).project;
-  const posting = await space.opportunity({ type: 'ra', projectId: project.id, courseId: '', title: 'Research assistant' });
+test('RA appointments retain application history without creating course privileges or a project workspace', async ({ space }) => {
+  const posting = await space.opportunity({ type: 'ra', courseId: '', title: 'Research assistant' });
   const application = await space.application(posting);
-  expect((await space.student.api.get(`/api/staffing/projects/${project.id}/workspace`)).status()).toBe(403);
-  const { client, db } = await database();
-  try {
-    await db.collection('staffingAppointments').insertMany(Array.from({ length: 101 }, (_, index) => ({ id: randomUUID(), projectId: project.id, opportunityId: posting.id, applicantId: space.student.user.id, applicantEmail: space.student.email, type: 'ra', status: 'ended', clearance: 'cleared', createdAt: new Date(Date.now() - 86400000 - index) })));
-  } finally { await client.close(); }
   const selected = await space.select(application);
   await ok(space.student.api.post(`/api/staffing/offers/${selected.offer.id}/accept`, { data: {} }));
   await ok(space.admin.api.post(`/api/staffing/appointments/${selected.appointment.id}/clearance`, { data: { status: 'cleared' } }));
-  const workspace = await json(space.student.api.get(`/api/staffing/projects/${project.id}/workspace`));
-  expect(workspace.canWork).toBe(true);
-  expect(workspace.pagination.totals.appointments).toBe(102);
-  expect(workspace.pagination.hasMore).toBe(true);
-  expect((await space.student.api.post(`/api/staffing/projects/${project.id}/workspace`, { data: { text: 'Synthetic update', kind: 'unknown' } })).status()).toBe(400);
-  expect((await json(space.student.api.get(`/api/staffing/projects/${project.id}/workspace?page=2`))).appointments).toHaveLength(2);
+  const detail = await json(space.student.api.get(`/api/staffing/applications/${application.id}`));
+  expect(detail.appointment).toMatchObject({ type: 'ra', status: 'active' });
+  expect(detail.appointment.projectId).toBeFalsy();
   expect((await json(space.student.api.get(`/api/courses/${space.code}`))).isStaff).toBe(false);
   expect((await json(space.student.api.get('/api/auth/me'))).user.primaryRole).toBe('student');
+  expect((await space.instructor.api.post('/api/staffing/projects', { data: { title: 'Unsupported workspace' } })).status()).toBe(404);
+  await ok(space.instructor.api.post(`/api/staffing/appointments/${selected.appointment.id}/end`, { data: { reason: 'Appointment completed' } }));
+  expect((await json(space.student.api.get(`/api/staffing/applications/${application.id}`))).appointment.status).toBe('ended');
 });
 
 test('AI assistance reports missing configuration without fake results or private data disclosure', async ({ space }) => {

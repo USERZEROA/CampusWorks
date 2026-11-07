@@ -44,7 +44,7 @@ export function assertVersion(record: Document, expected: unknown) {
 }
 export function publicRecord(record: Document | null | undefined) {
   if (!record) return null
-  const { _id, bytes, ...dto } = record
+  const { _id, bytes, projectId, ...dto } = record
   return dto
 }
 export async function event(db: Db, session: ClientSession, user: StaffingActor, kind: string, targetId: string, details: Record<string, unknown> = {}) {
@@ -54,13 +54,12 @@ export async function event(db: Db, session: ClientSession, user: StaffingActor,
 export async function initializeStaffingIndexes(db: Db) {
   const specs: Array<[string, IndexDescription[]]> = [
     ['staffingTerms', [{ key: { id: 1 }, unique: true }, { key: { startDate: -1 } }]],
-    ['researchProjects', [{ key: { id: 1 }, unique: true }, { key: { ownerEmail: 1 } }]],
-    ['staffingOpportunities', [{ key: { id: 1 }, unique: true }, { key: { termId: 1, status: 1 } }, { key: { courseId: 1 } }, { key: { projectId: 1 } }]],
+    ['staffingOpportunities', [{ key: { id: 1 }, unique: true }, { key: { termId: 1, status: 1 } }, { key: { courseId: 1 } }, { key: { ownerId: 1, termId: 1 } }]],
     ['staffingApplications', [{ key: { id: 1 }, unique: true }, { key: { opportunityId: 1, applicantId: 1 }, unique: true }, { key: { applicantId: 1, updatedAt: -1 } }, { key: { opportunityId: 1, status: 1, submittedAt: 1, id: 1 } }]],
     ['staffingDocuments', [{ key: { id: 1 }, unique: true }, { key: { applicationId: 1 } }]],
     ['staffingAllocations', [{ key: { termId: 1, applicantId: 1 }, unique: true }]],
     ['staffingOffers', [{ key: { id: 1 }, unique: true }, { key: { applicationId: 1, createdAt: -1 } }]],
-    ['staffingAppointments', [{ key: { id: 1 }, unique: true }, { key: { courseId: 1, applicantEmail: 1, status: 1 } }, { key: { projectId: 1, applicantId: 1 } }, { key: { applicantId: 1, endDate: 1 } }, { key: { applicantId: 1, status: 1, startDate: 1, endDate: 1 } }]],
+    ['staffingAppointments', [{ key: { id: 1 }, unique: true }, { key: { courseId: 1, applicantEmail: 1, status: 1 } }, { key: { applicantId: 1, endDate: 1 } }, { key: { applicantId: 1, status: 1, startDate: 1, endDate: 1 } }]],
     ['staffingEvents', [{ key: { id: 1 }, unique: true }, { key: { targetId: 1, createdAt: -1 } }, { key: { delivery: 1, createdAt: 1 } }]],
     ['staffingCommands', [{ key: { actorId: 1, key: 1 }, unique: true }]],
     ['staffingWorkload', [{ key: { id: 1 }, unique: true }, { key: { appointmentId: 1, date: -1 } }, { key: { appointmentId: 1, idempotencyKey: 1 }, unique: true, partialFilterExpression: { idempotencyKey: { $type: 'string' } } }]],
@@ -69,6 +68,8 @@ export async function initializeStaffingIndexes(db: Db) {
     ['staffingNotifications', [{ key: { id: 1 }, unique: true }, { key: { eventId: 1, recipientId: 1 }, unique: true }, { key: { recipientId: 1, createdAt: -1 } }]]
   ]
   for (const [collection, indexes] of specs) await db.collection(collection).createIndexes(indexes)
+  const { initializeRecruitmentCycle } = await import('./staffing-cycle')
+  await initializeRecruitmentCycle(db)
 }
 
 /** Date and clearance checks remain authoritative even before reconciliation runs. */
@@ -84,14 +85,21 @@ export async function manualCourseManager(db: Db, courseId: string, user: Staffi
   if (isGlobalAdmin(user)) return true
   return !!await db.collection('enrollments').findOne({ courseId, userEmail: user.email, role: { $in: ['instructor', 'admin'] } }, options(session))
 }
+export async function staffingCapabilities(db: Db, user: StaffingActor, session?: ClientSession) {
+  const global = isGlobalAdmin(user)
+  const instructional = !!await db.collection('enrollments').findOne({ userEmail: user.email, role: { $in: ['instructor', 'admin'] } }, { ...options(session), projection: { _id: 1 } })
+  const canManageStaffing = global || instructional
+  const canApplyStaffing = !canManageStaffing && ['student', 'ta'].includes(user.primaryRole)
+  return { id: actorId(user), email: user.email, name: user.name, primaryRole: user.primaryRole, isGlobalAdmin: global, canManageStaffing, canApplyStaffing, canBrowseStaffing: canManageStaffing || canApplyStaffing }
+}
 export async function canManageOpportunity(db: Db, opportunity: Document, user: StaffingActor, session?: ClientSession) {
   if (isGlobalAdmin(user)) return true
   if (opportunity.type === 'ta') return manualCourseManager(db, opportunity.courseId, user, session)
-  const project = await db.collection('researchProjects').findOne({ id: opportunity.projectId }, options(session))
-  return !!project && (project.ownerEmail === user.email || (project.reviewerEmails || []).includes(user.email))
+  if (opportunity.ownerId !== actorId(user)) return false
+  return (await staffingCapabilities(db, user, session)).canManageStaffing
 }
 export async function assertOpportunityManager(db: Db, opportunity: Document, user: StaffingActor, session?: ClientSession) {
-  if (!await canManageOpportunity(db, opportunity, user, session)) fail(403, 'Only the authorized course or project reviewers may manage this opportunity')
+  if (!await canManageOpportunity(db, opportunity, user, session)) fail(403, 'Only authorized instructors or administrators may manage this opportunity')
 }
 export async function applicationAccess(db: Db, id: string, user: StaffingActor, session?: ClientSession) {
   const application = await db.collection('staffingApplications').findOne({ id }, options(session)) || fail(404, 'Application not found')
