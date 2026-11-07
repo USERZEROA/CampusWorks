@@ -37,10 +37,7 @@ async function load() {
 </script>
 <template>
   <div v-if="hasMore || error" class="notice" role="status">
-    <p v-if="hasMore">
-      More authorized records are available. Load the next page to include them
-      in the lists and selectors.
-    </p>
+    <p v-if="hasMore">More records are available.</p>
     <p v-if="error">{{ error }}</p>
     <button
       type="button"

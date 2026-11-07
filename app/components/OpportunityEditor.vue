@@ -10,15 +10,10 @@ const form = reactive({
   title: "",
   type: "ta",
   courseId: "",
-  projectId: "",
-  termId: "",
   department: "Computer Science",
   description: "",
   positions: 1,
   weeklyHours: 10,
-  appointmentStart: "",
-  appointmentEnd: "",
-  applicationDeadline: "",
   requiresAttendance: false,
   hasLab: false,
   hasDiscussion: false,
@@ -42,6 +37,13 @@ const courses = computed(() =>
       ["instructor", "admin"].includes(c.role || c.primaryRole),
   ),
 );
+if (!props.opportunityId && !courses.value.length) {
+  form.type = "ra";
+  form.holdsOfficeHours = false;
+  form.duties = [
+    { kind: "research", sessionsPerWeek: 1, minutesPerSession: 60 },
+  ];
+}
 const originalVersion = ref<number | undefined>();
 const draftEditable = ref(!props.opportunityId);
 const editorError = ref("");
@@ -51,21 +53,22 @@ if (props.opportunityId) {
       `/api/staffing/opportunities/${props.opportunityId}`,
     );
     draftEditable.value =
-      !!current.canManage && current.opportunity?.status === "draft";
+      !!current.canManage &&
+      current.opportunity?.status === "draft" &&
+      current.opportunity.termId === data.value?.currentCycle?.termId &&
+      data.value?.currentCycle?.isOpen;
     if (!draftEditable.value)
-      editorError.value =
-        "Only an authorized reviewer may edit this opportunity while it is a draft.";
+      await nuxtApp.runWithContext(() =>
+        navigateTo(
+          current.canManage ? `/staffing/${props.opportunityId}` : "/courses",
+          { replace: true },
+        ),
+      );
     const item = current.opportunity;
     if (draftEditable.value) {
-      Object.assign(form, item);
+      for (const key of Object.keys(form))
+        if (key in item) (form as any)[key] = item[key];
       originalVersion.value = item.version;
-      const local = (value: string) => {
-        const d = new Date(value);
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}T${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-      };
-      form.appointmentStart = local(item.appointmentStart);
-      form.appointmentEnd = local(item.appointmentEnd);
-      form.applicationDeadline = local(item.applicationDeadline);
     }
   } catch (error: any) {
     draftEditable.value = false;
@@ -73,6 +76,10 @@ if (props.opportunityId) {
       error,
       "This opportunity draft is unavailable.",
     );
+    if ([403, 404].includes(error?.statusCode || error?.response?.status))
+      await nuxtApp.runWithContext(() =>
+        navigateTo("/courses", { replace: true }),
+      );
     if ((error?.statusCode || error?.response?.status) === 401) {
       currentUser.value = null;
       authError.value = "Your session expired. Please sign in again.";
@@ -82,19 +89,31 @@ if (props.opportunityId) {
     }
   }
 }
-const requiredApproval = computed(
-  () =>
-    (data.value?.terms || []).find((term: any) => term.id === form.termId)
-      ?.requiresApproval !== false,
-);
 watch(
-  requiredApproval,
-  (required) => {
-    if (required) form.approvalRequired = true;
+  () => form.type,
+  (type) => {
+    if (type === "ra") {
+      form.requiresGrading = false;
+      form.hasDiscussion = false;
+      form.hasLab = false;
+      form.holdsOfficeHours = false;
+      form.duties = form.duties.map((duty) =>
+        ["lab", "discussion", "grading", "office_hours"].includes(duty.kind)
+          ? { ...duty, kind: "research" }
+          : duty,
+      );
+    } else {
+      form.holdsOfficeHours = true;
+      form.duties = form.duties.map((duty) =>
+        duty.kind === "research" ? { ...duty, kind: "office_hours" } : duty,
+      );
+    }
   },
-  { immediate: true },
 );
-const iso = (value: string) => (value ? new Date(value).toISOString() : "");
+if (!props.opportunityId && !data.value?.currentCycle?.isOpen)
+  await nuxtApp.runWithContext(() =>
+    navigateTo("/staffing", { replace: true }),
+  );
 async function save() {
   const result = await run(
     () =>
@@ -108,10 +127,6 @@ async function save() {
             ...form,
             expectedVersion: originalVersion.value,
             courseId: form.type === "ta" ? form.courseId : undefined,
-            projectId: form.type === "ra" ? form.projectId : undefined,
-            appointmentStart: iso(form.appointmentStart),
-            appointmentEnd: iso(form.appointmentEnd),
-            applicationDeadline: iso(form.applicationDeadline),
           },
         },
       ),
@@ -135,7 +150,8 @@ function addQuestion() {
     :title="
       props.opportunityId ? 'Edit Opportunity Draft' : 'Create Opportunity'
     "
-    subtitle="Set clear weekly duties, qualification criteria, appointment dates, and approved capacity."
+    back-to="/staffing"
+    back-label="Recruitment"
   >
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load staffing configuration.") }}
@@ -146,10 +162,10 @@ function addQuestion() {
     <p v-if="editorError" class="notice error" role="alert">
       {{ editorError }}
     </p>
-    <p v-if="!data?.terms?.length" class="notice">
-      An administrator must
-      <NuxtLink to="/admin/staffing">create a term</NuxtLink> before you can
-      publish an opportunity.
+    <p v-if="data?.currentCycle?.termName" class="muted">
+      {{ data.currentCycle.termName }} ·
+      {{ staffingDate(data.currentCycle.startDate) }} –
+      {{ staffingDate(data.currentCycle.endDate) }}
     </p>
     <form
       v-if="
@@ -179,24 +195,10 @@ function addQuestion() {
                 v-model="form.type"
                 data-testid="opportunity-type"
               >
-                <option value="ta">Teaching Assistant</option>
-                <option value="ra">Research Assistant</option>
-              </select></label
-            >
-            <label
-              >Term<select
-                v-model="form.termId"
-                required
-                data-testid="opportunity-term"
-              >
-                <option value="">Choose a term</option>
-                <option
-                  v-for="term in data.terms"
-                  :key="term.id"
-                  :value="term.id"
-                >
-                  {{ term.name }}
+                <option v-if="courses.length" value="ta">
+                  Teaching Assistant
                 </option>
+                <option value="ra">Research Assistant</option>
               </select></label
             >
             <label v-if="form.type === 'ta'"
@@ -212,22 +214,6 @@ function addQuestion() {
                   :value="course.id"
                 >
                   {{ course.code }} — {{ course.title }}
-                </option>
-              </select></label
-            >
-            <label v-else
-              >Research project<select
-                v-model="form.projectId"
-                required
-                data-testid="opportunity-project"
-              >
-                <option value="">Choose a project</option>
-                <option
-                  v-for="project in data.projects || []"
-                  :key="project.id"
-                  :value="project.id"
-                >
-                  {{ project.title }}
                 </option>
               </select></label
             >
@@ -254,27 +240,6 @@ function addQuestion() {
                 required
                 data-testid="opportunity-hours"
             /></label>
-            <label
-              >Appointment start (your local time)<input
-                v-model="form.appointmentStart"
-                type="datetime-local"
-                required
-                data-testid="opportunity-start"
-            /></label>
-            <label
-              >Appointment end (your local time)<input
-                v-model="form.appointmentEnd"
-                type="datetime-local"
-                required
-                data-testid="opportunity-end"
-            /></label>
-            <label
-              >Application deadline (your local time)<input
-                v-model="form.applicationDeadline"
-                type="datetime-local"
-                required
-                data-testid="opportunity-deadline"
-            /></label>
           </div>
           <label
             >Description<textarea
@@ -287,7 +252,7 @@ function addQuestion() {
         </fieldset>
         <fieldset :disabled="busy">
           <legend>Weekly work expectations</legend>
-          <div class="grid">
+          <div v-if="form.type === 'ta'" class="grid">
             <label class="check"
               ><input
                 v-model="form.requiresAttendance"
@@ -314,12 +279,20 @@ function addQuestion() {
               >Duty {{ index + 1
               }}<select v-model="duty.kind">
                 <option value="attendance">Attendance</option>
-                <option value="lab">Lab</option>
-                <option value="discussion">Discussion</option>
-                <option value="grading">Grading</option>
-                <option value="office_hours">Office hours</option>
+                <option v-if="form.type === 'ta'" value="lab">Lab</option>
+                <option v-if="form.type === 'ta'" value="discussion">
+                  Discussion
+                </option>
+                <option v-if="form.type === 'ta'" value="grading">
+                  Grading
+                </option>
+                <option v-if="form.type === 'ta'" value="office_hours">
+                  Office hours
+                </option>
                 <option value="preparation">Preparation</option>
-                <option value="research">Research</option>
+                <option v-if="form.type === 'ra'" value="research">
+                  Research
+                </option>
               </select></label
             ><label
               >Sessions per week<input
@@ -357,11 +330,7 @@ function addQuestion() {
           >
             Add weekly duty
           </button>
-          <h3>Required fixed schedule (America/New_York campus time)</h3>
-          <p class="muted">
-            Leave empty when times are flexible. Applicants must confirm
-            coverage of any required slots.
-          </p>
+          <h3>Weekly schedule (Eastern Time)</h3>
           <div
             v-for="(slot, index) in form.requiredSlots"
             :key="index"
@@ -476,19 +445,6 @@ function addQuestion() {
                 data-testid="opportunity-budget"
             /></label>
           </div>
-          <label class="check"
-            ><input
-              v-model="form.approvalRequired"
-              type="checkbox"
-              :disabled="requiredApproval"
-            />Department approval required before publication (the selected term
-            may require it)</label
-          >
-          <p class="muted">
-            The budget must cover all published positions for the appointment
-            period. Zero-cost plans need an explicit approved cost basis;
-            recorded queue use alone does not establish staffing cost.
-          </p>
         </fieldset>
         <button type="submit" :disabled="busy" data-testid="opportunity-save">
           {{
@@ -501,9 +457,6 @@ function addQuestion() {
         </button>
       </div>
     </form>
-    <p v-else-if="!error" class="notice">
-      You do not currently manage a course or research project.
-    </p>
     <StaffingPaging
       cache-key="staffing-create"
       :pagination="data?.pagination"

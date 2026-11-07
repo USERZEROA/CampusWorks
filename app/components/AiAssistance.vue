@@ -16,7 +16,7 @@ const task = ref<any>(null);
 const refreshJobs = ref<any[]>([]);
 const subscriptions = ref<any[]>([]);
 const failed = ref(false);
-const message = ref("Checking AI availability…");
+const message = ref("Loading AI...");
 const comparisonPage = ref(1);
 const comparisonSize = 50;
 let requestGeneration = 0;
@@ -105,34 +105,27 @@ function evidenceLabel(reference: string): string {
     ? "Screening answer"
     : evidenceFields[field || ""] || "Submitted qualifications";
   return props.kind === "candidate_fit"
-    ? `${candidateLabel(applicationId || "")} · ${label}`
+    ? `${candidateLabel(applicationId || "")}  -  ${label}`
     : label;
 }
 const statusMessage = computed(() => {
   if (failed.value) return message.value;
-  if (configured.value === false)
-    return "AI is not configured. No analysis will run until a provider is configured on the server. You can continue every application and appointment action without AI.";
+  if (configured.value === false) return "AI is not configured.";
   const job = currentJob.value;
-  if (job?.status === "queued")
-    return "Candidate evidence or availability changed. An updated comparison is queued; earlier output is hidden until the current analysis completes.";
-  if (job?.status === "running")
-    return "An updated candidate comparison is running. Results will appear automatically when the current evidence is validated.";
+  if (job?.status === "queued") return "Updated candidate analysis is queued.";
+  if (job?.status === "running") return "Updating recommendations...";
   if (job?.status === "blocked")
     return (
       job.reason ||
-      "Automatic analysis is waiting for eligible evidence or provider capacity. Review the applications manually while it is unavailable."
+      "Analysis is waiting for eligible candidates or provider capacity."
     );
   if (["failed", "revoked"].includes(job?.status))
-    return (
-      job.reason ||
-      "Automatic analysis is unavailable. Review the submitted evidence manually."
-    );
+    return job.reason || "AI analysis is unavailable.";
   if (task.value?.status === "stale")
     return props.kind === "candidate_fit"
-      ? "Candidate evidence or availability changed. Earlier output is hidden; the subscribed comparison will update automatically when analysis is available."
-      : "The underlying evidence changed. Earlier output is hidden. Request assistance again to analyze the current evidence.";
-  if (task.value?.status === "pending")
-    return "Analysis is pending. Current results will appear automatically after validation.";
+      ? "Candidate details changed; recommendations will update automatically."
+      : "The evidence changed; request a new analysis.";
+  if (task.value?.status === "pending") return "Analysis is pending.";
   return task.value?.message || message.value;
 });
 async function handleFailure(error: any, fallback: string) {
@@ -179,16 +172,11 @@ async function loadTasks() {
             new Date(left.createdAt).getTime(),
         )[0] || null;
     failed.value = false;
-    message.value =
-      result.ai?.message ||
-      "AI assistance is available. Request an evidence-linked advisory review.";
+    message.value = result.ai?.message || "AI assistance is available.";
   } catch (error) {
     if (requestedScope !== scope.value || generation !== requestGeneration)
       return;
-    await handleFailure(
-      error,
-      "AI availability could not be checked. Continue the workflow manually while the connection is unavailable.",
-    );
+    await handleFailure(error, "AI availability could not be checked.");
   } finally {
     loading.value = false;
   }
@@ -219,10 +207,7 @@ async function requestAssistance(page = comparisonPage.value) {
     await loadTasks();
   } catch (error) {
     if (requestedScope !== scope.value) return;
-    await handleFailure(
-      error,
-      "Unable to request AI assistance. You can continue the workflow manually.",
-    );
+    await handleFailure(error, "Unable to request AI assistance.");
   } finally {
     busy.value = false;
   }
@@ -234,7 +219,7 @@ watch(scope, () => {
   subscriptions.value = [];
   configured.value = null;
   comparisonPage.value = 1;
-  message.value = "Checking AI availability…";
+  message.value = "Loading AI...";
   failed.value = false;
   loadTasks();
 });
@@ -256,21 +241,10 @@ useIntervalRefresh(loadTasks, 2500);
         {{ statusMessage }}
       </p>
       <p v-if="kind === 'candidate_fit'" class="muted">
-        After you request a comparison, changes to applications, submitted
-        evidence, and candidate availability automatically update that
-        comparison. No manual refresh is required. Comparisons cover the stated
-        page of candidates, not an overall ranking across all pages.
+        Recommendations update automatically when candidates or availability
+        change.
       </p>
-      <p class="muted">
-        Background summaries use the submitted qualification fields, screening
-        answers, and optional qualification text. PDF CVs remain private
-        attachments and are not automatically parsed.
-      </p>
-      <p class="muted">
-        Recommendations require evidence from submitted qualifications and
-        remain advisory. AI cannot select candidates, issue offers, grant
-        permissions, or change a budget.
-      </p>
+
       <div class="actions">
         <button
           type="button"
@@ -280,10 +254,16 @@ useIntervalRefresh(loadTasks, 2500);
         >
           {{
             busy
-              ? "Requesting…"
+              ? "Requesting..."
               : configured === false
                 ? "AI not configured"
-                : "Request assistance"
+                : kind === "candidate_fit"
+                  ? "Analyze candidates"
+                  : kind === "cv_summary"
+                    ? "Summarize application"
+                    : kind === "opportunity_draft"
+                      ? "Draft requirements"
+                      : "Draft course review"
           }}
         </button>
         <button
@@ -298,20 +278,18 @@ useIntervalRefresh(loadTasks, 2500);
         </button>
       </div>
       <p v-if="task" class="muted">
-        Analysis {{ staffingState(task.status) }} ·
+        Analysis {{ staffingState(task.status) }} -
         {{ staffingDate(task.completedAt || task.createdAt) }}
       </p>
       <p v-if="task?.coverage" class="muted" data-testid="ai-coverage">
         <template v-if="task.coverage.compared != null">
           Page {{ task.coverage.page || comparisonPage }}:
-          {{ task.coverage.compared }} eligible candidate(s) compared from
-          {{ task.coverage.totalSubmitted }} submitted application(s).
-          {{ task.coverage.inspected }} application(s) inspected.
+          {{ task.coverage.compared }} eligible candidates ?
+          {{ task.coverage.totalSubmitted }} applications
         </template>
-        {{ task.coverage.message || task.coverage.source }}
       </p>
       <div v-if="completedTask?.result" data-testid="ai-result">
-        <h3>Advisory output</h3>
+        <h3>Suggestions</h3>
         <p class="preserve-lines">{{ completedTask.result.summary }}</p>
         <p
           v-if="completedTask.result.summaryEvidenceRefs?.length"

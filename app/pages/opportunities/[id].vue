@@ -10,7 +10,17 @@ const { data, error, refresh } = await useAsyncData<any>(
   () => requestFetch(`/api/staffing/opportunities/${id}`),
 );
 guardStaffingAccess(data, error);
+if ([403, 404].includes((error.value as any)?.statusCode))
+  await navigationApp.runWithContext(() =>
+    navigateTo("/courses", { replace: true }),
+  );
 const opportunity = computed(() => data.value?.opportunity);
+const canApply = computed(
+  () =>
+    data.value?.viewer?.canApplyStaffing &&
+    data.value?.currentCycle?.isOpen &&
+    opportunity.value?.termId === data.value.currentCycle.termId,
+);
 const { busy, message, failure, run } = useStaffingMutation(refresh);
 async function apply() {
   const result = await run(
@@ -25,11 +35,13 @@ async function apply() {
       `/applications/${staffingId(result.application)}`,
     );
 }
+useIntervalRefresh(refresh);
 </script>
 <template>
   <StaffingShell
     :title="opportunity?.title || 'Opportunity'"
-    subtitle="Review the appointment scope and requirements before applying."
+    :back-to="data?.canManage ? `/staffing/${id}` : '/opportunities'"
+    :back-label="data?.canManage ? 'Candidates' : 'Positions'"
   >
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load this opportunity.") }}
@@ -68,8 +80,12 @@ async function apply() {
             </dd>
             <dt>Application deadline</dt>
             <dd>{{ staffingDate(opportunity.applicationDeadline) }}</dd>
-            <dt>Course or project</dt>
-            <dd>{{ opportunity.courseId || opportunity.projectId }}</dd>
+            <template v-if="data.course"
+              ><dt>Course</dt>
+              <dd>
+                {{ data.course.code }} ? {{ data.course.title }}
+              </dd></template
+            >
           </dl>
           <p class="preserve-lines">{{ opportunity.description }}</p>
           <h3>Required skills</h3>
@@ -83,7 +99,7 @@ async function apply() {
               "No additional preferences specified."
             }}
           </p>
-          <ul>
+          <ul v-if="opportunity.type === 'ta'">
             <li>
               Attendance:
               {{ opportunity.requiresAttendance ? "Required" : "Not required" }}
@@ -130,7 +146,7 @@ async function apply() {
             </table>
           </div>
           <template v-if="opportunity.requiredSlots?.length">
-            <h3>Required weekly schedule (America/New_York campus time)</h3>
+            <h3>Weekly schedule (Eastern Time)</h3>
             <ul>
               <li
                 v-for="(slot, index) in opportunity.requiredSlots"
@@ -150,15 +166,8 @@ async function apply() {
                 {{ slot.start }}–{{ slot.end }}
               </li>
             </ul>
-            <p class="muted">
-              Your application must confirm availability for each required slot.
-            </p>
           </template>
-          <p>
-            CV: {{ opportunity.cvRequired ? "Required" : "Optional" }}.
-            Submitted qualification material is visible to the authorized
-            opportunity reviewers.
-          </p>
+          <p>CV: {{ opportunity.cvRequired ? "Required" : "Optional" }}.</p>
           <div class="actions">
             <NuxtLink
               v-if="data.application"
@@ -166,7 +175,7 @@ async function apply() {
               :to="`/applications/${data.application.id}`"
               >Open my application</NuxtLink
             ><button
-              v-else
+              v-else-if="canApply"
               :disabled="
                 busy ||
                 (opportunity.state || opportunity.status) !== 'published'

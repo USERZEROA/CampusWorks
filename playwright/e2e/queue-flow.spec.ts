@@ -43,6 +43,8 @@ test.describe.serial('office-hours queue: full loop with four identities', () =>
   test('site admin creates the course and adds a TA', async () => {
     await open(admin, '/login');
     await admin.getByTestId('login-admin').click();
+    await expect(admin).toHaveURL(/\/courses$/);
+    await admin.getByTestId('admin-console-link').click();
     await expect(admin).toHaveURL(/\/admin\/courses$/);
 
     await admin.getByTestId('admin-new-code').fill(code);

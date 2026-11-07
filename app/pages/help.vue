@@ -35,7 +35,6 @@ const goBack = () => {
         </button>
       </div>
     </header>
-    <StaffingNavigation />
 
     <main id="main-content" tabindex="-1" class="content">
       <section class="block">
@@ -149,11 +148,9 @@ const goBack = () => {
                 grant the admin role.
               </li>
               <li>
-                A TA appointment can grant course access separately from a
-                manual enrollment. Setting the manual role to Student does not
-                revoke that appointment. Suspend or end it in
-                <NuxtLink to="/staffing">Staffing</NuxtLink>; independent manual
-                staff grants remain in place afterward.
+                Manage appointment access from
+                <NuxtLink to="/courses">Home</NuxtLink>; manual roles remain
+                independent.
               </li>
               <li>
                 Read structured <strong>course feedback</strong> from students.

@@ -62,9 +62,7 @@ const loginAs = async (as: MockRole, accountEmail?: string) => {
     });
     capturedUser.value = res.user;
 
-    await navigateWithContext(
-      res.user.isGlobalAdmin ? "/admin/courses" : "/courses",
-    );
+    await navigateWithContext("/courses");
   } catch (e: any) {
     error.value = apiErrorMessage(e, "Login failed");
   } finally {

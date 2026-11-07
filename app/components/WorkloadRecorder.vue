@@ -21,7 +21,7 @@ async function save() {
           idempotencyKey,
         },
       }),
-    "Workload observation recorded. This is a self-reported observation, not a payroll record.",
+    "Workload recorded.",
   );
   if (result) {
     idempotencyKey = "";
@@ -32,13 +32,8 @@ async function save() {
 </script>
 <template>
   <section class="panel">
-    <div class="panel-heading"><h2>Record Workload Observation</h2></div>
+    <div class="panel-heading"><h2>Record Workload</h2></div>
     <form @submit.prevent="save" class="panel-body" :aria-busy="busy">
-      <p class="muted">
-        Record actual work by category so the term review can distinguish office
-        hours, grading, labs, and preparation. Do not duplicate the same work in
-        multiple categories.
-      </p>
       <p
         v-if="message"
         class="notice"
@@ -49,7 +44,10 @@ async function save() {
       </p>
       <div class="grid">
         <label
-          >Work category<select v-model="observation.kind" aria-label="Work category">
+          >Work category<select
+            v-model="observation.kind"
+            aria-label="Work category"
+          >
             <option value="attendance">Attendance</option>
             <option value="lab">Lab</option>
             <option value="discussion">Discussion</option>

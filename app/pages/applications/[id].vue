@@ -5,12 +5,15 @@ const navigateWithContext = (target: string, options?: any) =>
   navigationApp.runWithContext(() => navigateTo(target, options));
 const id = String(useRoute().params.id);
 const signedInUser = useAuthUser();
+const staffingAccess = useStaffingCapabilities();
 const requestFetch = useRequestFetch();
 const { data, error, refresh } = await useAsyncData<any>(
   `application-${id}`,
   () => requestFetch(`/api/staffing/applications/${id}`),
 );
 guardStaffingAccess(data, error);
+if ([403, 404].includes((error.value as any)?.statusCode))
+  await navigateWithContext("/courses", { replace: true });
 const application = computed(() => data.value?.application);
 const opportunity = computed(() => data.value?.opportunity);
 const offer = computed(() => data.value?.offer);
@@ -47,6 +50,8 @@ const { busy, message, failure, run } = useStaffingMutation(refresh);
 const editable = computed(
   () =>
     !!application.value &&
+    !!staffingAccess.value?.currentCycle?.isOpen &&
+    opportunity.value?.termId === staffingAccess.value.currentCycle.termId &&
     [
       "draft",
       "submitted",
@@ -90,7 +95,7 @@ async function submit() {
         method: "POST",
         body: { expectedVersion: application.value.version },
       }),
-    "Application submitted. Your submitted answers and CV version are recorded.",
+    "Application submitted.",
   );
 }
 async function upload() {
@@ -125,13 +130,13 @@ async function saveAdministrative() {
             application.value.administrativeVersion || 0,
         },
       }),
-    "Restricted administrative details saved separately from your submitted qualifications.",
+    "Appointment details saved.",
   );
 }
 async function reloadApplication() {
   const result = await run(
     async () => ({ ok: true }),
-    "The current application version is loaded. Unsaved local changes were replaced.",
+    "Saved application loaded.",
   );
   if (result) loadDraft();
 }
@@ -139,7 +144,14 @@ async function reloadApplication() {
 <template>
   <StaffingShell
     :title="opportunity?.title || 'Application'"
-    subtitle="Your application and appointment status are private to you and authorized reviewers."
+    :back-to="
+      data?.canManage && !data?.owner
+        ? `/staffing/${opportunity?.id}`
+        : '/applications'
+    "
+    :back-label="
+      data?.canManage && !data?.owner ? 'Candidates' : 'My applications'
+    "
   >
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to open this application.") }}
@@ -154,16 +166,13 @@ async function reloadApplication() {
       {{ message }}
     </p>
     <template v-if="application && !error">
-      <p class="muted">
-        If another browser changes this application, refresh before saving.
-        Refresh replaces unsaved local answers.
-      </p>
       <button
         type="button"
         class="secondary"
         :disabled="busy"
         @click="reloadApplication"
         data-testid="application-refresh"
+        title="Replace unsaved changes with the saved application"
       >
         Refresh current application
       </button>
@@ -184,13 +193,9 @@ async function reloadApplication() {
             {{ opportunity?.weeklyHours }} hours/week,
             {{ staffingDate(opportunity?.appointmentStart) }} –
             {{ staffingDate(opportunity?.appointmentEnd) }}.
-            {{ opportunity?.type?.toUpperCase() }} appointment for
-            {{ opportunity?.courseId || opportunity?.projectId }}.
+            {{ opportunity?.type?.toUpperCase() }} appointment.
           </p>
-          <p>
-            Acceptance confirms these published duties. Staff access follows the
-            required clearance and start date.
-          </p>
+
           <div v-if="offer.status === 'issued' && data.owner" class="actions">
             <button
               :disabled="busy"
@@ -234,9 +239,7 @@ async function reloadApplication() {
             }}
           </p>
           <p v-if="appointment.status !== 'active'" class="notice">
-            Access remains unavailable until all appointment conditions hold.
-            Pending clearance or a future start date does not grant queue
-            permissions.
+            Access begins after clearance and the appointment start date.
           </p>
           <NuxtLink
             v-if="appointment.status === 'active' && appointment.courseId"
@@ -244,13 +247,6 @@ async function reloadApplication() {
             :to="`/courses/${appointment.courseId}/ta`"
             data-testid="appointment-workspace"
             >Open TA Queue</NuxtLink
-          >
-          <NuxtLink
-            v-if="appointment.status === 'active' && appointment.projectId"
-            class="button"
-            :to="`/projects/${appointment.projectId}`"
-            data-testid="appointment-workspace"
-            >Open Research Workspace</NuxtLink
           >
           <button class="secondary" :disabled="busy" @click="refresh()">
             Refresh appointment status
@@ -266,10 +262,6 @@ async function reloadApplication() {
       >
         <div class="panel-heading"><h2>Application Information</h2></div>
         <div class="panel-body">
-          <p v-if="data.canManage && !data.owner" class="notice">
-            Reviewer view. Applicant answers cannot be edited here. Restricted
-            administrative fields are excluded.
-          </p>
           <fieldset :disabled="!editable || busy">
             <legend>Personal and academic background</legend>
             <div class="grid">
@@ -336,27 +328,19 @@ async function reloadApplication() {
                   maxlength="100"
               /></label>
             </div>
-            <label class="check"
+            <label v-if="opportunity?.type === 'ta'" class="check"
               ><input v-model="profile.priorTaExperience" type="checkbox" />I
               have previous TA experience</label
             >
-            <label v-if="profile.priorTaExperience"
+            <label
+              v-if="opportunity?.type === 'ta' && profile.priorTaExperience"
               >Previous courses and departments<textarea
                 v-model="profile.priorCourses"
                 :required="profile.priorTaExperience"
                 maxlength="2000"
               />
             </label>
-            <label class="check"
-              ><input v-model="profile.multipleCourses" type="checkbox" />I
-              would be willing to assist more than one course if departmental
-              policy permits</label
-            >
-            <p class="muted">
-              Current allocation policy allows one held appointment per term,
-              including half appointments, and prevents overlapping appointment
-              dates across terms. This preference does not override those rules.
-            </p>
+
             <label
               >Availability and scheduling constraints<textarea
                 v-model="profile.availability"
@@ -374,15 +358,14 @@ async function reloadApplication() {
               />
             </label>
             <label
-              >Teaching or research experience<textarea
-                v-model="profile.experience"
-                maxlength="4000"
-              />
+              >{{
+                opportunity?.type === "ra"
+                  ? "Research experience"
+                  : "Teaching experience"
+              }}<textarea v-model="profile.experience" maxlength="4000" />
             </label>
             <fieldset v-if="opportunity?.requiredSlots?.length">
-              <legend>
-                Required weekly schedule (America/New_York campus time)
-              </legend>
+              <legend>Weekly schedule (Eastern Time)</legend>
               <p
                 v-for="(slot, index) in opportunity.requiredSlots"
                 :key="index"
@@ -409,7 +392,7 @@ async function reloadApplication() {
                   )
                 "
               >
-                Confirm I am available for all required slots
+                Confirm availability
               </button>
               <p v-if="profile.slots.length" role="status">
                 Schedule availability confirmed.
@@ -434,13 +417,9 @@ async function reloadApplication() {
           </fieldset>
           <fieldset :disabled="!editable || busy">
             <legend>CV and qualification material</legend>
-            <p>
-              Upload a PDF or plain-text CV, maximum 2 MiB. Files are private
-              and may be downloaded only by you and authorized reviewers. Do not
-              include an SSN or confidential third-party material.
-            </p>
+
             <label
-              >CV file<input
+              >CV (PDF or TXT, up to 2 MiB)<input
                 type="file"
                 accept="application/pdf,text/plain,.pdf,.txt"
                 @change="fileChanged"
@@ -454,16 +433,11 @@ async function reloadApplication() {
             >
               Upload CV
             </button>
-            <p class="muted">
-              PDF files are stored as private attachments. This version does not
-              extract their text; provide optional qualification text below when
-              you want it included in a future AI review.
-            </p>
+
             <label
-              >Qualification text for review or future AI assistance<textarea
+              >Additional qualifications (optional)<textarea
                 v-model="qualificationText"
                 maxlength="20000"
-                placeholder="Optional accessible text version of your qualifications; do not invent or add private administrative details."
               />
             </label>
           </fieldset>
@@ -481,11 +455,7 @@ async function reloadApplication() {
               >Download submitted CV</a
             >
           </p>
-          <p class="muted">
-            Payroll, SSN and immigration information are not qualification
-            signals. Any required administrative eligibility check is handled
-            separately by authorized administrators.
-          </p>
+
           <div v-if="editable" class="actions">
             <button
               type="submit"
@@ -523,14 +493,11 @@ async function reloadApplication() {
         class="panel"
       >
         <div class="panel-heading">
-          <h2>Restricted Appointment Administration</h2>
+          <h2>Appointment Details</h2>
         </div>
         <form @submit.prevent="saveAdministrative" class="panel-body">
           <p class="notice">
-            These optional processing details are shared only with you and site
-            administrators. Course reviewers and AI qualification assistance do
-            not receive them. Do not enter an SSN number or upload identity
-            documents.
+            Only you and site administrators can view these details.
           </p>
           <fieldset
             :disabled="
@@ -576,7 +543,11 @@ async function reloadApplication() {
         </form>
       </section>
       <WorkloadRecorder
-        v-if="appointment?.status === 'active' && data.owner"
+        v-if="
+          appointment?.status === 'active' &&
+          appointment.type === 'ta' &&
+          data.owner
+        "
         :appointment-id="appointment.id"
       />
       <AiAssistance

@@ -4,6 +4,52 @@ const { data, error, refresh } = await useStaffingOverview(
 );
 const { busy, message, failure, run } = useStaffingMutation(refresh);
 const term = reactive({ name: "", startDate: "", endDate: "" });
+const cycle = reactive({
+  termId: "",
+  opensAt: "",
+  closesAt: "",
+  enabled: true,
+});
+const cycleDirty = ref(false);
+const localDateTime = (value: string) => {
+  if (!value) return "";
+  const date = new Date(value);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+};
+function loadCycle() {
+  const current = data.value?.currentCycle;
+  cycle.termId = current?.termId || "";
+  cycle.opensAt = localDateTime(current?.opensAt);
+  cycle.closesAt = localDateTime(current?.closesAt);
+  cycle.enabled = current?.enabled !== false;
+}
+watch(
+  () => data.value?.currentCycle?.version,
+  () => {
+    if (!cycleDirty.value) loadCycle();
+  },
+  { immediate: true },
+);
+async function saveCycle() {
+  const result = await run(
+    () =>
+      staffingRequest("/api/staffing/cycle", {
+        method: "PUT",
+        body: {
+          expectedVersion: data.value?.currentCycle?.version || 0,
+          termId: cycle.termId,
+          opensAt: new Date(cycle.opensAt).toISOString(),
+          closesAt: new Date(cycle.closesAt).toISOString(),
+          enabled: cycle.enabled,
+        },
+      }),
+    "Recruitment schedule saved.",
+  );
+  if (result) {
+    cycleDirty.value = false;
+    loadCycle();
+  }
+}
 const clearance = reactive<Record<string, string>>({});
 const reason = ref("");
 const pending = computed(() => data.value?.admin?.pendingOpportunities || []);
@@ -24,12 +70,12 @@ async function createTerm() {
     "Term created.",
   );
 }
-async function approve(id: string, approved: boolean) {
+async function approve(item: any, approved: boolean) {
   await run(
     () =>
-      staffingRequest(`/api/staffing/opportunities/${id}/approve`, {
+      staffingRequest(`/api/staffing/opportunities/${item.id}/approve`, {
         method: "POST",
-        body: { approved, reason: reason.value },
+        body: { approved, reason: reason.value, expectedVersion: item.version },
       }),
     approved
       ? "Opportunity approved and published."
@@ -49,10 +95,7 @@ async function decide(item: any) {
 useIntervalRefresh(refresh);
 </script>
 <template>
-  <StaffingShell
-    title="Staffing Administration"
-    subtitle="Maintain terms, approve staffing plans, and record restricted appointment clearance."
-  >
+  <StaffingShell title="Recruitment Settings">
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load staffing administration.") }}
     </p>
@@ -66,24 +109,75 @@ useIntervalRefresh(refresh);
       {{ message }}
     </p>
     <section v-if="!error" class="panel">
-      <div class="panel-heading"><h2>Academic Terms</h2></div>
+      <div class="panel-heading"><h2>Current Recruitment Cycle</h2></div>
+      <form
+        @submit.prevent="saveCycle"
+        @input="cycleDirty = true"
+        @change="cycleDirty = true"
+        class="panel-body"
+        :aria-busy="busy"
+      >
+        <div class="grid">
+          <label
+            >Semester<select
+              v-model="cycle.termId"
+              required
+              data-testid="cycle-term"
+            >
+              <option value="">Choose a semester</option>
+              <option
+                v-for="item in data?.terms || []"
+                :key="item.id"
+                :value="item.id"
+              >
+                {{ item.name }}
+              </option>
+            </select></label
+          >
+          <label
+            >Applications open<input
+              v-model="cycle.opensAt"
+              type="datetime-local"
+              required
+              data-testid="cycle-open"
+          /></label>
+          <label
+            >Applications close<input
+              v-model="cycle.closesAt"
+              type="datetime-local"
+              required
+              data-testid="cycle-close"
+          /></label>
+        </div>
+        <label class="check"
+          ><input
+            v-model="cycle.enabled"
+            type="checkbox"
+            data-testid="cycle-enabled"
+          />Enable this cycle</label
+        >
+        <button :disabled="busy" data-testid="cycle-save">Save schedule</button>
+      </form>
+    </section>
+    <section v-if="!error" class="panel">
+      <div class="panel-heading"><h2>Semesters</h2></div>
       <div class="panel-body">
         <form @submit.prevent="createTerm" :aria-busy="busy">
           <div class="grid">
             <label
-              >Term name<input
+              >Semester name<input
                 v-model="term.name"
                 required
                 maxlength="100"
                 data-testid="term-name" /></label
             ><label
-              >Term starts (your local time)<input
+              >Semester starts<input
                 v-model="term.startDate"
                 type="datetime-local"
                 required
                 data-testid="term-start" /></label
             ><label
-              >Term ends (your local time)<input
+              >Semester ends<input
                 v-model="term.endDate"
                 type="datetime-local"
                 required
@@ -91,7 +185,7 @@ useIntervalRefresh(refresh);
             /></label>
           </div>
           <button type="submit" :disabled="busy" data-testid="term-create">
-            Create term
+            Add semester
           </button>
         </form>
         <ul>
@@ -127,14 +221,14 @@ useIntervalRefresh(refresh);
               >Inspect requirements</NuxtLink
             ><button
               :disabled="busy"
-              @click="approve(item.id, true)"
+              @click="approve(item, true)"
               :data-testid="`approve-opportunity-${item.id}`"
             >
               Approve and publish</button
             ><button
               class="secondary"
               :disabled="busy || !reason.trim()"
-              @click="approve(item.id, false)"
+              @click="approve(item, false)"
             >
               Return to draft
             </button>
@@ -148,12 +242,6 @@ useIntervalRefresh(refresh);
     <section v-if="!error" class="panel">
       <div class="panel-heading"><h2>Appointment Clearance</h2></div>
       <div class="panel-body">
-        <p class="notice">
-          Clearance records are separate from qualification review. Only an
-          accepted, cleared appointment within its approved dates can grant
-          staff access. Actual SSN values and immigration documents are not
-          collected in this form.
-        </p>
         <article
           v-for="item in appointments"
           :key="item.id"
@@ -166,8 +254,7 @@ useIntervalRefresh(refresh);
           </h3>
           <p>
             Status: {{ staffingState(item.status) }} · Clearance:
-            {{ staffingState(item.clearanceStatus || item.clearance) }} ·
-            {{ item.courseId || item.projectId }}
+            {{ staffingState(item.clearanceStatus || item.clearance) }}
           </p>
           <p>
             {{ staffingDate(item.startDate || item.appointmentStart) }} –

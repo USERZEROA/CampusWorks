@@ -1,5 +1,16 @@
 <script setup lang="ts">
-defineProps<{ title: string; subtitle?: string }>();
+withDefaults(
+  defineProps<{
+    title: string;
+    subtitle?: string;
+    backTo?: string;
+    backLabel?: string;
+  }>(),
+  {
+    backTo: "/courses",
+    backLabel: "Home",
+  },
+);
 const user = useAuthUser();
 </script>
 
@@ -23,8 +34,8 @@ const user = useAuthUser();
         </button>
       </div>
     </header>
-    <StaffingNavigation />
     <main id="main-content" class="staffing-content" tabindex="-1">
+      <NuxtLink :to="backTo" class="back-link">← {{ backLabel }}</NuxtLink>
       <h1>{{ title }}</h1>
       <p v-if="subtitle" class="intro">{{ subtitle }}</p>
       <slot />
@@ -85,6 +96,11 @@ const user = useAuthUser();
   font-size: 30px;
   margin: 0 0 10px;
   overflow-wrap: anywhere;
+}
+.staffing-root .back-link {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 13px;
 }
 .staffing-root h2 {
   font-size: 19px;

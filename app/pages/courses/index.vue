@@ -36,6 +36,20 @@ type CoursesApiResult = {
 
 const router = useRouter();
 const requestFetch = useRequestFetch();
+const staffingAccess = useStaffingCapabilities();
+async function refreshStaffingAccess() {
+  try {
+    staffingAccess.value = await requestFetch<StaffingCapabilities>(
+      "/api/staffing/capabilities",
+    );
+  } catch (error: any) {
+    staffingAccess.value = null;
+    if ((error?.statusCode || error?.response?.status) === 401) {
+      capturedUser.value = null;
+      await navigateWithContext("/login", { replace: true });
+    }
+  }
+}
 const catalog = useCourseCatalogLoader<CourseRow>();
 
 const { data, error } = await useAsyncData<CoursesApiResult>(
@@ -146,7 +160,10 @@ let timer: any = null;
 
 onMounted(() => {
   timer = setInterval(() => {
-    if (!document.hidden) refreshNuxtData("courses");
+    if (!document.hidden) {
+      refreshNuxtData("courses");
+      refreshStaffingAccess();
+    }
   }, 5000);
 });
 
@@ -208,7 +225,6 @@ const goAdminConsole = () => {
         </div>
       </div>
     </header>
-    <StaffingNavigation />
 
     <main
       :aria-busy="busyActions"
@@ -217,6 +233,7 @@ const goAdminConsole = () => {
       class="content"
     >
       <h1 class="sr-only">Courses</h1>
+      <StaffingNavigation />
       <section v-if="myCourses.length" class="panel">
         <div class="panel-header">My Courses</div>
         <table class="course-table" tabindex="0" aria-label="My courses">

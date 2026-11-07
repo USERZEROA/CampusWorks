@@ -459,7 +459,6 @@ const goHelp = () => {
         </div>
       </div>
     </header>
-    <StaffingNavigation />
 
     <main
       :aria-busy="busyActions"

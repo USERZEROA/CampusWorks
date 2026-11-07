@@ -2,26 +2,27 @@
 const { data, error, refresh } = await useStaffingOverview(
   "staffing-management",
 );
+const app = useNuxtApp();
+watch(
+  () => data.value?.viewer?.canManageStaffing,
+  (allowed) => {
+    if (allowed === false)
+      app.runWithContext(() => navigateTo("/courses", { replace: true }));
+  },
+  { immediate: true },
+);
 useIntervalRefresh(refresh);
 </script>
 <template>
-  <StaffingShell
-    title="Staffing"
-    subtitle="Publish course or project requirements, review applications, and manage appointment decisions."
-  >
+  <StaffingShell title="Recruitment">
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load staffing.") }}
-    </p>
-    <p v-if="!data?.viewer?.canManageStaffing && !error" class="notice">
-      Only authorized instructors and administrators can publish or review
-      staffing opportunities. You can
-      <NuxtLink to="/opportunities">browse opportunities</NuxtLink> and manage
-      your own applications.
     </p>
     <template v-if="data?.viewer?.canManageStaffing && !error">
       <div class="actions">
         <NuxtLink
           to="/staffing/new"
+          v-if="data.currentCycle?.isOpen"
           class="button"
           data-testid="new-opportunity"
           >Create opportunity</NuxtLink
@@ -29,11 +30,11 @@ useIntervalRefresh(refresh);
           v-if="data.viewer.isGlobalAdmin"
           to="/admin/staffing"
           class="button secondary"
-          >Terms and approvals</NuxtLink
+          >Recruitment settings</NuxtLink
         >
       </div>
       <section class="panel">
-        <div class="panel-heading"><h2>Managed Opportunities</h2></div>
+        <div class="panel-heading"><h2>Positions</h2></div>
         <div
           class="panel-body table-scroll"
           tabindex="0"

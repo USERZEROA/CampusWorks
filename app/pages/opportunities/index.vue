@@ -2,33 +2,27 @@
 const { data, error, refresh } = await useStaffingOverview("opportunities");
 const search = ref("");
 const kind = ref("");
-const term = ref("");
 const opportunities = computed(() =>
   (data.value?.opportunities || []).filter(
     (item: any) =>
       (!kind.value || item.type === kind.value) &&
-      (!term.value || item.termId === term.value) &&
       (!search.value ||
         `${item.title} ${item.description} ${item.requiredSkills}`
           .toLowerCase()
           .includes(search.value.toLowerCase())),
   ),
 );
+useIntervalRefresh(refresh);
 </script>
 <template>
-  <StaffingShell
-    title="Opportunities"
-    subtitle="Find teaching and research appointments, review the weekly expectations, and submit an application."
-  >
+  <StaffingShell title="TA &amp; RA Positions">
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load opportunities.") }}
       <button @click="refresh()">Retry</button>
     </p>
-    <p class="notice">
-      You may apply to several opportunities. One appointment can be reserved or
-      held per term, including half appointments. Appointment dates in different
-      terms must not overlap. A selection is confirmed by the server; a
-      recommendation does not reserve a position.
+    <p v-if="data?.currentCycle?.termName" class="muted">
+      {{ data.currentCycle.termName }} · Applications close
+      {{ staffingDate(data.currentCycle.closesAt) }}
     </p>
     <section class="panel" aria-label="Filter opportunities">
       <div class="panel-body grid">
@@ -43,18 +37,6 @@ const opportunities = computed(() =>
             <option value="">All types</option>
             <option value="ta">TA</option>
             <option value="ra">RA</option>
-          </select></label
-        >
-        <label
-          >Term<select v-model="term">
-            <option value="">All terms</option>
-            <option
-              v-for="item in data?.terms || []"
-              :key="item.id"
-              :value="item.id"
-            >
-              {{ item.name }}
-            </option>
           </select></label
         >
       </div>

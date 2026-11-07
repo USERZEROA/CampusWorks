@@ -1,157 +1,109 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 const courseId = String(useRoute().params.id);
-const termsCacheKey = `review-terms-${courseId}`;
 const reportCacheKey = `term-review-${courseId}`;
-const { data: overview, error: termsError } =
-  await useStaffingOverview(termsCacheKey);
-const termId = ref(String(useRoute().query.termId || ""));
-const reportPages = useState<number>(`${reportCacheKey}-page-count`, () => 1);
-watch(
-  termId,
-  () => {
-    reportPages.value = 1;
-  },
-  { flush: "sync" },
-);
 const { data, error, refresh, pending } = await useStaffingPagedRecord(
   reportCacheKey,
   `/api/staffing/reviews/${courseId}`,
-  { query: () => ({ termId: termId.value || undefined }), watch: [termId] },
+);
+const termId = computed(() => data.value?.termId || "");
+useIntervalRefresh(refresh, 10000);
+const opportunityTitles = computed(
+  () =>
+    new Map<string, string>(
+      (data.value?.budget?.opportunities || []).map((item: any) => [
+        item.id,
+        item.title,
+      ]),
+    ),
 );
 </script>
 <template>
   <StaffingShell
-    :title="`${data?.course?.code || courseId} Term Review`"
-    subtitle="Review recorded operations and staffing cost scenarios with their evidence gaps."
+    :title="`${data?.course?.code || ''} Course Review`"
+    back-to="/staffing"
+    back-label="Recruitment"
   >
-    <NuxtLink :to="`/courses/${courseId}/admin`">Back to Course Admin</NuxtLink>
+    <p v-if="data?.currentCycle?.termName" class="muted">
+      {{ data.currentCycle.termName }}
+    </p>
     <p v-if="error" class="notice error" role="alert">
-      {{ apiErrorMessage(error, "Unable to load this course review.") }}
+      {{ apiErrorMessage(error, "Unable to load this review.") }}
     </p>
-    <p v-if="termsError" class="notice error" role="alert">
-      {{
-        apiErrorMessage(termsError, "Unable to load available review terms.")
-      }}
-    </p>
-    <section class="panel">
-      <div class="panel-body">
-        <label
-          >Term<select v-model="termId" data-testid="review-term">
-            <option value="">All recorded terms</option>
-            <option
-              v-for="term in overview?.terms || []"
-              :key="term.id"
-              :value="term.id"
-            >
-              {{ term.name }}
-            </option>
-          </select></label
-        ><button class="secondary" :disabled="pending" @click="refresh()">
-          Refresh review
-        </button>
-        <StaffingPaging
-          :cache-key="termsCacheKey"
-          :pagination="overview?.pagination"
-        />
-      </div>
-    </section>
-    <p v-if="pending" class="notice" role="status">
-      Loading the selected review…
-    </p>
-    <template v-if="data && !error && !pending"
-      ><section class="panel">
-        <div class="panel-heading"><h2>Recorded Course Activity</h2></div>
+    <button class="secondary" :disabled="pending" @click="refresh()">
+      Refresh
+    </button>
+    <p v-if="pending" class="notice" role="status">Loading review…</p>
+    <template v-if="data && !error">
+      <section class="panel">
+        <div class="panel-heading"><h2>Course Activity</h2></div>
         <div class="panel-body">
           <dl>
             <dt>Sessions</dt>
             <dd>{{ data.metrics?.sessions }}</dd>
             <dt>Helped requests</dt>
             <dd>{{ data.metrics?.helped }}</dd>
-            <dt>Average wait (minutes)</dt>
+            <dt>Average wait</dt>
             <dd>
               {{
                 data.metrics?.avgWaitMinutes == null
                   ? "Unavailable"
-                  : Number(data.metrics.avgWaitMinutes).toFixed(1)
+                  : Number(data.metrics.avgWaitMinutes).toFixed(1) + " min"
               }}
             </dd>
-            <dt>P90 wait (minutes)</dt>
+            <dt>P90 wait</dt>
             <dd>
               {{
                 data.metrics?.p90WaitMinutes == null
                   ? "Unavailable"
-                  : Number(data.metrics.p90WaitMinutes).toFixed(1)
+                  : Number(data.metrics.p90WaitMinutes).toFixed(1) + " min"
               }}
             </dd>
-            <dt>Recorded help (minutes)</dt>
+            <dt>Recorded help</dt>
             <dd>
               {{ Number(data.metrics?.recordedHelpMinutes || 0).toFixed(1) }}
+              min
             </dd>
             <dt>Feedback responses</dt>
             <dd>{{ data.metrics?.feedbackCount }}</dd>
-            <dt>Reported workload (hours)</dt>
-            <dd>{{ Number(data.workload?.totalHours || 0).toFixed(1) }}</dd>
+            <dt>Reported workload</dt>
+            <dd>
+              {{ Number(data.workload?.totalHours || 0).toFixed(1) }} hours
+            </dd>
+          </dl>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-heading"><h2>Staffing Budget</h2></div>
+        <div class="panel-body">
+          <dl>
+            <dt>Approved</dt>
+            <dd>{{ data.budget?.approvedBudget ?? "Unavailable" }}</dd>
+            <dt>Committed</dt>
+            <dd>{{ data.budget?.committedBudget ?? "Unavailable" }}</dd>
           </dl>
           <p class="muted">
-            Queue activity is not the entire teaching workload. Recorded help
-            time is not a measure of payroll hours or an individual performance
-            rating.
-          </p>
-        </div>
-      </section>
-      <section class="panel">
-        <div class="panel-heading"><h2>Evidence Coverage</h2></div>
-        <div class="panel-body">
-          <ul>
-            <li
-              v-for="(item, index) in data.missingEvidence || []"
-              :key="index"
-            >
-              {{ item }}
-            </li>
-          </ul>
-          <p v-if="!data.missingEvidence?.length">
-            No additional evidence gaps were flagged by the available checks.
-          </p>
-          <p class="notice">
-            Low observed queue use alone does not justify fewer assistants.
-            Required attendance, grading, labs, discussions, preparation, and
-            peak demand must remain covered.
-          </p>
-        </div>
-      </section>
-      <section class="panel">
-        <div class="panel-heading"><h2>Budget Scenarios</h2></div>
-        <div class="panel-body">
-          <p class="muted">
-            Metrics and budget totals cover all matching records. Scenario
-            details currently include
             {{ data.budget?.opportunities?.length || 0 }} of
-            {{ data.pagination?.totals?.opportunities || 0 }} opportunities.
-          </p>
-          <p>
-            Committed budget:
-            {{ data.budget?.committedBudget ?? "Unavailable" }}
+            {{ data.pagination?.totals?.opportunities || 0 }} positions shown
           </p>
           <article
             v-for="(item, index) in data.budget?.scenarios || []"
             :key="index"
             class="opportunity-card"
           >
-            <h3>{{ item.name || item.label || `Scenario ${index + 1}` }}</h3>
-            <dl>
-              <template v-for="(value, key) in item" :key="key"
-                ><dt>{{ staffingState(key) }}</dt>
-                <dd>
-                  {{
-                    typeof value === "object" ? JSON.stringify(value) : value
-                  }}
-                </dd></template
-              >
-            </dl>
+            <h3>
+              {{ opportunityTitles.get(item.opportunityId) || "Position" }} ·
+              {{ item.positions }} assistant(s)
+            </h3>
+            <p>
+              {{ item.weeklyHours }} hours/week · Estimated cost
+              {{ Number(item.estimatedCost || 0).toFixed(2) }}
+            </p>
+            <span class="status">{{
+              item.budgetCovered ? "Within budget" : "Exceeds budget"
+            }}</span>
           </article>
           <p v-if="!data.budget?.scenarios?.length" class="empty">
-            No cost scenarios are available for this term.
+            No budget scenarios yet.
           </p>
         </div>
       </section>
@@ -163,7 +115,7 @@ const { data, error, refresh, pending } = await useStaffingPagedRecord(
         kind="term_review"
         :term-id="termId"
         :target-id="courseId"
-        title="Course Improvement Draft Assistance"
+        title="Course Suggestions"
       />
     </template>
   </StaffingShell>

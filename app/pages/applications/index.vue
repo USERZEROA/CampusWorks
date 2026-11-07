@@ -25,10 +25,7 @@ const titleOf = (item: any) =>
 useIntervalRefresh(refresh);
 </script>
 <template>
-  <StaffingShell
-    title="My Applications"
-    subtitle="Track your submissions, respond to offers, and open your active course or research workspace."
-  >
+  <StaffingShell title="My Applications">
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load your applications.") }}
     </p>
@@ -111,13 +108,8 @@ useIntervalRefresh(refresh);
       </div>
     </section>
     <section v-if="!error" class="panel">
-      <div class="panel-heading"><h2>Appointments and Workspaces</h2></div>
+      <div class="panel-heading"><h2>Appointments</h2></div>
       <div class="panel-body">
-        <p class="muted">
-          Access starts only after acceptance, required clearance, and the
-          appointment start date. It ends when the appointment expires, is
-          suspended, or is ended.
-        </p>
         <article
           v-for="item in data?.myAppointments || []"
           :key="item.id"
@@ -141,13 +133,6 @@ useIntervalRefresh(refresh);
             :to="`/courses/${item.courseId}/ta`"
             data-testid="appointment-workspace"
             >Open TA Queue</NuxtLink
-          >
-          <NuxtLink
-            v-if="item.status === 'active' && item.projectId"
-            class="button"
-            :to="`/projects/${item.projectId}`"
-            data-testid="appointment-workspace"
-            >Open Research Workspace</NuxtLink
           >
         </article>
         <p v-if="!data?.myAppointments?.length" class="empty">

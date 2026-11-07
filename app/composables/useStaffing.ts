@@ -1,5 +1,17 @@
 import type { Ref, WatchSource } from "vue";
 
+export type StaffingCapabilities = {
+  viewer: {
+    canManageStaffing: boolean;
+    canApplyStaffing: boolean;
+    canBrowseStaffing: boolean;
+    isGlobalAdmin: boolean;
+  };
+  currentCycle: any;
+};
+export const useStaffingCapabilities = () =>
+  useState<StaffingCapabilities | null>("staffing-capabilities", () => null);
+
 export const staffingId = (value: any): string =>
   String(value?.id || value?._id || "");
 export const staffingDate = (value: any): string =>
@@ -27,7 +39,11 @@ export function useStaffingPagedRecord(
   } = {},
 ) {
   const requestFetch = useRequestFetch();
+  const capabilities = useStaffingCapabilities();
   const pageCount = useState<number>(`${key}-page-count`, () => 1);
+  const previousScope = useState<string | null>(`${key}-scope`, () => null);
+  const responseScope = (value: any) =>
+    String(value.termId ?? value.currentCycle?.termId ?? "");
   const state = useAsyncData<any>(
     key,
     async () => {
@@ -37,7 +53,6 @@ export function useStaffingPagedRecord(
       const names = [
         "terms",
         "courses",
-        "projects",
         "opportunities",
         "myApplications",
         "myAppointments",
@@ -47,7 +62,6 @@ export function useStaffingPagedRecord(
         "appointments",
         "offers",
         "notifications",
-        "entries",
       ];
       const merge = (
         left: any[] = [],
@@ -62,6 +76,25 @@ export function useStaffingPagedRecord(
         const current = await requestFetch<any>(url, {
           query: { ...query, page },
         });
+        const currentScope = responseScope(current);
+        if (
+          page === 1 &&
+          previousScope.value !== null &&
+          previousScope.value !== currentScope
+        ) {
+          previousScope.value = currentScope;
+          pageCount.value = 1;
+          return current;
+        }
+        if (result && responseScope(result) !== currentScope) {
+          pageCount.value = 1;
+          const restarted = await requestFetch<any>(url, {
+            query: { ...query, page: 1 },
+          });
+          previousScope.value = responseScope(restarted);
+          return restarted;
+        }
+        previousScope.value = currentScope;
         if (!result) result = current;
         else {
           const previous = result;
@@ -115,6 +148,17 @@ export function useStaffingPagedRecord(
     { watch: options.watch },
   );
   guardStaffingAccess(state.data, state.error);
+  watch(
+    state.data,
+    (value) => {
+      if (value?.viewer && value.currentCycle)
+        capabilities.value = {
+          viewer: value.viewer,
+          currentCycle: value.currentCycle,
+        };
+    },
+    { immediate: true },
+  );
   return state;
 }
 export function guardStaffingAccess(data: Ref<any>, error: Ref<any>) {
@@ -126,13 +170,15 @@ export function guardStaffingAccess(data: Ref<any>, error: Ref<any>) {
     (value: any) => {
       const status =
         value?.statusCode || value?.response?.status || value?.data?.statusCode;
-      if (status !== 401 && status !== 403) return;
+      if (status !== 401 && status !== 403 && status !== 404) return;
       data.value = null;
       if (status === 401) {
         currentUser.value = null;
         authError.value = "Your session expired. Please sign in again.";
         if (import.meta.client)
           nuxtApp.runWithContext(() => navigateTo("/login", { replace: true }));
+      } else {
+        nuxtApp.runWithContext(() => navigateTo("/courses", { replace: true }));
       }
     },
     { immediate: true },

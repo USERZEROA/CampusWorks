@@ -1,11 +1,38 @@
 <script setup lang="ts">
 const id = String(useRoute().params.id);
+const app = useNuxtApp();
+const access = useStaffingCapabilities();
 const requestFetch = useRequestFetch();
 const { data, error, refresh } = await useStaffingPagedRecord(
   `staffing-opportunity-${id}`,
   `/api/staffing/opportunities/${id}`,
 );
 const opportunity = computed(() => data.value?.opportunity);
+if (data.value && !data.value.canManage)
+  await app.runWithContext(() => navigateTo("/courses", { replace: true }));
+if ([403, 404].includes((error.value as any)?.statusCode))
+  await app.runWithContext(() => navigateTo("/courses", { replace: true }));
+watch(
+  () => data.value?.canManage,
+  (allowed) => {
+    if (allowed === false)
+      app.runWithContext(() => navigateTo("/courses", { replace: true }));
+  },
+  { immediate: true },
+);
+const currentCycle = computed(
+  () => data.value?.currentCycle || access.value?.currentCycle,
+);
+const canReview = computed(
+  () =>
+    currentCycle.value?.canReview &&
+    opportunity.value?.termId === currentCycle.value.termId,
+);
+const canPublish = computed(
+  () =>
+    currentCycle.value?.isOpen &&
+    opportunity.value?.termId === currentCycle.value.termId,
+);
 const { busy, message, failure, run } = useStaffingMutation(refresh);
 const keys = new Map<string, string>();
 const reason = ref("");
@@ -37,7 +64,7 @@ async function select(candidate: any) {
           idempotencyKey: keys.get(key),
         },
       }),
-    "Candidate selected and offer issued. Other reviewers will see the updated appointment availability.",
+    "Offer sent.",
   );
   if (failure.value) await refresh();
 }
@@ -49,7 +76,8 @@ useIntervalRefresh(refresh);
 <template>
   <StaffingShell
     :title="opportunity?.title || 'Opportunity Review'"
-    subtitle="Review submitted evidence and make an explicit selection. Current availability is rechecked by the server."
+    back-to="/staffing"
+    back-label="Recruitment"
   >
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to open this review.") }}
@@ -84,13 +112,17 @@ useIntervalRefresh(refresh);
           </p>
           <div class="actions">
             <NuxtLink
-              v-if="(opportunity.status || opportunity.state) === 'draft'"
+              v-if="
+                canPublish &&
+                (opportunity.status || opportunity.state) === 'draft'
+              "
               class="button secondary"
               :to="`/staffing/edit?id=${id}`"
               data-testid="opportunity-edit"
               >Edit draft requirements</NuxtLink
             ><button
               v-if="
+                canPublish &&
                 ['draft', 'applications_closed'].includes(
                   opportunity.status || opportunity.state,
                 )
@@ -100,7 +132,7 @@ useIntervalRefresh(refresh);
                 command(
                   `/api/staffing/opportunities/${id}/publish`,
                   {},
-                  'Publication requested. The current approval status is shown above.',
+                  'Publication requested.',
                 )
               "
               data-testid="opportunity-publish"
@@ -125,8 +157,8 @@ useIntervalRefresh(refresh);
             ><NuxtLink
               v-if="opportunity.courseId"
               class="button secondary"
-              :to="`/courses/${opportunity.courseId}/admin`"
-              >Course Admin</NuxtLink
+              :to="`/courses/${opportunity.courseId}/review`"
+              >Course review</NuxtLink
             >
           </div>
         </div>
@@ -134,13 +166,6 @@ useIntervalRefresh(refresh);
       <section class="panel">
         <div class="panel-heading"><h2>Applications and Availability</h2></div>
         <div class="panel-body">
-          <p class="notice">
-            A shortlist does not reserve a candidate. The first successfully
-            committed selection reserves the candidate for this term and any
-            overlapping appointment dates across terms. Half appointments cannot
-            be combined. Competing selections receive a conflict and refresh the
-            list.
-          </p>
           <div
             class="table-scroll"
             tabindex="0"
@@ -192,7 +217,7 @@ useIntervalRefresh(refresh);
                     </p>
                   </td>
                   <td>
-                    <div class="actions">
+                    <div v-if="canReview" class="actions">
                       <button
                         class="secondary"
                         :disabled="
@@ -350,6 +375,7 @@ useIntervalRefresh(refresh);
         </div>
       </section>
       <AiAssistance
+        v-if="canReview"
         kind="candidate_fit"
         :target-id="id"
         :authorized-targets="authorizedCandidateTargets"

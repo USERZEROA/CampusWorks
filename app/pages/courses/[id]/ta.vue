@@ -491,7 +491,6 @@ const goAnalytics = () => {
         </div>
       </div>
     </header>
-    <StaffingNavigation />
 
     <main
       :aria-busy="busyActions"

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 const navigationApp = useNuxtApp();
 const capturedUser = useAuthUser();
 const navigateWithContext = (target: string, options?: any) =>
@@ -891,7 +891,7 @@ const updateRole = async (
       });
       roleNotice.value =
         result.role !== result.manualRole
-          ? `The manual role for ${email} is now ${result.manualRole}. Their active TA appointment still grants TA access. Suspend or end that appointment in Staffing to remove its automatic grant.`
+          ? `The manual role for ${email} is now ${result.manualRole}. Their TA appointment still grants access.`
           : `The manual role for ${email} is now ${result.manualRole}.`;
       await refreshNuxtData(`course-admin-${courseId}`);
     } catch (e: any) {
@@ -1007,7 +1007,6 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </header>
-    <StaffingNavigation />
 
     <main
       :aria-busy="busyActions"
@@ -1075,9 +1074,8 @@ onBeforeUnmount(() => {
       </section>
 
       <p v-if="hasMoreData" class="pagination-note" role="status">
-        Charts and CSV currently use {{ rawHelpSessions.length }} of
-        {{ data?.pagination?.totals.helpSessions }} history rows. Load more
-        records for a broader view.
+        Showing {{ rawHelpSessions.length }} of
+        {{ data?.pagination?.totals.helpSessions }} history rows.
         <button
           type="button"
           :disabled="loadingMore"
@@ -1087,15 +1085,7 @@ onBeforeUnmount(() => {
           {{ loadingMore ? "Loading…" : "Load more records" }}
         </button>
       </p>
-      <p class="analytics-note">
-        Dates use your local time zone. Assistance observations are not paid
-        teaching hours. Helper charts credit each participating helper once per
-        request and use that helper's recorded intervals; shared requests can
-        appear under more than one helper.
-        <NuxtLink :to="`/courses/${courseId}/review`"
-          >Open staffing and term review</NuxtLink
-        >
-      </p>
+
       <!-- Analytics -->
       <section class="panel">
         <div class="panel-header">TA Performance &amp; Queue Analytics</div>
@@ -1603,11 +1593,9 @@ onBeforeUnmount(() => {
         <div class="panel-header">Enrollments &amp; Roles</div>
         <div class="panel-body">
           <p class="role-guidance">
-            These controls manage independent course enrollments. Setting a
-            manual role to Student does not remove access from an active TA
-            appointment. Use <NuxtLink to="/staffing">Staffing</NuxtLink> to
-            suspend or end the appointment. Independent manual staff grants
-            remain in place when an appointment ends.
+            Appointment access is managed from
+            <NuxtLink to="/courses">Home</NuxtLink> separately from manual
+            roles.
           </p>
           <p v-if="roleNotice" class="role-guidance" role="status">
             {{ roleNotice }}
