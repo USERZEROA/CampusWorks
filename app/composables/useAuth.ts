@@ -20,32 +20,37 @@ export const useAuthError = () => useState<string>("auth-error", () => "");
  */
 export async function fetchAuthUser(): Promise<AuthUser | null> {
   const requestFetch = useRequestFetch();
+  const authError = useAuthError();
+  const currentUser = useAuthUser();
   try {
     const res = await requestFetch<{ user: AuthUser }>("/api/auth/me");
-    useAuthError().value = "";
+    authError.value = "";
     return res.user;
   } catch (error: any) {
     if ((error?.statusCode || error?.response?.status) === 401) return null;
-    useAuthError().value = apiErrorMessage(
+    authError.value = apiErrorMessage(
       error,
       "The session could not be checked. Please retry when the connection is available.",
     );
-    return useAuthUser().value;
+    return currentUser.value;
   }
 }
 
 /** End the session and return to the login page. */
 export async function signOut() {
+  const nuxtApp = useNuxtApp();
+  const currentUser = useAuthUser();
+  const authError = useAuthError();
   const signingOut = useState("signing-out", () => false);
   if (signingOut.value) return;
   signingOut.value = true;
-  useAuthError().value = "";
+  authError.value = "";
   try {
     await $fetch("/api/auth/logout", { method: "POST" });
-    useAuthUser().value = null;
-    await navigateTo("/login", { replace: true });
+    currentUser.value = null;
+    await nuxtApp.runWithContext(() => navigateTo("/login", { replace: true }));
   } catch (error) {
-    useAuthError().value = apiErrorMessage(
+    authError.value = apiErrorMessage(
       error,
       "Sign out could not be confirmed. Your current session is still open; please retry.",
     );

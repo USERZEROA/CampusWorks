@@ -5,6 +5,7 @@ const requestFetch = useRequestFetch();
 const { data, error, refresh } = await useAsyncData<any>(`project-${id}`, () =>
   requestFetch(`/api/staffing/projects/${id}/workspace`),
 );
+guardStaffingAccess(data, error);
 const { busy, message, failure, run } = useStaffingMutation(refresh);
 const entry = reactive({ kind: "update", text: "" });
 async function post() {
@@ -36,7 +37,7 @@ useIntervalRefresh(refresh);
     <p v-if="message" class="notice" :class="{ error: failure }" role="status">
       {{ message }}
     </p>
-    <template v-if="data?.project"
+    <template v-if="data?.project && !error"
       ><p class="preserve-lines">{{ data.project.description }}</p>
       <p class="notice">
         Research access does not grant a teaching role or permission to operate

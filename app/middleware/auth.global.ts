@@ -8,23 +8,26 @@
  */
 export default defineNuxtRouteMiddleware(async (to) => {
   const user = useAuthUser();
+  const nuxtApp = useNuxtApp();
+  const redirect = (target: string) =>
+    nuxtApp.runWithContext(() => navigateTo(target));
 
   // Always re-check on /login so an expired session cannot cause a redirect loop.
   user.value = await fetchAuthUser();
 
   if (to.path === "/login") {
-    return user.value ? navigateTo("/courses") : undefined;
+    return user.value ? redirect("/courses") : undefined;
   }
 
   if (!user.value) {
-    return navigateTo("/login");
+    return redirect("/login");
   }
 
   if (to.path === "/") {
-    return navigateTo("/courses");
+    return redirect("/courses");
   }
 
   if (to.path.startsWith("/admin") && !user.value.isGlobalAdmin) {
-    return navigateTo("/courses");
+    return redirect("/courses");
   }
 });

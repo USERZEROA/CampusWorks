@@ -1,5 +1,9 @@
 <script setup lang="ts">
 const props = defineProps<{ opportunityId?: string }>();
+const nuxtApp = useNuxtApp();
+const currentUser = useAuthUser();
+const authError = useAuthError();
+const requestFetch = useRequestFetch();
 const { data, error } = await useStaffingOverview("staffing-create");
 const { busy, message, failure, run } = useStaffingMutation();
 const form = reactive({
@@ -39,21 +43,57 @@ const courses = computed(() =>
   ),
 );
 const originalVersion = ref<number | undefined>();
+const draftEditable = ref(!props.opportunityId);
+const editorError = ref("");
 if (props.opportunityId) {
-  const current = await useRequestFetch()<any>(
-    `/api/staffing/opportunities/${props.opportunityId}`,
-  );
-  const item = current.opportunity;
-  Object.assign(form, item);
-  originalVersion.value = item.version;
-  const local = (value: string) => {
-    const d = new Date(value);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}T${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-  };
-  form.appointmentStart = local(item.appointmentStart);
-  form.appointmentEnd = local(item.appointmentEnd);
-  form.applicationDeadline = local(item.applicationDeadline);
+  try {
+    const current = await requestFetch<any>(
+      `/api/staffing/opportunities/${props.opportunityId}`,
+    );
+    draftEditable.value =
+      !!current.canManage && current.opportunity?.status === "draft";
+    if (!draftEditable.value)
+      editorError.value =
+        "Only an authorized reviewer may edit this opportunity while it is a draft.";
+    const item = current.opportunity;
+    if (draftEditable.value) {
+      Object.assign(form, item);
+      originalVersion.value = item.version;
+      const local = (value: string) => {
+        const d = new Date(value);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}T${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+      };
+      form.appointmentStart = local(item.appointmentStart);
+      form.appointmentEnd = local(item.appointmentEnd);
+      form.applicationDeadline = local(item.applicationDeadline);
+    }
+  } catch (error: any) {
+    draftEditable.value = false;
+    editorError.value = apiErrorMessage(
+      error,
+      "This opportunity draft is unavailable.",
+    );
+    if ((error?.statusCode || error?.response?.status) === 401) {
+      currentUser.value = null;
+      authError.value = "Your session expired. Please sign in again.";
+      await nuxtApp.runWithContext(() =>
+        navigateTo("/login", { replace: true }),
+      );
+    }
+  }
 }
+const requiredApproval = computed(
+  () =>
+    (data.value?.terms || []).find((term: any) => term.id === form.termId)
+      ?.requiresApproval !== false,
+);
+watch(
+  requiredApproval,
+  (required) => {
+    if (required) form.approvalRequired = true;
+  },
+  { immediate: true },
+);
 const iso = (value: string) => (value ? new Date(value).toISOString() : "");
 async function save() {
   const result = await run(
@@ -78,7 +118,9 @@ async function save() {
     "Opportunity draft created.",
   );
   if (result?.opportunity)
-    await navigateTo(`/staffing/${result.opportunity.id}`);
+    await nuxtApp.runWithContext(() =>
+      navigateTo(`/staffing/${result.opportunity.id}`),
+    );
 }
 function addQuestion() {
   form.questions.push({
@@ -101,13 +143,21 @@ function addQuestion() {
     <p v-if="message" class="notice" :class="{ error: failure }" role="status">
       {{ message }}
     </p>
+    <p v-if="editorError" class="notice error" role="alert">
+      {{ editorError }}
+    </p>
     <p v-if="!data?.terms?.length" class="notice">
       An administrator must
       <NuxtLink to="/admin/staffing">create a term</NuxtLink> before you can
       publish an opportunity.
     </p>
     <form
-      v-if="data?.viewer?.canManageStaffing"
+      v-if="
+        data?.viewer?.canManageStaffing &&
+        draftEditable &&
+        !error &&
+        !editorError
+      "
       @submit.prevent="save"
       class="panel"
       :aria-busy="busy"
@@ -427,8 +477,12 @@ function addQuestion() {
             /></label>
           </div>
           <label class="check"
-            ><input v-model="form.approvalRequired" type="checkbox" />Department
-            approval required before publication</label
+            ><input
+              v-model="form.approvalRequired"
+              type="checkbox"
+              :disabled="requiredApproval"
+            />Department approval required before publication (the selected term
+            may require it)</label
           >
           <p class="muted">
             The budget must cover all published positions for the appointment

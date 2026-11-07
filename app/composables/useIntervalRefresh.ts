@@ -1,4 +1,5 @@
 export function useIntervalRefresh(refresh: () => Promise<any>, delay = 5000) {
+  const nuxtApp = useNuxtApp();
   let timer: ReturnType<typeof setInterval> | undefined;
   let refreshing = false;
   onMounted(() => {
@@ -6,7 +7,7 @@ export function useIntervalRefresh(refresh: () => Promise<any>, delay = 5000) {
       if (document.hidden || refreshing) return;
       refreshing = true;
       try {
-        await refresh();
+        await nuxtApp.runWithContext(refresh);
       } finally {
         refreshing = false;
       }

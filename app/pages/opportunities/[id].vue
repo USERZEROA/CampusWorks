@@ -1,10 +1,15 @@
 <script setup lang="ts">
+const navigationApp = useNuxtApp();
+const capturedUser = useAuthUser();
+const navigateWithContext = (target: string, options?: any) =>
+  navigationApp.runWithContext(() => navigateTo(target, options));
 const id = String(useRoute().params.id);
 const requestFetch = useRequestFetch();
 const { data, error, refresh } = await useAsyncData<any>(
   `opportunity-${id}`,
   () => requestFetch(`/api/staffing/opportunities/${id}`),
 );
+guardStaffingAccess(data, error);
 const opportunity = computed(() => data.value?.opportunity);
 const { busy, message, failure, run } = useStaffingMutation(refresh);
 async function apply() {
@@ -16,7 +21,9 @@ async function apply() {
     "Application draft created.",
   );
   if (result?.application)
-    await navigateTo(`/applications/${staffingId(result.application)}`);
+    await navigateWithContext(
+      `/applications/${staffingId(result.application)}`,
+    );
 }
 </script>
 <template>
@@ -27,7 +34,7 @@ async function apply() {
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load this opportunity.") }}
     </p>
-    <template v-if="opportunity">
+    <template v-if="opportunity && !error">
       <p
         v-if="message"
         class="notice"

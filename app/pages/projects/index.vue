@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const navigationApp = useNuxtApp();
+const capturedUser = useAuthUser();
+const navigateWithContext = (target: string, options?: any) =>
+  navigationApp.runWithContext(() => navigateTo(target, options));
 const { data, error, refresh } = await useStaffingOverview("research-projects");
 const { busy, message, failure, run } = useStaffingMutation(refresh);
 const project = reactive({
@@ -15,7 +19,8 @@ async function create() {
       }),
     "Research project created.",
   );
-  if (result?.project) await navigateTo(`/projects/${result.project.id}`);
+  if (result?.project)
+    await navigateWithContext(`/projects/${result.project.id}`);
 }
 </script>
 <template>

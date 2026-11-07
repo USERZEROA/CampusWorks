@@ -65,7 +65,7 @@ useIntervalRefresh(refresh);
     >
       {{ message }}
     </p>
-    <section class="panel">
+    <section v-if="!error" class="panel">
       <div class="panel-heading"><h2>Academic Terms</h2></div>
       <div class="panel-body">
         <form @submit.prevent="createTerm" :aria-busy="busy">
@@ -102,7 +102,7 @@ useIntervalRefresh(refresh);
         </ul>
       </div>
     </section>
-    <section class="panel">
+    <section v-if="!error" class="panel">
       <div class="panel-heading"><h2>Publication Approvals</h2></div>
       <div class="panel-body">
         <label
@@ -145,7 +145,7 @@ useIntervalRefresh(refresh);
         </p>
       </div>
     </section>
-    <section class="panel">
+    <section v-if="!error" class="panel">
       <div class="panel-heading"><h2>Appointment Clearance</h2></div>
       <div class="panel-body">
         <p class="notice">

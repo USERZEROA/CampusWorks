@@ -9,6 +9,8 @@ const props = defineProps<{
   };
 }>();
 const loading = ref(false);
+const nuxtApp = useNuxtApp();
+const count = useState<number>(`${props.cacheKey}-page-count`, () => 1);
 const error = ref("");
 const hasMore = computed(() =>
   typeof props.pagination?.hasMore === "object"
@@ -19,10 +21,9 @@ async function load() {
   if (loading.value) return;
   loading.value = true;
   error.value = "";
-  const count = useState<number>(`${props.cacheKey}-page-count`, () => 1);
   count.value++;
   try {
-    await refreshNuxtData(props.cacheKey);
+    await nuxtApp.runWithContext(() => refreshNuxtData(props.cacheKey));
   } catch (failure) {
     count.value--;
     error.value = apiErrorMessage(

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const navigationApp = useNuxtApp();
+const capturedUser = useAuthUser();
+const navigateWithContext = (target: string, options?: any) =>
+  navigationApp.runWithContext(() => navigateTo(target, options));
 import { vAccessibleDialog } from "../../../directives/accessibleDialog";
 const busyActions = ref(false);
 
@@ -63,19 +67,19 @@ const { data, error } = await useAsyncData<CourseApiResult>(
 if (error.value) {
   const status = (error.value as any).statusCode;
   if (status === 401) {
-    useAuthUser().value = null;
-    await navigateTo("/login");
+    capturedUser.value = null;
+    await navigateWithContext("/login");
   } else {
-    await navigateTo("/courses");
+    await navigateWithContext("/courses");
   }
 }
 
 watch(error, (value) => {
   const status = (value as any)?.statusCode;
   if (status === 401) {
-    useAuthUser().value = null;
-    navigateTo("/login");
-  } else if (status === 403) navigateTo("/courses");
+    capturedUser.value = null;
+    navigateWithContext("/login");
+  } else if (status === 403) navigateWithContext("/courses");
 });
 const course = computed(() => data.value);
 const user = computed(() => course.value?.user || { email: "", name: "" });
@@ -87,10 +91,10 @@ const isStaff = computed(() => !!course.value?.isStaff);
 const isEnrolled = computed(() => !!course.value?.enrolled);
 
 if (isStaff.value) {
-  await navigateTo(`/courses/${courseId}/ta`, { replace: true });
+  await navigateWithContext(`/courses/${courseId}/ta`, { replace: true });
 }
 watch(isStaff, (value) => {
-  if (value) navigateTo(`/courses/${courseId}/ta`, { replace: true });
+  if (value) navigateWithContext(`/courses/${courseId}/ta`, { replace: true });
 });
 
 /**
@@ -407,7 +411,7 @@ const goBack = () => {
 };
 
 const goHelp = () => {
-  navigateTo("/help");
+  navigateWithContext("/help");
 };
 </script>
 

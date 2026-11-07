@@ -18,7 +18,7 @@ useIntervalRefresh(refresh);
       <NuxtLink to="/opportunities">browse opportunities</NuxtLink> and manage
       your own applications.
     </p>
-    <template v-if="data?.viewer?.canManageStaffing">
+    <template v-if="data?.viewer?.canManageStaffing && !error">
       <div class="actions">
         <NuxtLink
           to="/staffing/new"

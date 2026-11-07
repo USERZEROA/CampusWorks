@@ -48,7 +48,7 @@ useIntervalRefresh(refresh);
     >
       {{ message }}
     </p>
-    <template v-if="opportunity && data.canManage">
+    <template v-if="opportunity && data.canManage && !error">
       <section class="panel">
         <div class="panel-heading"><h2>Publication and Capacity</h2></div>
         <div class="panel-body">

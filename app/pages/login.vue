@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const navigationApp = useNuxtApp();
+const capturedUser = useAuthUser();
+const navigateWithContext = (target: string, options?: any) =>
+  navigationApp.runWithContext(() => navigateTo(target, options));
 import { ref, computed, onMounted } from "vue";
 import { navigateTo, useFetch } from "#app";
 
@@ -56,9 +60,11 @@ const loginAs = async (as: MockRole, accountEmail?: string) => {
       method: "POST",
       body,
     });
-    useAuthUser().value = res.user;
+    capturedUser.value = res.user;
 
-    await navigateTo(res.user.isGlobalAdmin ? "/admin/courses" : "/courses");
+    await navigateWithContext(
+      res.user.isGlobalAdmin ? "/admin/courses" : "/courses",
+    );
   } catch (e: any) {
     error.value = apiErrorMessage(e, "Login failed");
   } finally {
@@ -71,7 +77,7 @@ const loginWithGitlab = async () => {
     error.value = "";
     loading.value = "gitlab";
 
-    await navigateTo("/api/auth/gitlab/login", {
+    await navigateWithContext("/api/auth/gitlab/login", {
       external: true,
     });
   } catch (e: any) {

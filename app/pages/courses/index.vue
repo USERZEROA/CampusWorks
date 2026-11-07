@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const navigationApp = useNuxtApp();
+const capturedUser = useAuthUser();
+const navigateWithContext = (target: string, options?: any) =>
+  navigationApp.runWithContext(() => navigateTo(target, options));
 const busyActions = ref(false);
 
 import { computed, ref, watch, onMounted, onBeforeUnmount } from "vue";
@@ -42,8 +46,8 @@ const { data, error } = await useAsyncData<CoursesApiResult>(
 if (error.value) {
   const status = (error.value as any).statusCode;
   if (status === 401) {
-    useAuthUser().value = null;
-    await navigateTo("/login");
+    capturedUser.value = null;
+    await navigateWithContext("/login");
   }
 }
 
@@ -153,11 +157,11 @@ onBeforeUnmount(() => {
 const logout = signOut;
 
 const goHelp = () => {
-  navigateTo("/help");
+  navigateWithContext("/help");
 };
 
 const goAdminConsole = () => {
-  navigateTo("/admin/courses");
+  navigateWithContext("/admin/courses");
 };
 </script>
 

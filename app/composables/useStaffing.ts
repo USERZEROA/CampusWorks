@@ -1,3 +1,5 @@
+import type { Ref } from "vue";
+
 export const staffingId = (value: any): string =>
   String(value?.id || value?._id || "");
 export const staffingDate = (value: any): string =>
@@ -19,7 +21,7 @@ export function useStaffingOverview(key = "staffing-overview") {
 export function useStaffingPagedRecord(key: string, url: string) {
   const requestFetch = useRequestFetch();
   const pageCount = useState<number>(`${key}-page-count`, () => 1);
-  return useAsyncData<any>(key, async () => {
+  const state = useAsyncData<any>(key, async () => {
     let result: any;
     const names = [
       "terms",
@@ -33,6 +35,7 @@ export function useStaffingPagedRecord(key: string, url: string) {
       "applications",
       "appointments",
       "offers",
+      "notifications",
     ];
     const merge = (left: any[] = [], right: any[] = []) => [
       ...new Map(
@@ -69,8 +72,34 @@ export function useStaffingPagedRecord(key: string, url: string) {
     }
     return result;
   });
+  guardStaffingAccess(state.data, state.error);
+  return state;
+}
+export function guardStaffingAccess(data: Ref<any>, error: Ref<any>) {
+  const nuxtApp = useNuxtApp();
+  const currentUser = useAuthUser();
+  const authError = useAuthError();
+  watch(
+    error,
+    (value: any) => {
+      const status =
+        value?.statusCode || value?.response?.status || value?.data?.statusCode;
+      if (status !== 401 && status !== 403) return;
+      data.value = null;
+      if (status === 401) {
+        currentUser.value = null;
+        authError.value = "Your session expired. Please sign in again.";
+        if (import.meta.client)
+          nuxtApp.runWithContext(() => navigateTo("/login", { replace: true }));
+      }
+    },
+    { immediate: true },
+  );
 }
 export function useStaffingMutation(refresh?: () => Promise<any>) {
+  const nuxtApp = useNuxtApp();
+  const currentUser = useAuthUser();
+  const authError = useAuthError();
   const busy = ref(false);
   const message = ref("");
   const failure = ref(false);
@@ -86,6 +115,16 @@ export function useStaffingMutation(refresh?: () => Promise<any>) {
       return result;
     } catch (error: any) {
       failure.value = true;
+      const status =
+        error?.statusCode || error?.response?.status || error?.data?.statusCode;
+      if (status === 401) {
+        currentUser.value = null;
+        authError.value = "Your session expired. Please sign in again.";
+        await nuxtApp.runWithContext(() =>
+          navigateTo("/login", { replace: true }),
+        );
+        return null;
+      }
       message.value = apiErrorMessage(
         error,
         "The action could not be completed. Please refresh and try again.",

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const navigationApp = useNuxtApp();
+const capturedUser = useAuthUser();
+const navigateWithContext = (target: string, options?: any) =>
+  navigationApp.runWithContext(() => navigateTo(target, options));
 const busyActions = ref(false);
 
 import { computed, ref } from "vue";
@@ -38,8 +42,8 @@ const { data, error } = await useAsyncData<CoursesApiResult>(
 );
 
 if (error.value) {
-  useAuthUser().value = null;
-  await navigateTo("/login");
+  capturedUser.value = null;
+  await navigateWithContext("/login");
 }
 
 const user = computed(() => data.value?.user || null);
@@ -48,7 +52,7 @@ const user = computed(() => data.value?.user || null);
 const isAdmin = computed(() => !!user.value?.isGlobalAdmin);
 
 if (data.value && !isAdmin.value) {
-  await navigateTo("/courses");
+  await navigateWithContext("/courses");
 }
 
 const courses = computed<CourseRow[]>(() => data.value?.courses || []);
@@ -116,7 +120,7 @@ const deleteCourse = async (c: CourseRow) => {
 const logout = signOut;
 
 const goHelp = () => {
-  navigateTo("/help");
+  navigateWithContext("/help");
 };
 </script>
 

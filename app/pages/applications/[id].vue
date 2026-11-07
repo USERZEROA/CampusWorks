@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const navigationApp = useNuxtApp();
+const capturedUser = useAuthUser();
+const navigateWithContext = (target: string, options?: any) =>
+  navigationApp.runWithContext(() => navigateTo(target, options));
 const id = String(useRoute().params.id);
 const signedInUser = useAuthUser();
 const requestFetch = useRequestFetch();
@@ -6,6 +10,7 @@ const { data, error, refresh } = await useAsyncData<any>(
   `application-${id}`,
   () => requestFetch(`/api/staffing/applications/${id}`),
 );
+guardStaffingAccess(data, error);
 const application = computed(() => data.value?.application);
 const opportunity = computed(() => data.value?.opportunity);
 const offer = computed(() => data.value?.offer);
@@ -13,7 +18,7 @@ const appointment = computed(() => data.value?.appointment);
 const profile = reactive({
   firstName: "",
   lastName: "",
-  preferredEmail: useAuthUser().value?.email || "",
+  preferredEmail: capturedUser.value?.email || "",
   undergraduateMajors: "",
   department: "Computer Science",
   positionPreference: "either",
@@ -148,7 +153,7 @@ async function reloadApplication() {
     >
       {{ message }}
     </p>
-    <template v-if="application">
+    <template v-if="application && !error">
       <p class="muted">
         If another browser changes this application, refresh before saving.
         Refresh replaces unsaved local answers.

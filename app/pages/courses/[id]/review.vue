@@ -13,6 +13,7 @@ const { data, error, refresh } = await useAsyncData<any>(
     }),
   { watch: [termId] },
 );
+guardStaffingAccess(data, error);
 </script>
 <template>
   <StaffingShell
@@ -39,7 +40,7 @@ const { data, error, refresh } = await useAsyncData<any>(
         ><button class="secondary" @click="refresh()">Refresh review</button>
       </div>
     </section>
-    <template v-if="data"
+    <template v-if="data && !error"
       ><section class="panel">
         <div class="panel-heading"><h2>Recorded Course Activity</h2></div>
         <div class="panel-body">
@@ -132,6 +133,7 @@ const { data, error, refresh } = await useAsyncData<any>(
       </section>
       <AiAssistance
         kind="term_review"
+        :term-id="termId"
         :target-id="courseId"
         title="Course Improvement Draft Assistance"
       />

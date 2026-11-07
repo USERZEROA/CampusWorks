@@ -1,4 +1,8 @@
 <script setup lang="ts">
+const navigationApp = useNuxtApp();
+const capturedUser = useAuthUser();
+const navigateWithContext = (target: string, options?: any) =>
+  navigationApp.runWithContext(() => navigateTo(target, options));
 const busyActions = ref(false);
 
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
@@ -62,19 +66,19 @@ const { data, error } = await useAsyncData<CourseApiResult>(
 if (error.value) {
   const status = (error.value as any).statusCode;
   if (status === 401) {
-    useAuthUser().value = null;
-    await navigateTo("/login");
+    capturedUser.value = null;
+    await navigateWithContext("/login");
   } else {
-    await navigateTo("/courses");
+    await navigateWithContext("/courses");
   }
 }
 
 watch(error, (value) => {
   const status = (value as any)?.statusCode;
   if (status === 401) {
-    useAuthUser().value = null;
-    navigateTo("/login");
-  } else if (status === 403) navigateTo("/courses");
+    capturedUser.value = null;
+    navigateWithContext("/login");
+  } else if (status === 403) navigateWithContext("/courses");
 });
 const course = computed(() => data.value);
 const user = computed(() => course.value?.user || { email: "", name: "" });
@@ -86,11 +90,11 @@ const isStaff = computed(() => !!course.value?.isStaff);
 const isManager = computed(() => !!course.value?.isManager);
 
 if (course.value && !isStaff.value) {
-  await navigateTo(`/courses/${courseId}/student`, { replace: true });
+  await navigateWithContext(`/courses/${courseId}/student`, { replace: true });
 }
 watch(isStaff, (value) => {
   if (course.value && !value)
-    navigateTo(`/courses/${courseId}/student`, { replace: true });
+    navigateWithContext(`/courses/${courseId}/student`, { replace: true });
 });
 
 /**
@@ -426,7 +430,7 @@ const goBack = () => {
 };
 
 const goHelp = () => {
-  navigateTo("/help");
+  navigateWithContext("/help");
 };
 
 const goAnalytics = () => {

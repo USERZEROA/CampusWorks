@@ -3,8 +3,12 @@ const props = defineProps<{
   kind: "candidate_fit" | "cv_summary" | "opportunity_draft" | "term_review";
   targetId: string;
   title?: string;
+  termId?: string;
 }>();
 const busy = ref(false);
+const nuxtApp = useNuxtApp();
+const currentUser = useAuthUser();
+const authError = useAuthError();
 const message = ref(
   "AI assistance is awaiting provider configuration. All application and appointment actions work without AI.",
 );
@@ -17,7 +21,11 @@ async function requestAssistance() {
   try {
     const result = await staffingRequest<any>("/api/ai/tasks", {
       method: "POST",
-      body: { kind: props.kind, targetId: props.targetId },
+      body: {
+        kind: props.kind,
+        targetId: props.targetId,
+        termId: props.termId || undefined,
+      },
     });
     task.value = result.task;
     message.value =
@@ -25,8 +33,18 @@ async function requestAssistance() {
       (result.task?.status === "unconfigured"
         ? "No AI provider is configured. Your request is recorded; no private material was sent to a provider."
         : `Request status: ${result.task?.status || "pending"}.`);
-  } catch (error) {
+  } catch (error: any) {
     failed.value = true;
+    const status = error?.statusCode || error?.response?.status;
+    if (status === 401 || status === 403) task.value = null;
+    if (status === 401) {
+      currentUser.value = null;
+      authError.value = "Your session expired. Please sign in again.";
+      await nuxtApp.runWithContext(() =>
+        navigateTo("/login", { replace: true }),
+      );
+      return;
+    }
     message.value = apiErrorMessage(
       error,
       "Unable to request AI assistance. You can continue the workflow manually.",
