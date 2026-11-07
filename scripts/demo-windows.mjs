@@ -14,11 +14,13 @@
 
 import { execFileSync } from 'node:child_process'
 import { chromium } from '@playwright/test'
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { prepareStaffingDemo, staffingWindows } from './demo-staffing.mjs'
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000'
 const COURSE = process.env.DEMO_COURSE || 'cs101'
 
-const WINDOWS = [
+const WINDOWS = process.env.DEMO_LAYOUT === 'staffing' ? staffingWindows(COURSE) : [
   { label: 'TA User', as: 'ta', email: 'ta@example.com', path: `/courses/${COURSE}/ta` },
   { label: 'TA Two', as: 'ta', email: 'ta2@example.com', path: `/courses/${COURSE}/ta` },
   { label: 'Instructor', as: 'instructor', email: 'instructor@example.com', path: `/courses/${COURSE}/admin` },
@@ -57,6 +59,8 @@ if (!health?.ok) {
   process.exit(1)
 }
 
+if (process.env.DEMO_LAYOUT === 'staffing') await prepareStaffingDemo(BASE_URL, COURSE)
+
 const area = screenArea()
 const cols = 3
 const width = Math.floor(area.width / cols)
@@ -88,15 +92,27 @@ async function openWindow(win, index) {
   if (!res.ok()) throw new Error(`Demo login failed for ${win.email}: ${res.status()} ${await res.text()}`)
 
   const page = await context.newPage()
-  await page.goto(win.path)
+  const response = await page.goto(win.path)
+  if (response?.status() !== 200) throw new Error(`Demonstration page did not load for ${win.label}`)
+  await page.locator('main').waitFor({ state: 'visible' })
+  await page.locator('img.app-logo').evaluate(async image => {
+    if (!image.complete) await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = reject })
+    if (!image.naturalWidth) throw new Error('The Duke CS logo did not load')
+  })
+  if (new URL(page.url()).pathname !== win.path) throw new Error(`Unexpected demonstration destination for ${win.label}`)
   console.log(`  ${win.label.padEnd(14)} ${win.email.padEnd(24)} ${BASE_URL}${win.path}`)
 }
 
 console.log(`Opening ${WINDOWS.length} demo windows on ${BASE_URL}:`)
-for (const [i, win] of WINDOWS.entries()) {
-  await openWindow(win, i)
+try {
+  for (const [i, win] of WINDOWS.entries()) await openWindow(win, i)
+} catch (error) {
+  await Promise.allSettled(browsers.map(browser => browser.close()))
+  throw error
 }
 console.log('Ready. Close the windows (or press Ctrl+C) to end the demo.')
+mkdirSync('.cache', { recursive: true })
+writeFileSync('.cache/demo-windows-state.json', JSON.stringify({ pid: process.pid, readyAt: new Date().toISOString(), origin: BASE_URL, windows: WINDOWS }, null, 2))
 
 const closeAll = async () => {
   await Promise.allSettled(browsers.map((b) => b.close()))
@@ -106,4 +122,6 @@ process.on('SIGINT', closeAll)
 process.on('SIGTERM', closeAll)
 
 // Stay alive until every window has been closed.
-await Promise.all(browsers.map((b) => new Promise((resolve) => b.once('disconnected', resolve))))
+await Promise.all(browsers.map((browser) => browser.isConnected()
+  ? new Promise(resolve => browser.once('disconnected', resolve))
+  : Promise.resolve()))
