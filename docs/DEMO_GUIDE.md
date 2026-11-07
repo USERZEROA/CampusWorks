@@ -8,6 +8,8 @@ Use the [five-minute product pitch](ROADSHOW.md) for a project presentation. It 
 
 ## Prepare or open
 
+For a hands-free six-window presentation, use the [automatic lifecycle demo](AUTOMATED_DEMO.md). It clicks through recruitment, the same applicant's TA appointment, course work and closeout, then restores its own data and repeats. Stop an existing manual showcase before starting that separate loop.
+
 ```sh
 npm run demo:prepare
 npm run demo:showcase

@@ -75,6 +75,8 @@ Open the [offline screenshot gallery](docs/demo/index.html) for desktop/mobile v
 
 For a project showcase, follow the [five-minute product pitch](docs/ROADSHOW.md): one applicant's transition into course work, the department review and a measurable pilot proposal. A ninety-second version and evaluator answers are included.
 
+The [automatic six-window presentation](docs/AUTOMATED_DEMO.md) performs the complete lifecycle through real browser controls, foregrounds the acting role and repeats from an isolated baseline, with Pause/Resume and Stop controls.
+
 ## Configuration
 
 See [`.env.example`](.env.example) and [`server/utils/config.ts`](server/utils/config.ts).

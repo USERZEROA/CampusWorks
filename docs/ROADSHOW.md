@@ -2,6 +2,8 @@
 
 Audience: a project showcase. Lead with the connected product journey, visible user outcomes and an achievable pilot. Use the [offline presentation gallery](demo/index.html) alongside the live app; the [demonstration guide](DEMO_GUIDE.md) contains launch commands and role accounts.
 
+For an unattended presentation, the [automatic six-window lifecycle](AUTOMATED_DEMO.md) follows Alex from student applicant to appointed CS201 TA, course work, access removal and financial closeout, then repeats from a restored isolated baseline. Its actor and dataset are separate from Avery's manual rehearsal below.
+
 ## Product message
 
 **From application to appointment to student support.**
