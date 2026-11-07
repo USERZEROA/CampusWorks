@@ -20,6 +20,7 @@ async function releaseCommitments(db: Db, session: ClientSession, appointment: D
   await db.collection('staffingAppointments').updateOne({ id: appointment.id }, { $set: { status, endReason: reason, endedAt: new Date(), budgetStatus: retainBudget ? 'awaiting_settlement' : 'released', releasedBudget }, $inc: { version: 1 } }, { session })
   await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: 'released', releasedAt: new Date() }, $inc: { version: 1 } }, { session })
   await db.collection('staffingOffers').updateOne({ id: appointment.offerId, status: { $in: ['issued', 'accepted'] } }, { $set: { status: status === 'expired' ? 'expired' : 'rescinded', resolvedAt: new Date() } }, { session })
+  if (!appointment.acceptedAt) await db.collection('staffingApplications').updateOne({ id: appointment.applicationId, status: 'selected' }, { $set: { status: 'under_review', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
   await db.collection('staffingAiTasks').updateMany({ opportunityId: opportunity.id, status: 'completed' }, { $set: { status: 'stale' } }, { session })
   if (appointment.type === 'ta') {
     const manual = await db.collection('enrollments').findOne({ courseId: appointment.courseId, userEmail: appointment.applicantEmail, role: { $in: ['ta', 'instructor', 'admin'] } }, { session })
@@ -33,7 +34,7 @@ async function releaseCommitments(db: Db, session: ClientSession, appointment: D
 }
 
 export async function reconcileStaffing(db: Db, session: ClientSession, resource?: { courseId?: string; projectId?: string }) {
-  const filter: Document = { status: { $nin: terminalAppointments } }
+  const filter: Document = { status: { $nin: terminalAppointments }, $or: [{ endDate: { $lte: new Date() } }, { status: 'pending_start', startDate: { $lte: new Date() } }, { status: 'offered', offerExpiresAt: { $lte: new Date() } }] }
   if (resource?.courseId) filter.courseId = resource.courseId
   if (resource?.projectId) filter.projectId = resource.projectId
   const appointments = await db.collection('staffingAppointments').find(filter, { session }).limit(500).toArray()
@@ -48,6 +49,23 @@ export async function reconcileStaffing(db: Db, session: ClientSession, resource
       await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: 'active' }, $inc: { version: 1 } }, { session })
     }
   }
+}
+
+/** Each resource gets its own transaction; bounded maintenance is safe to retry. */
+export async function reconcileDueStaffing(db: Db) {
+  const due = await db.collection('staffingAppointments').find({ status: { $nin: terminalAppointments }, $or: [{ endDate: { $lte: new Date() } }, { status: 'pending_start', startDate: { $lte: new Date() } }, { status: 'offered', offerExpiresAt: { $lte: new Date() } }] }).limit(100).toArray()
+  const { withTransaction } = await import('./db')
+  const seen = new Set<string>()
+  for (const appointment of due) {
+    const key = `${appointment.type}:${appointment.courseId || appointment.projectId}`
+    if (seen.has(key)) continue
+    seen.add(key)
+    await withTransaction(async (database, session) => {
+      await lockStaffingResource(database, appointment, session)
+      await reconcileStaffing(database, session, appointment.type === 'ta' ? { courseId: appointment.courseId } : { projectId: appointment.projectId })
+    })
+  }
+  return { resourcesChecked: seen.size, hasMore: due.length === 100 }
 }
 
 export async function selectApplication(db: Db, session: ClientSession, user: StaffingActor, applicationId: string, raw: unknown) {
@@ -86,7 +104,7 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
   const appointmentId = uid()
   const expiresAt = new Date(Math.min(Date.now() + 7 * 86400000, opportunity.appointmentEnd.getTime()))
   const offer = { id: offerId, applicationId, opportunityId: opportunity.id, appointmentId, applicantId: application.applicantId, applicantEmail: application.applicantEmail, instructorEmail: user.email, status: 'issued', version: 1, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, projectId: opportunity.projectId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, weeklyHours: opportunity.weeklyHours, duties: opportunity.duties, committedCost: opportunity.appointmentCost, expiresAt, createdAt: new Date() }
-  const appointment = { id: appointmentId, offerId, applicationId, opportunityId: opportunity.id, applicantId: application.applicantId, applicantEmail: application.applicantEmail, applicantName: application.applicantName, instructorEmail: user.email, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, projectId: opportunity.projectId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, weeklyHours: opportunity.weeklyHours, committedCost: opportunity.appointmentCost, status: 'offered', clearance: 'not_started', version: 1, acceptedAt: null, activatedAt: null, createdAt: new Date() }
+  const appointment = { id: appointmentId, offerId, applicationId, opportunityId: opportunity.id, applicantId: application.applicantId, applicantEmail: application.applicantEmail, applicantName: application.applicantName, instructorEmail: user.email, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, projectId: opportunity.projectId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, offerExpiresAt: expiresAt, weeklyHours: opportunity.weeklyHours, committedCost: opportunity.appointmentCost, status: 'offered', clearance: 'not_started', version: 1, acceptedAt: null, activatedAt: null, createdAt: new Date() }
   await db.collection('staffingAllocations').updateOne({ applicantId: application.applicantId, termId: opportunity.termId }, { $set: { offerId, appointmentId, opportunityId: opportunity.id, status: 'offered', expiresAt, endDate: opportunity.appointmentEnd, updatedAt: new Date() }, $setOnInsert: { _id: safeAllocationId(application.applicantId, opportunity.termId) } as any, $inc: { version: 1 } }, { session, upsert: true })
   await db.collection('staffingOffers').insertOne(offer, { session })
   await db.collection('staffingAppointments').insertOne(appointment, { session })

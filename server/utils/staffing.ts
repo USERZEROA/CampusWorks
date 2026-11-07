@@ -6,7 +6,7 @@ import { isGlobalAdmin, type SessionUser } from './auth'
 export type StaffingActor = SessionUser & { id?: string }
 export const now = () => new Date()
 export const uid = () => randomUUID()
-export const fail = (statusCode: number, statusMessage: string): never => { throw createError({ statusCode, statusMessage }) }
+export function fail(statusCode: number, statusMessage: string): never { throw createError({ statusCode, statusMessage }) }
 export const options = (session?: ClientSession) => session ? { session } : {}
 export const actorId = (user: StaffingActor) => user.id || user.email
 export const pageLimit = 100
@@ -64,7 +64,7 @@ export async function initializeStaffingIndexes(db: Db) {
     ['staffingAppointments', [{ key: { id: 1 }, unique: true }, { key: { courseId: 1, applicantEmail: 1, status: 1 } }, { key: { projectId: 1, applicantId: 1 } }, { key: { applicantId: 1, endDate: 1 } }]],
     ['staffingEvents', [{ key: { id: 1 }, unique: true }, { key: { targetId: 1, createdAt: -1 } }, { key: { delivery: 1, createdAt: 1 } }]],
     ['staffingCommands', [{ key: { actorId: 1, key: 1 }, unique: true }]],
-    ['staffingWorkload', [{ key: { id: 1 }, unique: true }, { key: { appointmentId: 1, date: -1 } }]],
+    ['staffingWorkload', [{ key: { id: 1 }, unique: true }, { key: { appointmentId: 1, date: -1 } }, { key: { appointmentId: 1, idempotencyKey: 1 }, unique: true, partialFilterExpression: { idempotencyKey: { $type: 'string' } } }]],
     ['staffingAiTasks', [{ key: { id: 1 }, unique: true }, { key: { requestedBy: 1, createdAt: -1 } }, { key: { targetId: 1, status: 1 } }]]
   ]
   for (const [collection, indexes] of specs) await db.collection(collection).createIndexes(indexes)
@@ -126,9 +126,18 @@ export function eligibility(application: Document, opportunity: Document) {
   const profile = application.profile || {}
   const reasons: string[] = []
   if ((profile.availableHours || 0) < opportunity.weeklyHours) reasons.push('Available hours do not cover the published weekly workload')
-  if (!(opportunity.allowedPositionPreferences || ['full', 'half', 'either', 'other']).includes(profile.positionPreference)) reasons.push('Appointment preference is incompatible')
+  const preferences = opportunity.allowedPositionPreferences || ['full', 'half', 'either', 'other']
+  const compatiblePreference = preferences.includes(profile.positionPreference) || (profile.positionPreference === 'either' && preferences.some((p: string) => ['full', 'half'].includes(p))) || (preferences.includes('either') && ['full', 'half'].includes(profile.positionPreference))
+  if (!compatiblePreference) reasons.push('Appointment preference is incompatible')
   for (const required of opportunity.requiredSlots || []) {
-    if (!(profile.slots || []).some((available: Slot) => available.day === required.day && available.start <= required.start && available.end >= required.end)) reasons.push(`Required availability is missing for day ${required.day} ${required.start}-${required.end}`)
+    let coveredUntil = required.start
+    const available = (profile.slots || []).filter((slot: Slot) => slot.day === required.day).sort((a: Slot, b: Slot) => a.start.localeCompare(b.start))
+    for (const slot of available) {
+      if (slot.start > coveredUntil) break
+      if (slot.end > coveredUntil) coveredUntil = slot.end
+      if (coveredUntil >= required.end) break
+    }
+    if (coveredUntil < required.end) reasons.push(`Required availability is missing for day ${required.day} ${required.start}-${required.end}`)
   }
   return { eligible: reasons.length === 0, reasons }
 }

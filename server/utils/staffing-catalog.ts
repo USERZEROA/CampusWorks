@@ -38,7 +38,7 @@ export function opportunityInput(raw: unknown) {
     const item = object(raw, 'Question')
     return { id: text(item.id, 'Question ID', 64) || `q${index + 1}`, prompt: text(item.prompt, 'Question', 1000, true), required: flag(item.required, 'Question required', true) }
   })
-  if (new Set(normalizedQuestions.map(q => q.id)).size !== normalizedQuestions.length || normalizedQuestions.some(q => !/^[a-zA-Z0-9_-]+$/.test(q.id))) fail(400, 'Question IDs must be unique letters, digits, underscores or hyphens')
+  if (new Set(normalizedQuestions.map(q => q.id)).size !== normalizedQuestions.length || normalizedQuestions.some(q => !/^[a-zA-Z0-9_-]+$/.test(q.id) || ['__proto__', 'prototype', 'constructor'].includes(q.id))) fail(400, 'Question IDs must be unique safe identifiers')
   const hourlyRate = number(body.hourlyRate, 'Hourly rate', 0, 1000, 0)
   const budget = number(body.budget, 'Approved budget', 0, 10000000, 0)
   const weeks = Math.ceil((appointmentEnd.getTime() - appointmentStart.getTime()) / (7 * 86400000))
@@ -72,7 +72,12 @@ export async function createTerm(db: Db, session: ClientSession, user: StaffingA
 }
 
 export async function createProject(db: Db, session: ClientSession, user: StaffingActor, raw: unknown) {
-  if (!isGlobalAdmin(user) && user.primaryRole !== 'instructor') fail(403, 'Instructors or administrators create research projects')
+  const instructionalRole = await db.collection('enrollments').findOne({ userEmail: user.email, role: { $in: ['instructor', 'admin'] } }, { session })
+  if (!isGlobalAdmin(user) && !instructionalRole) fail(403, 'Authorized instructors or administrators create research projects')
+  if (!isGlobalAdmin(user) && instructionalRole) {
+    await lockCourse(db, instructionalRole.courseId, session)
+    if (!await db.collection('enrollments').findOne({ courseId: instructionalRole.courseId, userEmail: user.email, role: { $in: ['instructor', 'admin'] } }, { session })) fail(403, 'Instructional authority changed')
+  }
   const body = object(raw, 'Research project')
   const project = { id: uid(), title: text(body.title, 'Project title', 160, true), description: text(body.description, 'Project description', 6000, true), department: text(body.department, 'Department', 120, true), ownerEmail: user.email, reviewerEmails: [], createdAt: new Date(), mutationVersion: 0 }
   await db.collection('researchProjects').insertOne(project, { session })
@@ -90,7 +95,7 @@ export async function createOpportunity(db: Db, session: ClientSession, user: St
     if (resource.staffingTermId && resource.staffingTermId !== input.termId) fail(409, 'This course offering belongs to another term. Create a separate course offering for the new term.')
     await db.collection('courses').updateOne({ _id: resource._id }, { $set: { staffingTermId: input.termId } }, { session })
   }
-  const opportunity = { ...input, id: uid(), status: 'draft', version: 1, ownerEmail: user.email, ownerId: actorId(user), approved: isGlobalAdmin(user) || !input.approvalRequired, committedPositions: 0, committedBudget: 0, createdAt: new Date(), updatedAt: new Date() }
+  const opportunity = { ...input, id: uid(), status: 'draft', version: 1, requirementsVersion: 1, ownerEmail: user.email, ownerId: actorId(user), approved: isGlobalAdmin(user) || !input.approvalRequired, committedPositions: 0, committedBudget: 0, createdAt: new Date(), updatedAt: new Date() }
   await db.collection('staffingOpportunities').insertOne(opportunity, { session })
   await event(db, session, user, 'OpportunityCreated', opportunity.id)
   return { opportunity: publicRecord(opportunity) }
@@ -100,8 +105,11 @@ export async function overview(db: Db, user: StaffingActor) {
   const global = isGlobalAdmin(user)
   const enrollments = await db.collection('enrollments').find({ userEmail: user.email, role: { $in: ['instructor', 'admin'] } }).limit(pageLimit).toArray()
   const courses = await db.collection('courses').find(global ? {} : { id: { $in: enrollments.map(e => e.courseId) } }).limit(pageLimit).toArray()
-  const projects = await db.collection('researchProjects').find(global ? {} : { $or: [{ ownerEmail: user.email }, { reviewerEmails: user.email }] }).limit(pageLimit).toArray()
-  const manageable = { $or: [{ courseId: { $in: courses.map(c => c.id) } }, { projectId: { $in: projects.map(p => p.id) } }] }
+  const ownedProjects = await db.collection('researchProjects').find(global ? {} : { $or: [{ ownerEmail: user.email }, { reviewerEmails: user.email }] }).limit(pageLimit).toArray()
+  const raAppointments = await db.collection('staffingAppointments').find({ applicantId: actorId(user), type: 'ra', status: { $in: ['active', 'pending_start'] }, clearance: 'cleared', startDate: { $lte: new Date() }, endDate: { $gt: new Date() } }).limit(pageLimit).toArray()
+  const assignedProjects = await db.collection('researchProjects').find({ id: { $in: raAppointments.map(a => a.projectId) } }).limit(pageLimit).toArray()
+  const projects = [...new Map([...ownedProjects, ...assignedProjects].map(p => [p.id, p])).values()]
+  const manageable = { $or: [{ courseId: { $in: courses.map(c => c.id) } }, { projectId: { $in: ownedProjects.map(p => p.id) } }] }
   const [terms, opportunities, myApplications, myAppointments, managedOpportunities] = await Promise.all([
     db.collection('staffingTerms').find({}).sort({ startDate: -1 }).limit(pageLimit).toArray(),
     db.collection('staffingOpportunities').find({ status: { $in: ['published', 'applications_closed', 'filled'] } }).sort({ createdAt: -1 }).limit(pageLimit).toArray(),
@@ -110,7 +118,7 @@ export async function overview(db: Db, user: StaffingActor) {
     db.collection('staffingOpportunities').find(global ? {} : manageable).sort({ createdAt: -1 }).limit(pageLimit).toArray()
   ])
   return {
-    viewer: { id: actorId(user), email: user.email, name: user.name, primaryRole: user.primaryRole, isGlobalAdmin: global, canManageStaffing: global || courses.length > 0 || projects.length > 0 || user.primaryRole === 'instructor' },
+    viewer: { id: actorId(user), email: user.email, name: user.name, primaryRole: user.primaryRole, isGlobalAdmin: global, canManageStaffing: global || courses.length > 0 || ownedProjects.length > 0 },
     terms: terms.map(publicRecord), courses: courses.map(c => ({ id: c.id, code: c.code, title: c.title, role: global ? 'admin' : enrollments.find(e => e.courseId === c.id)?.role })), projects: projects.map(publicRecord),
     opportunities: opportunities.map(publicRecord), myApplications: myApplications.map(a => { const { administrative, ...dto } = publicRecord(a)!; return dto }),
     myAppointments: myAppointments.map(publicRecord), managedOpportunities: managedOpportunities.map(publicRecord), policy: { exclusivePerTerm: true, manualDecision: true, clearanceRequired: true }, pagination: { limit: pageLimit, bounded: true }
