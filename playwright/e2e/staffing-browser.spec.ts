@@ -1,4 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
+import { readFileSync } from 'node:fs';
 import { test, expect, ok, json, type Actor } from '../staffing-fixtures';
 import type { BrowserContext, Page } from '@playwright/test';
 
@@ -16,6 +17,13 @@ const localDate = (time: number) => {
   const date = new Date(time);
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}T${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
 };
+
+test('the Duke Computer Science PNG is served intact with the expected image type', async ({ request }) => {
+  const response = await request.get('/duke-cs-logo.png');
+  expect(response.status()).toBe(200);
+  expect(response.headers()['content-type']).toMatch(/^image\/png/);
+  expect(await response.body()).toEqual(readFileSync('public/duke-cs-logo.png'));
+});
 
 test('browser users publish, apply, upload, select, accept, clear, operate and end an appointment', async ({ browser, baseURL, space }, testInfo) => {
   test.setTimeout(120000);
@@ -138,6 +146,9 @@ test('keyboard dialogs trap focus, close with Escape and restore the initiating 
   expect(await page.getByRole('dialog').evaluate(node => node.contains(document.activeElement))).toBe(true);
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('feedback-open-btn')).toBeFocused();
+  await ok(space.admin.api.patch(`/api/courses/${space.code}/state`, { data: { state: 'paused' } }));
+  await expect(page.locator('.state-pill')).toHaveText(/paused/i);
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([]);
 });
 
 test('research assistants use their project workspace and workload form without course staff access', async ({ browser, baseURL, space }, testInfo) => {
@@ -179,8 +190,53 @@ test('research assistants use their project workspace and workload form without 
   } finally { await context.close(); }
 });
 
+test('course review pages keep complete aggregates while independently loading terms and scenarios', async ({ page, space }) => {
+  const overview = await json(space.instructor.api.get('/api/staffing/overview'));
+  const baseline = await json(space.instructor.api.get(`/api/staffing/reviews/${space.code}`));
+  const additionalTerm = { ...space.term, id: 'synthetic-review-term', name: 'Synthetic additional review term' };
+  const requests: Array<{ page: number; termId: string }> = [];
+  // Labeled browser-only pagination responses; no synthetic historical or
+  // financial observations are written into the database.
+  await page.route('**/api/staffing/overview*', route => {
+    const pageNumber = Number(new URL(route.request().url()).searchParams.get('page') || 1);
+    return route.fulfill({ json: { ...overview, terms: [pageNumber === 1 ? space.term : additionalTerm], pagination: { page: pageNumber, limit: 1, totals: { terms: 2 }, hasMore: pageNumber === 1 } } });
+  });
+  await page.route(`**/api/staffing/reviews/${space.code}*`, route => {
+    const query = new URL(route.request().url()).searchParams;
+    const pageNumber = Number(query.get('page') || 1);
+    requests.push({ page: pageNumber, termId: query.get('termId') || '' });
+    return route.fulfill({ json: {
+      ...baseline, termId: query.get('termId') || null,
+      workload: { ...baseline.workload, totalHours: 20, count: 2, records: [{ id: `synthetic-workload-${pageNumber}`, hours: 10 }] },
+      budget: { approvedBudget: 2000, committedBudget: 400, opportunities: [{ id: `synthetic-position-${pageNumber}`, title: `Synthetic position ${pageNumber}`, budget: 1000, committedBudget: 200 }], scenarios: [{ opportunityId: `synthetic-position-${pageNumber}`, name: pageNumber === 1 ? 'Synthetic first scenario' : 'Synthetic second scenario', positions: 1, estimatedCost: 1000, coverageValidated: false }] },
+      pagination: { page: pageNumber, limit: 1, totals: { workload: 2, opportunities: 2 }, hasMore: pageNumber === 1 },
+    } });
+  });
+  await signIn(page.context(), space.instructor);
+  await open(page, `/courses/${space.code}/admin`);
+  await page.getByRole('link', { name: 'Open staffing and term review', exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`/courses/${space.code}/review$`));
+  await expect(page.getByRole('heading', { name: 'Synthetic first scenario', exact: true })).toBeVisible();
+  const workload = page.locator('dt:has-text("Reported workload (hours)") + dd');
+  await expect(workload).toHaveText('20.0');
+  const termsPanel = page.locator('section.panel').filter({ has: page.getByTestId('review-term') });
+  await termsPanel.getByTestId('staffing-load-more').click();
+  await expect(page.getByTestId('review-term').locator(`option[value="${additionalTerm.id}"]`)).toHaveCount(1);
+  await expect(termsPanel.getByTestId('staffing-load-more')).toHaveCount(0);
+  await page.getByTestId('staffing-load-more').click();
+  await expect(page.getByRole('heading', { name: 'Synthetic second scenario', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Synthetic first scenario', exact: true })).toBeVisible();
+  await expect(workload).toHaveText('20.0');
+  await expect(page.getByText('Committed budget: 400', { exact: true })).toBeVisible();
+  await page.getByTestId('review-term').selectOption(space.term.id);
+  await expect.poll(() => requests.at(-1)?.termId).toBe(space.term.id);
+  expect(requests.at(-1)?.page).toBe(1);
+  await expect(page.getByRole('heading', { name: 'Synthetic second scenario', exact: true })).toHaveCount(0);
+  await expect(workload).toHaveText('20.0');
+});
+
 test('desktop and mobile staffing and queue screens pass automated accessibility checks', async ({ browser, baseURL, space }, testInfo) => {
-  test.setTimeout(120000);
+  test.setTimeout(180000);
   const posting = await space.opportunity();
   const draft = (await json(space.student.api.post(`/api/staffing/opportunities/${posting.id}/applications`, { data: {} }))).application;
   const project = (await json(space.instructor.api.post('/api/staffing/projects', { data: { title: `Accessible research ${space.suffix}`, description: 'Synthetic research accessibility check', department: 'Computer Science' } }))).project;
@@ -214,7 +270,8 @@ test('desktop and mobile staffing and queue screens pass automated accessibility
     { actor: space.admin, path: `/applications/${raApplication.id}`, label: 'clearance-review' },
   ];
   const violations: any[] = [];
-  for (const width of [1440, 390]) {
+  const widths = [1440, 768, 390, 320];
+  for (const width of widths) {
     for (const screen of screens) {
       const context = await browser.newContext({ baseURL, viewport: { width, height: 1000 } });
       try {
@@ -224,6 +281,17 @@ test('desktop and mobile staffing and queue screens pass automated accessibility
         if (screen.actor) await signIn(context, screen.actor);
         await open(page, screen.path);
         expect(new URL(page.url()).pathname, `${screen.label} authorized destination`).toBe(screen.path);
+        await expect(page.locator('header.app-navbar, header.app-banner'), `${screen.label} Duke blue`).toHaveCSS('background-color', 'rgb(1, 33, 105)');
+        const logo = page.locator('img.app-logo');
+        await expect(logo).toBeVisible();
+        await expect(logo).toHaveAttribute('src', '/duke-cs-logo.png');
+        await expect(logo).toHaveAttribute('alt', /Duke.*Computer Science/i);
+        await expect.poll(() => logo.evaluate(image => (image as HTMLImageElement).naturalWidth), { message: `${screen.label} loaded PNG` }).toBeGreaterThan(0);
+        const logoBounds = await logo.boundingBox();
+        expect(logoBounds).toBeTruthy();
+        expect(logoBounds!.width).toBeGreaterThan(40);
+        expect(logoBounds!.x).toBeGreaterThanOrEqual(0);
+        expect(logoBounds!.x + logoBounds!.width).toBeLessThanOrEqual(width);
         const audit = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
         expect(browserErrors, `${screen.label} browser errors`).toEqual([]);
         violations.push(...audit.violations.map(item => ({ screen: screen.label, width, id: item.id, impact: item.impact, nodes: item.nodes.map(node => ({ target: node.target, summary: node.failureSummary })) })));
@@ -232,6 +300,6 @@ test('desktop and mobile staffing and queue screens pass automated accessibility
       } finally { await context.close(); }
     }
   }
-  await testInfo.attach('accessibility-results.json', { body: JSON.stringify({ checkedScreens: screens.length * 2, violations }, null, 2), contentType: 'application/json' });
+  await testInfo.attach('accessibility-results.json', { body: JSON.stringify({ checkedScreens: screens.length * widths.length, widths, branding: { logo: '/duke-cs-logo.png', header: '#012169' }, violations }, null, 2), contentType: 'application/json' });
   expect(violations).toEqual([]);
 });

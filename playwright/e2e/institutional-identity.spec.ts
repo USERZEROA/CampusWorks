@@ -1,11 +1,12 @@
 import { createServer } from 'node:http';
+import AxeBuilder from '@axe-core/playwright';
 import { spawn } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { openSync, closeSync } from 'node:fs';
 import { request, type APIRequestContext } from '@playwright/test';
 import { test, expect, json, ok, database } from '../staffing-fixtures';
 
-test('institutional identity binding rejects email changes, reused addresses and demo impersonation', async ({ space }) => {
+test('institutional identity binding rejects email changes, reused addresses and demo impersonation', async ({ space, browser }) => {
   test.setTimeout(60000);
   const email = `institutional-${space.suffix}@example.com`;
   let profile: any = { id: 11001, email, name: 'Synthetic institutional student', username: `institutional-${space.suffix}` };
@@ -40,6 +41,19 @@ test('institutional identity binding rejects email changes, reused addresses and
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     api = await request.newContext({ baseURL: origin });
+    const browserContext = await browser.newContext({ baseURL: origin });
+    try {
+      const page = await browserContext.newPage();
+      for (const width of [1440, 320]) {
+        await page.setViewportSize({ width, height: 1000 });
+        expect((await page.goto('/login'))?.status()).toBe(200);
+        await expect(page.getByTestId('login-gitlab-btn')).toBeVisible();
+        await expect(page.getByTestId('login-gitlab-btn')).toBeEnabled();
+        await expect(page.locator('header.app-navbar, header.app-banner')).toHaveCSS('background-color', 'rgb(1, 33, 105)');
+        const audit = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+        expect(audit.violations).toEqual([]);
+      }
+    } finally { await browserContext.close(); }
     const login = async () => {
       const begin = await api!.get('/api/auth/gitlab/login', { maxRedirects: 0 });
       expect(begin.status()).toBe(302);
