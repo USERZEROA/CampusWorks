@@ -16,7 +16,7 @@ export async function processStaffingOutbox(db: Db) {
     if (event.kind === 'OfferIssued' || event.kind.startsWith('Offer')) {
       const offer = await database.collection('staffingOffers').findOne({ id: event.targetId }, { session })
       if (offer) {
-        if (event.kind === 'OfferIssued') { recipients.add(offer.applicantId); path = `/applications/${offer.applicationId}`; title = 'An appointment offer is ready for your response' }
+        if (event.kind === 'OfferIssued' || event.kind === 'OfferRescinded') { recipients.add(offer.applicantId); path = `/applications/${offer.applicationId}`; title = event.kind === 'OfferIssued' ? 'An appointment offer is ready for your response' : 'Your appointment offer was rescinded' }
         else {
           const manager = await database.collection('users').findOne({ email: offer.instructorEmail }, { session })
           if (manager) recipients.add(manager.id)
