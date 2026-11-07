@@ -1,85 +1,81 @@
-// server/utils/db.ts
-import { MongoClient, type Db } from 'mongodb'
+import { MongoClient, type ClientSession, type Db, type IndexDescription } from 'mongodb'
 import { createError } from 'h3'
 import { getServerConfig } from './config'
 import { seedDemoDataIfEmpty } from './seed'
 
 let dbPromise: Promise<Db> | null = null
+let connectedClient: MongoClient | null = null
 
-/**
- * Get a shared MongoDB database instance.
- * Connects lazily on first use, ensures indexes once, and optionally seeds
- * demo data. A failed connection is retried on the next call.
- */
+/** Transactions and mandatory indexes are prerequisites for serving application data. */
 export function getDb(): Promise<Db> {
-  if (!dbPromise) {
-    dbPromise = connect().catch((err) => {
-      dbPromise = null
-      throw err
-    })
-  }
+  dbPromise ||= connect().catch((error) => { dbPromise = null; throw error })
   return dbPromise
 }
 
 async function connect(): Promise<Db> {
-  const { mongodbUri, mongodbDb, seedDemoData } = getServerConfig()
-
-  if (!mongodbUri) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'MONGODB_URI is not configured'
-    })
-  }
-
-  const client = new MongoClient(mongodbUri, {
-    serverSelectionTimeoutMS: 5000
-  })
-
+  const config = getServerConfig()
+  if (!config.mongodbUri) throw createError({ statusCode: 503, statusMessage: 'MONGODB_URI is not configured' })
+  const client = new MongoClient(config.mongodbUri, { serverSelectionTimeoutMS: 5000 })
   try {
     await client.connect()
-  } catch (err) {
+    const db = client.db(config.mongodbDb)
+    const topology = await db.admin().command({ hello: 1 })
+    if (!topology.setName && topology.msg !== 'isdbgrid') throw new Error('A MongoDB replica set or sharded cluster is required for transactions')
+    await ensureIndexes(db)
+    const { initializeStaffingIndexes } = await import('./staffing')
+    await initializeStaffingIndexes(db)
+    if (config.seedDemoData) {
+      await client.withSession(async session => {
+        await session.withTransaction(() => seedDemoDataIfEmpty(db, session), {
+          readConcern: { level: 'snapshot' }, writeConcern: { w: 'majority' }, readPreference: 'primary'
+        })
+      })
+    }
+    connectedClient = client
+    return db
+  } catch (error) {
     await client.close().catch(() => {})
-    console.error('[campusworks] MongoDB connection failed:', (err as Error).message)
-    throw createError({
-      statusCode: 503,
-      statusMessage: 'Database unavailable'
-    })
+    console.error('[campusworks] Database initialization failed:', (error as Error).message)
+    throw createError({ statusCode: 503, statusMessage: 'Database initialization failed; verify replica set and required indexes' })
   }
-
-  const db = client.db(mongodbDb)
-  await ensureIndexes(db)
-
-  if (seedDemoData) {
-    await seedDemoDataIfEmpty(db)
-  }
-
-  return db
 }
 
-/**
- * Indexes back the "one entry per student" and "one enrollment per user"
- * invariants. Failures (e.g. legacy duplicate rows) are logged, not fatal.
- */
-async function ensureIndexes(db: Db) {
-  const specs: Array<[string, Record<string, 1 | -1>, { unique?: boolean }?]> = [
-    ['courses', { id: 1 }, { unique: true }],
-    ['enrollments', { courseId: 1, userEmail: 1 }, { unique: true }],
-    ['enrollments', { userEmail: 1 }],
-    ['queueEntries', { courseId: 1, studentEmail: 1 }, { unique: true }],
-    ['queueEntries', { courseId: 1, position: 1 }],
-    ['helpSessions', { courseId: 1, joinedAt: -1 }],
-    ['announcements', { courseId: 1, createdAt: -1 }],
-    ['feedback', { courseId: 1, createdAt: -1 }]
-  ]
-
-  for (const [collection, keys, options] of specs) {
-    try {
-      await db.collection(collection).createIndex(keys, options || {})
-    } catch (err) {
-      console.warn(
-        `[campusworks] Could not create index on ${collection} ${JSON.stringify(keys)}:`,
-        (err as Error).message
-      )
+/** The driver retries transient conflicts; no external side effect belongs in this callback. */
+export async function withTransaction<T>(work: (db: Db, session: ClientSession) => Promise<T>): Promise<T> {
+  const db = await getDb()
+  const session = connectedClient!.startSession()
+  try {
+    return await session.withTransaction(() => work(db, session), {
+      readConcern: { level: 'snapshot' }, writeConcern: { w: 'majority' }, readPreference: 'primary',
+      maxCommitTimeMS: 10_000, timeoutMS: 30_000
+    }) as T
+  } catch (error: any) {
+    if (error?.code === 11000) throw createError({ statusCode: 409, statusMessage: 'A conflicting record already exists' })
+    if (error?.hasErrorLabel?.('TransientTransactionError') || error?.code === 50) {
+      throw createError({ statusCode: 409, statusMessage: 'The record changed; refresh and try again' })
     }
+    throw error
+  } finally { await session.endSession() }
+}
+
+async function ensureIndexes(db: Db) {
+  const indexes: Record<string, IndexDescription[]> = {
+    courses: [{ key: { id: 1 }, unique: true }],
+    enrollments: [{ key: { courseId: 1, userEmail: 1 }, unique: true }, { key: { userEmail: 1 } }],
+    queueEntries: [
+      { key: { courseId: 1, studentEmail: 1 }, unique: true }, { key: { courseId: 1, position: 1 } },
+      { key: { courseId: 1, taEmail: 1 }, unique: true, partialFilterExpression: { taEmail: { $type: 'string' } } }
+    ],
+    helpSessions: [
+      { key: { courseId: 1, joinedAt: -1 } },
+      { key: { entryId: 1 }, unique: true, partialFilterExpression: { entryId: { $type: 'string' } } }
+    ],
+    announcements: [{ key: { courseId: 1, createdAt: -1 } }],
+    feedback: [{ key: { courseId: 1, createdAt: -1 } }],
+    users: [{ key: { id: 1 }, unique: true }, { key: { email: 1 }, unique: true }],
+    authSessions: [{ key: { expiresAt: 1 }, expireAfterSeconds: 0 }, { key: { userId: 1 } }],
+    requestLimits: [{ key: { expiresAt: 1 }, expireAfterSeconds: 0 }],
+    auditEvents: [{ key: { courseId: 1, createdAt: -1 } }]
   }
+  for (const [name, specs] of Object.entries(indexes)) await db.collection(name).createIndexes(specs)
 }

@@ -1,5 +1,5 @@
 // server/utils/seed.ts
-import type { Db } from 'mongodb'
+import type { ClientSession, Db } from 'mongodb'
 
 /**
  * Demo accounts offered by the mock login (see server/api/auth/mock.post.ts).
@@ -37,9 +37,9 @@ const DAY = 24 * 60 * MINUTE
  * Seed a small, self-explanatory demo dataset when SEED_DEMO_DATA=true
  * and the database has no courses yet. Never touches a non-empty database.
  */
-export async function seedDemoDataIfEmpty(db: Db) {
+export async function seedDemoDataIfEmpty(db: Db, session: ClientSession) {
   const courses = db.collection('courses')
-  if ((await courses.countDocuments({}, { limit: 1 })) > 0) return
+  if ((await courses.countDocuments({}, { limit: 1, session })) > 0) return
 
   const now = Date.now()
   const students = accountsWithRole('student')
@@ -50,7 +50,7 @@ export async function seedDemoDataIfEmpty(db: Db) {
     { id: 'cs101', code: 'cs101', title: 'Intro to Programming', state: 'open', onDutyTAs: [] },
     { id: 'cs201', code: 'cs201', title: 'Data Structures', state: 'closed', onDutyTAs: [] },
     { id: 'math221', code: 'math221', title: 'Linear Algebra', state: 'closed', onDutyTAs: [] }
-  ])
+  ], { session })
 
   await db.collection('enrollments').insertMany([
     { courseId: 'cs101', userEmail: admin.email, role: 'admin' },
@@ -61,7 +61,7 @@ export async function seedDemoDataIfEmpty(db: Db) {
     { courseId: 'cs201', userEmail: ta.email, role: 'ta' },
     ...tas.map((a) => ({ courseId: 'cs101', userEmail: a.email, role: 'ta' })),
     ...students.map((a) => ({ courseId: 'cs101', userEmail: a.email, role: 'student' }))
-  ])
+  ], { session })
 
   await db.collection('announcements').insertOne({
     courseId: 'cs101',
@@ -69,7 +69,7 @@ export async function seedDemoDataIfEmpty(db: Db) {
       'Welcome! Join the queue with your location and a short question; a TA will pick you up.',
     by: instructor.name,
     createdAt: new Date(now - 2 * DAY)
-  })
+  }, { session })
 
   // A few past help sessions so the analytics page has something to show.
   // Past students are student4..student9, distinct from the live demo accounts.
@@ -96,7 +96,7 @@ export async function seedDemoDataIfEmpty(db: Db) {
       removedBy: helper.email
     }
   })
-  await db.collection('helpSessions').insertMany(sessions)
+  await db.collection('helpSessions').insertMany(sessions, { session })
 
   await db.collection('feedback').insertOne({
     courseId: 'cs101',
@@ -109,7 +109,7 @@ export async function seedDemoDataIfEmpty(db: Db) {
     negative: 'Wait times were long right before the deadline.',
     allowContact: false,
     createdAt: new Date(now - DAY)
-  })
+  }, { session })
 
   console.log('[campusworks] Seeded demo data (SEED_DEMO_DATA=true).')
 }

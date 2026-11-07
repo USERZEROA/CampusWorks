@@ -1,99 +1,61 @@
-// server/utils/config.ts
-import { createHash, randomBytes } from 'node:crypto'
+import type { H3Event } from 'h3'
+import { getRequestURL } from 'h3'
 
-/**
- * Server configuration, read from environment variables at runtime
- * (not baked in at build time), so one Docker image can be configured
- * per environment. See `.env.example` for every supported variable.
- */
 export type ServerConfig = {
-  mongodbUri: string
-  mongodbDb: string
-  sessionSecret: string
-  mockLoginEnabled: boolean
-  seedDemoData: boolean
-  adminEmails: string[]
-  allowedEmailDomains: string[]
-  gitlab: {
-    baseUrl: string
-    clientId: string
-    clientSecret: string
-  }
+  mongodbUri: string; mongodbDb: string; sessionSecret: string
+  mockLoginEnabled: boolean; seedDemoData: boolean; adminEmails: string[]; allowedEmailDomains: string[]
+  publicOrigin: string; trustProxy: boolean; maxBodyBytes: number; apiRateLimit: number; loginRateLimit: number
+  historyRetentionDays: number
+  gitlab: { baseUrl: string; clientId: string; clientSecret: string }
 }
-
-// Only used outside production so that dev restarts keep sessions valid.
-const DEV_SESSION_SECRET = 'campusworks-dev-only-session-secret-do-not-use-in-prod'
-
-const toList = (value?: string) =>
-  (value || '')
-    .split(',')
-    .map((s) => s.trim().toLowerCase())
-    .filter(Boolean)
-
-const toFlag = (value: string | undefined, fallback: boolean) => {
-  if (value === undefined || value.trim() === '') return fallback
-  return ['1', 'true', 'yes', 'on'].includes(value.trim().toLowerCase())
+const toList = (value = '') => value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean)
+const toFlag = (value: string | undefined, fallback: boolean) => value?.trim() ? ['1', 'true', 'yes', 'on'].includes(value.trim().toLowerCase()) : fallback
+const integer = (value: string | undefined, fallback: number, min: number, max: number) => {
+  if (!value) return fallback
+  const parsed = Number(value)
+  if (!Number.isInteger(parsed) || parsed < min || parsed > max) throw new Error('Invalid integer server setting')
+  return parsed
 }
-
-/**
- * Sealed sessions need a password of at least 32 characters.
- * Shorter secrets are stretched with SHA-256 instead of being rejected.
- */
-const resolveSessionSecret = (raw: string | undefined, isProd: boolean) => {
-  if (raw && raw.length >= 32) return raw
-  if (raw) {
-    console.warn('[campusworks] SESSION_SECRET is shorter than 32 characters; consider a longer value.')
-    return createHash('sha256').update(raw).digest('hex')
-  }
-  if (isProd) {
-    // Secure by default: a random secret means sessions do not survive restarts
-    // and are not shared between replicas, so production must set SESSION_SECRET.
-    console.warn('[campusworks] SESSION_SECRET is not set; generated a random one for this process.')
-    return randomBytes(32).toString('hex')
-  }
-  return DEV_SESSION_SECRET
-}
-
 let cached: ServerConfig | null = null
-
 export function getServerConfig(): ServerConfig {
   if (cached) return cached
-
   const env = process.env
-  const isProd = env.NODE_ENV === 'production'
-
-  cached = {
-    mongodbUri: env.MONGODB_URI || '',
-    mongodbDb: env.MONGODB_DB || 'campusworks',
-    sessionSecret: resolveSessionSecret(env.SESSION_SECRET, isProd),
-    // Mock (demo) login is on by default in development only.
-    mockLoginEnabled: toFlag(env.ENABLE_MOCK_LOGIN, !isProd),
-    seedDemoData: toFlag(env.SEED_DEMO_DATA, false),
-    adminEmails: toList(env.ADMIN_EMAILS),
-    allowedEmailDomains: toList(env.ALLOWED_EMAIL_DOMAINS).map((d) =>
-      d.replace(/^@/, '')
-    ),
-    gitlab: {
-      baseUrl: (env.GITLAB_BASE_URL || '').trim().replace(/\/+$/, ''),
-      clientId: (env.GITLAB_CLIENT_ID || '').trim(),
-      clientSecret: (env.GITLAB_CLIENT_SECRET || '').trim()
-    }
+  const production = env.NODE_ENV === 'production'
+  const sessionSecret = env.SESSION_SECRET || (production ? '' : 'campusworks-local-development-secret-change-for-production')
+  if (sessionSecret.length < 32) throw new Error('SESSION_SECRET must contain at least 32 characters')
+  let publicOrigin = ''
+  if (env.PUBLIC_ORIGIN) {
+    const url = new URL(env.PUBLIC_ORIGIN)
+    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.pathname !== '/' || url.search || url.hash) throw new Error('PUBLIC_ORIGIN must be an HTTP(S) origin without credentials or a path')
+    publicOrigin = url.origin
   }
-
+  const gitlab = {
+    baseUrl: (env.GITLAB_BASE_URL || '').trim().replace(/\/+$/, ''),
+    clientId: (env.GITLAB_CLIENT_ID || '').trim(), clientSecret: (env.GITLAB_CLIENT_SECRET || '').trim()
+  }
+  if (gitlab.baseUrl) {
+    const url = new URL(gitlab.baseUrl)
+    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || (production && url.protocol !== 'https:')) throw new Error('GITLAB_BASE_URL must use a trusted HTTPS provider in production')
+  }
+  if (production && gitlab.clientId && gitlab.clientSecret && !publicOrigin) throw new Error('PUBLIC_ORIGIN is required for production OAuth')
+  cached = {
+    mongodbUri: env.MONGODB_URI || '', mongodbDb: env.MONGODB_DB || 'campusworks', sessionSecret,
+    mockLoginEnabled: toFlag(env.ENABLE_MOCK_LOGIN, !production), seedDemoData: toFlag(env.SEED_DEMO_DATA, false),
+    adminEmails: toList(env.ADMIN_EMAILS), allowedEmailDomains: toList(env.ALLOWED_EMAIL_DOMAINS).map(d => d.replace(/^@/, '')),
+    publicOrigin, trustProxy: toFlag(env.TRUST_PROXY, false),
+    maxBodyBytes: integer(env.MAX_BODY_BYTES, 12 * 1024 * 1024, 1024, 32 * 1024 * 1024),
+    apiRateLimit: integer(env.API_RATE_LIMIT, 1800, 10, 100_000),
+    loginRateLimit: integer(env.LOGIN_RATE_LIMIT, 300, 5, 10_000),
+    historyRetentionDays: integer(env.HISTORY_RETENTION_DAYS, 0, 0, 3650), gitlab
+  }
   return cached
 }
-
-export function isGitlabConfigured(config = getServerConfig()) {
-  const { baseUrl, clientId, clientSecret } = config.gitlab
-  return !!(baseUrl && clientId && clientSecret)
+export function requestOrigin(event: H3Event) {
+  const config = getServerConfig()
+  return config.publicOrigin || getRequestURL(event, { xForwardedHost: config.trustProxy, xForwardedProto: config.trustProxy }).origin
 }
-
-/**
- * Whether an email may sign in via OAuth.
- * An empty ALLOWED_EMAIL_DOMAINS list allows every domain.
- */
+export function secureRequest(event: H3Event) { return requestOrigin(event).startsWith('https:') }
+export const isGitlabConfigured = (config = getServerConfig()) => !!(config.gitlab.baseUrl && config.gitlab.clientId && config.gitlab.clientSecret)
 export function isEmailDomainAllowed(email: string, config = getServerConfig()) {
-  if (!config.allowedEmailDomains.length) return true
-  const domain = email.split('@').pop()?.toLowerCase() || ''
-  return config.allowedEmailDomains.includes(domain)
+  return !config.allowedEmailDomains.length || config.allowedEmailDomains.includes(email.split('@').pop()?.toLowerCase() || '')
 }
