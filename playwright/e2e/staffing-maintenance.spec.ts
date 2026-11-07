@@ -3,8 +3,8 @@ import { ObjectId } from 'mongodb';
 import { test, expect, json, ok, database } from '../staffing-fixtures';
 
 test('provider-independent maintenance expires an unanswered offer and delivers its event once without page or API reconciliation', async ({ space }) => {
-  expect(process.env.AI_API_KEY || '').toBe('');
-  expect(process.env.AI_BASE_URL || '').toBe('');
+  expect(Boolean(process.env.AI_API_KEY?.trim())).toBe(false);
+  expect(Boolean(process.env.AI_BASE_URL?.trim())).toBe(false);
   const replica = await space.secondary(space.admin);
   expect((await replica.get('/api/health')).status()).toBe(200);
   const posting = await space.opportunity();

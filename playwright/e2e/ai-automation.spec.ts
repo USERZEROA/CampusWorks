@@ -429,7 +429,7 @@ test("provider failures back off and exhausted daily capacity stays blocked desp
 
 test("revoking the in-flight reviewer prevents publication, allows a current peer to take over and stops with no manager", async ({
   automation: service,
-}) => {
+}, testInfo) => {
   const peer = await service.actor("takeover-faculty", "instructor");
   await ok(
     service.admin.api.patch(`/api/courses/${service.code}/enrollments/role`, {
@@ -461,6 +461,7 @@ test("revoking the in-flight reviewer prevents publication, allows a current pee
     await service.db
       .collection("enrollments")
       .deleteOne({ courseId: service.code, userEmail: service.faculty.email });
+    expect(await service.db.collection("enrollments").distinct("userEmail", { courseId: service.code, role: { $in: ["instructor", "admin"] } })).toEqual([peer.email]);
     gate.release();
     await expect
       .poll(
@@ -480,14 +481,25 @@ test("revoking the in-flight reviewer prevents publication, allows a current pee
           .findOne({ id: original!.taskId })
       )?.result,
     ).toBeFalsy();
-    const replacement = await completed(service, "candidate_fit", posting.id, {
-      requestedBy: peer.user.id,
-    });
+    let replacement;
+    try {
+      replacement = await completed(service, "candidate_fit", posting.id, {
+        requestedBy: peer.user.id,
+      });
+    } catch (failure) {
+      const jobs = await service.db.collection('staffingAiAutomationJobs').find({ targetId: posting.id }, { projection: { _id: 1, kind: 1, targetId: 1, requestedBy: 1, status: 1, generation: 1, runningGeneration: 1, inputHash: 1, runningInputHash: 1, lastInputHash: 1, taskId: 1, lastTaskId: 1, attempts: 1, leaseUntil: 1, nextAttemptAt: 1, nextObserveAt: 1, observationVersion: 1, lastObservedAt: 1, updatedAt: 1 } }).toArray();
+      const tasks = await service.db.collection('staffingAiTasks').find({ targetId: posting.id }, { projection: { _id: 0, id: 1, kind: 1, requestedBy: 1, status: 1, failureCode: 1, inputHash: 1, automationScopeId: 1, automationGeneration: 1, createdAt: 1, completedAt: 1 } }).sort({ createdAt: -1 }).limit(30).toArray();
+      const members = await service.db.collection('enrollments').find({ courseId: service.code }, { projection: { _id: 0, userEmail: 1, role: 1 } }).toArray();
+      const diagnostic = { synthetic: true, expectedPeerId: peer.user.id, originalActorId: service.faculty.user.id, memberships: members.map(member => ({ actor: member.userEmail === peer.email ? 'peer' : member.userEmail === service.faculty.email ? 'original' : 'other', role: member.role })), jobs, tasks, providerKinds: service.seen.map(call => call.input.kind) };
+      await testInfo.attach('revocation-state.json', { body: Buffer.from(JSON.stringify(diagnostic, null, 2)), contentType: 'application/json' });
+      throw failure;
+    }
     expect(replacement!.id).not.toBe(original!.taskId);
     await allIdle(service);
     await service.db
       .collection("enrollments")
       .deleteOne({ courseId: service.code, userEmail: peer.email });
+    expect(await service.db.collection("enrollments").countDocuments({ courseId: service.code, role: { $in: ["instructor", "admin"] } })).toBe(0);
     const saved = (
       await json(
         service.student.api.patch(

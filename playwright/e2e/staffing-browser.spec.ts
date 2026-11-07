@@ -837,7 +837,18 @@ test("current-semester course review keeps complete aggregates when loading scen
         }),
       )
     ).term;
+    const switchedReport = page.waitForResponse(
+      async (response) =>
+        new URL(response.url()).pathname ===
+          `/api/staffing/reviews/${space.code}` &&
+        response.status() === 200 &&
+        (await response.json()).termId === nextTerm.id,
+      { timeout: 30000 },
+    );
     await activateCycle(space.admin, nextTerm);
+    // Observe the normal idle poll before checking the new semester. The
+    // report interval and a DOM assertion timeout are both ten seconds.
+    await switchedReport;
     await expect(page.getByText(nextTerm.name, { exact: true })).toBeVisible();
     await expect(
       page.getByRole("heading", { name: /New semester position 1/ }),

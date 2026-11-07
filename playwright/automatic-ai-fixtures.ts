@@ -284,6 +284,7 @@ export async function createAutomaticAiHarness(): Promise<AutomaticAiHarness> {
     const admin = await actor("automatic-admin", "admin");
     const faculty = await actor("automatic-faculty", "instructor");
     const student = await actor("automatic-student");
+    const fixtureCourses: string[] = [];
     const course = async (owner: Actor, label: string, peers: Actor[] = []) => {
       const code = `auto-${label}-${suffix}`;
       await createCourse(
@@ -294,6 +295,7 @@ export async function createAutomaticAiHarness(): Promise<AutomaticAiHarness> {
           role: "instructor" as const,
         })),
       );
+      fixtureCourses.push(code);
       return code;
     };
     const code = await course(faculty, "course");
@@ -446,8 +448,12 @@ export async function createAutomaticAiHarness(): Promise<AutomaticAiHarness> {
       environment: Record<string, string> = {},
       nodes = 2,
     ) => {
-      // The unattended manager must come from current course scope, not a
-      // still-signed-in synthetic site administrator used only for setup.
+      // Course creation also grants its creator a manual course-admin role.
+      // Remove only this fixture's setup grants before testing faculty scope;
+      // logout alone intentionally preserves independent manual authority.
+      const setupGrants = { courseId: { $in: fixtureCourses }, userEmail: admin.email, role: "admin" };
+      await db.collection("enrollments").deleteMany(setupGrants);
+      expect(await db.collection("enrollments").countDocuments(setupGrants)).toBe(0);
       if (!administratorLoggedOut) {
         await ok(admin.api.post("/api/auth/logout"));
         administratorLoggedOut = true;
