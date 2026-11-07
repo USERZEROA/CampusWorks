@@ -1,53 +1,77 @@
 {
   "status": "passed",
-  "startedAt": "2026-11-07T17:52:50.975Z",
+  "startedAt": "2026-11-07T19:04:31.387Z",
   "synthetic": true,
   "headless": true,
-  "maxProviderCalls": 7,
-  "providerCallsReserved": 7,
+  "automatic": true,
+  "maxProviderCalls": 14,
+  "providerCallsReserved": 12,
   "checks": [
     {
+      "kind": "candidate_fit",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": 2
+    },
+    {
+      "kind": "candidate_fit",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": 2
+    },
+    {
       "kind": "cv_summary",
-      "trigger": "browser_click",
-      "reviewer": "faculty_a",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "cv_summary",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "cv_summary",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "cv_summary",
+      "trigger": "automatic_without_page",
       "status": "completed",
       "validated": true,
       "compared": null
     },
     {
       "kind": "opportunity_draft",
-      "trigger": "browser_click",
-      "reviewer": "faculty_a",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "opportunity_draft",
+      "trigger": "automatic_without_page",
       "status": "completed",
       "validated": true,
       "compared": null
     },
     {
       "kind": "term_review",
-      "trigger": "browser_click",
-      "reviewer": "faculty_a",
+      "trigger": "automatic_without_page",
       "status": "completed",
       "validated": true,
       "compared": null
     },
     {
       "kind": "candidate_fit",
-      "trigger": "browser_click",
-      "reviewer": "faculty_a",
-      "status": "completed",
-      "validated": true,
-      "compared": 2
-    },
-    {
-      "kind": "candidate_fit",
-      "trigger": "browser_click",
-      "reviewer": "faculty_b",
-      "status": "completed",
-      "validated": true,
-      "compared": 2
-    },
-    {
-      "kind": "candidate_fit",
       "trigger": "automatic_after_selection",
       "reviewer": "faculty_a",
       "status": "completed",
@@ -61,6 +85,13 @@
       "status": "completed",
       "validated": true,
       "compared": 1
+    },
+    {
+      "kind": "term_review",
+      "trigger": "automatic_semester_end",
+      "status": "completed",
+      "validated": true,
+      "compared": null
     }
   ],
   "stage": "expiry_and_budget_checks",
@@ -69,16 +100,18 @@
     "model": "gpt-5.4-mini"
   },
   "source": {
-    "commit": "0281e97fbdba05940e41250ed83679ede7acd338",
-    "applicationSha256": "5d138758dfee49155066881c0e86f5de09ae0f42aebd986e25d88c84fed33dd8",
+    "commit": "085175686d8f723baead2b9882fdc3c1d94ba9cc",
+    "applicationSha256": "5377f9d0d865afd8a8d4bb70d1cb19640052c74efc161bf81cfafbc3c8f01214",
     "buildEntrySha256": "444c92c4a9bd18740e5ba3138935d1266fcf7fd93ae9c2641c9eeab0130cdbc2"
   },
+  "sharedResourceResults": true,
   "competingSelectionStatus": 409,
   "browserAnalysisPosts": [
-    4,
-    1
+    0,
+    0
   ],
   "pageErrors": 0,
+  "automaticFinalReview": true,
   "endedAnalysisStatus": {
     "candidate_fit": 409,
     "cv_summary": 409,
@@ -87,5 +120,5 @@
   "remainingLeases": 0,
   "offerRequiresAcceptanceAndClearance": true,
   "cleanup": "complete",
-  "completedAt": "2026-11-07T17:53:23.801Z"
+  "completedAt": "2026-11-07T19:05:53.409Z"
 }

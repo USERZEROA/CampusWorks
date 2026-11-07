@@ -101,7 +101,7 @@ Queue commands identify intent and request identity; completion also fences the 
 
 Domain transitions record durable events. The in-app outbox claims an event and writes uniquely keyed notifications before marking delivery complete in the same transaction. Repeated or concurrent processing cannot duplicate notification rows. Model calls and external side effects are not placed inside a retried database transaction.
 
-Reconciliation handles due offer expiry, date activation and appointment end in bounded, resource-locked batches. Course transactions and staffing/task endpoints invoke the applicable maintenance. The administrator maintenance endpoint can drain additional work. Configured AI workers also process due transitions for their active comparison service so timed candidate availability changes trigger reanalysis without an open browser. Provider-disabled instances perform no background AI work; date-based authorization remains authoritative.
+Reconciliation handles due offer expiry, date activation and appointment end in bounded, resource-locked batches. A provider-independent persistent worker alternates lifecycle reconciliation and in-app delivery with leased control, bounded batches, backoff and restart recovery. Course transactions and staffing/task endpoints also invoke applicable maintenance. A protected administrator API can drain additional work. Date-based authorization remains authoritative even before displayed statuses catch up.
 
 MongoDB's distinction between single-document atomicity and multi-document transactions is the basis of this architecture. [MongoDB atomicity documentation](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/)
 
@@ -116,6 +116,8 @@ Candidate comparison scans past unavailable/ineligible records rather than slici
 Each response must conform to the bounded JSON contract and cite supplied evidence references. Candidate explanations cannot cite another applicant's evidence. Authorization and data hashes are checked again after a call and when results are read. Changed evidence/availability makes a result stale; failed, invalid or over-budget calls do not invent results.
 
 Candidate outputs cover every supplied candidate exactly once. Only explicitly classified qualification questions enter evidence; unclassified questions are omitted with a caution. A live distributed lease is confirmed after budget commit and before the provider call. Position end stops new candidate comparisons, summaries and automatic refresh while preserving currently authorized historical results and course review.
+
+All four advisory task kinds have shared resource-scoped automatic jobs. Persistent round-robin discovery runs independently of provider execution. Current manager/account bindings, source hashes and execution generations are checked before a call and publication. Candidate pages default to ten; large text may be explicitly excerpted with complete-source hashes and coverage warnings, retaining all candidates and references. Changed course previews coalesce for fifteen minutes; the semester-end final phase bypasses that cooldown. Ordinary page reads are read-only status/result access.
 
 AI requests have user/global daily request and conservative token reservations, distributed concurrency leases, bounded input/output and a body-inclusive timeout. Provider-account spending limits and private-data approval are still required. The software controls requests; it does not certify provider billing, fairness or actual hiring quality.
 

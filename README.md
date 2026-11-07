@@ -98,7 +98,9 @@ Only the OpenAI Key is entered. Windows encrypts it for the current account in i
 
 Other deployments can use server-only `AI_BASE_URL`, `AI_API_KEY` and `AI_MODEL` environment variables. Never expose them through public runtime configuration. Missing configuration disables AI while manual workflows remain usable. `node scripts/ai-provider-check.mjs` performs a capped, isolated synthetic provider check; it does not evaluate hiring quality.
 
-AI receives authorized evidence with references, excludes private administrative attributes, and returns validated suggestions for human review. It never selects applicants, grants roles or reduces staffing. Availability and evidence are rechecked after a response; a concurrent selection makes the result stale. Established candidate comparisons update automatically when candidate lists, qualifications or availability change, using a durable worker, current reviewer permissions and the existing budgets. Candidate pages disclose coverage. Disabling recruitment or switching semesters invalidates old comparisons; closed applications can still be reviewed in the current enabled semester. Background summaries currently use supplied profile and qualification text; binary PDF text extraction is not implemented.
+AI receives authorized evidence with references, excludes private administrative attributes, and returns validated suggestions for human review. All four task types run automatically: saved requirements, submitted qualification summaries, current candidate comparisons and dated course reviews. Authorized managers share resource-scoped results; ordinary page reads do not purchase requests. Availability, evidence, current authority and execution leases are checked before publication. Candidate pages disclose coverage, normally ten people per automatic page. Course previews use a fifteen-minute cooldown; semester-end advice bypasses that preview cooldown. Disabling recruitment or switching semesters invalidates old candidate comparisons; closed applications remain reviewable in the current enabled semester. Binary PDF text extraction is not implemented.
+
+Pages synchronize silently and recover after reconnect or focus, retaining complete data and unsaved input. Conflicting remote edits require explicit resolution. Hiring, offer responses, clearance, settlement and deletion remain human decisions. A separate persistent worker handles existing timed transitions and in-app delivery without AI configuration or an open browser.
 
 | AI setting | Default |
 | --- | --- |
@@ -107,10 +109,14 @@ AI receives authorized evidence with references, excludes private administrative
 | `AI_GLOBAL_DAILY_REQUEST_LIMIT` | 200 |
 | `AI_GLOBAL_DAILY_TOKEN_BUDGET` | 1000000 reserved tokens |
 | `AI_MAX_CONCURRENT` | 2 distributed requests |
+| `AI_AUTO_REFRESH_ENABLED`, `AI_AUTO_DISCOVERY_ENABLED` | true; automatic execution and discovery |
+| `AI_AUTO_CANDIDATE_PAGE_SIZE` | 10; range 1-10 |
+| `AI_TERM_REVIEW_COOLDOWN_MS` | 900000 between changed course previews |
+| `STAFFING_MAINTENANCE_ENABLED`, `STAFFING_MAINTENANCE_INTERVAL_MS` | true; 5000 ms between idle due-date/delivery checks |
 
 Requests have bounded input, output, response size and timeout. Failed calls consume their reservation. See [staffing operations](docs/STAFFING_OPERATIONS.md) for evidence and review constraints.
 
-[AI workflows](docs/AI_WORKFLOWS.md) identifies each page, trigger and advisory output. Current real-provider browser verification covers all four AI tasks and automatic updates for two teachers after selection. The capped harness is `node scripts/ai-provider-browser-check.mjs`; it requires the saved Windows Key, a production build and a dedicated loopback replica set specified by `AI_PROOF_MONGODB_URI`.
+[AI workflows](docs/AI_WORKFLOWS.md) identifies each page, automatic trigger and advisory output. The capped real-provider harness is `node scripts/ai-provider-browser-check.mjs`; it requires the saved Windows Key, a production build and a dedicated loopback replica set specified by `AI_PROOF_MONGODB_URI`. Its current executed results belong in [verification](docs/VERIFICATION.md).
 
 Only explicitly classified qualification questions can enter AI evidence; older unclassified questions are omitted. Candidate comparisons must cover each supplied candidate exactly once. At a position's appointment end, new candidate comparisons and summaries stop, while authorized historical results, settlement and course reviews remain available.
 
@@ -118,7 +124,7 @@ Only explicitly classified qualification questions can enter AI evidence; older 
 
 Every queue mutation locks its course inside a MongoDB transaction. Membership, queue state, duty, claims, ordering and history are checked and changed together. Closing cannot leave a simultaneous new arrival stranded. History insertion and active-entry removal share a transaction and a unique entry identifier. Actual help segments preserve attribution across pauses, handoffs and revoked appointments.
 
-The MongoDB driver is pinned to 7.8.0, which includes the vendor's pool-isolation and SRV validation fixes. Transactions retain driver-managed retries and commit resolution, with separate connection-stage limits and a checked callback work budget. See the [official release notes](https://www.mongodb.com/docs/drivers/node/current/reference/release-notes/#what-s-new-in-7-8). Required indexes and transaction support are readiness requirements. Database/index failures produce an unavailable state. Sessions, rate limits, allocation uniqueness, audit events and durable in-app notifications are shared across replicas. Lists expose bounded pagination. Notification delivery is idempotent; administrators can trigger reconciliation through `POST /api/staffing/reconcile`.
+The MongoDB driver is pinned to 7.8.0, which includes the vendor's pool-isolation and SRV validation fixes. Transactions retain driver-managed retries and commit resolution, with separate connection-stage limits and a checked callback work budget. See the [official release notes](https://www.mongodb.com/docs/drivers/node/current/reference/release-notes/#what-s-new-in-7-8). Required indexes and transaction support are readiness requirements. Database/index failures produce an unavailable state. Sessions, rate limits, allocation uniqueness, audit events and durable in-app notifications are shared across replicas. Lists expose bounded pagination. Notification delivery is idempotent and automatic; `POST /api/staffing/reconcile` remains a protected administrative maintenance API.
 
 Feedback remains identified to managers; declining contact does not make it anonymous. Queue help minutes are measured activity, while workload records are submitted work. Reports expose missing evidence and separate budget scenarios from measured cost. Neither establishes payroll or an automatic staffing reduction.
 

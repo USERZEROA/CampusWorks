@@ -2,7 +2,7 @@
 
 Verified on November 7, 2026 against the delivered source. [Results](verification/results.json) record exact case names, durations, accessibility checks and screenshot hashes. [Business review](BUSINESS_REVIEW.md) maps the seventeen findings, the three owner decisions and the additional integration fixes to regression evidence.
 
-The complete local run passed **163 acceptance tests**, with zero failures, skips or flaky results. It also passed **9 unit tests**, application/server/test TypeScript checks and a production build. Two production application instances shared an isolated disposable MongoDB replica set. The separately built Linux production image passed **24 Chromium/Firefox browser tests** against another authenticated database. No GitHub Actions, remote push or deployment was used.
+The complete local run passed **187 acceptance tests**, with zero failures, skips or flaky results. It also passed **21 unit tests**, application/server/test TypeScript checks and a production build. Two production application instances shared an isolated disposable MongoDB replica set. The separately built Linux production image passed **36 Chromium/Firefox browser tests** against another authenticated database. No GitHub Actions, remote push or deployment was used.
 
 ## Exercised business and security behavior
 
@@ -22,6 +22,11 @@ The complete local run passed **163 acceptance tests**, with zero failures, skip
 - Loopback AI providers: qualification-only projection, technical-question retention, invalid/cross-candidate citations, exact candidate coverage, failures, quotas, distributed concurrency and valid-lease confirmation.
 - Automatic comparisons after submission, selection, withdrawal, timed expiry and course restriction/restoration; worker coalescing, current permissions, stale evidence rejection, candidate page metadata and disabled-provider behavior.
 - Position end stops new comparisons/summaries and automatic calls while preserving authorized, dated historical results and course reviews. Other AI task kinds retain their default interface capability.
+- Unattended TA/RA generation of all four advisory kinds, shared authorized results, automatic ten-person candidate pages, persistent discovery beyond the initial batch and restart without repeat purchases.
+- Candidate availability changes after manual selection, preview/final semester advice, failed-call backoff, quota exhaustion, revoked reviewers and expired execution leases.
+- Real offline/reconnect and focus recovery, one in-flight poll, no refresh/generate controls, retained unsaved input, explicit remote-conflict discard and immediate clearing after permission loss.
+- Provider-independent offer expiry, cleared activation, restricted/uncleared activation refusal, multiple lifecycle batches and exactly-once in-app delivery without page traffic.
+- Actual-source unit checks for hint/due fairness under sustained backlog, failed observation recovery, complete candidate/reference preservation, Unicode, hidden-tail evidence hashes and oversized input with zero budget/provider activity.
 
 ## Browser presentation and accessibility
 
@@ -31,9 +36,9 @@ These scans are automated checks of the exercised states, not proof of universal
 
 ## Provider, dependency and review boundaries
 
-The latest production build also passed **seven real OpenAI requests** through headless browser workflows: qualification summary, requirements suggestions, course review, two teachers' initial comparisons and both automatic updates after selection. The [sanitized browser receipt](verification/ai-browser-proof.json) records the source digest, configured model and outcomes. The saved Key was decrypted only by the local Windows loader and passed through the application child environment; it was not printed, saved to logs or exposed to the browser. Synthetic records alone were sent to OpenAI. All responses passed schema/evidence checks, the competing selection was refused, expiry preserved history without another call, and cleanup completed.
+The final production build passed **twelve real OpenAI advisory tasks**, with **12 reserved provider attempts**, using synthetic records. Nine tasks completed without an open page or an analysis request, both teachers' candidate comparisons updated after manual selection, and final course advice appeared at semester end. Headless browsers checked all four result panels without analysis POSTs; an authorized peer read the same task, competing selection returned 409, expiry preserved authorized history and no early TA grant occurred. The [sanitized receipt](verification/ai-browser-proof.json) records the application source digest, model, outcomes and complete cleanup. The saved Key was loaded only by the Windows credential loader and passed to the application child environment, never printed or exposed to browsers.
 
-The retained [five-request OpenAI receipt](verification/ai-provider-proof.json) is historical. Loopback providers still exercise controlled failure, quota and race cases. The masked DPAPI launcher remains covered by synthetic-credential tests. Real API success does not establish real hiring accuracy or fairness. See [AI workflows](AI_WORKFLOWS.md) for the exact insertion points and manual/automatic behavior.
+The retained [five-request receipt](verification/ai-provider-proof.json) is historical. Controlled loopback providers exercise failures, quota and races; the masked DPAPI launcher remains covered by synthetic-credential tests. Neither synthetic provider success nor finite output inspection establishes real hiring accuracy or fairness. [AI workflows](AI_WORKFLOWS.md) identifies every automatic trigger and retained human decision.
 
 MongoDB remains pinned to **7.8.0**. The current npm audit snapshot reports **zero vulnerabilities**. Mandatory declared indexes and transaction-capable topology are readiness requirements. Unit/source checks, dependency audit and finite acceptance tests are complementary evidence; none is an exhaustive security proof.
 

@@ -1,42 +1,40 @@
-# CampusWorks AI workflows
+﻿# CampusWorks AI workflows
 
-AI currently participates in four steps. The current production build passed seven real OpenAI requests using synthetic records and headless browser interactions. The [sanitized receipt](verification/ai-browser-proof.json) records the model, source digest, task outcomes and cleanup without credentials or model output.
+All four advisory tasks run in the background when the provider is configured. Opening a page reads results; it does not start a paid request. The [verification report](VERIFICATION.md) and [sanitized provider receipt](verification/ai-browser-proof.json) record executed checks and their source digest.
 
-| Business step | Page and control | What AI does | Trigger |
+| Business step | Result location | Automatic trigger | Advisory output |
 | --- | --- | --- | --- |
-| Prepare position requirements | Saved position review, `Draft requirements` | Suggest concise requirement wording and qualification questions using the position's existing description, skills, duties, hours and schedule | An authorized position manager clicks the button; suggestions do not automatically change the posting |
-| Read an application | Application details, `Summarize application` | Summarize submitted qualifications, answers and entered background text; identify missing evidence | A teacher or administrator opens an application they manage and clicks the button |
-| Compare candidates | Position review, `Analyze candidates` | Compare each eligible, available applicant on the current candidate page against the position requirements, with evidence references | The manager starts the first comparison; relevant later changes update that approved comparison automatically |
-| Review a course and plan staffing | Course review, `Draft course review` | Use queue demand, waiting time, feedback, submitted work, requested/approved/committed/settled budgets and evidence gaps to suggest improvements and conditional staffing scenarios | An authorized course manager clicks the button; semester end does not automatically create a report |
+| Prepare requirements | Saved position review | A position is saved or its requirements change | Concise wording and qualification-question suggestions; the saved position is not edited automatically |
+| Read applications | Application detail | An application is submitted or its reviewed qualifications change | Evidence-linked qualifications and missing information |
+| Compare candidates | Position review | Submitted candidate evidence or eligibility/availability changes, including another teacher's selection | A comparison for each currently eligible candidate in the page, with evidence references |
+| Review course staffing | Course review | Checked course/semester aggregates change; a final review becomes due at the semester end | Course improvements, evidence gaps and conditional staffing/budget scenarios |
 
-Recruitment starts from the course-list home page. Hiring controls require current instructor or administrator authority. An RA owner must retain the required instructional authority. A TA identity alone does not confer hiring permissions.
+Recruitment starts from the course-list home page. Only current instructors and administrators manage hiring. RA owners must retain instructional authority. A TA identity alone confers no hiring authority. RA remains an application and appointment type without a research workspace or queue grant.
 
-The qualification-summary page is manager-facing. Its protected API also permits an applicant to summarize their own authorized record. Candidate summaries are blocked after position end; their API does not independently enforce every current-cycle visibility condition used by the page.
+## Shared results and background execution
 
-## Candidate updates and appointment authority
+Persistent jobs are scoped to a resource, task kind, semester and candidate page. Authorized managers share the same automatic result instead of purchasing separate results for each viewer. The worker reconstructs current account/provider bindings and management authority before calling the provider and again before publishing. An authorized peer can take over when a manager loses authority. With no valid manager, the task stops.
 
-Once a manager starts a comparison, the subscription belongs to that manager, position and candidate-page scope. Submission, qualification/CV changes, withdrawal, review, selection, offer/appointment changes and course restriction/restoration can invalidate the comparison. Changed evidence or availability schedules a new analysis; unchanged evidence may reuse a completed result. Ordinary page polling only reads status.
+Discovery uses a persistent round-robin cursor across task types and subsequent candidate pages. Discovery continues while a provider response is pending. Leases and generations fence overlapping instances and abandoned workers. Duplicate hints and unchanged evidence reuse the current result. Changed evidence invalidates it and schedules current work. Failures back off; daily budget exhaustion waits until the next UTC day. Ordinary page reads never retry model work themselves.
 
-Selection remains a human command. Its transaction reserves the person, vacancy and commitment. Another teacher cannot reserve that person for an overlapping appointment. Established comparisons then exclude the unavailable applicant and refresh the remaining candidates. Candidate acceptance, administrative clearance and the effective start date still precede TA course authority. AI cannot issue offers, grant roles or reduce budgets.
+Automatic candidate pages contain up to ten eligible candidates by default. Every supplied candidate must receive exactly one valid explanation. Coverage identifies the page, inspected/submitted/compared counts and remaining pages. A page does not establish the best applicant across the entire pool. Large automatic inputs may use explicitly marked text excerpts, retaining every candidate, reference and complete-source hash; the result then warns that reviewers must inspect the full application. Inputs that still exceed the limit stop without a provider purchase until evidence changes.
 
-Comparisons are paged, normally up to fifty eligible candidates per request. The interface discloses coverage; a page comparison does not establish a global best applicant. Position end stops new comparisons and candidate summaries, while current permissions govern access to dated historical results. Settlement and course reviews remain available.
+Course previews coalesce changing observations with a fifteen-minute default cooldown. Semester end changes the review phase to final and bypasses that preview cooldown. Both previews and final advice use checked, dated aggregates. A missing provider disables AI without blocking deterministic staffing work.
 
-## Real API verification
+## Decisions and appointment authority
 
-The latest isolated run used `gpt-5.4-mini` through the production OpenAI adapter:
+Selection, offer acceptance, clearance, settlement, suspension/end and deletion remain explicit human commands. Their existing transactions reserve the candidate, vacancy and financial commitment. Another teacher cannot reserve that person for an overlapping appointment. Automatic comparisons then exclude that applicant and update the available candidates. Acceptance, clearance and the effective appointment start still precede TA course authority.
 
-1. Browser-generated qualification summary, requirements suggestions and course review: three requests.
-2. Two teachers each compared the same two synthetic applicants for separate courses: two requests.
-3. The first teacher selected one applicant through the interface. Both comparisons automatically updated to the remaining applicant without another analysis click: two requests.
+Timed offer expiry, cleared appointment activation, appointment end and in-app notification delivery have an independent persistent maintenance worker. They run without an AI provider or an open browser. Date-valid authorization also checks expiry directly. The worker never chooses a hire, accepts an offer, approves clearance or settles a cost.
 
-All seven results completed and passed evidence/schema checks. The competing selection returned 409. Position-end checks refused new candidate analysis without purchasing another call and retained authorized history. No browser runtime errors, unused concurrency leases or early TA authority remained. Temporary application processes and the synthetic database were removed.
+At position end, new candidate comparisons and application summaries stop. Authorized history keeps its original date and evidence; settlement and course reviews remain available. Revoked managers lose access to cached results as well as new analysis.
 
-The maintained harness is [ai-provider-browser-check.mjs](../scripts/ai-provider-browser-check.mjs). It requires the saved encrypted Windows configuration, a current production build and `AI_PROOF_MONGODB_URI` pointing to a dedicated loopback replica set. It caps requests at seven, runs headlessly and writes sanitized status to ignored local storage. The Key reaches only the application child environment. The database fixture is generated separately from real user data and removed after the run.
+## Verification and limits
 
-The earlier five-request [provider receipt](verification/ai-provider-proof.json) remains a historical check. Reproducible timeout, malformed-output, quota and race tests continue using loopback providers; the complete local acceptance results are in [VERIFICATION.md](VERIFICATION.md).
+The maintained [headless provider harness](../scripts/ai-provider-browser-check.mjs) uses only synthetic records and the production OpenAI adapter. It checks unattended generation before opening a browser, all four result panels, shared candidate updates after manual selection, competing selection refusal, final semester advice, ended-position history and cleanup. It reserves at most fourteen calls, allowing twelve expected successful tasks and bounded retry headroom. The Key is loaded only through the saved encrypted Windows configuration and the application child environment.
 
-## Evidence limits
+The current sanitized receipt records actual outcomes; the earlier [five-request receipt](verification/ai-provider-proof.json) remains historical. Controlled loopback providers exercise timeout, malformed output, quota, revoked authority, stale publication, restart and lease cases. Finite synthetic tests do not establish real hiring accuracy, fairness or production scale.
 
-PDF/TXT attachments are saved privately and can be downloaded by authorized users. Their bytes are not parsed or sent to the model; entered qualification fields, screened answers and background text supply AI evidence. Administrative records are excluded. Free-text filtering is defensive and does not guarantee complete anonymization.
+The final automatic workflow check completed twelve `gpt-5.4-mini` tasks in twelve reserved requests: nine unattended initial results, two updated candidate comparisons after manual selection and one final semester review. Both teachers read the same shared position result. Browser analysis POSTs, runtime errors and remaining concurrency leases were zero; competing selection returned 409 and cleanup completed.
 
-The synthetic outputs were inspected for relevant qualifications, missing evidence and appropriate course-report uncertainty. This verifies working integration and the exercised controls, not real hiring accuracy or fairness. Queue observations and submitted work do not prove total paid hours or justify an automatic staffing reduction.
+PDF/TXT attachments remain private download records. Their bytes are not parsed or sent to the model. Entered qualification fields, screened answers and background text supply evidence; administrative records are excluded. Free-text filtering is defensive and does not guarantee complete anonymization. Queue observations and submitted work do not establish total paid hours or authorize automatic staffing cuts.

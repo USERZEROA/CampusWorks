@@ -29,7 +29,7 @@ Course restrictions also govern selection, clearance, resumption and future acti
 | F07: Multi-page reports merge inconsistent rows | Course-identity and full-dataset fingerprint; bounded restart; publish complete reads only | `queue-business`: 502 rows, KPI, CSV and failed-refresh preservation |
 | F08: Slow polling starves updates | Deferred, guarded refreshes and cancellation propagation | `queue-business`: delayed responses; existing browser flows |
 | F09: Disabled helpers retain duty/claims | Current account validity participates in effective helper cleanup | `queue-business`: disabled manual TA and demo administrator |
-| F10: Application controls retain an old cycle | Details return current cycle; Refresh uses authoritative capabilities | `staffing-browser`: reopen without browser reload |
+| F10: Application controls retain an old cycle | Details return current cycle; silent synchronization uses authoritative capabilities | `staffing-browser`: reopen without browser reload |
 | F11: Closed recruitment hides withdrawal | Withdrawal follows pre-acceptance state independently of edit permission | `staffing-browser`: closed-cycle withdrawal |
 | F12: Accepted end boundary prevents default postings | Recruitment closes strictly before semester end | `staffing-audit-regressions`: invalid boundary leaves cycle unchanged |
 | F13: Draft budgets appear approved | Requested plans, approved published plans, outstanding commitments and settled costs are separate | `staffing-audit-regressions`: budget progression; fake-provider report evidence |
@@ -40,12 +40,22 @@ Course restrictions also govern selection, clearance, resumption and future acti
 
 Additional review fixes confirm a valid provider lease after budget commit, use one snapshot for course-review aggregates and P90, guard CSV formula prefixes, prevent snapshot reuse after course deletion/recreation, and check all declared mandatory database indexes during readiness. Local form versions advance from successful commands without adopting another tab's unseen revision. Candidate-analysis capability defaults explicitly preserve other AI task kinds; expired candidate controls alone are hidden. Manager refreshes stop displaying a deleted or newly unauthorized resource.
 
+## Automatic operation review
+
+The owner confirmed that data synchronization and advisory AI generation should run automatically, while business decisions remain human commands. Pages retain complete data through temporary failures, synchronize on reconnect/focus and prevent overlapping reads. Dirty qualification, administrative, recruitment-window and requirement forms retain their original baseline. A remote content edit requires an explicit discard; a delayed response cannot roll back a successful local command.
+
+Saved requirements, submitted summaries, candidate comparisons and course previews/final advice use shared resource-scoped jobs. Current permissions, full-source hashes, generations and live leases fence provider execution and publication. Discovery cursors survive restart. Candidate pages default to ten and cover every supplied candidate once; excerpted input is identified rather than dropping applicants. Retry times belong to job state and cannot be overwritten by discovery hints. Due observations and new-resource hints must both make progress under backlog.
+
+An independent leased maintenance worker alternates timed lifecycle transitions and in-app notification delivery without provider configuration or an open page. Empty batches return to the idle interval; persistent cursors and bounded continuation prevent a large first batch from starving later resources. The original transactional domain controls still govern every transition.
+
+Position end independently blocks new application drafts, qualification/CV edits and submissions even if an administrator extends the shared recruitment window. Pre-acceptance withdrawal remains available. Selection, acceptance, clearance, settlement, suspension/end and deletion are never retried or chosen automatically.
+
 ## Evidence boundaries
 
 The review combines the earlier complete maintained-source reading receipts, current domain review of changed files, independent cross-review and targeted synthetic counterexamples converted to regressions. Inventory hashes are distinct from semantic review. Finite tests do not prove all possible races or security properties.
 
 Administrative audit records remain fully stored; the detail view shows the latest 100. Complete course-report reads can retry under continuous writes and retain the previous complete result after a bounded failure. Sustained production load, real failover and large institutional datasets have not been measured.
 
-AI question classification and filtering do not guarantee that arbitrary free text contains no personal information. Candidate comparisons are advisory and paged; provider output is structurally checked, not certified accurate or fair. The latest production build passed seven real OpenAI requests on synthetic records, including automatic updates for two teachers after one selects an applicant. Controlled failure and race tests use loopback providers. [AI workflows](AI_WORKFLOWS.md) records the four current insertion points and the [new receipt](verification/ai-browser-proof.json); the older five-request receipt remains historical.
+AI question classification and filtering do not guarantee that arbitrary free text contains no personal information. Candidate comparisons are advisory and paged; provider output is structurally checked, not certified accurate or fair. The [current receipt](verification/ai-browser-proof.json) records real OpenAI checks using synthetic records; controlled failures and races use loopback providers. [AI workflows](AI_WORKFLOWS.md) records the four automatic insertion points. The older five-request receipt remains historical.
 
 The established scope still excludes student resignation requests, a new department role, PDF extraction/OCR, antivirus certification, institutional HR/payroll, external messaging and hosted deployment. These are documented boundaries, not newly enabled business features.

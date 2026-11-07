@@ -19,11 +19,13 @@ Confirmed by the owner on November 7, 2026.
 
 ## AI assistance
 
-- Candidate-list, qualification and availability changes automatically invalidate the old comparison and schedule an updated comparison for its established reviewer and scope.
+- Page data synchronizes silently, including recovery after focus, reconnect and temporary failures. Background reads preserve complete data and unsaved input; remote edit conflicts require explicit resolution.
+- Requirements suggestions, submitted qualification summaries, candidate comparisons and course reviews are generated automatically for shared authorized resource scopes. Candidate-list, qualification and availability changes invalidate old evidence and schedule current work.
 - Automatic comparisons remain advisory, use current permissions and evidence, and obey the existing daily and concurrent request budgets.
 - Duplicate changes and overlapping worker executions must not produce duplicate calls for the same current evidence.
 - Missing provider configuration means no model call. The owner supplied an OpenAI Key through a masked local form; provider verification is recorded separately.
 - Automatic comparison does not select, reject, approve clearance, change roles or alter budgets.
+- Hiring, offer responses, clearance, settlement and deletion remain human decisions, as confirmed by the owner. Date transitions and in-app delivery run independently of AI configuration or page traffic.
 - When a position's appointment end is reached, new candidate comparisons, candidate summaries and automatic recommendations stop. Authorized historical records, financial settlement and course reviews remain available.
 
 ## Presentation and verification

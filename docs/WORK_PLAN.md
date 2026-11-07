@@ -15,6 +15,7 @@
 - After a position's appointment end, candidate analysis and automatic recommendations stop. History, settlement and course summaries remain available to authorized users.
 - A candidate cannot hold overlapping TA/RA commitments or multiple live allocations in one semester. Human decisions and transactional allocation remain authoritative.
 - Administrative information stays outside qualification review and AI input. AI is advisory and cannot select candidates, grant permissions or change budgets.
+- Synchronize every live page silently and generate all four advisory AI task types automatically. Retain human confirmation for business decisions.
 
 ## Reliability requirements
 
@@ -23,6 +24,8 @@
 - Bind submitted application snapshots and dirty administrator forms to their reviewed versions.
 - Preserve complete report/export data across pagination and consistent report reads; keep planned, approved-position, committed and settled costs distinct.
 - Prevent overlapping polling from discarding every slow response; synchronize recruitment controls after cycle changes and keep legitimate withdrawal available.
+- Preserve dirty form baselines, fence stale responses, retry temporary network failures and handle permission loss without leaving private data visible.
+- Run persistent due-date and notification maintenance without an AI provider or an open page; share automatic AI work across authorized managers and fence late publications.
 - Remove disabled helpers from operational duty/claims while retaining independent employment/financial obligations.
 - Expose authorized settlement and opportunity closeout controls, and keep RA/TA controls aligned with appointment type.
 - Validate qualification projections and exact candidate-result coverage; use current authority, position dates, durable budgets and concurrency reservations.
