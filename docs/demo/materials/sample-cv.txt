@@ -1,0 +1,8 @@
+SYNTHETIC DEMONSTRATION CV
+
+Name: Demo Applicant
+Academic preparation: Computer Science coursework in algorithms, software testing and data systems.
+Experience: Peer study groups, clear technical explanations, reproducible examples and collaborative projects.
+Availability: Ten hours per week, with schedule details supplied in the application.
+
+This is a synthetic local presentation file. It contains no real person's qualifications or academic results.

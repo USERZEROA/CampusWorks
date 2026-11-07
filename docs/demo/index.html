@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="CampusWorks synthetic TA and RA workflow screenshots from actual local browser tests."
+    />
+    <title>CampusWorks Demo Gallery</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --duke: #012169;
+        --blue: #17408b;
+        --ink: #172033;
+        --muted: #536174;
+        --line: #d9e2ef;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #f3f5fa;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+      }
+      a {
+        color: var(--blue);
+        text-underline-offset: 3px;
+      }
+      :focus-visible {
+        outline: 3px solid #d97706;
+        outline-offset: 4px;
+      }
+      .skip-link {
+        position: fixed;
+        z-index: 5;
+        top: -80px;
+        left: 16px;
+        padding: 10px 16px;
+        color: var(--duke);
+        background: #fff;
+        border: 2px solid var(--duke);
+        border-radius: 6px;
+      }
+      .skip-link:focus {
+        top: 12px;
+      }
+      .masthead {
+        color: #fff;
+        background: var(--duke);
+      }
+      .masthead-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        max-width: 1248px;
+        margin: auto;
+        padding: 20px 24px;
+      }
+      .logo {
+        display: block;
+        width: 228px;
+        height: auto;
+        max-width: 100%;
+      }
+      .brand {
+        font-size: 23px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+      .brand span {
+        display: block;
+        margin-top: 3px;
+        color: #dbe7ff;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      main {
+        max-width: 1248px;
+        margin: auto;
+        padding: 38px 24px 52px;
+      }
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0;
+        color: var(--duke);
+        font-size: clamp(29px, 4vw, 42px);
+        line-height: 1.15;
+        letter-spacing: -0.035em;
+      }
+      .intro {
+        margin: 13px 0 22px;
+        max-width: 700px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.65;
+      }
+      .disclosure {
+        margin: 0 0 28px;
+        padding: 13px 16px;
+        border-left: 3px solid var(--blue);
+        border-radius: 4px;
+        color: #344868;
+        background: #eaf0fc;
+        font-size: 12px;
+        line-height: 1.7;
+      }
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .ai-section {
+        margin-top: 36px;
+      }
+      .ai-section > h2 {
+        margin: 0;
+        color: var(--duke);
+        font-size: 27px;
+        letter-spacing: -0.03em;
+      }
+      .ai-section > p {
+        margin: 8px 0 18px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.65;
+      }
+      .ai-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .ai-gallery .preview {
+        background: #fff;
+      }
+      .ai-gallery .preview img {
+        min-height: 0;
+      }
+      .provider-label {
+        color: #17603c;
+        font-weight: 650;
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        box-shadow: 0 10px 28px rgb(1 33 105 / 4%);
+      }
+      .preview {
+        display: block;
+        width: 100%;
+        height: 218px;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        background: #e8edf6;
+        text-align: left;
+      }
+      .preview img {
+        display: block;
+        width: 100%;
+        min-height: 100%;
+        height: auto;
+        object-fit: cover;
+        object-position: top;
+      }
+      .preview.mobile {
+        background: #e8edf6;
+        text-align: center;
+      }
+      .preview.mobile img {
+        width: 160px;
+        min-height: auto;
+        margin: 0 auto;
+        box-shadow: 0 0 18px rgb(1 33 105 / 10%);
+      }
+      .card-body {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 10px;
+        padding: 19px 20px 20px;
+      }
+      .card-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .step {
+        color: var(--blue);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+      .card h2,
+      .card h3 {
+        margin: 0;
+        color: var(--duke);
+        font-size: 19px;
+        line-height: 1.4;
+        letter-spacing: -0.02em;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.65;
+      }
+      .original {
+        align-self: flex-start;
+        margin-top: auto;
+        padding-top: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .footer-note {
+        margin: 24px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.7;
+      }
+      dialog {
+        width: min(1240px, calc(100% - 32px));
+        height: calc(100dvh - 32px);
+        max-width: none;
+        max-height: none;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #c4d0e5;
+        border-radius: 12px;
+        color: var(--ink);
+        background: #fff;
+        box-shadow: 0 24px 100px rgb(0 0 0 / 35%);
+      }
+      dialog[open] {
+        display: flex;
+        flex-direction: column;
+      }
+      dialog::backdrop {
+        background: rgb(4 15 39 / 76%);
+      }
+      .viewer-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 16px 20px 13px;
+        background: var(--duke);
+        color: #fff;
+      }
+      .viewer-header h2 {
+        margin: 0;
+        font-size: 19px;
+        line-height: 1.45;
+      }
+      .viewer-position {
+        margin: 0 0 4px;
+        color: #dbe7ff;
+        font-size: 11px;
+        font-variant-numeric: tabular-nums;
+      }
+      .viewer-close,
+      .viewer-tools button {
+        min-height: 36px;
+        padding: 7px 12px;
+        border: 1px solid #b9c8e4;
+        border-radius: 6px;
+        color: var(--duke);
+        background: #fff;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .viewer-close {
+        flex-shrink: 0;
+        color: #fff;
+        border-color: #c1d0eb;
+        background: transparent;
+      }
+      .viewer-tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .viewer-tools button[aria-pressed="true"] {
+        color: #fff;
+        border-color: var(--blue);
+        background: var(--blue);
+      }
+      .viewer-tools a {
+        margin-left: auto;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .viewer-canvas {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+        background: #e8edf6;
+      }
+      .viewer-canvas img {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        margin: auto;
+      }
+      .viewer-canvas.actual-size img {
+        max-width: none;
+      }
+      .viewer-caption {
+        margin: 0;
+        padding: 10px 16px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+      @media (max-width: 960px) {
+        .gallery {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 600px) {
+        .masthead-inner {
+          padding: 16px;
+        }
+        .logo {
+          width: 190px;
+        }
+        .brand {
+          font-size: 20px;
+        }
+        main {
+          padding: 28px 16px 36px;
+        }
+        .gallery {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 16px;
+        }
+        .ai-gallery {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .preview {
+          height: 210px;
+        }
+        .card-body {
+          padding: 17px 18px;
+        }
+        .intro {
+          font-size: 14px;
+        }
+        dialog {
+          width: calc(100% - 16px);
+          height: calc(100dvh - 16px);
+          border-radius: 8px;
+        }
+        .viewer-header {
+          gap: 12px;
+          padding: 13px 12px;
+        }
+        .viewer-header h2 {
+          font-size: 16px;
+        }
+        .viewer-tools {
+          padding: 8px 10px;
+          gap: 6px;
+        }
+        .viewer-tools button {
+          padding: 7px 9px;
+        }
+        .viewer-tools a {
+          margin-left: 0;
+        }
+        .viewer-caption {
+          padding: 9px 12px;
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to gallery</a>
+    <header class="masthead">
+      <div class="masthead-inner">
+        <img
+          class="logo"
+          src="../../public/duke-cs-logo.png"
+          width="381"
+          height="70"
+          alt="Duke Department of Computer Science"
+        />
+        <div class="brand">CampusWorks<span>Demo gallery</span></div>
+      </div>
+    </header>
+    <main id="main-content" tabindex="-1">
+      <p class="eyebrow">Four roles. One connected workflow.</p>
+      <h1>CampusWorks Demo Gallery</h1>
+      <p class="intro">
+        Recruitment, appointments, live student support and course review.
+      </p>
+      <aside class="disclosure" aria-label="Screenshot context">
+        All records are synthetic. Eight workflow captures come from local
+        browser tests with AI unconfigured. Two AI panels show real OpenAI
+        responses to synthetic evidence.
+      </aside>
+      <div class="gallery" aria-label="Workflow screenshots">
+        <article class="card">
+          <button
+            class="preview"
+            type="button"
+            aria-label="Enlarge Recruitment overview"
+            aria-haspopup="dialog"
+            data-image="screenshots/showcase-recruitment-desktop.png"
+            data-title="Recruitment overview"
+            data-caption="TA/RA openings across publication states."
+            data-alt="Recruitment overview with synthetic TA and RA openings in several publication states."
+          >
+            <img
+              src="screenshots/showcase-recruitment-desktop.png"
+              alt=""
+              width="1440"
+              height="1000"
+              decoding="async"
+            />
+          </button>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="step">01</span><span>Administrator · Desktop</span>
+            </div>
+            <h2>Recruitment overview</h2>
+            <p>TA/RA openings across publication states.</p>
+            <a
+              class="original"
+              href="screenshots/showcase-recruitment-desktop.png"
+              target="_blank"
+              rel="noopener"
+              >Open original PNG</a
+            >
+          </div>
+        </article>
+        <article class="card">
+          <button
+            class="preview"
+            type="button"
+            aria-label="Enlarge Candidate review"
+            aria-haspopup="dialog"
+            data-image="screenshots/showcase-candidate-pool-desktop.png"
+            data-title="Candidate review"
+            data-caption="Qualifications, availability and offer controls."
+            data-alt="Instructor candidate pool with synthetic qualifications, availability and offer controls."
+          >
+            <img
+              src="screenshots/showcase-candidate-pool-desktop.png"
+              alt=""
+              width="1440"
+              height="1000"
+              decoding="async"
+            />
+          </button>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="step">02</span><span>Instructor · Desktop</span>
+            </div>
+            <h2>Candidate review</h2>
+            <p>Qualifications, availability and offer controls.</p>
+            <a
+              class="original"
+              href="screenshots/showcase-candidate-pool-desktop.png"
+              target="_blank"
+              rel="noopener"
+              >Open original PNG</a
+            >
+          </div>
+        </article>
+        <article class="card">
+          <button
+            class="preview"
+            type="button"
+            aria-label="Enlarge Applications and offers"
+            aria-haspopup="dialog"
+            data-image="screenshots/showcase-applicant-applications-desktop.png"
+            data-title="Applications and offers"
+            data-caption="Application progress and appointment notifications."
+            data-alt="Applicant view with synthetic application progress, appointments and notifications."
+          >
+            <img
+              src="screenshots/showcase-applicant-applications-desktop.png"
+              alt=""
+              width="1440"
+              height="1000"
+              decoding="async"
+            />
+          </button>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="step">03</span><span>Applicant · Desktop</span>
+            </div>
+            <h2>Applications and offers</h2>
+            <p>Application progress and appointment notifications.</p>
+            <a
+              class="original"
+              href="screenshots/showcase-applicant-applications-desktop.png"
+              target="_blank"
+              rel="noopener"
+              >Open original PNG</a
+            >
+          </div>
+        </article>
+        <article class="card">
+          <button
+            class="preview"
+            type="button"
+            aria-label="Enlarge Clearance and appointments"
+            aria-haspopup="dialog"
+            data-image="screenshots/showcase-clearance-desktop.png"
+            data-title="Clearance and appointments"
+            data-caption="Approvals, clearance and financial closeout."
+            data-alt="Administrative view of synthetic publication approvals, clearance and appointment records."
+          >
+            <img
+              src="screenshots/showcase-clearance-desktop.png"
+              alt=""
+              width="1440"
+              height="1000"
+              decoding="async"
+            />
+          </button>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="step">04</span><span>Administrator · Desktop</span>
+            </div>
+            <h2>Clearance and appointments</h2>
+            <p>Approvals, clearance and financial closeout.</p>
+            <a
+              class="original"
+              href="screenshots/showcase-clearance-desktop.png"
+              target="_blank"
+              rel="noopener"
+              >Open original PNG</a
+            >
+          </div>
+        </article>
+        <article class="card">
+          <button
+            class="preview"
+            type="button"
+            aria-label="Enlarge Live TA queue"
+            aria-haspopup="dialog"
+            data-image="screenshots/showcase-ta-queue-desktop.png"
+            data-title="Live TA queue"
+            data-caption="Waiting, claimed and paused requests."
+            data-alt="TA queue containing synthetic waiting, claimed and paused student requests."
+          >
+            <img
+              src="screenshots/showcase-ta-queue-desktop.png"
+              alt=""
+              width="1440"
+              height="1000"
+              decoding="async"
+            />
+          </button>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="step">05</span><span>TA · Desktop</span>
+            </div>
+            <h2>Live TA queue</h2>
+            <p>Waiting, claimed and paused requests.</p>
+            <a
+              class="original"
+              href="screenshots/showcase-ta-queue-desktop.png"
+              target="_blank"
+              rel="noopener"
+              >Open original PNG</a
+            >
+          </div>
+        </article>
+        <article class="card">
+          <button
+            class="preview"
+            type="button"
+            aria-label="Enlarge Course review"
+            aria-haspopup="dialog"
+            data-image="screenshots/showcase-course-report-desktop.png"
+            data-title="Course review"
+            data-caption="Recorded demand, feedback, workload and budgets."
+            data-alt="Course review with synthetic recorded demand, feedback, workload and staffing budgets."
+          >
+            <img
+              src="screenshots/showcase-course-report-desktop.png"
+              alt=""
+              width="1440"
+              height="1000"
+              decoding="async"
+            />
+          </button>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="step">06</span><span>Instructor · Desktop</span>
+            </div>
+            <h2>Course review</h2>
+            <p>Recorded demand, feedback, workload and budgets.</p>
+            <a
+              class="original"
+              href="screenshots/showcase-course-report-desktop.png"
+              target="_blank"
+              rel="noopener"
+              >Open original PNG</a
+            >
+          </div>
+        </article>
+        <article class="card">
+          <button
+            class="preview mobile"
+            type="button"
+            aria-label="Enlarge Browse positions"
+            aria-haspopup="dialog"
+            data-image="screenshots/showcase-position-catalog-mobile.png"
+            data-title="Browse positions"
+            data-caption="Course requirements and weekly responsibilities."
+            data-alt="Mobile catalog of synthetic TA and RA positions, requirements and weekly responsibilities."
+          >
+            <img
+              src="screenshots/showcase-position-catalog-mobile.png"
+              alt=""
+              width="390"
+              height="1000"
+              decoding="async"
+            />
+          </button>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="step">07</span><span>Applicant · Mobile</span>
+            </div>
+            <h2>Browse positions</h2>
+            <p>Course requirements and weekly responsibilities.</p>
+            <a
+              class="original"
+              href="screenshots/showcase-position-catalog-mobile.png"
+              target="_blank"
+              rel="noopener"
+              >Open original PNG</a
+            >
+          </div>
+        </article>
+        <article class="card">
+          <button
+            class="preview mobile"
+            type="button"
+            aria-label="Enlarge Respond to an offer"
+            aria-haspopup="dialog"
+            data-image="screenshots/showcase-applicant-offer-mobile.png"
+            data-title="Respond to an offer"
+            data-caption="An explicit candidate decision before appointment activation."
+            data-alt="Mobile offer view with response buttons and synthetic appointment details."
+          >
+            <img
+              src="screenshots/showcase-applicant-offer-mobile.png"
+              alt=""
+              width="390"
+              height="1000"
+              decoding="async"
+            />
+          </button>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="step">08</span><span>Applicant · Mobile</span>
+            </div>
+            <h2>Respond to an offer</h2>
+            <p>An explicit candidate decision before appointment activation.</p>
+            <a
+              class="original"
+              href="screenshots/showcase-applicant-offer-mobile.png"
+              target="_blank"
+              rel="noopener"
+              >Open original PNG</a
+            >
+          </div>
+        </article>
+      </div>
+      <section class="ai-section" aria-labelledby="ai-title">
+        <h2 id="ai-title">AI in the workflow</h2>
+        <p>Actual OpenAI responses on synthetic evidence.</p>
+        <div class="gallery ai-gallery">
+          <article class="card">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Candidate fit with OpenAI"
+              aria-haspopup="dialog"
+              data-image="screenshots/showcase-ai-candidates-desktop.png"
+              data-title="Candidate fit with OpenAI"
+              data-caption="Real OpenAI response on synthetic evidence: one ten-candidate comparison page."
+              data-alt="Actual OpenAI candidate comparison with ten eligible synthetic applicants, evidence references and page-coverage limits."
+            >
+              <img
+                src="screenshots/showcase-ai-candidates-desktop.png"
+                alt=""
+                width="1200"
+                height="1000"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">09</span
+                ><span class="provider-label">OpenAI · Actual response</span>
+              </div>
+              <h3>Candidate fit with OpenAI</h3>
+              <p>Evidence-linked guidance for a ten-candidate page.</p>
+              <a
+                class="original"
+                href="screenshots/showcase-ai-candidates-desktop.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+          <article class="card">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Course suggestions with OpenAI"
+              aria-haspopup="dialog"
+              data-image="screenshots/showcase-ai-course-review-desktop.png"
+              data-title="Course suggestions with OpenAI"
+              data-caption="Real OpenAI response on synthetic evidence: course observations and conditional suggestions."
+              data-alt="Actual OpenAI course suggestions based on synthetic recorded demand, workload and evidence limitations."
+            >
+              <img
+                src="screenshots/showcase-ai-course-review-desktop.png"
+                alt=""
+                width="1200"
+                height="600"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">10</span
+                ><span class="provider-label">OpenAI · Actual response</span>
+              </div>
+              <h3>Course suggestions with OpenAI</h3>
+              <p>Recorded demand, workload and missing evidence.</p>
+              <a
+                class="original"
+                href="screenshots/showcase-ai-course-review-desktop.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+      <p class="footer-note">
+        Select a preview to enlarge it. Original PNG files remain available
+        offline.
+      </p>
+    </main>
+    <dialog
+      id="viewer"
+      aria-labelledby="viewer-title"
+      aria-describedby="viewer-instructions"
+    >
+      <div class="viewer-header">
+        <div>
+          <p
+            id="viewer-position"
+            class="viewer-position"
+            aria-live="polite"
+          ></p>
+          <h2 id="viewer-title">Screenshot</h2>
+        </div>
+        <button id="viewer-close" class="viewer-close" type="button" autofocus>
+          Close
+        </button>
+      </div>
+      <p id="viewer-instructions" class="sr-only">
+        Use the Left and Right arrow keys to change screenshots. Press Escape to
+        close.
+      </p>
+      <div class="viewer-tools">
+        <button id="previous" type="button" aria-label="Previous screenshot">
+          ← Previous</button
+        ><button id="next" type="button" aria-label="Next screenshot">
+          Next →</button
+        ><button id="actual-size" type="button" aria-pressed="false">
+          Actual size</button
+        ><a id="viewer-original" target="_blank" rel="noopener"
+          >Open original PNG</a
+        >
+      </div>
+      <div
+        id="viewer-canvas"
+        class="viewer-canvas"
+        tabindex="0"
+        role="region"
+        aria-label="Full-size screenshot"
+      >
+        <img id="viewer-image" alt="" />
+      </div>
+      <p id="viewer-caption" class="viewer-caption"></p>
+    </dialog>
+    <script>
+      const previews = [...document.querySelectorAll(".preview")];
+      const viewer = document.getElementById("viewer");
+      const image = document.getElementById("viewer-image");
+      const title = document.getElementById("viewer-title");
+      const position = document.getElementById("viewer-position");
+      const caption = document.getElementById("viewer-caption");
+      const original = document.getElementById("viewer-original");
+      const canvas = document.getElementById("viewer-canvas");
+      const actualSize = document.getElementById("actual-size");
+      let index = 0;
+      let opener;
+      function show(nextIndex) {
+        index = (nextIndex + previews.length) % previews.length;
+        const selected = previews[index];
+        image.src = selected.dataset.image;
+        image.alt = selected.dataset.alt;
+        title.textContent = selected.dataset.title;
+        position.textContent = `${index + 1} / ${previews.length}`;
+        caption.textContent = selected.dataset.caption;
+        original.href = selected.dataset.image;
+        canvas.scrollTop = 0;
+        canvas.scrollLeft = 0;
+      }
+      for (const [previewIndex, preview] of previews.entries()) {
+        preview.addEventListener("click", () => {
+          opener = preview;
+          canvas.classList.remove("actual-size");
+          actualSize.setAttribute("aria-pressed", "false");
+          show(previewIndex);
+          viewer.showModal();
+        });
+      }
+      document
+        .getElementById("viewer-close")
+        .addEventListener("click", () => viewer.close());
+      document
+        .getElementById("previous")
+        .addEventListener("click", () => show(index - 1));
+      document
+        .getElementById("next")
+        .addEventListener("click", () => show(index + 1));
+      actualSize.addEventListener("click", () => {
+        const active = canvas.classList.toggle("actual-size");
+        actualSize.setAttribute("aria-pressed", String(active));
+      });
+      viewer.addEventListener("keydown", (event) => {
+        if (event.key === "Tab") {
+          const controls = [
+            ...viewer.querySelectorAll(
+              'button:not([disabled]), a[href], [tabindex="0"]',
+            ),
+          ];
+          const first = controls[0];
+          const last = controls[controls.length - 1];
+          if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          event.preventDefault();
+          show(index + (event.key === "ArrowRight" ? 1 : -1));
+        }
+      });
+      viewer.addEventListener("close", () => {
+        if (opener?.isConnected) opener.focus();
+      });
+    </script>
+  </body>
+</html>
