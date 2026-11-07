@@ -37,7 +37,7 @@ The matrix checks authorized screens at 1440, 768, 390 and 320 pixels in Chromiu
 
 These scans are automated checks of the exercised states, not proof of universal accessibility or physical-device behavior.
 
-Actual real-provider candidate and course-advice pages passed another **8 checks** at the same four widths. The offline [demonstration gallery](demo/index.html) passed sixteen additional Chromium/Firefox page/dialog scans, local image/original-link loading, keyboard navigation and focus-return checks. Synthetic workflow captures and real-provider panels have separate provenance labels.
+Actual real-provider candidate and course-advice pages passed another **8 checks** at the same four widths. The earlier ten-image offline gallery passed sixteen additional Chromium/Firefox page/dialog scans, local image/original-link loading, keyboard navigation and focus-return checks; its [receipt](verification/gallery-proof.json) retains that earlier HTML digest. The current twelve-image project-pitch presentation is verified separately below. Synthetic workflow captures and real-provider panels have separate provenance labels.
 
 ## Provider, dependency and review boundaries
 
@@ -57,6 +57,14 @@ PDF/TXT files are private attachments; their bytes are not parsed by AI. Qualifi
 
 Interactive demonstration windows and the demonstration website remain closed. Disposable verification services are stopped and removed after their runs.
 
-The [presentation guide](DEMO_GUIDE.md) covers the eight-minute rehearsal and saved synthetic dataset. [Product readiness](PRODUCT_READINESS.md) separates implemented fixes from proposed semester, offer and late-recording decisions required before a real pilot.
+The [project pitch](ROADSHOW.md) covers a five-minute presentation, a ninety-second version and evaluator answers. The [presentation guide](DEMO_GUIDE.md) covers preparation, the extended eight-minute rehearsal and saved synthetic dataset. [Product readiness](PRODUCT_READINESS.md) separates implemented fixes from proposed semester, offer and late-recording decisions required before a real pilot.
 
 All six saved presentation routes were reopened in independent headless contexts against the retained dataset. The CS logo loaded, unauthorized hiring links stayed hidden, application counts remained consistent, no provider Key was loaded, provider reservations did not increase and the owned app/database services closed successfully. [Prepared-window receipt](verification/prepared-windows-proof.json)
+
+## Project-pitch presentation checks
+
+The materials follow one synthetic applicant, Avery Chen (`student2@example.com`), from an existing CS201 offer into active TA course work. An additional isolated browser run clicked **Accept offer**, recorded administrator clearance, observed Avery's silent update to **Active**, opened the same course queue, started duty and claimed Noah's request. Assertions confirmed that acceptance alone granted no TA access and that unrelated CS101 staff access remained absent. The two original screenshots and [story receipt](verification/roadshow-story-proof.json) retain the same actor, course and appointment throughout. The disposable application stopped, its database was dropped and its container was removed.
+
+The current [offline product gallery](demo/index.html) contains **twelve original screenshots**: ten actual browser workflow captures with AI unconfigured and two retained real OpenAI panels on synthetic evidence. CS101 review examples are explicitly separate from Avery's CS201 journey. The [presentation receipt](verification/roadshow-gallery-proof.json) records the current HTML and image hashes and **eight Chromium/Firefox browser-width cases** at 1440, 768, 390 and 320 pixels. All twelve original-PNG links opened in each case. Start presentation, previous/next wraparound, all thumbnail open/close actions, actual-size viewing, five stage links, dialog Tab/Shift+Tab trapping, Escape and returned focus passed. Another **sixteen WCAG 2 A/AA and 2.1 AA scans** reported zero violations. The logo loaded, Duke blue matched, no horizontal page overflow or runtime errors occurred, and the offline gallery made no external HTTP requests.
+
+This presentation update changed no application code or business rules and made **zero new provider calls**. The existing application acceptance and real-provider results above remain separate evidence. Presentation tests do not establish institutional adoption, hiring quality, savings or production readiness. All new browser sessions closed; no interactive test window was opened.

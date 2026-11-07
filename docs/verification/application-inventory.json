@@ -1,6 +1,6 @@
 {
-  "recordedAt": "2026-11-07T21:57:13.890133+00:00",
-  "count": 232,
+  "recordedAt": "2026-11-07T22:41:08.913006+00:00",
+  "count": 237,
   "coverage": "Delivered local working-tree bytes excluding self-referential inventory/result/review receipts. Git may normalize line endings on checkout; inventory alone is not semantic review.",
   "files": [
     {
@@ -41,9 +41,9 @@
     },
     {
       "path": "README.md",
-      "bytes": 15770,
-      "sha256": "b633e6f8f64c80b54fdfbf80f1fd6ee771297737ebe3ffe48169e6e00d2bd471",
-      "physicalLines": 149
+      "bytes": 16015,
+      "sha256": "a6ab5b5ffd2b90f5dd4b40f38f5414ffc48c454106c5dc8a5912c9237c0e359a",
+      "physicalLines": 151
     },
     {
       "path": "app/app.vue",
@@ -275,9 +275,9 @@
     },
     {
       "path": "docs/DEMO_GUIDE.md",
-      "bytes": 7166,
-      "sha256": "d8f03eeb4e2cae184735c7659ccec63732172763f5baf41ccecc4e67d8e5af6a",
-      "physicalLines": 85
+      "bytes": 9767,
+      "sha256": "240af2f4a8771656c87d68f4f5f7067fc020461952d2ce334ae020344240ded8",
+      "physicalLines": 91
     },
     {
       "path": "docs/IMPLEMENTATION_PLAN.md",
@@ -298,6 +298,12 @@
       "physicalLines": 87
     },
     {
+      "path": "docs/ROADSHOW.md",
+      "bytes": 12382,
+      "sha256": "8340a689f51b1b699a65b3799b1c05beb1430d41f2410503ae97d3fd73642c34",
+      "physicalLines": 92
+    },
+    {
       "path": "docs/STAFFING_DESIGN.md",
       "bytes": 18439,
       "sha256": "c9350be50b130dabc051f23624e6765cd3e55d526ac6b1fd18cb5e2766fc3a43",
@@ -311,9 +317,9 @@
     },
     {
       "path": "docs/VERIFICATION.md",
-      "bytes": 11877,
-      "sha256": "1d4e6538b231aaec3668bd6d892ab1096b11c29875f09091718f1b9422206423",
-      "physicalLines": 62
+      "bytes": 14247,
+      "sha256": "12ce6272405333e441473bf7d543a71a2102aede1d9617ce8c0d47e0905404f0",
+      "physicalLines": 70
     },
     {
       "path": "docs/WORK_PLAN.md",
@@ -323,9 +329,9 @@
     },
     {
       "path": "docs/demo/index.html",
-      "bytes": 28741,
-      "sha256": "5aa7e458c5e006985555938ca4ab18dd6f9bac439e8fa0a2a6faf1e4b0278fc7",
-      "physicalLines": 925
+      "bytes": 43241,
+      "sha256": "bcb0c865a78282cdaf6cd3872bae1cc6f21114bb69a63a805234a0255d9cacc5",
+      "physicalLines": 1357
     },
     {
       "path": "docs/demo/materials/sample-cv.txt",
@@ -355,6 +361,18 @@
       "path": "docs/demo/screenshots/showcase-applicant-offer-mobile.png",
       "bytes": 144454,
       "sha256": "43fd919b0e275346f7b5769bd12c524bc5a9af6a718b40950e95f4d0d1b43f7f",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-avery-active-application.png",
+      "bytes": 67214,
+      "sha256": "6cf67fd68d18cdf1491aa8c7724d0d3a26512f87acce1a67f3cc5e0330dfed74",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-avery-ta-queue.png",
+      "bytes": 98528,
+      "sha256": "ce06462e4b91b76f7d51e8611e4ef340fd868584bfa09a3c5b975b3775fd76e3",
       "physicalLines": null
     },
     {
@@ -464,6 +482,18 @@
       "bytes": 2090,
       "sha256": "83b562eb82f038a6a5680712841ac1ea99c3e7b744334a2ec597d32631edfce8",
       "physicalLines": 48
+    },
+    {
+      "path": "docs/verification/roadshow-gallery-proof.json",
+      "bytes": 8851,
+      "sha256": "ab585ea4e319e52a37f076e880a019302d3d3d95cabf8ca8724ba42f28422062",
+      "physicalLines": 292
+    },
+    {
+      "path": "docs/verification/roadshow-story-proof.json",
+      "bytes": 4104,
+      "sha256": "d34433ff6c8e3de4860dea6ee8585e715aa7fdb2386827cd1b20b1f7bc719f4f",
+      "physicalLines": 123
     },
     {
       "path": "docs/verification/screenshots/active-ra-appointment.png",

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="CampusWorks synthetic TA and RA workflow screenshots from actual local browser tests."
+      content="A connected TA and RA workflow, from recruiting to student support and next-cycle planning. Actual browser captures on synthetic records."
     />
-    <title>CampusWorks Demo Gallery</title>
+    <title>CampusWorks · Product Demo</title>
     <style>
       :root {
         color-scheme: light;
@@ -100,6 +100,9 @@
         margin: auto;
         padding: 38px 24px 52px;
       }
+      .hero {
+        padding: 8px 0 27px;
+      }
       .eyebrow {
         margin: 0 0 10px;
         color: var(--blue);
@@ -111,7 +114,8 @@
       h1 {
         margin: 0;
         color: var(--duke);
-        font-size: clamp(29px, 4vw, 42px);
+        max-width: 980px;
+        font-size: clamp(34px, 4.5vw, 57px);
         line-height: 1.15;
         letter-spacing: -0.035em;
       }
@@ -120,6 +124,127 @@
         max-width: 700px;
         color: var(--muted);
         font-size: 16px;
+        line-height: 1.65;
+      }
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px 22px;
+      }
+      .start-button {
+        min-height: 46px;
+        padding: 12px 20px;
+        border: 1px solid var(--duke);
+        border-radius: 7px;
+        color: #fff;
+        background: var(--duke);
+        font-weight: 650;
+        box-shadow: 0 6px 16px rgb(1 33 105 / 12%);
+      }
+      .hero-actions a {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .presentation-hint {
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      .values {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin: 0 0 28px;
+      }
+      .value {
+        padding: 19px 20px;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        background: #fff;
+      }
+      .value h2 {
+        margin: 0 0 7px;
+        color: var(--duke);
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .value p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.7;
+      }
+      .workflow-nav {
+        margin: 0 0 20px;
+        padding: 5px;
+        border: 1px solid #cbd8ed;
+        border-radius: 9px;
+        background: #eaf0fc;
+      }
+      .workflow-nav ol {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .workflow-nav a {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 48px;
+        padding: 9px 8px;
+        border-radius: 5px;
+        color: var(--duke);
+        font-size: 13px;
+        font-weight: 650;
+        text-decoration: none;
+      }
+      .workflow-nav a:hover {
+        background: #fff;
+      }
+      .workflow-nav .number {
+        font-size: 10px;
+        font-variant-numeric: tabular-nums;
+        opacity: 0.8;
+      }
+      .story-section {
+        margin-top: 38px;
+        scroll-margin-top: 24px;
+      }
+      .section-heading {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        margin: 0 0 17px;
+      }
+      .phase-number {
+        display: grid;
+        flex: 0 0 34px;
+        min-height: 34px;
+        place-items: center;
+        border: 1px solid #c2d1eb;
+        border-radius: 8px;
+        background: #eaf0fc;
+        color: var(--duke);
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .section-heading h2 {
+        margin: 0;
+        color: var(--duke);
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: -0.035em;
+      }
+      .section-heading p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
         line-height: 1.65;
       }
       .disclosure {
@@ -134,31 +259,13 @@
       }
       .gallery {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 20px;
       }
-      .ai-section {
-        margin-top: 36px;
-      }
-      .ai-section > h2 {
-        margin: 0;
-        color: var(--duke);
-        font-size: 27px;
-        letter-spacing: -0.03em;
-      }
-      .ai-section > p {
-        margin: 8px 0 18px;
-        color: var(--muted);
-        font-size: 13px;
-        line-height: 1.65;
-      }
-      .ai-gallery {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      .ai-gallery .preview {
+      .ai-capture .preview {
         background: #fff;
       }
-      .ai-gallery .preview img {
+      .ai-capture .preview img {
         min-height: 0;
       }
       .provider-label {
@@ -178,7 +285,7 @@
       .preview {
         display: block;
         width: 100%;
-        height: 218px;
+        height: 285px;
         padding: 0;
         overflow: hidden;
         border: 0;
@@ -251,6 +358,23 @@
         color: var(--muted);
         font-size: 12px;
         line-height: 1.7;
+      }
+      .cycle-link {
+        display: block;
+        margin-top: 20px;
+        padding: 15px 18px;
+        border: 1px solid #cbd8ed;
+        border-radius: 7px;
+        background: #eaf0fc;
+        color: var(--duke);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.7;
+      }
+      .additional-section {
+        margin-top: 46px;
+        padding-top: 30px;
+        border-top: 1px solid var(--line);
       }
       dialog {
         width: min(1240px, calc(100% - 32px));
@@ -363,8 +487,14 @@
         white-space: nowrap;
       }
       @media (max-width: 960px) {
-        .gallery {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
+        .values {
+          gap: 10px;
+        }
+        .value {
+          padding: 15px;
+        }
+        .preview {
+          height: 230px;
         }
       }
       @media (max-width: 600px) {
@@ -384,8 +514,33 @@
           grid-template-columns: minmax(0, 1fr);
           gap: 16px;
         }
-        .ai-gallery {
+        .values {
           grid-template-columns: minmax(0, 1fr);
+          gap: 9px;
+          margin-bottom: 20px;
+        }
+        .value {
+          padding: 14px 16px;
+        }
+        .value h2 {
+          margin-bottom: 4px;
+          font-size: 14px;
+        }
+        .workflow-nav a {
+          flex-direction: column;
+          gap: 3px;
+          min-height: 57px;
+          padding: 7px 2px;
+          font-size: 10px;
+        }
+        .workflow-nav .number {
+          font-size: 9px;
+        }
+        .section-heading h2 {
+          font-size: 25px;
+        }
+        .story-section {
+          margin-top: 30px;
         }
         .preview {
           height: 210px;
@@ -426,7 +581,7 @@
     </style>
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to gallery</a>
+    <a class="skip-link" href="#main-content">Skip to product demo</a>
     <header class="masthead">
       <div class="masthead-inner">
         <img
@@ -436,327 +591,132 @@
           height="70"
           alt="Duke Department of Computer Science"
         />
-        <div class="brand">CampusWorks<span>Demo gallery</span></div>
+        <div class="brand">CampusWorks<span>Product demo</span></div>
       </div>
     </header>
     <main id="main-content" tabindex="-1">
-      <p class="eyebrow">Four roles. One connected workflow.</p>
-      <h1>CampusWorks Demo Gallery</h1>
-      <p class="intro">
-        Recruitment, appointments, live student support and course review.
-      </p>
-      <aside class="disclosure" aria-label="Screenshot context">
-        All records are synthetic. Eight workflow captures come from local
-        browser tests with AI unconfigured. Two AI panels show real OpenAI
-        responses to synthetic evidence.
-      </aside>
-      <div class="gallery" aria-label="Workflow screenshots">
-        <article class="card">
+      <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow">Four roles. One connected workflow.</p>
+        <h1 id="hero-title">
+          Connect hiring, student support and next-term planning.
+        </h1>
+        <p class="intro">
+          A shared workflow for students, TAs, instructors and administrators.
+        </p>
+        <div class="hero-actions">
           <button
-            class="preview"
+            id="presentation-start"
+            class="start-button"
             type="button"
-            aria-label="Enlarge Recruitment overview"
             aria-haspopup="dialog"
-            data-image="screenshots/showcase-recruitment-desktop.png"
-            data-title="Recruitment overview"
-            data-caption="TA/RA openings across publication states."
-            data-alt="Recruitment overview with synthetic TA and RA openings in several publication states."
           >
-            <img
-              src="screenshots/showcase-recruitment-desktop.png"
-              alt=""
-              width="1440"
-              height="1000"
-              decoding="async"
-            />
+            Start presentation
           </button>
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="step">01</span><span>Administrator · Desktop</span>
-            </div>
-            <h2>Recruitment overview</h2>
-            <p>TA/RA openings across publication states.</p>
-            <a
-              class="original"
-              href="screenshots/showcase-recruitment-desktop.png"
-              target="_blank"
-              rel="noopener"
-              >Open original PNG</a
-            >
-          </div>
-        </article>
-        <article class="card">
-          <button
-            class="preview"
-            type="button"
-            aria-label="Enlarge Candidate review"
-            aria-haspopup="dialog"
-            data-image="screenshots/showcase-candidate-pool-desktop.png"
-            data-title="Candidate review"
-            data-caption="Qualifications, availability and offer controls."
-            data-alt="Instructor candidate pool with synthetic qualifications, availability and offer controls."
-          >
-            <img
-              src="screenshots/showcase-candidate-pool-desktop.png"
-              alt=""
-              width="1440"
-              height="1000"
-              decoding="async"
-            />
-          </button>
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="step">02</span><span>Instructor · Desktop</span>
-            </div>
-            <h2>Candidate review</h2>
-            <p>Qualifications, availability and offer controls.</p>
-            <a
-              class="original"
-              href="screenshots/showcase-candidate-pool-desktop.png"
-              target="_blank"
-              rel="noopener"
-              >Open original PNG</a
-            >
-          </div>
-        </article>
-        <article class="card">
-          <button
-            class="preview"
-            type="button"
-            aria-label="Enlarge Applications and offers"
-            aria-haspopup="dialog"
-            data-image="screenshots/showcase-applicant-applications-desktop.png"
-            data-title="Applications and offers"
-            data-caption="Application progress and appointment notifications."
-            data-alt="Applicant view with synthetic application progress, appointments and notifications."
-          >
-            <img
-              src="screenshots/showcase-applicant-applications-desktop.png"
-              alt=""
-              width="1440"
-              height="1000"
-              decoding="async"
-            />
-          </button>
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="step">03</span><span>Applicant · Desktop</span>
-            </div>
-            <h2>Applications and offers</h2>
-            <p>Application progress and appointment notifications.</p>
-            <a
-              class="original"
-              href="screenshots/showcase-applicant-applications-desktop.png"
-              target="_blank"
-              rel="noopener"
-              >Open original PNG</a
-            >
-          </div>
-        </article>
-        <article class="card">
-          <button
-            class="preview"
-            type="button"
-            aria-label="Enlarge Clearance and appointments"
-            aria-haspopup="dialog"
-            data-image="screenshots/showcase-clearance-desktop.png"
-            data-title="Clearance and appointments"
-            data-caption="Approvals, clearance and financial closeout."
-            data-alt="Administrative view of synthetic publication approvals, clearance and appointment records."
-          >
-            <img
-              src="screenshots/showcase-clearance-desktop.png"
-              alt=""
-              width="1440"
-              height="1000"
-              decoding="async"
-            />
-          </button>
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="step">04</span><span>Administrator · Desktop</span>
-            </div>
-            <h2>Clearance and appointments</h2>
-            <p>Approvals, clearance and financial closeout.</p>
-            <a
-              class="original"
-              href="screenshots/showcase-clearance-desktop.png"
-              target="_blank"
-              rel="noopener"
-              >Open original PNG</a
-            >
-          </div>
-        </article>
-        <article class="card">
-          <button
-            class="preview"
-            type="button"
-            aria-label="Enlarge Live TA queue"
-            aria-haspopup="dialog"
-            data-image="screenshots/showcase-ta-queue-desktop.png"
-            data-title="Live TA queue"
-            data-caption="Waiting, claimed and paused requests."
-            data-alt="TA queue containing synthetic waiting, claimed and paused student requests."
-          >
-            <img
-              src="screenshots/showcase-ta-queue-desktop.png"
-              alt=""
-              width="1440"
-              height="1000"
-              decoding="async"
-            />
-          </button>
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="step">05</span><span>TA · Desktop</span>
-            </div>
-            <h2>Live TA queue</h2>
-            <p>Waiting, claimed and paused requests.</p>
-            <a
-              class="original"
-              href="screenshots/showcase-ta-queue-desktop.png"
-              target="_blank"
-              rel="noopener"
-              >Open original PNG</a
-            >
-          </div>
-        </article>
-        <article class="card">
-          <button
-            class="preview"
-            type="button"
-            aria-label="Enlarge Course review"
-            aria-haspopup="dialog"
-            data-image="screenshots/showcase-course-report-desktop.png"
-            data-title="Course review"
-            data-caption="Recorded demand, feedback, workload and budgets."
-            data-alt="Course review with synthetic recorded demand, feedback, workload and staffing budgets."
-          >
-            <img
-              src="screenshots/showcase-course-report-desktop.png"
-              alt=""
-              width="1440"
-              height="1000"
-              decoding="async"
-            />
-          </button>
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="step">06</span><span>Instructor · Desktop</span>
-            </div>
-            <h2>Course review</h2>
-            <p>Recorded demand, feedback, workload and budgets.</p>
-            <a
-              class="original"
-              href="screenshots/showcase-course-report-desktop.png"
-              target="_blank"
-              rel="noopener"
-              >Open original PNG</a
-            >
-          </div>
-        </article>
-        <article class="card">
-          <button
-            class="preview mobile"
-            type="button"
-            aria-label="Enlarge Browse positions"
-            aria-haspopup="dialog"
-            data-image="screenshots/showcase-position-catalog-mobile.png"
-            data-title="Browse positions"
-            data-caption="Course requirements and weekly responsibilities."
-            data-alt="Mobile catalog of synthetic TA and RA positions, requirements and weekly responsibilities."
-          >
-            <img
-              src="screenshots/showcase-position-catalog-mobile.png"
-              alt=""
-              width="390"
-              height="1000"
-              decoding="async"
-            />
-          </button>
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="step">07</span><span>Applicant · Mobile</span>
-            </div>
-            <h2>Browse positions</h2>
-            <p>Course requirements and weekly responsibilities.</p>
-            <a
-              class="original"
-              href="screenshots/showcase-position-catalog-mobile.png"
-              target="_blank"
-              rel="noopener"
-              >Open original PNG</a
-            >
-          </div>
-        </article>
-        <article class="card">
-          <button
-            class="preview mobile"
-            type="button"
-            aria-label="Enlarge Respond to an offer"
-            aria-haspopup="dialog"
-            data-image="screenshots/showcase-applicant-offer-mobile.png"
-            data-title="Respond to an offer"
-            data-caption="An explicit candidate decision before appointment activation."
-            data-alt="Mobile offer view with response buttons and synthetic appointment details."
-          >
-            <img
-              src="screenshots/showcase-applicant-offer-mobile.png"
-              alt=""
-              width="390"
-              height="1000"
-              decoding="async"
-            />
-          </button>
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="step">08</span><span>Applicant · Mobile</span>
-            </div>
-            <h2>Respond to an offer</h2>
-            <p>An explicit candidate decision before appointment activation.</p>
-            <a
-              class="original"
-              href="screenshots/showcase-applicant-offer-mobile.png"
-              target="_blank"
-              rel="noopener"
-              >Open original PNG</a
-            >
-          </div>
-        </article>
+          <a href="#workflow">Explore the workflow</a>
+        </div>
+        <p class="presentation-hint">
+          Actual browser captures. Use arrow keys to move through the
+          presentation.
+        </p>
+      </section>
+      <div class="values" role="group" aria-label="Product value">
+        <section class="value">
+          <h2>One place to coordinate</h2>
+          <p>Connect role requirements, applications and staffing decisions.</p>
+        </section>
+        <section class="value">
+          <h2>Staffing connected to access</h2>
+          <p>Link accepted, cleared TA appointments to the course workflow.</p>
+        </section>
+        <section class="value">
+          <h2>Evidence for the next cycle</h2>
+          <p>Bring demand, feedback and reported work into planning.</p>
+        </section>
       </div>
-      <section class="ai-section" aria-labelledby="ai-title">
-        <h2 id="ai-title">AI in the workflow</h2>
-        <p>Actual OpenAI responses on synthetic evidence.</p>
-        <div class="gallery ai-gallery">
+      <nav
+        id="workflow"
+        class="workflow-nav"
+        aria-label="The connected workflow"
+      >
+        <ol>
+          <li>
+            <a href="#recruit"
+              ><span class="number" aria-hidden="true">01</span>Recruit</a
+            >
+          </li>
+          <li>
+            <a href="#review"
+              ><span class="number" aria-hidden="true">02</span>Review</a
+            >
+          </li>
+          <li>
+            <a href="#activate"
+              ><span class="number" aria-hidden="true">03</span>Activate</a
+            >
+          </li>
+          <li>
+            <a href="#support"
+              ><span class="number" aria-hidden="true">04</span>Support</a
+            >
+          </li>
+          <li>
+            <a href="#learn"
+              ><span class="number" aria-hidden="true">05</span>Learn</a
+            >
+          </li>
+        </ol>
+      </nav>
+      <aside class="disclosure" aria-label="Screenshot provenance">
+        All records are synthetic. Ten workflow captures come from actual local
+        browser tests with AI unconfigured. Two panels show real OpenAI
+        responses to synthetic evidence. Avery’s appointment and queue journey
+        is CS201; review examples use CS101.
+      </aside>
+      <section
+        id="recruit"
+        class="story-section"
+        aria-labelledby="recruit-title"
+      >
+        <div class="section-heading">
+          <span class="phase-number" aria-hidden="true">01</span>
+          <div>
+            <h2 id="recruit-title">Recruit</h2>
+            <p>
+              Publish the requirements. Give students a clear route to apply.
+            </p>
+          </div>
+        </div>
+        <div class="gallery">
           <article class="card">
             <button
               class="preview"
               type="button"
-              aria-label="Enlarge Candidate fit with OpenAI"
+              aria-label="Enlarge Recruitment overview"
               aria-haspopup="dialog"
-              data-image="screenshots/showcase-ai-candidates-desktop.png"
-              data-title="Candidate fit with OpenAI"
-              data-caption="Real OpenAI response on synthetic evidence: one ten-candidate comparison page."
-              data-alt="Actual OpenAI candidate comparison with ten eligible synthetic applicants, evidence references and page-coverage limits."
+              data-stage="recruit"
+              data-image="screenshots/showcase-recruitment-desktop.png"
+              data-title="Recruitment overview"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. TA/RA openings, requirements and publication states."
+              data-alt="Administrator view of synthetic TA and RA openings across publication states."
             >
               <img
-                src="screenshots/showcase-ai-candidates-desktop.png"
+                src="screenshots/showcase-recruitment-desktop.png"
                 alt=""
-                width="1200"
-                height="1000"
+                width="1440"
+                height="2098"
                 decoding="async"
               />
             </button>
             <div class="card-body">
               <div class="card-meta">
-                <span class="step">09</span
-                ><span class="provider-label">OpenAI · Actual response</span>
+                <span class="step">01</span
+                ><span>Administrator &middot; Desktop</span>
               </div>
-              <h3>Candidate fit with OpenAI</h3>
-              <p>Evidence-linked guidance for a ten-candidate page.</p>
+              <h3>Recruitment overview</h3>
+              <p>TA/RA openings, requirements and publication states.</p>
               <a
                 class="original"
-                href="screenshots/showcase-ai-candidates-desktop.png"
+                href="screenshots/showcase-recruitment-desktop.png"
                 target="_blank"
                 rel="noopener"
                 >Open original PNG</a
@@ -767,28 +727,401 @@
             <button
               class="preview"
               type="button"
-              aria-label="Enlarge Course suggestions with OpenAI"
+              aria-label="Enlarge Avery&#x27;s applications"
               aria-haspopup="dialog"
+              data-stage="recruit"
+              data-image="screenshots/showcase-applicant-applications-desktop.png"
+              data-title="Avery&#x27;s applications"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. One place to follow applications and respond to an offer."
+              data-alt="Avery Chen follows synthetic applications and an offered CS201 TA appointment."
+            >
+              <img
+                src="screenshots/showcase-applicant-applications-desktop.png"
+                alt=""
+                width="1440"
+                height="1352"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">02</span
+                ><span>Student &middot; Desktop</span>
+              </div>
+              <h3>Avery&#x27;s applications</h3>
+              <p>One place to follow applications and respond to an offer.</p>
+              <a
+                class="original"
+                href="screenshots/showcase-applicant-applications-desktop.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+      <section id="review" class="story-section" aria-labelledby="review-title">
+        <div class="section-heading">
+          <span class="phase-number" aria-hidden="true">02</span>
+          <div>
+            <h2 id="review-title">Review</h2>
+            <p>
+              Bring candidate evidence and availability into the staffing
+              decision.
+            </p>
+          </div>
+        </div>
+        <div class="gallery">
+          <article class="card">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Candidate review"
+              aria-haspopup="dialog"
+              data-stage="review"
+              data-image="screenshots/showcase-candidate-pool-desktop.png"
+              data-title="Candidate review"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. Compare qualifications, availability and appointment eligibility."
+              data-alt="Instructor candidate pool with synthetic qualifications, availability and offer controls."
+            >
+              <img
+                src="screenshots/showcase-candidate-pool-desktop.png"
+                alt=""
+                width="1440"
+                height="2884"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">03</span
+                ><span>Instructor &middot; Desktop</span>
+              </div>
+              <h3>Candidate review</h3>
+              <p>
+                Compare qualifications, availability and appointment
+                eligibility.
+              </p>
+              <a
+                class="original"
+                href="screenshots/showcase-candidate-pool-desktop.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+          <article class="card ai-capture">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Evidence beside the decision"
+              aria-haspopup="dialog"
+              data-stage="review"
+              data-image="screenshots/showcase-ai-candidates-desktop.png"
+              data-title="Evidence beside the decision"
+              data-caption="Real OpenAI response on synthetic evidence. A real OpenAI comparison of one ten-candidate page; the instructor decides."
+              data-alt="Actual OpenAI candidate comparison with ten eligible synthetic applicants, evidence references and page-coverage limits."
+            >
+              <img
+                src="screenshots/showcase-ai-candidates-desktop.png"
+                alt=""
+                width="1200"
+                height="2199"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">04</span
+                ><span class="provider-label"
+                  >OpenAI &middot; Actual response</span
+                >
+              </div>
+              <h3>Evidence beside the decision</h3>
+              <p>
+                A real OpenAI comparison of one ten-candidate page; the
+                instructor decides.
+              </p>
+              <a
+                class="original"
+                href="screenshots/showcase-ai-candidates-desktop.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+      <section
+        id="activate"
+        class="story-section"
+        aria-labelledby="activate-title"
+      >
+        <div class="section-heading">
+          <span class="phase-number" aria-hidden="true">03</span>
+          <div>
+            <h2 id="activate-title">Activate</h2>
+            <p>
+              Accepted, cleared TA appointments connect to course access on
+              their scheduled dates.
+            </p>
+          </div>
+        </div>
+        <div class="gallery">
+          <article class="card">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Clearance and appointments"
+              aria-haspopup="dialog"
+              data-stage="activate"
+              data-image="screenshots/showcase-clearance-desktop.png"
+              data-title="Clearance and appointments"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. Review clearance, appointment records and financial closeout."
+              data-alt="Administrative view of synthetic publication approvals, clearance and appointment records."
+            >
+              <img
+                src="screenshots/showcase-clearance-desktop.png"
+                alt=""
+                width="1440"
+                height="5204"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">05</span
+                ><span>Administrator &middot; Desktop</span>
+              </div>
+              <h3>Clearance and appointments</h3>
+              <p>
+                Review clearance, appointment records and financial closeout.
+              </p>
+              <a
+                class="original"
+                href="screenshots/showcase-clearance-desktop.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+          <article class="card">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Avery is ready to support CS201"
+              aria-haspopup="dialog"
+              data-stage="activate"
+              data-image="screenshots/showcase-avery-active-application.png"
+              data-title="Avery is ready to support CS201"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. The accepted, cleared appointment is active. Avery can open the course queue."
+              data-alt="Avery Chen at student2@example.com has an accepted Data Structures offer, Active appointment, cleared status and Open TA Queue action."
+            >
+              <img
+                src="screenshots/showcase-avery-active-application.png"
+                alt=""
+                width="1440"
+                height="1000"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">06</span
+                ><span>Same Avery &middot; CS201</span>
+              </div>
+              <h3>Avery is ready to support CS201</h3>
+              <p>
+                The accepted, cleared appointment is active. Avery can open the
+                course queue.
+              </p>
+              <a
+                class="original"
+                href="screenshots/showcase-avery-active-application.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+      <section
+        id="support"
+        class="story-section"
+        aria-labelledby="support-title"
+      >
+        <div class="section-heading">
+          <span class="phase-number" aria-hidden="true">04</span>
+          <div>
+            <h2 id="support-title">Support</h2>
+            <p>Move from staffing to the daily work of helping students.</p>
+          </div>
+        </div>
+        <div class="gallery">
+          <article class="card">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge The same Avery, now helping a student"
+              aria-haspopup="dialog"
+              data-stage="support"
+              data-image="screenshots/showcase-avery-ta-queue.png"
+              data-title="The same Avery, now helping a student"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. Avery starts duty and claims Noah’s request in the CS201 TA queue."
+              data-alt="The same student2@example.com account is on duty as Avery Chen in CS201 and owns Noah Brooks’s help request."
+            >
+              <img
+                src="screenshots/showcase-avery-ta-queue.png"
+                alt=""
+                width="1440"
+                height="1000"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">07</span
+                ><span>Same Avery &middot; CS201</span>
+              </div>
+              <h3>The same Avery, now helping a student</h3>
+              <p>
+                Avery starts duty and claims Noah’s request in the CS201 TA
+                queue.
+              </p>
+              <a
+                class="original"
+                href="screenshots/showcase-avery-ta-queue.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+          <article class="card">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Live support in CS101"
+              aria-haspopup="dialog"
+              data-stage="support"
+              data-image="screenshots/showcase-ta-queue-desktop.png"
+              data-title="Live support in CS101"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. Additional operations example: waiting, claimed and paused requests."
+              data-alt="Additional CS101 TA operations example with synthetic waiting, claimed and paused student requests."
+            >
+              <img
+                src="screenshots/showcase-ta-queue-desktop.png"
+                alt=""
+                width="1440"
+                height="1040"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">08</span><span>TA &middot; Desktop</span>
+              </div>
+              <h3>Live support in CS101</h3>
+              <p>
+                Additional operations example: waiting, claimed and paused
+                requests.
+              </p>
+              <a
+                class="original"
+                href="screenshots/showcase-ta-queue-desktop.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
+      <section id="learn" class="story-section" aria-labelledby="learn-title">
+        <div class="section-heading">
+          <span class="phase-number" aria-hidden="true">05</span>
+          <div>
+            <h2 id="learn-title">Learn</h2>
+            <p>Use course evidence to inform the next staffing plan.</p>
+          </div>
+        </div>
+        <div class="gallery">
+          <article class="card">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Course evidence"
+              aria-haspopup="dialog"
+              data-stage="learn"
+              data-image="screenshots/showcase-course-report-desktop.png"
+              data-title="Course evidence"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. Recorded demand, feedback, reported workload and staffing budgets."
+              data-alt="Course review with synthetic recorded demand, feedback, workload and staffing budgets."
+            >
+              <img
+                src="screenshots/showcase-course-report-desktop.png"
+                alt=""
+                width="1440"
+                height="2015"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">09</span
+                ><span>Instructor &middot; Desktop</span>
+              </div>
+              <h3>Course evidence</h3>
+              <p>
+                Recorded demand, feedback, reported workload and staffing
+                budgets.
+              </p>
+              <a
+                class="original"
+                href="screenshots/showcase-course-report-desktop.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+          <article class="card ai-capture">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Plan with context"
+              aria-haspopup="dialog"
+              data-stage="learn"
               data-image="screenshots/showcase-ai-course-review-desktop.png"
-              data-title="Course suggestions with OpenAI"
-              data-caption="Real OpenAI response on synthetic evidence: course observations and conditional suggestions."
+              data-title="Plan with context"
+              data-caption="Real OpenAI response on synthetic evidence. A real OpenAI course review with conditional suggestions and evidence limits."
               data-alt="Actual OpenAI course suggestions based on synthetic recorded demand, workload and evidence limitations."
             >
               <img
                 src="screenshots/showcase-ai-course-review-desktop.png"
                 alt=""
                 width="1200"
-                height="600"
+                height="566"
                 decoding="async"
               />
             </button>
             <div class="card-body">
               <div class="card-meta">
                 <span class="step">10</span
-                ><span class="provider-label">OpenAI · Actual response</span>
+                ><span class="provider-label"
+                  >OpenAI &middot; Actual response</span
+                >
               </div>
-              <h3>Course suggestions with OpenAI</h3>
-              <p>Recorded demand, workload and missing evidence.</p>
+              <h3>Plan with context</h3>
+              <p>
+                A real OpenAI course review with conditional suggestions and
+                evidence limits.
+              </p>
               <a
                 class="original"
                 href="screenshots/showcase-ai-course-review-desktop.png"
@@ -800,9 +1133,101 @@
           </article>
         </div>
       </section>
+      <a class="cycle-link" href="#recruit"
+        >Use the evidence to shape the next recruitment cycle &rarr;</a
+      >
+      <section
+        id="mobile"
+        class="story-section additional-section"
+        aria-labelledby="mobile-title"
+      >
+        <div class="section-heading">
+          <div>
+            <h2 id="mobile-title">Along the way, on mobile</h2>
+            <p>Additional views of the same application workflow.</p>
+          </div>
+        </div>
+        <div class="gallery">
+          <article class="card">
+            <button
+              class="preview mobile"
+              type="button"
+              aria-label="Enlarge Browse positions"
+              aria-haspopup="dialog"
+              data-stage="mobile"
+              data-image="screenshots/showcase-position-catalog-mobile.png"
+              data-title="Browse positions"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. Course requirements and weekly responsibilities on a smaller screen."
+              data-alt="Mobile catalog of synthetic TA and RA positions, requirements and weekly responsibilities."
+            >
+              <img
+                src="screenshots/showcase-position-catalog-mobile.png"
+                alt=""
+                width="390"
+                height="6375"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">11</span><span>Student &middot; Mobile</span>
+              </div>
+              <h3>Browse positions</h3>
+              <p>
+                Course requirements and weekly responsibilities on a smaller
+                screen.
+              </p>
+              <a
+                class="original"
+                href="screenshots/showcase-position-catalog-mobile.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+          <article class="card">
+            <button
+              class="preview mobile"
+              type="button"
+              aria-label="Enlarge Respond to an offer"
+              aria-haspopup="dialog"
+              data-stage="mobile"
+              data-image="screenshots/showcase-applicant-offer-mobile.png"
+              data-title="Respond to an offer"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. The candidate confirms before clearance and activation."
+              data-alt="Mobile offer view with response buttons and synthetic appointment details."
+            >
+              <img
+                src="screenshots/showcase-applicant-offer-mobile.png"
+                alt=""
+                width="390"
+                height="3797"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">12</span><span>Student &middot; Mobile</span>
+              </div>
+              <h3>Respond to an offer</h3>
+              <p>The candidate confirms before clearance and activation.</p>
+              <a
+                class="original"
+                href="screenshots/showcase-applicant-offer-mobile.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
+        </div>
+      </section>
       <p class="footer-note">
-        Select a preview to enlarge it. Original PNG files remain available
-        offline.
+        Captured from the local application in a browser. These screenshots stay
+        available offline; they are a presentation, not a live session. Hiring,
+        clearance and other business decisions remain with the responsible
+        person.
       </p>
     </main>
     <dialog
@@ -873,15 +1298,22 @@
         canvas.scrollTop = 0;
         canvas.scrollLeft = 0;
       }
-      for (const [previewIndex, preview] of previews.entries()) {
-        preview.addEventListener("click", () => {
-          opener = preview;
-          canvas.classList.remove("actual-size");
-          actualSize.setAttribute("aria-pressed", "false");
-          show(previewIndex);
-          viewer.showModal();
-        });
+      function openPresentation(nextIndex, trigger) {
+        opener = trigger;
+        canvas.classList.remove("actual-size");
+        actualSize.setAttribute("aria-pressed", "false");
+        show(nextIndex);
+        viewer.showModal();
       }
+      for (const [previewIndex, preview] of previews.entries()) {
+        preview.addEventListener("click", () =>
+          openPresentation(previewIndex, preview),
+        );
+      }
+      const startButton = document.getElementById("presentation-start");
+      startButton.addEventListener("click", () =>
+        openPresentation(0, startButton),
+      );
       document
         .getElementById("viewer-close")
         .addEventListener("click", () => viewer.close());

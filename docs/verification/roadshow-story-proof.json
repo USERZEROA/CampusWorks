@@ -1,0 +1,123 @@
+{
+  "synthetic": true,
+  "scenario": "Single protagonist Avery Chen: existing CS201 offer to active TA support",
+  "catalogVersion": 4,
+  "catalogMarker": "campusworks-showcase-v4",
+  "sameActor": {
+    "name": "Avery Chen",
+    "email": "student2@example.com",
+    "userId": "0e6df51f-e7bb-477f-9e92-d7d1be3d1eb4"
+  },
+  "sameCourse": {
+    "code": "cs201",
+    "courseId": "cs201"
+  },
+  "applicationId": "b2b9cc31-e8d2-4c78-b0ab-40fc5790f84b",
+  "appointmentId": "bb438759-aea4-4a7e-9c29-292fb13f534e",
+  "initialRole": "student",
+  "providerCalls": 0,
+  "keyRead": false,
+  "aiConfigured": false,
+  "sourceBuildSha256": "444c92c4a9bd18740e5ba3138935d1266fcf7fd93ae9c2641c9eeab0130cdbc2",
+  "baseURL": "http://127.0.0.1:63443",
+  "databaseName": "campusworks_showcase_test_467bf5409a26d9",
+  "steps": [
+    {
+      "action": "Avery clicks Accept offer",
+      "appointmentStatus": "pending_clearance",
+      "taAccess": false,
+      "userId": "0e6df51f-e7bb-477f-9e92-d7d1be3d1eb4",
+      "courseId": "cs201"
+    },
+    {
+      "action": "Administrator clicks cleared; Avery page updates silently",
+      "appointmentStatus": "active",
+      "clearance": "cleared",
+      "taAccess": true,
+      "otherCourse": {
+        "code": "cs101",
+        "courseId": "cs101",
+        "taAccess": false
+      },
+      "userId": "0e6df51f-e7bb-477f-9e92-d7d1be3d1eb4",
+      "courseId": "cs201"
+    },
+    {
+      "action": "Same Avery opens TA queue, begins duty and claims Noah",
+      "userId": "0e6df51f-e7bb-477f-9e92-d7d1be3d1eb4",
+      "courseId": "cs201",
+      "onDuty": true,
+      "queueEntryId": "6aefa66c470faead0d8e1097",
+      "student": {
+        "name": "Noah Brooks",
+        "email": "demo-noah-brooks@example.com",
+        "userId": "876666fb-eaef-4dcb-abeb-f6ce087a9ac9"
+      },
+      "claimedBy": {
+        "name": "Avery Chen",
+        "email": "student2@example.com"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/demo/screenshots/showcase-avery-active-application.png",
+      "bytes": 67214,
+      "sha256": "6cf67fd68d18cdf1491aa8c7724d0d3a26512f87acce1a67f3cc5e0330dfed74",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "logos": [
+        {
+          "src": "/duke-cs-logo.png",
+          "alt": "Duke Department of Computer Science",
+          "width": 381,
+          "height": 70
+        }
+      ],
+      "userId": "0e6df51f-e7bb-477f-9e92-d7d1be3d1eb4",
+      "courseId": "cs201",
+      "url": "http://127.0.0.1:63443/applications/b2b9cc31-e8d2-4c78-b0ab-40fc5790f84b"
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-avery-ta-queue.png",
+      "bytes": 98528,
+      "sha256": "ce06462e4b91b76f7d51e8611e4ef340fd868584bfa09a3c5b975b3775fd76e3",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "logos": [
+        {
+          "src": "/duke-cs-logo.png",
+          "alt": "Duke Department of Computer Science",
+          "width": 381,
+          "height": 70
+        }
+      ],
+      "userId": "0e6df51f-e7bb-477f-9e92-d7d1be3d1eb4",
+      "courseId": "cs201",
+      "url": "http://127.0.0.1:63443/courses/cs201/ta"
+    }
+  ],
+  "startedAt": "2026-11-07T22:30:05.907Z",
+  "passed": true,
+  "lifecycleMethod": "Ordinary authenticated APIs prepare synthetic records; browser buttons accept, clear, begin duty and claim Noah.",
+  "apiFailures": [],
+  "applicationStopped": true,
+  "databaseDropped": true,
+  "finishedAt": "2026-11-07T22:30:12.865Z",
+  "cleanup": {
+    "synthetic": true,
+    "name": "campusworks-roadshow-story-3f1b5c6f7933",
+    "containerId": "53584b16709f6c680351c69a8c7a2d7077a30054ceca1e28587faf2f6288472d",
+    "port": 63439,
+    "passed": true,
+    "containerCleaned": true,
+    "providerCalls": 0,
+    "startedAt": "2026-11-07T22:29:07.979Z",
+    "finishedAt": "2026-11-07T22:30:13.820Z"
+  },
+  "scope": "Fresh isolated synthetic database; actual acceptance, clearance and queue buttons. No application source changes and no provider calls."
+}

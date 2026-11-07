@@ -2896,5 +2896,22 @@
     "No real institutional SSO, private candidate processing, payroll, external email, hosted deployment or physical-device validation.",
     "Uploaded PDF/TXT bytes are not parsed by AI; supplied qualification fields, answers and typed background text are analyzed.",
     "Finite tests and source review do not establish hiring quality, perfect de-identification, production scale or universal accessibility."
-  ]
+  ],
+  "projectPitch": {
+    "recordedAt": "2026-11-07T22:41:08.913006+00:00",
+    "status": "passed",
+    "applicationSourceUnchanged": true,
+    "providerCalls": 0,
+    "guide": "docs/ROADSHOW.md",
+    "storyReceipt": "docs/verification/roadshow-story-proof.json",
+    "galleryReceipt": "docs/verification/roadshow-gallery-proof.json",
+    "browserWidthCases": 8,
+    "axeScans": 16,
+    "axeViolations": 0,
+    "workflowCaptures": 10,
+    "realProviderCaptures": 2,
+    "newSameApplicantCaptures": 2,
+    "cleanup": "complete",
+    "boundary": "Materials and one isolated synthetic actor journey only; prior application and provider results retained separately."
+  }
 }
