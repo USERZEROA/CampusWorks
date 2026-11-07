@@ -181,7 +181,13 @@ try {
   process.stdout.write(`Showcase ready at ${origin}: ${safeState.counts.courses} courses, ${safeState.counts.opportunities} positions and ${safeState.counts.applications} applications.\n`);
   if (flags.has('--serve-only')) {
     await new Promise(done => {
-      process.on('message', message => { if (message?.command === 'close-showcase') done(); });
+      const close = message => {
+        if (message?.command !== 'close-showcase') return;
+        process.off('message', close);
+        if (process.connected) process.disconnect();
+        done();
+      };
+      process.on('message', close);
     });
   } else if (!flags.has('--prepare-only')) {
     const browser = spawn(process.execPath, ['scripts/demo-windows.mjs'], { cwd: root, windowsHide: true, stdio: 'inherit', env: { ...process.env, BASE_URL: origin, DEMO_LAYOUT: 'showcase', SHOWCASE_WINDOWS_FILE: resolve('.cache/showcase-windows.json') } });
