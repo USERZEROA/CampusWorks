@@ -15,14 +15,14 @@
 - MongoDB transactions are mandatory. Local environments use a single-node replica set; unsupported database topology fails readiness with an actionable message.
 - A candidate may apply to multiple opportunities. Only one reserved/offered/accepted/active TA or RA allocation per term is permitted by default; the first committed selection wins.
 - Selection reserves a vacancy. Candidate acceptance and explicit administrative clearance precede dated operational authority.
-- TA grants apply only to the appointed course. RA capabilities apply only to the appointed project. Manual instructor/admin authority is preserved when an appointment ends.
+- TA grants apply only to the appointed course. RA appointments grant no course authority or project workspace. Manual instructor/admin authority is preserved when an appointment ends.
 - AI remains advisory and optional. Candidate availability, deadlines, position capacity, budgets, permissions, and activation are deterministic service decisions.
 - Payroll, SSN numbers, citizenship, and immigration documents do not enter qualification review or AI fit inputs.
 
 ## Verification coverage
 
 - Transaction rollback and retries; concurrent joins/close, assignments/order, demotion, completion, selection/withdrawal, final vacancy, duplicate/replayed commands, expiry/acceptance, and privilege revocation.
-- Four-role API authorization, cross-course/project/application/CV boundaries, copied-session logout revocation, malformed inputs, origin/body/rate controls, and required indexes.
+- Four-role API authorization, cross-course/RA-owner/application/CV boundaries, copied-session logout revocation, malformed inputs, origin/body/rate controls, and required indexes.
 - Actual browser publish/apply/upload/review/select/accept/clearance/queue/end flows, keyboard dialogs, focus restoration, accessible names, mobile/desktop layout, CSV, reporting, and configuration-required AI behavior.
 - Clean dependency installation and audit, type checks, Windows and container production builds, local multi-instance checks, and a complete final findings record.
 

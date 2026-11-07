@@ -1,6 +1,6 @@
 # CampusWorks
 
-CampusWorks connects TA and RA recruitment with course operations: faculty publish positions, students apply, faculty make offers, administrators record clearance, and dated appointments provide the appropriate workspace. Students, TAs, instructors and administrators retain the established Duke blue interface and course permissions.
+CampusWorks connects TA and RA recruitment with course operations: faculty publish positions, students apply, faculty make offers, administrators record clearance, and dated TA appointments provide course queue access. Students, TAs, instructors and administrators retain the established Duke blue interface and course permissions.
 
 The application uses Nuxt 4, Vue 3, Nitro, MongoDB transactions and Playwright. All demonstration records are synthetic.
 
@@ -10,12 +10,12 @@ The application uses Nuxt 4, Vue 3, Nitro, MongoDB transactions and Playwright. 
 | --- | --- |
 | Student | Browse courses and positions; enroll; prepare answers and a private CV; submit, withdraw, accept or decline; enter a queue and submit feedback; view appointment notifications |
 | TA | Receive dated course access; start duty; manage claims, handoffs, ordering and queue states; record non-queue work |
-| Instructor | Publish course or research requirements and questions; review submitted evidence; shortlist and select; manage appointments; review queue activity, workload and course recommendations |
-| Administrator | Manage courses and scoped permissions; define recruitment terms and approval policy; approve positions; record post-offer clearance; review allocations, budgets and operational status |
+| Instructor | Publish TA/RA requirements and questions; review submitted evidence; shortlist and select; manage appointments; review queue activity, workload and course recommendations |
+| Administrator | Manage courses and scoped permissions; select the current recruitment semester, window and approval policy; approve positions; record post-offer clearance; review allocations, budgets and operational status |
 
-RA appointments provide a research-project workspace within these four identities. They do not grant course queue permissions. Course-admin and site-admin describe scopes of the administrator identity.
+RA is an application and appointment type within these four identities. It has no separate project workspace or course queue privileges. Course-admin and site-admin describe scopes of the administrator identity.
 
-Faculty specify weekly hours and work frequency, attendance, lab/discussion duties, grading, office hours, schedules, skills, questions, vacancies and budget. Publication follows the term's approval policy. Submission freezes the reviewed answers and CV revision. Private administrative information is collected separately after an offer and excluded from ordinary faculty review and AI input.
+Recruitment links appear on the course-list home page. Only authorized instructors and administrators see hiring controls. Administrators select one shared current semester and application window; faculty postings inherit that semester and deadline. Faculty specify weekly hours and work frequency, attendance, lab/discussion duties, grading, office hours, schedules, skills, questions, vacancies and budget. Publication follows the term's approval policy. Submission freezes the reviewed answers and CV revision. Private administrative information is collected separately after an offer and excluded from ordinary faculty review and AI input.
 
 Selection reserves a candidate and vacancy atomically. TA and RA commitments cannot overlap in dates, even across different recruitment terms, and two half appointments cannot coexist. The one-live-allocation-per-term rule also remains. Acceptance, clearance and the appointment start date are required for access. Expiration, suspension or ending removes appointment-derived access and releases queue claims while preserving independently granted roles. See [product policy](docs/PRODUCT_POLICY.md) and [staffing operations](docs/STAFFING_OPERATIONS.md).
 
@@ -86,17 +86,17 @@ OAuth binds the immutable provider issuer and subject to a stable account ID. A 
 
 ### AI assistance
 
-The UI and server support candidate-fit explanations, background summaries, position drafting and course-term reviews. Configure all three values to enable the adapter:
+AI supports candidate comparisons, background summaries, qualification/question drafts and course reviews. On Windows, open the local masked Key form with:
 
-```dotenv
-AI_BASE_URL=https://your-provider.example/v1
-AI_API_KEY=
-AI_MODEL=
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ai-provider-dialog.ps1
 ```
 
-The base URL must expose an OpenAI-compatible `/chat/completions` endpoint. Missing configuration produces an explicit unavailable state; manual workflows remain usable. Real provider behavior requires a separate check after configuration.
+Only the OpenAI Key is entered. Windows encrypts it for the current account in ignored `.cache/ai-provider.xml`. `npm run start:ai` starts the production build with the saved credential; `npm run dev:ai` starts development. The application uses `https://api.openai.com/v1` and `gpt-5.4-mini` automatically. The chosen model and Chat Completions endpoint are documented by [OpenAI](https://developers.openai.com/api/docs/models/gpt-5.4-mini).
 
-AI receives authorized evidence with references, excludes private administrative attributes, and returns validated suggestions for human review. It never selects applicants, grants roles or reduces staffing. Availability and evidence are rechecked after a response; a concurrent selection makes the result stale. Established candidate comparisons update automatically when candidate lists, qualifications or availability change, using a durable worker, current reviewer permissions and the existing budgets. Candidate pages disclose coverage. Background summaries currently use supplied profile and qualification text; binary PDF text extraction is not implemented.
+Other deployments can use server-only `AI_BASE_URL`, `AI_API_KEY` and `AI_MODEL` environment variables. Never expose them through public runtime configuration. Missing configuration disables AI while manual workflows remain usable. `node scripts/ai-provider-check.mjs` performs a capped, isolated synthetic provider check; it does not evaluate hiring quality.
+
+AI receives authorized evidence with references, excludes private administrative attributes, and returns validated suggestions for human review. It never selects applicants, grants roles or reduces staffing. Availability and evidence are rechecked after a response; a concurrent selection makes the result stale. Established candidate comparisons update automatically when candidate lists, qualifications or availability change, using a durable worker, current reviewer permissions and the existing budgets. Candidate pages disclose coverage. Disabling recruitment or switching semesters invalidates old comparisons; closed applications can still be reviewed in the current enabled semester. Background summaries currently use supplied profile and qualification text; binary PDF text extraction is not implemented.
 
 | AI setting | Default |
 | --- | --- |
@@ -112,7 +112,7 @@ Requests have bounded input, output, response size and timeout. Failed calls con
 
 Every queue mutation locks its course inside a MongoDB transaction. Membership, queue state, duty, claims, ordering and history are checked and changed together. Closing cannot leave a simultaneous new arrival stranded. History insertion and active-entry removal share a transaction and a unique entry identifier. Actual help segments preserve attribution across pauses, handoffs and revoked appointments.
 
-Required indexes and transaction support are readiness requirements. Database/index failures produce an unavailable state. Sessions, rate limits, allocation uniqueness, audit events and durable in-app notifications are shared across replicas. Lists expose bounded pagination. Notification delivery is idempotent; administrators can trigger reconciliation through `POST /api/staffing/reconcile`.
+The MongoDB driver is pinned to 7.8.0, which includes the vendor's pool-isolation and SRV validation fixes. Transactions retain driver-managed retries and commit resolution, with separate connection-stage limits and a checked callback work budget. See the [official release notes](https://www.mongodb.com/docs/drivers/node/current/reference/release-notes/#what-s-new-in-7-8). Required indexes and transaction support are readiness requirements. Database/index failures produce an unavailable state. Sessions, rate limits, allocation uniqueness, audit events and durable in-app notifications are shared across replicas. Lists expose bounded pagination. Notification delivery is idempotent; administrators can trigger reconciliation through `POST /api/staffing/reconcile`.
 
 Feedback remains identified to managers; declining contact does not make it anonymous. Queue help minutes are measured activity, while workload records are submitted work. Reports expose missing evidence and separate budget scenarios from measured cost. Neither establishes payroll or an automatic staffing reduction.
 

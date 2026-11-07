@@ -8,13 +8,13 @@ CampusWorks retains four identities: student, TA, instructor, and administrator.
 
 | Actor | Implemented authority |
 | --- | --- |
-| Applicant | Maintain own applications; upload own CV; submit or withdraw under the state rules; answer own offers; provide restricted administrative details after an offer; record own active-appointment work |
+| Applicant | Maintain own applications; upload own CV; submit or withdraw under the state rules; answer own offers; provide restricted administrative details after an offer; record own active TA appointment work |
 | Course TA | Existing duty, queue and announcement operations in the course where an effective TA grant exists |
 | Course instructor/admin | Publish and review positions for courses they manage; shortlist, select and issue offers; oversee appointments; review course activity and staffing scenarios |
-| Research project owner/reviewer | Manage the assigned project's positions, applicants, appointments and research updates |
+| RA position owner | Review direct RA positions while retaining current instructional authority |
 | Site administrator | Configure terms and their approval policy; approve staffing requests; determine clearance; settle financial commitments; administer courses and authorized staffing records |
 
-The server checks current course enrollment or project ownership. A primary role label alone is not authority over an unrelated course. A person may apply while holding another platform identity, but a reviewer cannot select themselves. Project creation requires actual instructional/course-admin authority or site-admin authority.
+The server checks current course enrollment and direct RA ownership. A primary role label alone is not authority over an unrelated course. A person may apply while holding another platform identity, but a reviewer cannot select themselves. TA status alone never grants hiring rights; unavailable management controls are hidden.
 
 The owner has retained the existing course/site administration scopes without adding a department-admin hierarchy or independent second-approver workflow. Course administration stays course-scoped. Clearance and settlement use site-admin authority. See [PRODUCT_POLICY.md](PRODUCT_POLICY.md) for the confirmed scope.
 
@@ -22,14 +22,14 @@ The owner has retained the existing course/site administration scopes without ad
 
 MongoDB must support transactions through a replica set or compatible sharded topology. Standalone MongoDB is rejected. Required uniqueness indexes must be established successfully; an unsuccessful index setup is a readiness failure.
 
-Course mutations and TA appointment transitions share a write on the canonical course record before authorization/state validation. Research transitions use their canonical project record. Candidate allocation, vacancy counters, budget commitments, offers, appointments, audit/outbox events and command receipts commit together. There is no process-local mutex being treated as a cross-instance guarantee.
+Course mutations and TA appointment transitions share a write on the canonical course record before authorization/state validation. Staffing takes the shared recruitment-cycle write first. RA transitions then lock their direct opportunity and current instructional authority. Candidate allocation, vacancy counters, budget commitments, offers, appointments, audit/outbox events and command receipts commit together. There is no process-local mutex being treated as a cross-instance guarantee.
 
 Use an explicit `SESSION_SECRET` of at least 32 characters in production. Set `PUBLIC_ORIGIN` for production OAuth and enable `TRUST_PROXY` only behind a correctly configured trusted proxy. Keep `ENABLE_MOCK_LOGIN=false` for real users. Demo sign-in deliberately permits role selection and is not an institutional authentication method.
 
 ## A complete TA appointment
 
-1. A site administrator creates a term with dates and `requiresApproval`. Approval is required by default. Only that administrator-owned term policy can relax the requirement; an instructor's posting checkbox cannot override it.
-2. A site administrator creates the operational course offering and assigns its instructor/course administrators using the course people controls. A course ID is bound to its staffing term when its first TA opportunity is created. A different term needs a different operational course offering.
+1. A site administrator creates a semester with dates and `requiresApproval`, selects it as the single current semester, and sets its application window. Approval is required by default. Only that administrator-owned term policy can relax the requirement; an instructor's posting checkbox cannot override it.
+2. A site administrator creates the operational course offering and assigns its instructor/course administrators using the course people controls. The operational course can be reused across recruitment semesters. Every posting inherits the current semester and shared application deadline.
 3. An authorized instructor creates an opportunity, supplies duties, hours, qualifications, required availability, questions, CV requirement, positions and cost basis, and requests publication. A required approval produces `pending_approval`; administrator approval publishes it. Administrator-created/approved requests and explicitly approval-optional terms follow their corresponding path.
 4. A student opens the published opportunity, saves a draft, supplies academic and availability information, answers questions, and uploads the required CV. Saving revised qualifications returns the application to `draft`; submission is explicit.
 5. Submission validates the published requirements version, required profile/answers/CV, declared hours and schedule. It records a frozen qualification/CV snapshot. Reviewers cannot inspect unsent drafts or a newer draft CV.
@@ -38,13 +38,13 @@ Use an explicit `SESSION_SECRET` of at least 32 characters in production. Set `P
 8. A site administrator records clearance. A cleared appointment becomes `active` if its start has arrived, otherwise `pending_start` until the effective start.
 9. The course's effective role calculation recognizes the active, accepted, cleared, date-valid TA appointment. The person can enter the familiar TA view and start duty. Their other courses retain their own roles; the session is not promoted globally.
 10. Ending, expiry or suspension removes appointment-derived authority. If no other valid staff grant remains, duty and live claims are cleared while the student request and accumulated help history are preserved. Independent manual instructor/admin/TA grants are retained.
-11. Course review combines recorded queue activity, submitted feedback, declared workload and explicit cost scenarios. Instructors and administrators decide the following term's requirements.
+11. TA course review combines recorded queue activity, submitted feedback, declared workload and explicit cost scenarios. Instructors and administrators decide the following term's requirements.
 
 The service permits applying to several opportunities while available. Shortlisting does not reserve a student. A stable applicant cannot hold date-overlapping TA/RA commitments across any term IDs, including two half appointments. The existing one-live-allocation-per-term rule also remains. Date intervals include the start and exclude the end, so adjacent appointments may meet at the same instant.
 
 ## Opportunities and requirements
 
-An opportunity stores its TA/RA type, course/project scope, term, department, title, description, positions, weekly hours, appointment dates, application deadline, required/preferred skills, screening questions and material requirements.
+An opportunity stores its TA/RA type, course/RA owner scope, term, department, title, description, positions, weekly hours, appointment dates, application deadline, required/preferred skills, screening questions and material requirements.
 
 Attendance, lab, discussion, grading and office-hour flags are separate from duty rows. Duty rows identify category, occurrences per week and minutes per occurrence. The total stated duty duration cannot exceed the published weekly hours. Required weekly slots use day number and increasing same-day `HH:mm` windows; adjacent applicant slots can jointly cover a required window. Missing availability is not replaced with an invented twenty-hour declaration.
 
@@ -84,7 +84,7 @@ PDF extraction, OCR, malware scanning and raw-document transmission to an AI pro
 
 Institutional ID, prior payroll status, whether the applicant has an SSN, citizenship category and work-authorization expiry are collected separately after an offer when needed. Actual SSN numbers and identity documents are not accepted as administrative fields. The normal qualification-save endpoint cannot collect or erase these details.
 
-Only the applicant and site administrators can update those administrative details, and cleared/active details require an administrator-led amendment process rather than an ordinary edit. Course/project reviewers do not receive the administrative object, historical unsent revisions, or restricted clearance reasons. AI projections omit those fields and exclude screening questions that request sensitive administrative or demographic information. Free-text filtering is a precaution, not a guarantee of complete anonymization.
+Only the applicant and site administrators can update those administrative details, and cleared/active details require an administrator-led amendment process rather than an ordinary edit. Ordinary faculty reviewers do not receive the administrative object, historical unsent revisions, or restricted clearance reasons. AI projections omit those fields and exclude screening questions that request sensitive administrative or demographic information. Free-text filtering is a precaution, not a guarantee of complete anonymization.
 
 ## AI configuration and actual behavior
 
@@ -130,17 +130,15 @@ Lifecycle events are stored with the domain transition. In-app delivery claims e
 
 Notifications are listed in the authenticated overview and can be marked read only by their recipient. They contain a short status message and a protected application/staffing link, not CV contents or clearance details. No email, SMS, institutional inbox or external messaging integration is configured.
 
-## Research and workload records
+## TA and RA records
 
-RA activation grants the named project workspace only. Project owners/reviewers oversee updates; an active, cleared, date-valid RA may submit project updates and record work. Their ordinary course access stays unchanged. Having an RA workspace does not make them a project staffing manager.
+RA uses the same application, offer, acceptance and administrative-clearance states as TA. It grants no course queue permissions, project workspace or research update feature. Recruitment entry links appear only on the course-list home page; secondary staffing pages provide Home/back navigation.
 
-Workspace authorization queries the current effective grant independently of historical appointment pages. Appointments and project activity expose stable, bounded pagination. Project entries retain their update, task or research-note type.
-
-Workload records use an explicit category, hours, UTC work date and notes. The appointment must be active; future dates and more than 24 accumulated hours in a day are rejected. They are labeled self-reported observations, not approved payroll evidence.
+TA appointees and authorized managers may record bounded, categorized workload with replay-safe command keys. Queue help time and self-reported workload remain distinct evidence sources.
 
 ## Course reports and budget settlement
 
-The course review accepts an optional term and applies its dates to queue/feedback records and its ID to staffing/workload records. Metrics aggregate all matching database records. Detailed workload rows and opportunity scenarios are paged separately, so the report does not silently truncate totals at a row limit.
+The course review uses the shared current semester by default, with an optional authorized historical API scope, and applies its dates to queue/feedback records and its ID to staffing/workload records. Metrics aggregate all matching TA course records; RA metadata does not contribute TA staffing budgets or workload. Detailed workload rows and opportunity scenarios are paged separately, so the report does not silently truncate totals at a row limit.
 
 Recorded outputs include queue/help counts, mean/nearest-rank P90 wait, recorded help duration, feedback count/mean, workload totals by category, approved/committed budget and cost arithmetic for alternative position counts. Scenarios explicitly lack validated coverage and cannot authorize staffing reductions.
 
@@ -158,4 +156,4 @@ Demo sign-in cannot impersonate an institutional binding. Sessions reference rev
 
 The owner has prohibited overlapping appointments, including two half appointments; retained existing manager-controlled departure and course/site administration; declined additional retention/document/HR features; and authorized automatic candidate comparison updates after list changes. These decisions are recorded in [PRODUCT_POLICY.md](PRODUCT_POLICY.md).
 
-Provider credentials will be supplied separately. No external model, real institutional identity, payroll, email or document-scanning service is established by local tests. In-app notifications and the current private attachment controls remain available. Descriptive workload and budget scenarios still require a human staffing decision; the software cannot validate unrecorded work or external expense evidence.
+The owner supplied an OpenAI Key through the local masked form. A capped real-provider check used only synthetic records; no real institutional identity, payroll, email or document-scanning service is established by that check. In-app notifications and the current private attachment controls remain available. Descriptive workload and budget scenarios still require a human staffing decision; the software cannot validate unrecorded work or external expense evidence.

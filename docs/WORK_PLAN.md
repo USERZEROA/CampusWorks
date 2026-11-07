@@ -17,13 +17,13 @@ Initial delivery plan retained as a scope record. Current implementation require
 
 Design the following capabilities without implementing them in this delivery:
 
-1. Instructor TA/RA opportunities with term, course or research project, positions, weekly workload, attendance, lab/discussion, grading, office hours, required skills, screening questions, deadlines, and budget.
+1. Instructor TA/RA opportunities with shared current semester and optional TA course, positions, weekly workload, attendance, lab/discussion, grading, office hours, required skills, screening questions, deadlines, and budget.
 2. Student applications with academic background, position preference, course preferences, prior experience, availability, answers, CV, and application status.
 3. Instructor review, explicit selection, candidate availability updates, and collision-safe allocation so competing instructors cannot allocate an unavailable candidate.
-4. Accepted appointments connected to course-scoped TA permissions, with start/end dates, withdrawal, termination, and next-term renewal.
-5. A shared TA/RA application foundation with distinct course operations and research-project operations; RA appointments must not grant course privileges by default.
+4. Accepted appointments connected to course-scoped TA permissions, with start/end dates, suspension and ending; later semesters require new appointments.
+5. A shared TA/RA application foundation with course operations for TA and appointment records for RA; RA appointments must not grant course privileges by default.
 6. AI-assisted candidate summaries grounded in submitted qualifications and stated opportunity requirements, with instructor decisions and auditable explanations.
-7. End-of-term course observations for instructors and department administrators, using queue demand, assistance workload, student feedback, and explicit staffing costs; recommendations must state data gaps.
+7. End-of-term course observations for instructors and administrators, using queue demand, assistance workload, student feedback, and explicit staffing costs; recommendations must state data gaps.
 8. Additional useful AI assistance, a complete business lifecycle, failure handling, permissions, and a phased implementation proposal.
 
 ## Supplied form evidence

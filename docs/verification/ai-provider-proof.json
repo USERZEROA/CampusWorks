@@ -1,0 +1,38 @@
+{
+  "status": "passed",
+  "synthetic": true,
+  "maxProviderCalls": 5,
+  "checks": [
+    {
+      "kind": "cv_summary",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "opportunity_draft",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "term_review",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "candidate_fit",
+      "status": "completed",
+      "validated": true,
+      "compared": 2
+    },
+    {
+      "kind": "candidate_fit",
+      "status": "completed",
+      "validated": true,
+      "compared": 1
+    }
+  ],
+  "providerCallsReserved": 5
+}
