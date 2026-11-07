@@ -59,7 +59,7 @@ try {
   if (!Number.isInteger(mongoPort)) throw new Error('Invalid loopback database port.');
   const mongoUri = `mongodb://127.0.0.1:${mongoPort}/?replicaSet=rs0&directConnection=true`;
   const { MongoClient } = await import('mongodb');
-  const client = new MongoClient(mongoUri, { serverSelectionTimeoutMS: 1000 });
+  const client = new MongoClient(`mongodb://127.0.0.1:${mongoPort}/?directConnection=true`, { serverSelectionTimeoutMS: 1000 });
   for (let attempt = 0; ; attempt++) {
     try { await client.connect(); break; } catch (error) { if (attempt >= 40) throw error; await pause(500); }
   }
