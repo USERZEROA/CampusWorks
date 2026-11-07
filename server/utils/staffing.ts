@@ -98,11 +98,14 @@ export async function applicationAccess(db: Db, id: string, user: StaffingActor,
   const owner = application.applicantId === actorId(user)
   const canManage = await canManageOpportunity(db, opportunity, user, session)
   if (!owner && !canManage) fail(403, 'This application is private')
+  if (!owner && (!application.submittedAt || application.status === 'draft')) fail(403, 'Draft applications are private to the applicant')
   return { application, opportunity, owner, canManage }
 }
 export function applicationDto(application: Document, sensitive: boolean) {
-  const { administrative, ...dto } = publicRecord(application)!
-  return sensitive ? { ...dto, administrative: administrative || {} } : dto
+  const { administrative, revisions, ...dto } = publicRecord(application)!
+  if (sensitive) return { ...dto, administrative: administrative || {}, revisions: revisions || [] }
+  const snapshot = application.submittedSnapshot || {}
+  return { ...dto, profile: snapshot.profile || application.profile, answers: snapshot.answers || application.answers, qualificationText: snapshot.qualificationText ?? application.qualificationText, cvDocumentId: snapshot.cvDocumentId ?? application.cvDocumentId }
 }
 
 export type Slot = { day: number; start: string; end: string }
