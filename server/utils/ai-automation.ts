@@ -296,18 +296,42 @@ async function discover(db: Db, signal?: AbortSignal) {
   }
 }
 
+async function claimAutomaticJob(db: Db) {
+  const controls = db.collection<any>('staffingAiAutomationControl')
+  // Initialize outside the claim transaction: concurrent first-time upserts
+  // may collide on _id, while later cursor writes remain transactionally fenced.
+  try {
+    await controls.updateOne({ _id: 'execution' }, { $setOnInsert: { nextKind: 0 } }, { upsert: true })
+  } catch (error: any) {
+    if (error?.code !== 11000 || !await controls.findOne({ _id: 'execution' }, { projection: { _id: 1 } })) throw error
+  }
+  return withTransaction(async (database, session) => {
+    const control = await database.collection<any>('staffingAiAutomationControl').findOne({ _id: 'execution' }, { session })
+    const kinds: AiKind[] = ['candidate_fit', 'cv_summary', 'opportunity_draft', 'term_review']
+    const first = Number.isInteger(control?.nextKind) && control.nextKind >= 0 && control.nextKind < kinds.length ? control.nextKind : 0
+    const now = new Date()
+    const due = { $or: [{ status: { $in: ['queued', 'failed', 'blocked', 'unconfigured'] }, nextAttemptAt: { $lte: now } }, { status: 'running', leaseUntil: { $lte: now } }] }
+    for (let offset = 0; offset < kinds.length; offset++) {
+      const index = (first + offset) % kinds.length
+      const pending = await jobs(database).findOne({ kind: kinds[index], ...due }, { session, sort: { nextAttemptAt: 1, _id: 1 } })
+      if (!pending) continue
+      const claimed = await jobs(database).findOneAndUpdate({ _id: pending._id, kind: kinds[index], generation: pending.generation, ...due }, { $set: { status: 'running', runningGeneration: pending.generation, runningInputHash: pending.inputHash, leaseToken: randomUUID(), leaseUntil: new Date(Date.now() + 90000), taskId: randomUUID(), updatedAt: new Date() }, $inc: { fence: 1 } }, { session, returnDocument: 'after' })
+      if (!claimed) continue
+      // A shared short transaction serializes only the claim and its turn.
+      // Fingerprinting, authority checks and provider work happen after commit.
+      await database.collection<any>('staffingAiAutomationControl').updateOne({ _id: 'execution' }, { $set: { nextKind: (index + 1) % kinds.length, updatedAt: new Date() } }, { session })
+      return claimed
+    }
+    return null
+  })
+}
+
 async function executeOne(db: Db, signal?: AbortSignal) {
   const capacity = await db.collection<any>('staffingAiBudgets').findOne({ _id: 'concurrency' })
   if ((capacity?.leases || []).filter((lease: any) => lease.expiresAt > new Date()).length >= boundedSetting('AI_MAX_CONCURRENT', 2, 1, 20)) return
-  const now = new Date()
-  const leaseToken = randomUUID()
-  const job = await withTransaction(async (database, session) => {
-    const pending = await jobs(database).findOne({ $or: [{ status: { $in: ['queued', 'failed', 'blocked', 'unconfigured'] }, nextAttemptAt: { $lte: now } }, { status: 'running', leaseUntil: { $lte: now } }] }, { session, sort: { priority: -1, nextAttemptAt: 1, _id: 1 } })
-    if (!pending) return null
-    const claimed = await jobs(database).findOneAndUpdate({ _id: pending._id, generation: pending.generation }, { $set: { status: 'running', runningGeneration: pending.generation, runningInputHash: pending.inputHash, leaseToken, leaseUntil: new Date(Date.now() + 90000), taskId: randomUUID(), updatedAt: new Date() }, $inc: { fence: 1 } }, { session, returnDocument: 'after' })
-    return claimed
-  })
+  const job = await claimAutomaticJob(db)
   if (!job) return
+  const leaseToken = job.leaseToken
   let actor: StaffingActor | null = null
   let evidenceChanged = false
   try {

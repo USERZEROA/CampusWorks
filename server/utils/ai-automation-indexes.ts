@@ -6,6 +6,8 @@ export const aiAutomationIndexes: Array<[string, IndexDescription[]]> = [
     { key: { status: 1, nextAttemptAt: 1, priority: -1 } },
     { key: { targetId: 1, kind: 1 } },
     { key: { kind: 1, nextObserveAt: 1, _id: 1 } },
+    { key: { kind: 1, status: 1, nextAttemptAt: 1, _id: 1 } },
+    { key: { kind: 1, status: 1, leaseUntil: 1, _id: 1 } },
   ]],
   ['staffingAiAutomationCache', [{ key: { scopeId: 1, inputHash: 1 }, unique: true }]],
   ['staffingAiAutomationHints', [
