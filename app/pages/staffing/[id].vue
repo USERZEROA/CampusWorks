@@ -26,6 +26,7 @@ const currentCycle = computed(
 const canReview = computed(
   () =>
     currentCycle.value?.canReview &&
+    opportunity.value?.canAnalyzeCandidates !== false &&
     opportunity.value?.termId === currentCycle.value.termId,
 );
 const canPublish = computed(
@@ -69,6 +70,8 @@ async function select(candidate: any) {
   if (failure.value) await refresh();
 }
 async function command(path: string, body: any = {}, success = "Saved.") {
+  if (path.startsWith(`/api/staffing/opportunities/${id}/`))
+    body = { ...body, expectedVersion: opportunity.value.version };
   await run(() => staffingRequest(path, { method: "POST", body }), success);
 }
 useIntervalRefresh(refresh);
@@ -155,11 +158,41 @@ useIntervalRefresh(refresh);
             ><NuxtLink class="button secondary" :to="`/opportunities/${id}`"
               >View published requirements</NuxtLink
             ><NuxtLink
-              v-if="opportunity.courseId"
+              v-if="opportunity.type === 'ta' && opportunity.courseId"
               class="button secondary"
               :to="`/courses/${opportunity.courseId}/review`"
               >Course review</NuxtLink
             >
+            <button
+              v-if="data.canCloseout"
+              class="secondary"
+              :disabled="busy"
+              @click="
+                command(
+                  `/api/staffing/opportunities/${id}/archive`,
+                  {},
+                  'Opportunity archived.',
+                )
+              "
+              data-testid="opportunity-archive"
+            >
+              Archive opportunity
+            </button>
+            <button
+              v-if="data.canCloseout"
+              class="danger"
+              :disabled="busy"
+              @click="
+                command(
+                  `/api/staffing/opportunities/${id}/cancel`,
+                  {},
+                  'Opportunity cancelled.',
+                )
+              "
+              data-testid="opportunity-cancel"
+            >
+              Cancel opportunity
+            </button>
           </div>
         </div>
       </section>
@@ -318,6 +351,14 @@ useIntervalRefresh(refresh);
               Clearance:
               {{ staffingState(item.clearanceStatus || item.clearance) }}
             </p>
+            <StaffingSettlement
+              v-if="
+                data.viewer?.isGlobalAdmin &&
+                item.budgetStatus === 'awaiting_settlement'
+              "
+              :appointment="item"
+              @saved="refresh"
+            />
             <div class="actions">
               <button
                 v-if="item.status === 'active'"
@@ -375,10 +416,11 @@ useIntervalRefresh(refresh);
         </div>
       </section>
       <AiAssistance
-        v-if="canReview"
+        v-if="data.canManage"
         kind="candidate_fit"
         :target-id="id"
         :authorized-targets="authorizedCandidateTargets"
+        :can-analyze="!!canReview"
         title="Candidate Review Assistance"
       />
       <AiAssistance

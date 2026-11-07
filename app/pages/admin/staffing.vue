@@ -275,11 +275,19 @@ useIntervalRefresh(refresh);
             {{ staffingDate(item.startDate || item.appointmentStart) }} –
             {{ staffingDate(item.endDate || item.appointmentEnd) }}
           </p>
+          <NuxtLink :to="`/applications/${item.applicationId}`"
+            >Appointment details</NuxtLink
+          >
+          <StaffingSettlement
+            v-if="item.budgetStatus === 'awaiting_settlement'"
+            :appointment="item"
+            @saved="refresh"
+          />
           <div
             v-if="
               !['ended', 'cancelled', 'not_cleared', 'expired'].includes(
                 item.status,
-              )
+              ) && ['pending_clearance', 'pending_start'].includes(item.status)
             "
             class="grid"
           >

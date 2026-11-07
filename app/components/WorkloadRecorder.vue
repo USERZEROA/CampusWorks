@@ -55,7 +55,6 @@ async function save() {
             <option value="office_hours">Office hours</option>
             <option value="preparation">Preparation</option>
             <option value="coordination">Coordination</option>
-            <option value="research">Research</option>
           </select></label
         ><label
           >Hours<input
