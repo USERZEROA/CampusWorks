@@ -11,6 +11,7 @@ const cycle = reactive({
   enabled: true,
 });
 const cycleDirty = ref(false);
+const cycleVersion = ref(0);
 const localDateTime = (value: string) => {
   if (!value) return "";
   const date = new Date(value);
@@ -18,6 +19,7 @@ const localDateTime = (value: string) => {
 };
 function loadCycle() {
   const current = data.value?.currentCycle;
+  cycleVersion.value = current?.version || 0;
   cycle.termId = current?.termId || "";
   cycle.opensAt = localDateTime(current?.opensAt);
   cycle.closesAt = localDateTime(current?.closesAt);
@@ -36,7 +38,7 @@ async function saveCycle() {
       staffingRequest("/api/staffing/cycle", {
         method: "PUT",
         body: {
-          expectedVersion: data.value?.currentCycle?.version || 0,
+          expectedVersion: cycleVersion.value,
           termId: cycle.termId,
           opensAt: new Date(cycle.opensAt).toISOString(),
           closesAt: new Date(cycle.closesAt).toISOString(),
@@ -157,6 +159,19 @@ useIntervalRefresh(refresh);
           />Enable this cycle</label
         >
         <button :disabled="busy" data-testid="cycle-save">Save schedule</button>
+        <button
+          v-if="cycleDirty"
+          type="button"
+          class="secondary"
+          :disabled="busy"
+          @click="
+            cycleDirty = false;
+            loadCycle();
+          "
+          data-testid="cycle-reset"
+        >
+          Reload schedule
+        </button>
       </form>
     </section>
     <section v-if="!error" class="panel">

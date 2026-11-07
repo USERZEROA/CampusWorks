@@ -12,7 +12,7 @@ export async function getRecruitmentCycle(db: Db, session?: ClientSession) {
   const settings = await db.collection('staffingSettings').findOne({ _id: cycleId as any }, options(session))
   const term = settings?.termId ? await db.collection('staffingTerms').findOne({ id: settings.termId }, options(session)) : null
   const timestamp = new Date()
-  const canReview = !!(term && settings?.enabled && settings.opensAt <= timestamp)
+  const canReview = !!(term && settings?.enabled && settings.opensAt <= timestamp && term.endDate > timestamp)
   return {
     termId: term?.id || null, termName: term?.name || '', startDate: term?.startDate || null, endDate: term?.endDate || null,
     opensAt: settings?.opensAt || null, closesAt: settings?.closesAt || null, enabled: !!settings?.enabled,
@@ -37,7 +37,7 @@ export async function configureRecruitmentCycle(db: Db, session: ClientSession, 
   const term = await db.collection('staffingTerms').findOne({ id: termId }, { session }) || fail(400, 'Choose a configured semester')
   const opensAt = date(body.opensAt, 'Recruitment opening')
   const closesAt = date(body.closesAt, 'Recruitment closing')
-  if (opensAt >= closesAt || closesAt > term.endDate) fail(400, 'Recruitment must close after opening and no later than the semester end')
+  if (opensAt >= closesAt || closesAt >= term.endDate) fail(400, 'Recruitment must close after opening and before the semester end')
   await db.collection('staffingSettings').updateOne({ _id: cycleId as any }, { $set: { termId, opensAt, closesAt, enabled: flag(body.enabled, 'Recruitment enabled'), updatedAt: new Date(), updatedBy: user.email }, $inc: { version: 1 } }, { session })
   await event(db, session, user, 'RecruitmentCycleConfigured', cycleId, { termId })
   const cycle = await getRecruitmentCycle(db, session)

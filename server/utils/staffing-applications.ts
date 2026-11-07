@@ -142,6 +142,7 @@ export async function reviewApplication(db: Db, session: ClientSession, user: St
   await lockStaffingResource(db, opportunity, session)
   if (!canManage) fail(403, 'Only reviewers may change review status')
   await assertRecruitmentGate(db, session, opportunity.termId, 'review')
+  if (opportunity.appointmentEnd <= new Date() || !['published', 'applications_closed', 'filled'].includes(opportunity.status)) fail(409, 'Candidate review has ended for this position')
   if (!['submitted', 'under_review', 'shortlisted', 'not_selected'].includes(application.status)) fail(409, 'Only submitted applications may be reviewed')
   const body = object(raw || {}, 'Review')
   if (await db.collection('staffingOffers').findOne({ applicationId, status: { $in: ['issued', 'accepted'] } }, { session })) fail(409, 'Resolve the offer before changing review status')
