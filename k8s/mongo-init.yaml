@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongo-init
+  namespace: campusworks
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: initialize
+          image: mongo:7
+          command: ["mongosh", "--quiet", "--file", "/bootstrap/init-mongo-replica.js"]
+          envFrom:
+            - secretRef: { name: mongo-auth }
+          env:
+            - { name: MONGO_REPLICA_HOST, value: "mongo:27017" }
+          volumeMounts:
+            - { name: bootstrap, mountPath: /bootstrap, readOnly: true }
+      volumes:
+        - name: bootstrap
+          configMap: { name: campusworks-mongo-bootstrap }

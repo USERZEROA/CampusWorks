@@ -12,6 +12,13 @@ spec:
     metadata:
       labels: { app: mongo }
     spec:
+      initContainers:
+        - name: replica-key
+          image: mongo:7
+          command: ["bash", "-ec", "cp /secret/replica-key /keys/replica.key; chown 999:999 /keys/replica.key; chmod 400 /keys/replica.key"]
+          volumeMounts:
+            - { name: replica-secret, mountPath: /secret, readOnly: true }
+            - { name: replica-key, mountPath: /keys }
       containers:
         - name: mongo
           image: mongo:7
@@ -23,15 +30,25 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data/db
+            - { name: replica-key, mountPath: /keys, readOnly: true }
           args:
             - "--bind_ip_all"
             - "--auth"
+            - "--replSet"
+            - "rs0"
+            - "--keyFile"
+            - "/keys/replica.key"
           readinessProbe:
             exec:
               command: ["mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
+      volumes:
+        - name: replica-secret
+          secret: { secretName: mongo-auth, defaultMode: 256 }
+        - name: replica-key
+          emptyDir: {}
   volumeClaimTemplates:
     - metadata:
         name: data
