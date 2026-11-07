@@ -14,20 +14,24 @@
 
 import { execFileSync } from 'node:child_process'
 import { chromium } from '@playwright/test'
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { prepareStaffingDemo, staffingWindows } from './demo-staffing.mjs'
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000'
 const COURSE = process.env.DEMO_COURSE || 'cs101'
 
-const WINDOWS = process.env.DEMO_LAYOUT === 'staffing' ? staffingWindows(COURSE) : [
+const showcaseMode = process.env.DEMO_LAYOUT === 'showcase'
+const showcaseWindows = showcaseMode ? JSON.parse(readFileSync(process.env.SHOWCASE_WINDOWS_FILE || resolve('.cache/showcase-windows.json'), 'utf8')) : null
+if (showcaseMode && (!['127.0.0.1', 'localhost', '[::1]'].includes(new URL(BASE_URL).hostname) || !Array.isArray(showcaseWindows) || showcaseWindows.length !== 6 || showcaseWindows.some(window => !['student', 'ta', 'instructor', 'admin'].includes(window.as) || !/@example\.com$/i.test(window.email || '') || typeof window.path !== 'string' || !window.path.startsWith('/') || window.path.startsWith('//') || new URL(window.path, BASE_URL).origin !== new URL(BASE_URL).origin))) throw new Error('Use a prepared local showcase window list.')
+const WINDOWS = showcaseWindows || (process.env.DEMO_LAYOUT === 'staffing' ? staffingWindows(COURSE) : [
   { label: 'TA User', as: 'ta', email: 'ta@example.com', path: `/courses/${COURSE}/ta` },
   { label: 'TA Two', as: 'ta', email: 'ta2@example.com', path: `/courses/${COURSE}/ta` },
   { label: 'Instructor', as: 'instructor', email: 'instructor@example.com', path: `/courses/${COURSE}/admin` },
   { label: 'Student User', as: 'student', email: 'student@example.com', path: `/courses/${COURSE}/student` },
   { label: 'Student Two', as: 'student', email: 'student2@example.com', path: `/courses/${COURSE}/student` },
   { label: 'Student Three', as: 'student', email: 'student3@example.com', path: `/courses/${COURSE}/student` }
-]
+])
 
 /** Usable screen area (excluding the taskbar) on Windows; a 1080p guess elsewhere. */
 function screenArea() {
@@ -88,7 +92,7 @@ async function openWindow(win, index) {
     new MutationObserver(apply).observe(document, { subtree: true, childList: true, characterData: true })
   }, `[${win.label}] `)
 
-  const res = await context.request.post('/api/auth/mock', { data: { as: win.as, email: win.email } })
+  const res = await context.request.post('/api/auth/mock', { data: { as: win.as, email: win.email, ...(win.name ? { name: win.name } : {}) } })
   if (!res.ok()) throw new Error(`Demo login failed for ${win.email}: ${res.status()} ${await res.text()}`)
 
   const page = await context.newPage()

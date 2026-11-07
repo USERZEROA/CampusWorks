@@ -19,6 +19,8 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
     "demo:windows": "node scripts/demo-windows.mjs",
+    "demo:showcase": "node scripts/showcase-runner.mjs",
+    "demo:prepare": "node scripts/showcase-runner.mjs --prepare-only --no-ai",
     "test:unit": "node --test tests/*.test.mjs",
     "verify:local": "node scripts/local-test.mjs"
   },
