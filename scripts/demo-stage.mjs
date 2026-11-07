@@ -1,0 +1,688 @@
+import { spawn } from "node:child_process";
+import { randomBytes } from "node:crypto";
+import { fileURLToPath } from "node:url";
+import { createInterface } from "node:readline";
+import { chromium } from "@playwright/test";
+
+const foregroundScript = fileURLToPath(
+  new URL("./demo-foreground.ps1", import.meta.url),
+);
+const roleLabels = {
+  student: "Student",
+  ta: "TA",
+  instructor: "Instructor",
+  admin: "Administrator",
+};
+const wait = (milliseconds) =>
+  new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+function createForegroundBridge() {
+  const child = spawn(
+    "powershell.exe",
+    [
+      "-NoProfile",
+      "-NonInteractive",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      foregroundScript,
+      "-Persistent",
+    ],
+    { windowsHide: true, stdio: ["pipe", "pipe", "pipe"] },
+  );
+  let queued = Promise.resolve();
+  let pending;
+  let failed;
+  let closing;
+  const exited = new Promise((resolve) => child.once("exit", resolve));
+  const fail = () => {
+    failed = new Error("The owned demonstration foreground helper stopped.");
+    pending?.reject(failed);
+    pending = undefined;
+  };
+  child.once("error", fail);
+  child.once("exit", fail);
+  child.stdin.on("error", fail);
+  child.stderr.resume();
+  const lines = createInterface({ input: child.stdout });
+  lines.on("line", (line) => {
+    if (!pending) return;
+    try {
+      pending.resolve(JSON.parse(line));
+    } catch {
+      pending.reject(
+        new Error(
+          "The owned demonstration foreground helper returned an invalid response.",
+        ),
+      );
+    }
+    pending = undefined;
+  });
+  return {
+    pid: child.pid,
+    activate(titleToken) {
+      if (closing)
+        return Promise.reject(
+          new Error("The demonstration foreground helper is closing."),
+        );
+      const request = queued.then(
+        () =>
+          new Promise((resolve, reject) => {
+            if (failed) {
+              reject(failed);
+              return;
+            }
+            const timeout = setTimeout(() => {
+              failed = new Error(
+                "The owned demonstration foreground helper timed out.",
+              );
+              pending = undefined;
+              child.kill();
+              reject(failed);
+            }, 10000);
+            pending = {
+              resolve: (result) => {
+                clearTimeout(timeout);
+                resolve(result);
+              },
+              reject: (error) => {
+                clearTimeout(timeout);
+                reject(error);
+              },
+            };
+            child.stdin.write(`${titleToken}\n`);
+          }),
+      );
+      queued = request.catch(() => {});
+      return request;
+    },
+    close() {
+      if (closing) return closing;
+      closing = (async () => {
+        try {
+          await queued;
+          if (child.exitCode === null && child.signalCode === null) {
+            child.stdin.end("__CLOSE__\n");
+            await Promise.race([exited, wait(2000)]);
+            if (child.exitCode === null && child.signalCode === null)
+              child.kill();
+            await Promise.race([exited, wait(2000)]);
+          }
+          if (
+            child.pid &&
+            child.exitCode === null &&
+            child.signalCode === null
+          ) {
+            let present = true;
+            try {
+              process.kill(child.pid, 0);
+            } catch (error) {
+              if (error.code === "ESRCH") present = false;
+            }
+            if (present)
+              throw new Error(
+                "The owned demonstration foreground helper could not be stopped.",
+              );
+          }
+        } finally {
+          lines.close();
+        }
+      })();
+      return closing;
+    },
+  };
+}
+
+export class DemoStopped extends Error {
+  constructor(message = "The demonstration was stopped.") {
+    super(message);
+    this.name = "DemoStopped";
+  }
+}
+
+// This function executes only inside the automation-owned browser contexts.
+function installDemoOverlay({ titleToken }) {
+  let lastState;
+  let observer;
+  let resize;
+  let originalPadding;
+  const elementId = "campusworks-demo-stage";
+  const styleId = "campusworks-demo-stage-style";
+  const fixTitle = () => {
+    const prefix = `[${titleToken}] `;
+    if (!document.title.startsWith(prefix))
+      document.title = prefix + document.title;
+  };
+  function render(state) {
+    lastState = state;
+    if (!document.body || !document.head) return;
+    let banner = document.getElementById(elementId);
+    if (!banner) {
+      originalPadding = getComputedStyle(document.body).paddingTop;
+      const style = document.createElement("style");
+      style.id = styleId;
+      style.textContent = `
+        body[data-campusworks-demo-stage] { padding-top: calc(var(--campusworks-demo-original-padding, 0px) + var(--campusworks-demo-offset, 92px)) !important; }
+        #${elementId} { position:fixed; inset:0 0 auto; z-index:2147483000; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px 20px; box-sizing:border-box; padding:12px 22px 10px; background:#012169; color:#fff; border-bottom:3px solid #00c7a3; box-shadow:0 4px 18px #01216930; font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+        #${elementId} * { box-sizing:border-box; }
+        #${elementId} .demo-identity { display:flex; align-items:center; flex-wrap:wrap; gap:7px 12px; color:#fff; font-size:13px; }
+        #${elementId} .demo-badge { padding:2px 7px; border:1px solid #a5c7ff; border-radius:4px; font-size:10px; letter-spacing:0.08em; }
+        #${elementId} .demo-role { font-weight:750; font-size:17px; }
+        #${elementId} .demo-cycle { color:#dbe7ff; font-size:11px; }
+        #${elementId} .demo-step-title { margin:5px 0 0; color:#fff; font-size:16px; font-weight:700; }
+        #${elementId} .demo-detail { margin:3px 0 0; color:#e4edff; font-size:12px; }
+        #${elementId} .demo-controls { align-self:center; display:flex; gap:8px; }
+        #${elementId} button { min-height:36px; padding:6px 13px; border:1px solid #9dbaf2; border-radius:6px; background:#fff; color:#012169; font:600 12px/1.4 system-ui,sans-serif; cursor:pointer; }
+        #${elementId} button:focus-visible { outline:3px solid #ffcf4a; outline-offset:3px; }
+        #${elementId} button[data-demo-stop] { color:#fff; background:transparent; }
+        #${elementId} progress { grid-column:1 / -1; width:100%; height:4px; appearance:none; border:0; background:#5475ac; border-radius:2px; }
+        #${elementId} progress::-webkit-progress-bar { background:#5475ac; border-radius:2px; }
+        #${elementId} progress::-webkit-progress-value { background:#00e1b5; border-radius:2px; }
+        #${elementId} progress::-moz-progress-bar { background:#00e1b5; }
+        [data-campusworks-demo-spotlight] { outline:3px solid #b45309 !important; outline-offset:5px !important; scroll-margin-top:calc(var(--campusworks-demo-offset, 92px) + 24px) !important; }
+        @media(max-width:600px) { #${elementId} { padding:10px 12px 8px; gap:6px 10px; } #${elementId} .demo-role { font-size:14px; } #${elementId} .demo-step-title { font-size:14px; } #${elementId} .demo-controls { flex-direction:column; gap:5px; } #${elementId} button { min-height:32px; padding:4px 9px; } }
+      `;
+      document.head.append(style);
+      banner = document.createElement("section");
+      banner.id = elementId;
+      banner.setAttribute("aria-label", "Automatic demonstration controls");
+      banner.setAttribute("data-testid", "demo-stage");
+      const copy = document.createElement("div");
+      copy.innerHTML =
+        '<div class="demo-identity"><span class="demo-badge">DEMO</span><span class="demo-role"></span><span class="demo-person"></span><span class="demo-cycle"></span></div><p class="demo-step-title" role="status" aria-live="polite" aria-atomic="true"></p><p class="demo-detail"></p>';
+      const controls = document.createElement("div");
+      controls.className = "demo-controls";
+      const pauseButton = document.createElement("button");
+      pauseButton.type = "button";
+      pauseButton.dataset.demoPause = "";
+      pauseButton.addEventListener("click", () => {
+        void window.__campusworksDemoCommand("toggle-pause");
+      });
+      const stopButton = document.createElement("button");
+      stopButton.type = "button";
+      stopButton.dataset.demoStop = "";
+      stopButton.textContent = "Stop demo";
+      stopButton.addEventListener("click", () => {
+        void window.__campusworksDemoCommand("stop");
+      });
+      controls.append(pauseButton, stopButton);
+      const progress = document.createElement("progress");
+      progress.setAttribute("aria-label", "Cycle progress");
+      banner.append(copy, controls, progress);
+      document.body.prepend(banner);
+      document.body.setAttribute("data-campusworks-demo-stage", "");
+      document.documentElement.style.setProperty(
+        "--campusworks-demo-original-padding",
+        originalPadding,
+      );
+      resize = new ResizeObserver(() =>
+        document.documentElement.style.setProperty(
+          "--campusworks-demo-offset",
+          `${banner.getBoundingClientRect().height}px`,
+        ),
+      );
+      resize.observe(banner);
+    }
+    banner.querySelector(".demo-role").textContent = state.role;
+    banner.querySelector(".demo-person").textContent = state.person;
+    banner.querySelector(".demo-cycle").textContent =
+      `Cycle ${state.cycle} · ${state.index} / ${state.totalSteps}`;
+    banner.querySelector(".demo-step-title").textContent = state.stopped
+      ? "Demonstration stopped"
+      : `${state.paused ? "Paused · " : ""}${state.title}`;
+    banner.querySelector(".demo-detail").textContent = state.detail || "";
+    banner.querySelector("[data-demo-pause]").textContent = state.paused
+      ? "Resume"
+      : "Pause";
+    banner
+      .querySelector("[data-demo-pause]")
+      .setAttribute("aria-pressed", String(state.paused));
+    banner.querySelector("progress").max = Math.max(1, state.totalSteps);
+    banner.querySelector("progress").value = Math.min(
+      state.index,
+      state.totalSteps,
+    );
+    fixTitle();
+  }
+  window.__campusworksDemoRender = render;
+  const boot = async () => {
+    render(await window.__campusworksDemoCommand("state"));
+    observer = new MutationObserver(() => {
+      fixTitle();
+      if (!document.getElementById(elementId) && lastState) render(lastState);
+    });
+    observer.observe(document, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+  };
+  if (document.readyState === "loading")
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        void boot();
+      },
+      { once: true },
+    );
+  else void boot();
+  window.__campusworksDemoRemove = () => {
+    observer?.disconnect();
+    resize?.disconnect();
+    document.getElementById(elementId)?.remove();
+    document.getElementById(styleId)?.remove();
+    document.body?.removeAttribute("data-campusworks-demo-stage");
+    document.documentElement.style.removeProperty(
+      "--campusworks-demo-original-padding",
+    );
+    document.documentElement.style.removeProperty("--campusworks-demo-offset");
+    document.title = document.title.replace(`[${titleToken}] `, "");
+  };
+}
+
+export async function createDemoStage({
+  windows,
+  baseURL,
+  headless = false,
+  holdMs = 1200,
+  beforeMs = holdMs,
+  totalSteps = 1,
+  cycle = 1,
+  onStop,
+  onStep,
+  strictForeground = true,
+} = {}) {
+  const origin = new URL(baseURL);
+  if (
+    !["http:", "https:"].includes(origin.protocol) ||
+    !["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname) ||
+    origin.username ||
+    origin.password
+  )
+    throw new Error("The demonstration stage requires a local application.");
+  if (!Array.isArray(windows) || !windows.length || windows.length > 6)
+    throw new Error("Provide one to six independent demo identities.");
+  if (
+    ![holdMs, beforeMs].every(
+      (value) => Number.isFinite(value) && value >= 0 && value <= 60000,
+    )
+  )
+    throw new Error("Use demo pauses between zero and sixty seconds.");
+  const token = randomBytes(6).toString("hex");
+  const actors = new Map();
+  const foregroundChecks = [];
+  let foregroundCheckCount = 0;
+  let foregroundBridge;
+  let paused = false;
+  let stopped = false;
+  let closing;
+  let current = {
+    actor: null,
+    title: "Preparing the full product lifecycle",
+    detail:
+      "Each window has an independent identity. Actions use local synthetic demo records.",
+    index: 0,
+    totalSteps,
+    cycle,
+  };
+  const stateFor = (actor) => ({
+    ...current,
+    paused,
+    stopped,
+    active: current.actor === actor.key,
+    role: actor.displayRole || roleLabels[actor.win.as],
+    person: actor.win.name || actor.win.label || actor.key,
+  });
+  const publish = () =>
+    Promise.allSettled(
+      [...actors.values()].map((actor) =>
+        actor.page?.evaluate(
+          (state) => window.__campusworksDemoRender?.(state),
+          stateFor(actor),
+        ),
+      ),
+    );
+  function checkStopped() {
+    if (stopped) throw new DemoStopped();
+  }
+  const setPaused = async (value) => {
+    if (!stopped) paused = value;
+    await publish();
+  };
+  const stop = async (reason = "requested") => {
+    if (stopped) return;
+    stopped = true;
+    paused = false;
+    await publish();
+    if (onStop)
+      void Promise.resolve()
+        .then(() => onStop(reason))
+        .catch(() => {});
+  };
+  async function pausePoint(milliseconds = 0) {
+    let remaining = milliseconds;
+    let previous = Date.now();
+    for (;;) {
+      checkStopped();
+      const now = Date.now();
+      if (!paused) remaining -= now - previous;
+      previous = now;
+      if (!paused && remaining <= 0) break;
+      await wait(Math.min(100, Math.max(1, remaining || 100)));
+    }
+  }
+  const getActor = (key) => {
+    const actor = actors.get(key);
+    if (!actor) throw new Error("Unknown demonstration identity.");
+    return actor;
+  };
+  const actorFor = (target) => {
+    if (typeof target === "string") return getActor(target);
+    const actor = [...actors.values()].find(
+      (candidate) =>
+        candidate.page === target ||
+        candidate === target ||
+        candidate.key === target?.key,
+    );
+    if (!actor)
+      throw new Error(
+        "The foreground target must belong to this demonstration stage.",
+      );
+    return actor;
+  };
+  async function login(actor) {
+    const response = await actor.context.request.post("/api/auth/mock", {
+      data: {
+        as: actor.win.as,
+        email: actor.win.email,
+        ...(actor.win.name ? { name: actor.win.name } : {}),
+      },
+    });
+    if (!response.ok())
+      throw new Error(`Demonstration sign-in failed (${response.status()}).`);
+  }
+  async function foreground(actor) {
+    checkStopped();
+    await actor.page.bringToFront();
+    actor.lastForeground = {
+      method: "Playwright",
+      headless,
+      confirmed: headless,
+    };
+    if (!headless) {
+      actor.cdp ||= await actor.context.newCDPSession(actor.page);
+      const { windowId, bounds } = await actor.cdp.send(
+        "Browser.getWindowForTarget",
+      );
+      if (bounds.windowState !== "maximized") {
+        if (bounds.windowState !== "normal")
+          await actor.cdp.send("Browser.setWindowBounds", {
+            windowId,
+            bounds: { windowState: "normal" },
+          });
+        await actor.cdp.send("Browser.setWindowBounds", {
+          windowId,
+          bounds: { windowState: "maximized" },
+        });
+      }
+      actor.lastForeground = {
+        method: "Chromium window bounds",
+        maximized: true,
+        confirmed: false,
+      };
+      if (process.platform === "win32") {
+        foregroundBridge ||= createForegroundBridge();
+        let confirmed = false;
+        let maximized = false;
+        for (let attempt = 0; attempt < 3 && !confirmed; attempt++) {
+          const result = await foregroundBridge.activate(actor.titleToken);
+          confirmed = result.foreground === true && result.maximized === true;
+          maximized = result.maximized === true;
+          if (!confirmed) await wait(100);
+        }
+        if (!confirmed && strictForeground)
+          throw new Error(
+            "The acting demonstration window could not be brought to the foreground.",
+          );
+        actor.lastForeground = {
+          method: "Windows foreground window handle",
+          maximized,
+          confirmed,
+        };
+      }
+    }
+    foregroundChecks.push({
+      actor: actor.key,
+      checkedAt: new Date().toISOString(),
+      ...actor.lastForeground,
+    });
+    foregroundCheckCount++;
+    if (foregroundChecks.length > 2000) foregroundChecks.shift();
+    return actor.lastForeground;
+  }
+  const stage = {
+    get stopped() {
+      return stopped;
+    },
+    get paused() {
+      return paused;
+    },
+    get foregroundChecks() {
+      return foregroundChecks.map((check) => ({ ...check }));
+    },
+    get foregroundCheckCount() {
+      return foregroundCheckCount;
+    },
+    get foregroundHelperPid() {
+      return foregroundBridge?.pid;
+    },
+    get windows() {
+      return [...actors.values()].map((actor) => ({
+        key: actor.key,
+        page: actor.page,
+        context: actor.context,
+        browser: actor.browser,
+        titleToken: actor.titleToken,
+      }));
+    },
+    page: (key) => getActor(key).page,
+    context: (key) => getActor(key).context,
+    async ensureForeground(target) {
+      await pausePoint();
+      return foreground(actorFor(target));
+    },
+    pause: () => setPaused(true),
+    resume: () => setPaused(false),
+    stop,
+    checkpoint: () => pausePoint(),
+    hold: (milliseconds) => pausePoint(milliseconds),
+    async setCycle(nextCycle) {
+      current = { ...current, cycle: nextCycle, index: 0 };
+      await publish();
+    },
+    async setRole(key, role) {
+      getActor(key).displayRole = roleLabels[role] || role;
+      await publish();
+    },
+    async loginAll() {
+      for (const actor of actors.values()) {
+        checkStopped();
+        await login(actor);
+      }
+    },
+    async resetSessions({ navigate = true } = {}) {
+      for (const actor of actors.values()) {
+        checkStopped();
+        await actor.context.clearCookies();
+        await login(actor);
+        actor.displayRole = roleLabels[actor.win.as];
+        if (navigate) {
+          const response = await actor.page.goto(actor.win.path);
+          if (!response?.ok())
+            throw new Error("A demonstration starting page did not reload.");
+          await actor.page
+            .locator("#campusworks-demo-stage")
+            .waitFor({ state: "visible" });
+          await actor.page.waitForFunction(
+            () => !!document.querySelector("#__nuxt")?.__vue_app__,
+          );
+        }
+      }
+      await publish();
+    },
+    async spotlight(locator) {
+      await pausePoint();
+      await foreground(actorFor(locator.page()));
+      await pausePoint();
+      await locator.evaluate((element) => {
+        document
+          .querySelectorAll("[data-campusworks-demo-spotlight]")
+          .forEach((previous) =>
+            previous.removeAttribute("data-campusworks-demo-spotlight"),
+          );
+        element.setAttribute("data-campusworks-demo-spotlight", "");
+        element.scrollIntoView({
+          block: "center",
+          inline: "nearest",
+          behavior: "instant",
+        });
+      });
+    },
+    async step(
+      {
+        actor: key,
+        title,
+        detail = "",
+        role,
+        index = current.index + 1,
+        cycle: nextCycle = current.cycle,
+      },
+      action,
+    ) {
+      await pausePoint();
+      const actor = getActor(key);
+      if (role) actor.displayRole = roleLabels[role] || role;
+      current = {
+        ...current,
+        actor: key,
+        title,
+        detail,
+        index,
+        cycle: nextCycle,
+      };
+      await publish();
+      await foreground(actor);
+      await pausePoint(beforeMs);
+      const result = await action?.(actor.page, stage);
+      await publish();
+      await pausePoint(holdMs);
+      if (onStep)
+        await onStep({
+          ...current,
+          role: stateFor(actor).role,
+          actor: key,
+          url: actor.page.url(),
+          foreground: actor.lastForeground,
+        });
+      return result;
+    },
+    async close() {
+      if (closing) return closing;
+      stopped = true;
+      closing = (async () => {
+        const cleanup = await Promise.allSettled([
+          Promise.resolve().then(() => foregroundBridge?.close()),
+          ...[...actors.values()].map(async (actor) => {
+            await actor.page
+              ?.evaluate(() => window.__campusworksDemoRemove?.())
+              .catch(() => {});
+            await actor.browser.close();
+            if (actor.browser.isConnected())
+              throw new Error(
+                "An owned demonstration browser could not be closed.",
+              );
+          }),
+        ]);
+        const failures = cleanup.filter(
+          (result) => result.status === "rejected",
+        );
+        if (failures.length)
+          throw new AggregateError(
+            failures.map((result) => result.reason),
+            "Demonstration browser cleanup is incomplete.",
+          );
+      })();
+      return closing;
+    },
+  };
+  try {
+    for (const [index, win] of windows.entries()) {
+      const key = win.key || win.actor || String(index);
+      if (
+        !/^[a-z0-9_-]{1,60}$/i.test(key) ||
+        actors.has(key) ||
+        !Object.hasOwn(roleLabels, win.as) ||
+        !/^[^\s@]+@example\.com$/i.test(win.email || "") ||
+        typeof win.path !== "string" ||
+        !win.path.startsWith("/") ||
+        win.path.startsWith("//") ||
+        new URL(win.path, origin).origin !== origin.origin
+      )
+        throw new Error(
+          "Use distinct synthetic local demonstration identities.",
+        );
+      const browser = await chromium.launch({
+        headless,
+        args: headless ? [] : ["--start-maximized"],
+      });
+      const actor = {
+        key,
+        win,
+        browser,
+        titleToken: `CW-DEMO-${token}:${key}`,
+        context: null,
+        page: null,
+        displayRole: roleLabels[win.as],
+      };
+      actors.set(key, actor);
+      actor.context = await browser.newContext({
+        baseURL: origin.origin,
+        viewport: headless ? { width: 1440, height: 1000 } : null,
+      });
+      await actor.context.exposeBinding(
+        "__campusworksDemoCommand",
+        async (_source, command) => {
+          if (command === "state") return stateFor(actor);
+          if (command === "toggle-pause") await setPaused(!paused);
+          if (command === "stop") await stop("button");
+          return stateFor(actor);
+        },
+      );
+      await actor.context.addInitScript(installDemoOverlay, {
+        titleToken: actor.titleToken,
+      });
+      await login(actor);
+      actor.page = await actor.context.newPage();
+      actor.page.on("close", () => {
+        if (!closing) void stop("window-closed");
+      });
+      browser.on("disconnected", () => {
+        if (!closing) void stop("browser-closed");
+      });
+      const response = await actor.page.goto(win.path);
+      if (!response?.ok())
+        throw new Error("A demonstration starting page did not load.");
+      await actor.page
+        .locator("#campusworks-demo-stage")
+        .waitFor({ state: "visible" });
+      await actor.page.locator("main").waitFor({ state: "visible" });
+      await actor.page.waitForFunction(
+        () => !!document.querySelector("#__nuxt")?.__vue_app__,
+      );
+    }
+    return stage;
+  } catch (error) {
+    await stage.close();
+    throw error;
+  }
+}
