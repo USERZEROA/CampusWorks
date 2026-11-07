@@ -148,7 +148,12 @@ async function observeScope(db: Db, scope: Scope, preferredId?: string) {
 const hints = (db: Db) => db.collection<any>('staffingAiAutomationHints')
 const scope = (kind: AiKind, targetId: string, termId = '', page = 1): Scope => ({ kind, targetId, termId, page, pageSize: kind === 'candidate_fit' ? automaticCandidatePageSize() : 50 })
 async function hint(db: Db, value: Scope) {
-  await hints(db).updateOne({ _id: automaticScopeId(value) }, { $setOnInsert: { ...value, priority: priorities[value.kind], createdAt: new Date(), nextAttemptAt: new Date() }, $inc: { generation: 1 } }, { upsert: true })
+  const id = automaticScopeId(value)
+  // Existing resources already have a durable observation lane. Replaying
+  // several events for that resource must not refill the new-resource queue.
+  const observed = await jobs(db).updateOne({ _id: id }, { $set: { nextObserveAt: new Date(0) }, $inc: { observationVersion: 1 } })
+  if (observed.matchedCount) return
+  await hints(db).updateOne({ _id: id }, { $setOnInsert: { ...value, priority: priorities[value.kind], createdAt: new Date(), nextAttemptAt: new Date() }, $inc: { generation: 1 } }, { upsert: true })
 }
 
 async function discover(db: Db, signal?: AbortSignal) {
@@ -166,6 +171,12 @@ async function discover(db: Db, signal?: AbortSignal) {
       if (observed) return
     } catch (error: any) { if (![403, 404, 409].includes(error?.statusCode)) throw error }
     await jobs(db).updateOne({ _id: automaticScopeId(value) }, { $set: { status: 'ended', reason: 'Automatic guidance is unavailable for this scope.', nextObserveAt: new Date(Date.now() + 60000), updatedAt: new Date() }, $unset: { leaseToken: '', leaseUntil: '' } })
+  }
+  // Each baseline lane creates its own missing scopes. Initial discovery is
+  // independent of mutation-event backlog and of the other task kinds.
+  const observeNew = async (value: Scope) => {
+    const id = automaticScopeId(value)
+    if (!await jobs(db).findOne({ _id: id }, { projection: { _id: 1 } })) await safelyObserve(value)
   }
   const nextById = async (collection: string, filter: Document, cursor: string) => db.collection(collection).findOne({ ...filter, ...(cursor ? { id: { $gt: cursor } } : {}) }, { sort: { id: 1 } })
   const step = async (phase: number) => {
@@ -203,7 +214,7 @@ async function discover(db: Db, signal?: AbortSignal) {
       const row = await nextById(phase === 2 ? 'staffingApplications' : 'staffingOpportunities', filter, state.cursors[key] || '')
       if (row) {
         const value = scope(phase === 1 ? 'candidate_fit' : phase === 2 ? 'cv_summary' : 'opportunity_draft', row.id)
-        if (!await jobs(db).findOne({ _id: automaticScopeId(value) }, { projection: { _id: 1 } })) await hint(db, value)
+        await observeNew(value)
       }
       state.cursors[key] = row?.id || ''
       return
@@ -222,28 +233,44 @@ async function discover(db: Db, signal?: AbortSignal) {
       if (!await jobs(db).findOne({ _id: automaticScopeId(value) }, { projection: { _id: 1 } })) {
         const dates = { $gte: term.startDate, $lt: term.endDate }
         const relevant = await db.collection('staffingOpportunities').findOne({ type: 'ta', termId: term.id, courseId: { $in: await staffingCourseAliases(db, course.id) } }, { projection: { _id: 1 } }) || await db.collection('helpSessions').findOne({ courseId: course.id, joinedAt: dates }, { projection: { _id: 1 } }) || await db.collection('feedback').findOne({ courseId: course.id, createdAt: dates }, { projection: { _id: 1 } })
-        if (relevant) await hint(db, value)
+        if (relevant) await observeNew(value)
       }
       state.reportCourse = course.id
       return
     }
     if (phase === 5) {
+      const kinds: AiKind[] = ['candidate_fit', 'cv_summary', 'opportunity_draft', 'term_review']
       const preferHint = state.hintNext !== false
       // Persist the opposite turn even if an observation fails, so one noisy
       // backlog cannot indefinitely postpone existing candidate/final scopes.
       state.hintNext = !preferHint
       const observeHint = async () => {
-        const pending = await hints(db).findOne({ nextAttemptAt: { $lte: new Date() } }, { sort: { priority: -1, createdAt: 1, _id: 1 } })
-        if (!pending) return false
-        await safelyObserve(pending)
-        await hints(db).deleteOne({ _id: pending._id, generation: pending.generation })
-        return true
+        const first = Number.isInteger(state.hintKind) && state.hintKind >= 0 && state.hintKind < kinds.length ? state.hintKind : 0
+        for (let offset = 0; offset < kinds.length; offset++) {
+          const index = (first + offset) % kinds.length
+          const pending = await hints(db).findOne({ kind: kinds[index], nextAttemptAt: { $lte: new Date() } }, { sort: { nextAttemptAt: 1, createdAt: 1, _id: 1 } })
+          if (!pending) continue
+          // Advance before observation, including failure/restart paths.
+          state.hintKind = (index + 1) % kinds.length
+          await safelyObserve(pending)
+          await hints(db).deleteOne({ _id: pending._id, generation: pending.generation })
+          return true
+        }
+        return false
       }
       const observeDue = async () => {
-        const due = await jobs(db).findOne({ nextObserveAt: { $lte: new Date() } }, { sort: { nextObserveAt: 1, priority: -1, _id: 1 } })
-        if (!due) return false
-        await safelyObserve(due, due.requestedBy)
-        return true
+        const first = Number.isInteger(state.dueKind) && state.dueKind >= 0 && state.dueKind < kinds.length ? state.dueKind : 0
+        for (let offset = 0; offset < kinds.length; offset++) {
+          const index = (first + offset) % kinds.length
+          const due = await jobs(db).findOne({ kind: kinds[index], nextObserveAt: { $lte: new Date() } }, { sort: { nextObserveAt: 1, _id: 1 } })
+          if (!due) continue
+          // Existing scopes need their own persistent turn: repeated candidate
+          // changes must not postpone already discovered summaries or reviews.
+          state.dueKind = (index + 1) % kinds.length
+          await safelyObserve(due, due.requestedBy)
+          return true
+        }
+        return false
       }
       if (preferHint) { if (!await observeHint()) await observeDue() }
       else if (!await observeDue()) await observeHint()
@@ -252,7 +279,7 @@ async function discover(db: Db, signal?: AbortSignal) {
     const parent = await jobs(db).findOne({ kind: 'candidate_fit', pageSize: automaticCandidatePageSize(), status: { $nin: ['ended', 'revoked'] }, coverageHasMore: true, page: { $lt: 10000 }, ...(state.cursors.pages ? { _id: { $gt: state.cursors.pages } } : {}) }, { sort: { _id: 1 } })
     if (parent) {
       const value = scope('candidate_fit', parent.targetId, '', parent.page + 1)
-      if (!await jobs(db).findOne({ _id: automaticScopeId(value) }, { projection: { _id: 1 } })) await hint(db, value)
+      await observeNew(value)
     }
     state.cursors.pages = parent?._id || ''
   }
