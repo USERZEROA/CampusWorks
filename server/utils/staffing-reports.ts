@@ -73,19 +73,30 @@ export async function courseReview(db: Db, user: StaffingActor, courseId: string
   }
 }
 
-export async function projectWorkspace(db: Db, user: StaffingActor, projectId: string) {
-  const project = await db.collection('researchProjects').findOne({ id: projectId }) || fail(404, 'Project not found')
+export async function projectWorkspace(db: Db, user: StaffingActor, projectId: string, page = 1, session?: ClientSession) {
+  const readOptions = session ? { session } : {}
+  const project = await db.collection('researchProjects').findOne({ id: projectId }, readOptions) || fail(404, 'Project not found')
   const canManage = isGlobalAdmin(user) || project.ownerEmail === user.email || (project.reviewerEmails || []).includes(user.email)
-  const appointments = await db.collection('staffingAppointments').find({ projectId, ...(canManage ? {} : { applicantId: actorId(user) }) }).limit(100).toArray()
-  const canWork = appointments.some(a => a.status === 'active' && a.clearance === 'cleared' && a.startDate <= new Date() && a.endDate > new Date())
+  const timestamp = new Date()
+  const activeAppointment = await db.collection('staffingAppointments').findOne({ projectId, applicantId: actorId(user), type: 'ra', status: { $in: ['active', 'pending_start'] }, acceptedAt: { $ne: null }, clearance: 'cleared', startDate: { $lte: timestamp }, endDate: { $gt: timestamp } }, readOptions)
+  const canWork = !!activeAppointment
   if (!canManage && !canWork) fail(403, 'Only project managers and currently appointed researchers may use this workspace')
-  const entries = await db.collection('staffingEvents').find({ kind: 'ResearchUpdate', 'details.projectId': projectId }).sort({ createdAt: -1 }).limit(100).toArray()
-  return { project: publicRecord(project), appointments: appointments.map(a => appointmentDto(a, user)), entries: entries.map(publicRecord), canManage, canWork }
+  const offset = (page - 1) * 100
+  const appointmentFilter = { projectId, ...(canManage ? {} : { applicantId: actorId(user) }) }
+  const entryFilter = { kind: 'ResearchUpdate', 'details.projectId': projectId }
+  const appointments = await db.collection('staffingAppointments').find(appointmentFilter, readOptions).sort({ createdAt: -1, id: 1 }).skip(offset).limit(100).toArray()
+  const appointmentCount = await db.collection('staffingAppointments').countDocuments(appointmentFilter, readOptions)
+  const entries = await db.collection('staffingEvents').find(entryFilter, readOptions).sort({ createdAt: -1, id: 1 }).skip(offset).limit(100).toArray()
+  const entryCount = await db.collection('staffingEvents').countDocuments(entryFilter, readOptions)
+  return {
+    project: publicRecord(project), appointments: appointments.map(a => appointmentDto(a, user)), entries: entries.map(publicRecord), canManage, canWork,
+    pagination: { page, limit: 100, totals: { appointments: appointmentCount, entries: entryCount }, hasMore: appointmentCount > offset + 100 || entryCount > offset + 100 }
+  }
 }
 
 export async function addProjectUpdate(db: Db, session: ClientSession, user: StaffingActor, projectId: string, raw: unknown) {
   await lockStaffingResource(db, { type: 'ra', projectId }, session)
-  const workspace = await projectWorkspace(db, user, projectId)
+  const workspace = await projectWorkspace(db, user, projectId, 1, session)
   const body = object(raw, 'Project update')
   const message = text(body.text, 'Project update', 5000, true)
   await event(db, session, user, 'ResearchUpdate', projectId, { projectId, text: message })

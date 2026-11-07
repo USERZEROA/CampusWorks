@@ -36,6 +36,7 @@ export function useStaffingPagedRecord(key: string, url: string) {
       "appointments",
       "offers",
       "notifications",
+      "entries",
     ];
     const merge = (left: any[] = [], right: any[] = []) => [
       ...new Map(

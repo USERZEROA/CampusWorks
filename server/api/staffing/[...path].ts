@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
     await db.collection('staffingEvents').insertOne({ id: crypto.randomUUID(), actorId: actorId(user), actorEmail: user.email, kind: 'CvDownloaded', targetId: id, createdAt: new Date(), delivery: 'pending' })
     return Buffer.from(document.bytes.buffer || document.bytes)
   }
-  if (method === 'GET' && resource === 'projects' && id && action === 'workspace') return projectWorkspace(db, user, id)
+  if (method === 'GET' && resource === 'projects' && id && action === 'workspace') return projectWorkspace(db, user, id, page)
   if (method === 'GET' && resource === 'reviews' && id && !action) return courseReview(db, user, id, text(getQuery(event).termId, 'Term', 64), page)
   if (method === 'POST' && resource === 'applications' && id && action === 'cv') {
     const form = await readMultipartFormData(event)

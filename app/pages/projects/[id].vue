@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const id = String(useRoute().params.id);
 const signedInUser = useAuthUser();
-const requestFetch = useRequestFetch();
-const { data, error, refresh } = await useAsyncData<any>(`project-${id}`, () =>
-  requestFetch(`/api/staffing/projects/${id}/workspace`),
+const cacheKey = `project-${id}`;
+const { data, error, refresh } = await useStaffingPagedRecord(
+  cacheKey,
+  `/api/staffing/projects/${id}/workspace`,
 );
-guardStaffingAccess(data, error);
 const { busy, message, failure, run } = useStaffingMutation(refresh);
 const entry = reactive({ kind: "update", text: "" });
 async function post() {
@@ -98,6 +98,7 @@ useIntervalRefresh(refresh);
         :key="item.id"
         :appointment-id="item.id"
       />
+      <StaffingPaging :cache-key="cacheKey" :pagination="data.pagination" />
     </template>
   </StaffingShell>
 </template>
