@@ -6,19 +6,17 @@ const navigateWithContext = (target: string, options?: any) =>
 const id = String(useRoute().params.id);
 const signedInUser = useAuthUser();
 const staffingAccess = useStaffingCapabilities();
-const requestFetch = useRequestFetch();
-const { data, error, refresh } = await useAsyncData<any>(
+const { data, error, refresh } = await useStaffingPagedRecord(
   `application-${id}`,
-  () => requestFetch(`/api/staffing/applications/${id}`),
+  `/api/staffing/applications/${id}`,
 );
-guardStaffingAccess(data, error);
 if ([403, 404].includes((error.value as any)?.statusCode))
   await navigateWithContext("/courses", { replace: true });
 const application = computed(() => data.value?.application);
 const opportunity = computed(() => data.value?.opportunity);
 const offer = computed(() => data.value?.offer);
 const appointment = computed(() => data.value?.appointment);
-const profile = reactive({
+const profileDefaults = {
   firstName: "",
   lastName: "",
   preferredEmail: capturedUser.value?.email || "",
@@ -34,22 +32,64 @@ const profile = reactive({
   skills: "",
   experience: "",
   slots: [] as any[],
-});
+};
+const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
+const profile = reactive(clone(profileDefaults));
 const answers = reactive<Record<string, string>>(Object.create(null));
 const formElement = ref<HTMLFormElement | null>(null);
 const qualificationText = ref("");
 const formVersion = ref(0);
 const administrativeVersion = ref(0);
 const correctionReason = ref("");
-const administrative = reactive({
+const administrativeDefaults = {
   dukeUniqueId: "",
   payrollBefore: false,
   hasSsn: false,
   citizenship: "",
   authorizationExpiry: "",
-});
+};
+const administrative = reactive({ ...administrativeDefaults });
 const selectedCv = ref<File | null>(null);
 const { busy, message, failure, run } = useStaffingMutation(refresh);
+const qualificationBaseline = ref("");
+const qualificationSource = ref("");
+const administrativeBaseline = ref("");
+const qualificationConflict = ref(false);
+const administrativeConflict = ref(false);
+const latestQualifications = shallowRef<any>();
+const latestAdministrative = shallowRef<any>();
+const qualifications = (record?: any) =>
+  record
+    ? {
+        profile: { ...profileDefaults, ...clone(record.profile || {}) },
+        answers: clone(record.answers || {}),
+        qualificationText: record.qualificationText || "",
+      }
+    : {
+        profile: { ...profile },
+        answers: { ...answers },
+        qualificationText: qualificationText.value,
+      };
+const qualificationSnapshot = (record: any) =>
+  staffingSnapshot({
+    ...qualifications(record),
+    cvDocumentId: record.cvDocumentId || null,
+  });
+const administrativeSnapshot = (record: any) =>
+  staffingSnapshot({
+    ...administrativeDefaults,
+    ...(record.administrative || {}),
+  });
+const qualificationDirty = computed(
+  () =>
+    staffingSnapshot(qualifications()) !== qualificationBaseline.value ||
+    !!selectedCv.value,
+);
+const administrativeDirty = computed(
+  () =>
+    staffingSnapshot(administrative) !== administrativeBaseline.value ||
+    !!correctionReason.value,
+);
 const currentCycle = computed(
   () => data.value?.currentCycle || staffingAccess.value?.currentCycle,
 );
@@ -84,6 +124,7 @@ const editable = computed(
     !!currentCycle.value?.isOpen &&
     opportunity.value?.termId === currentCycle.value.termId &&
     opportunity.value?.status === "published" &&
+    new Date(opportunity.value.appointmentEnd).getTime() > Date.now() &&
     [
       "draft",
       "submitted",
@@ -95,17 +136,93 @@ const editable = computed(
     data.value?.owner &&
     !["issued", "accepted"].includes(offer.value?.status),
 );
-function loadDraft() {
-  formVersion.value = application.value?.version || 0;
-  administrativeVersion.value = application.value?.administrativeVersion || 0;
+function loadQualifications(
+  record = latestQualifications.value || application.value,
+) {
+  if (!record) return;
+  formVersion.value = record.version;
   for (const key of Object.keys(answers)) delete answers[key];
-  Object.assign(profile, application.value?.profile || {});
-  Object.assign(answers, application.value?.answers || {});
-  qualificationText.value = application.value?.qualificationText || "";
-  Object.assign(administrative, application.value?.administrative || {});
+  const saved = qualifications(record);
+  Object.assign(profile, saved.profile);
+  Object.assign(answers, saved.answers);
+  qualificationText.value = saved.qualificationText;
+  selectedCv.value = null;
+  const fileInput =
+    formElement.value?.querySelector<HTMLInputElement>('input[type="file"]');
+  if (fileInput) fileInput.value = "";
+  qualificationBaseline.value = staffingSnapshot(saved);
+  qualificationSource.value = qualificationSnapshot(record);
+  qualificationConflict.value = false;
 }
-loadDraft();
+function loadAdministrative(
+  record = latestAdministrative.value || application.value,
+) {
+  if (!record) return;
+  if (
+    !latestAdministrative.value ||
+    (latestAdministrative.value.administrativeVersion || 0) <=
+      (record.administrativeVersion || 0)
+  )
+    latestAdministrative.value = clone(record);
+  Object.assign(
+    administrative,
+    administrativeDefaults,
+    clone(record.administrative || {}),
+  );
+  administrativeVersion.value = record.administrativeVersion || 0;
+  administrativeBaseline.value = administrativeSnapshot(record);
+  correctionReason.value = "";
+  administrativeConflict.value = false;
+}
+function keepQualificationRevision(record: any) {
+  if (
+    !latestQualifications.value ||
+    latestQualifications.value.version <= record.version
+  )
+    latestQualifications.value = clone(record);
+  formVersion.value = record.version;
+  qualificationBaseline.value = staffingSnapshot(qualifications(record));
+  qualificationSource.value = qualificationSnapshot(record);
+  qualificationConflict.value = false;
+}
+watch(
+  [application, busy],
+  ([record, saving]) => {
+    if (!record || saving) return;
+    if (
+      record.version >=
+      Math.max(formVersion.value, latestQualifications.value?.version || 0)
+    ) {
+      latestQualifications.value = clone(record);
+      if (!formVersion.value || !qualificationDirty.value)
+        loadQualifications(record);
+      else if (qualificationSnapshot(record) === qualificationSource.value) {
+        formVersion.value = record.version;
+        qualificationConflict.value = false;
+      } else qualificationConflict.value = true;
+    }
+    if (
+      (record.administrativeVersion || 0) >=
+      Math.max(
+        administrativeVersion.value,
+        latestAdministrative.value?.administrativeVersion || 0,
+      )
+    ) {
+      latestAdministrative.value = clone(record);
+      if (!administrativeBaseline.value || !administrativeDirty.value)
+        loadAdministrative(record);
+      else if (
+        administrativeSnapshot(record) === administrativeBaseline.value
+      ) {
+        administrativeVersion.value = record.administrativeVersion || 0;
+        administrativeConflict.value = false;
+      } else administrativeConflict.value = true;
+    }
+  },
+  { immediate: true },
+);
 async function save() {
+  if (qualificationConflict.value) return null;
   const result = await run(
     () =>
       staffingRequest(`/api/staffing/applications/${id}`, {
@@ -119,7 +236,7 @@ async function save() {
       }),
     "Application saved.",
   );
-  if (result) formVersion.value = result.application.version;
+  if (result) keepQualificationRevision(result.application);
   return result;
 }
 async function submit() {
@@ -134,10 +251,10 @@ async function submit() {
       }),
     "Application submitted.",
   );
-  if (submitted) formVersion.value = submitted.application.version;
+  if (submitted) keepQualificationRevision(submitted.application);
 }
 async function upload() {
-  if (!selectedCv.value) return;
+  if (!selectedCv.value || qualificationConflict.value) return;
   const form = new FormData();
   form.append("file", selectedCv.value);
   form.append("expectedVersion", String(formVersion.value));
@@ -149,20 +266,23 @@ async function upload() {
       }),
     "CV uploaded privately.",
   );
-  if (result) formVersion.value = result.application.version;
+  if (result) {
+    keepQualificationRevision(result.application);
+    selectedCv.value = null;
+  }
 }
 async function action(path: string, success: string) {
   const result = await run(
     () => staffingRequest(path, { method: "POST" }),
     success,
   );
-  if (result?.application) formVersion.value = result.application.version;
   await refreshNuxtData("courses");
 }
 function fileChanged(event: Event) {
   selectedCv.value = (event.target as HTMLInputElement).files?.[0] || null;
 }
 async function saveAdministrative() {
+  if (administrativeConflict.value) return;
   const result = await run(
     () =>
       staffingRequest(`/api/staffing/applications/${id}/administrative`, {
@@ -176,17 +296,12 @@ async function saveAdministrative() {
     "Appointment details saved.",
   );
   if (result) {
-    administrativeVersion.value = result.application.administrativeVersion || 0;
-    correctionReason.value = "";
+    loadAdministrative(result.application);
   }
 }
-async function reloadApplication() {
-  const result = await run(
-    async () => ({ ok: true }),
-    "Saved application loaded.",
-  );
-  if (result) loadDraft();
-}
+useIntervalRefresh((options) =>
+  busy.value ? Promise.resolve() : refresh(options),
+);
 </script>
 <template>
   <StaffingShell
@@ -213,15 +328,23 @@ async function reloadApplication() {
       {{ message }}
     </p>
     <template v-if="application && !error">
+      <p
+        v-if="qualificationConflict"
+        class="notice"
+        role="status"
+        data-testid="application-conflict"
+      >
+        Application changed elsewhere. Your edits are kept.
+      </p>
       <button
+        v-if="qualificationDirty || qualificationConflict"
         type="button"
         class="secondary"
         :disabled="busy"
-        @click="reloadApplication"
-        data-testid="application-refresh"
-        title="Replace unsaved changes with the saved application"
+        @click="loadQualifications()"
+        data-testid="application-discard"
       >
-        Refresh current application
+        Discard changes
       </button>
       <p>
         <span class="status" data-testid="application-status">{{
@@ -299,9 +422,6 @@ async function reloadApplication() {
             data-testid="appointment-workspace"
             >Open TA Queue</NuxtLink
           >
-          <button class="secondary" :disabled="busy" @click="refresh()">
-            Refresh appointment status
-          </button>
         </div>
       </section>
       <form
@@ -478,7 +598,7 @@ async function reloadApplication() {
             ><button
               type="button"
               class="secondary"
-              :disabled="!selectedCv || busy"
+              :disabled="!selectedCv || busy || qualificationConflict"
               @click="upload"
               data-testid="application-cv-upload"
             >
@@ -510,13 +630,13 @@ async function reloadApplication() {
           <div v-if="editable" class="actions">
             <button
               type="submit"
-              :disabled="busy"
+              :disabled="busy || qualificationConflict"
               data-testid="application-save"
             >
               Save draft</button
             ><button
               type="button"
-              :disabled="busy"
+              :disabled="busy || qualificationConflict"
               @click="submit"
               data-testid="application-submit"
             >
@@ -549,6 +669,24 @@ async function reloadApplication() {
           <h2>Appointment Details</h2>
         </div>
         <form @submit.prevent="saveAdministrative" class="panel-body">
+          <p
+            v-if="administrativeConflict"
+            class="notice"
+            role="status"
+            data-testid="administrative-conflict"
+          >
+            Administrative details changed elsewhere. Your edits are kept.
+          </p>
+          <button
+            v-if="administrativeDirty || administrativeConflict"
+            type="button"
+            class="secondary"
+            :disabled="busy"
+            @click="loadAdministrative()"
+            data-testid="administrative-discard"
+          >
+            Discard changes
+          </button>
           <p class="notice">
             Only you and site administrators can view these details.
           </p>
@@ -592,7 +730,11 @@ async function reloadApplication() {
             /></label>
             <button
               v-if="canEditAdministrative"
-              :disabled="busy || (clearedDetails && !correctionReason.trim())"
+              :disabled="
+                busy ||
+                administrativeConflict ||
+                (clearedDetails && !correctionReason.trim())
+              "
               data-testid="administrative-save"
             >
               Save administrative details

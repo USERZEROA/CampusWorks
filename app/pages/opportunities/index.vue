@@ -18,7 +18,6 @@ useIntervalRefresh(refresh);
   <StaffingShell title="TA &amp; RA Positions">
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load opportunities.") }}
-      <button @click="refresh()">Retry</button>
     </p>
     <p v-if="data?.currentCycle?.termName" class="muted">
       {{ data.currentCycle.termName }} · Applications close

@@ -12,27 +12,56 @@ const cycle = reactive({
 });
 const cycleDirty = ref(false);
 const cycleVersion = ref(0);
+const cycleBaseline = ref("");
+const cycleConflict = ref(false);
+const latestCycle = shallowRef<any>();
 const localDateTime = (value: string) => {
   if (!value) return "";
   const date = new Date(value);
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}T${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 };
-function loadCycle() {
-  const current = data.value?.currentCycle;
+const cycleSnapshot = (current: any) =>
+  staffingSnapshot({
+    termId: current?.termId || "",
+    opensAt: current?.opensAt || null,
+    closesAt: current?.closesAt || null,
+    enabled: current?.enabled !== false,
+  });
+function loadCycle(current = latestCycle.value || data.value?.currentCycle) {
+  if (latestCycle.value?.version > (current?.version || 0))
+    current = latestCycle.value;
+  if (current) latestCycle.value = { ...current };
   cycleVersion.value = current?.version || 0;
   cycle.termId = current?.termId || "";
   cycle.opensAt = localDateTime(current?.opensAt);
   cycle.closesAt = localDateTime(current?.closesAt);
   cycle.enabled = current?.enabled !== false;
+  cycleBaseline.value = cycleSnapshot(current);
+  cycleConflict.value = false;
+  cycleDirty.value = false;
 }
 watch(
-  () => data.value?.currentCycle?.version,
+  [() => data.value?.currentCycle?.version, busy],
   () => {
-    if (!cycleDirty.value) loadCycle();
+    if (busy.value) return;
+    const current = data.value?.currentCycle;
+    if (
+      !current ||
+      current.version <
+        Math.max(cycleVersion.value, latestCycle.value?.version || 0)
+    )
+      return;
+    latestCycle.value = { ...current };
+    if (!cycleDirty.value) loadCycle(current);
+    else if (cycleSnapshot(data.value?.currentCycle) === cycleBaseline.value) {
+      cycleVersion.value = data.value?.currentCycle?.version || 0;
+      cycleConflict.value = false;
+    } else cycleConflict.value = true;
   },
   { immediate: true },
 );
 async function saveCycle() {
+  if (cycleConflict.value) return;
   const result = await run(
     () =>
       staffingRequest("/api/staffing/cycle", {
@@ -48,8 +77,7 @@ async function saveCycle() {
     "Recruitment schedule saved.",
   );
   if (result) {
-    cycleDirty.value = false;
-    loadCycle();
+    loadCycle(result.currentCycle);
   }
 }
 const clearance = reactive<Record<string, string>>({});
@@ -94,7 +122,9 @@ async function decide(item: any) {
     "Clearance recorded and appointment activation rechecked.",
   );
 }
-useIntervalRefresh(refresh);
+useIntervalRefresh((options) =>
+  busy.value ? Promise.resolve() : refresh(options),
+);
 </script>
 <template>
   <StaffingShell title="Recruitment Settings">
@@ -119,6 +149,14 @@ useIntervalRefresh(refresh);
         class="panel-body"
         :aria-busy="busy"
       >
+        <p
+          v-if="cycleConflict"
+          class="notice"
+          role="status"
+          data-testid="cycle-conflict"
+        >
+          Schedule changed elsewhere. Your edits are kept.
+        </p>
         <div class="grid">
           <label
             >Semester<select
@@ -158,7 +196,9 @@ useIntervalRefresh(refresh);
             data-testid="cycle-enabled"
           />Enable this cycle</label
         >
-        <button :disabled="busy" data-testid="cycle-save">Save schedule</button>
+        <button :disabled="busy || cycleConflict" data-testid="cycle-save">
+          Save schedule
+        </button>
         <button
           v-if="cycleDirty"
           type="button"
@@ -170,7 +210,7 @@ useIntervalRefresh(refresh);
           "
           data-testid="cycle-reset"
         >
-          Reload schedule
+          Discard changes
         </button>
       </form>
     </section>

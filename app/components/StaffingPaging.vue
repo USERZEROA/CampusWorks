@@ -12,13 +12,16 @@ const loading = ref(false);
 const nuxtApp = useNuxtApp();
 const count = useState<number>(`${props.cacheKey}-page-count`, () => 1);
 const error = ref("");
+const waiting = computed(
+  () => loading.value || count.value > (props.pagination?.page || 1),
+);
 const hasMore = computed(() =>
   typeof props.pagination?.hasMore === "object"
     ? Object.values(props.pagination.hasMore).some(Boolean)
     : !!props.pagination?.hasMore,
 );
 async function load() {
-  if (loading.value) return;
+  if (waiting.value) return;
   loading.value = true;
   error.value = "";
   count.value++;
@@ -28,7 +31,7 @@ async function load() {
     count.value--;
     error.value = apiErrorMessage(
       failure,
-      "Unable to load the next page. Please retry.",
+      "Additional records will load when the connection returns.",
     );
   } finally {
     loading.value = false;
@@ -42,11 +45,11 @@ async function load() {
     <button
       type="button"
       class="secondary"
-      :disabled="loading"
+      :disabled="waiting"
       @click="load"
       data-testid="staffing-load-more"
     >
-      {{ loading ? "Loading…" : "Load more records" }}
+      {{ waiting ? "Loading…" : "Load more records" }}
     </button>
   </div>
 </template>

@@ -28,7 +28,7 @@ async function signIn(context: BrowserContext, actor: Actor) {
   );
 }
 
-test("application refresh observes a reopened cycle without reloading the browser", async ({
+test("application observes a reopened cycle automatically without refresh controls", async ({
   page,
   space,
 }) => {
@@ -46,7 +46,7 @@ test("application refresh observes a reopened cycle without reloading the browse
   await open(page, `/applications/${draft.id}`);
   await expect(page.getByTestId("application-save")).toHaveCount(0);
   await activateCycle(space.admin, space.term);
-  await page.getByTestId("application-refresh").click();
+  await expect(page.getByTestId("application-refresh")).toHaveCount(0);
   await expect(page.getByTestId("application-save")).toBeVisible();
   await page.getByTestId("app-first-name").fill("Unsaved synthetic name");
   await expect(page.getByTestId("app-first-name")).toHaveValue(
@@ -113,10 +113,8 @@ test("a dirty recruitment schedule keeps its loaded version when another adminis
   });
   await responsePromise;
   await expect(page.getByTestId("cycle-close")).toHaveValue(originalClose);
-  await page.getByTestId("cycle-save").click();
-  await expect(page.getByTestId("admin-staffing-notice")).toContainText(
-    /changed/i,
-  );
+  await expect(page.getByTestId("cycle-conflict")).toBeVisible();
+  await expect(page.getByTestId("cycle-save")).toBeDisabled();
   expect(
     (await json(space.admin.api.get("/api/staffing/cycle"))).cycle,
   ).toEqual(changed);
@@ -293,7 +291,6 @@ test("browser users publish, apply, upload, select, accept, clear, operate and e
     await expect(student.getByTestId("application-status")).toHaveText(
       /submitted/i,
     );
-    await faculty.reload();
     await expect(
       faculty.getByTestId(`candidate-row-${applicationId}`),
     ).toContainText("Browser");
@@ -305,7 +302,6 @@ test("browser users publish, apply, upload, select, accept, clear, operate and e
     await expect(faculty.getByTestId("staffing-notice")).toContainText(
       "Offer sent",
     );
-    await student.getByTestId("application-refresh").click();
     await expect(student.getByTestId("offer-accept")).toBeVisible();
     await student.getByTestId("offer-accept").click();
     await expect(student.getByTestId("appointment-status")).toContainText(
@@ -316,12 +312,11 @@ test("browser users publish, apply, upload, select, accept, clear, operate and e
       space.admin.api.get(`/api/staffing/applications/${applicationId}`),
     );
     const appointmentId = detail.appointment.id;
-    await admin.reload();
+    await expect(admin.getByTestId(`clearance-${appointmentId}`)).toBeVisible();
     await admin.getByTestId(`clearance-${appointmentId}`).click();
     await expect(admin.getByTestId("admin-staffing-notice")).toContainText(
       "Clearance recorded",
     );
-    await student.getByTestId("application-refresh").click();
     await expect(student.getByTestId("appointment-status")).toHaveText(
       /active/i,
     );
@@ -351,7 +346,9 @@ test("browser users publish, apply, upload, select, accept, clear, operate and e
       path: testInfo.outputPath("appointed-ta-queue.png"),
       fullPage: true,
     });
-    await faculty.reload();
+    await expect(
+      faculty.getByTestId(`appointment-end-${appointmentId}`),
+    ).toBeVisible();
     await faculty
       .getByTestId("appointment-reason")
       .fill("Synthetic browser appointment completed");
@@ -372,7 +369,22 @@ test("browser users publish, apply, upload, select, accept, clear, operate and e
     await expect(
       admin.getByTestId(`appointment-settle-${appointmentId}`),
     ).toHaveCount(0);
-    await faculty.reload();
+    const settledVersion = (
+      await json(
+        space.admin.api.get(`/api/staffing/opportunities/${postingId}`),
+      )
+    ).opportunity.version;
+    // Returning to the faculty window wakes its automatic synchronization;
+    // financial settlement in another session must be observed before the
+    // separately confirmed archive command uses its optimistic version.
+    await faculty.bringToFront();
+    await faculty.evaluate(() => window.dispatchEvent(new Event("focus")));
+    await expect(faculty.getByTestId("opportunity-status")).toHaveAttribute(
+      "data-version",
+      String(settledVersion),
+      { timeout: 15000 },
+    );
+    await expect(faculty.getByTestId("opportunity-archive")).toBeVisible();
     await faculty.getByTestId("opportunity-archive").click();
     await expect(faculty.getByTestId("opportunity-status")).toHaveText(
       /archived/i,
@@ -682,7 +694,6 @@ test("RA applicants receive an offer and appointment without project or course s
         { data: { status: "cleared" } },
       ),
     );
-    await page.getByTestId("application-refresh").click();
     await expect(page.getByTestId("appointment-status")).toHaveText(/active/i);
     await expect(page.getByTestId("appointment-workspace")).toHaveCount(0);
     await expect(page.getByTestId("workload-save")).toHaveCount(0);
@@ -770,8 +781,19 @@ test("current-semester course review keeps complete aggregates when loading scen
     },
   );
   await signIn(page.context(), space.instructor);
+  const initialReport = page.waitForResponse(
+    (response) =>
+      response.url().includes(`/api/staffing/reviews/${space.code}`) &&
+      response.status() === 200,
+  );
   await open(page, "/courses/" + space.code + "/review");
-  await page.getByRole("button", { name: "Refresh", exact: true }).click();
+  // Browser-only fixtures start after the SSR read. A focus event exercises
+  // automatic synchronization without introducing a manual refresh control.
+  await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+  await initialReport;
+  await expect(
+    page.getByRole("button", { name: "Refresh", exact: true }),
+  ).toHaveCount(0);
   await expect(page.getByTestId("review-term")).toHaveCount(0);
   await expect(page.locator("select")).toHaveCount(0);
   await expect(page.getByText(space.term.name, { exact: true })).toBeVisible();
@@ -816,7 +838,6 @@ test("current-semester course review keeps complete aggregates when loading scen
       )
     ).term;
     await activateCycle(space.admin, nextTerm);
-    await page.getByRole("button", { name: "Refresh", exact: true }).click();
     await expect(page.getByText(nextTerm.name, { exact: true })).toBeVisible();
     await expect(
       page.getByRole("heading", { name: /New semester position 1/ }),

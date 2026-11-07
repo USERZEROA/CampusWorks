@@ -4,12 +4,10 @@ const capturedUser = useAuthUser();
 const navigateWithContext = (target: string, options?: any) =>
   navigationApp.runWithContext(() => navigateTo(target, options));
 const id = String(useRoute().params.id);
-const requestFetch = useRequestFetch();
-const { data, error, refresh } = await useAsyncData<any>(
+const { data, error, refresh } = await useStaffingPagedRecord(
   `opportunity-${id}`,
-  () => requestFetch(`/api/staffing/opportunities/${id}`),
+  `/api/staffing/opportunities/${id}`,
 );
-guardStaffingAccess(data, error);
 if ([403, 404].includes((error.value as any)?.statusCode))
   await navigationApp.runWithContext(() =>
     navigateTo("/courses", { replace: true }),
@@ -19,6 +17,7 @@ const canApply = computed(
   () =>
     data.value?.viewer?.canApplyStaffing &&
     data.value?.currentCycle?.isOpen &&
+    new Date(opportunity.value?.appointmentEnd).getTime() > Date.now() &&
     opportunity.value?.termId === data.value.currentCycle.termId,
 );
 const { busy, message, failure, run } = useStaffingMutation(refresh);

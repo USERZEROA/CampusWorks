@@ -30,7 +30,7 @@ export default defineConfig({
     },
     {
       name: 'firefox',
-      testMatch: /(?:auth|queue-flow|extended-flow|staffing-browser)\.spec\.ts$/,
+      testMatch: /(?:auth|queue-flow|extended-flow|staffing-browser|silent-refresh-browser)\.spec\.ts$/,
       use: { ...devices['Desktop Firefox'] },
     },
   ],

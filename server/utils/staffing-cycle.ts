@@ -32,7 +32,7 @@ export async function configureRecruitmentCycle(db: Db, session: ClientSession, 
   const body = object(raw, 'Recruitment cycle')
   const settings = await lockRecruitmentCycle(db, session)
   const expectedVersion = number(body.expectedVersion, 'Recruitment settings version', 0, Number.MAX_SAFE_INTEGER)
-  if (!Number.isInteger(expectedVersion) || settings.version !== expectedVersion) fail(409, 'Recruitment settings changed. Refresh before saving.')
+  if (!Number.isInteger(expectedVersion) || settings.version !== expectedVersion) fail(409, 'Recruitment settings changed elsewhere. Your edits are kept.')
   const termId = text(body.termId, 'Current semester', 64, true)
   const term = await db.collection('staffingTerms').findOne({ id: termId }, { session }) || fail(400, 'Choose a configured semester')
   const opensAt = date(body.opensAt, 'Recruitment opening')

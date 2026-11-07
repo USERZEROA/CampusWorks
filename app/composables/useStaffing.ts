@@ -18,6 +18,16 @@ export const staffingDate = (value: any): string =>
   value ? new Date(value).toLocaleString() : "Not specified";
 export const staffingState = (value: any): string =>
   String(value || "draft").replaceAll("_", " ");
+export const staffingSnapshot = (value: unknown): string =>
+  JSON.stringify(value, (_key, item) =>
+    item && typeof item === "object" && !Array.isArray(item)
+      ? Object.fromEntries(
+          Object.entries(item).sort(([left], [right]) =>
+            left.localeCompare(right),
+          ),
+        )
+      : item,
+  );
 export function staffingRequest<T = any>(
   url: string,
   options?: Record<string, any>,
@@ -44,113 +54,130 @@ export function useStaffingPagedRecord(
   const previousScope = useState<string | null>(`${key}-scope`, () => null);
   const responseScope = (value: any) =>
     String(value.termId ?? value.currentCycle?.termId ?? "");
+  let lastComplete: any;
   const state = useAsyncData<any>(
     key,
-    async () => {
-      const query = options.query?.() || {};
-      const requestedPages = pageCount.value;
-      let result: any;
-      const names = [
-        "terms",
-        "courses",
-        "opportunities",
-        "myApplications",
-        "myAppointments",
-        "managedOpportunities",
-        "adminAppointments",
-        "applications",
-        "appointments",
-        "offers",
-        "notifications",
-      ];
-      const merge = (
-        left: any[] = [],
-        right: any[] = [],
-        recordKey: (item: any) => string = staffingId,
-      ) => [
-        ...new Map(
-          [...left, ...right].map((item) => [recordKey(item), item]),
-        ).values(),
-      ];
-      for (let page = 1; page <= requestedPages; page++) {
-        const current = await requestFetch<any>(url, {
-          query: { ...query, page },
-        });
-        const currentScope = responseScope(current);
-        if (
-          page === 1 &&
-          previousScope.value !== null &&
-          previousScope.value !== currentScope
-        ) {
-          previousScope.value = currentScope;
-          pageCount.value = 1;
-          return current;
-        }
-        if (result && responseScope(result) !== currentScope) {
-          pageCount.value = 1;
-          const restarted = await requestFetch<any>(url, {
-            query: { ...query, page: 1 },
+    async (_app, { signal }) => {
+      try {
+        const query = options.query?.() || {};
+        const requestedPages = pageCount.value;
+        let result: any;
+        const names = [
+          "terms",
+          "courses",
+          "opportunities",
+          "myApplications",
+          "myAppointments",
+          "managedOpportunities",
+          "adminAppointments",
+          "applications",
+          "appointments",
+          "offers",
+          "notifications",
+        ];
+        const merge = (
+          left: any[] = [],
+          right: any[] = [],
+          recordKey: (item: any) => string = staffingId,
+        ) => [
+          ...new Map(
+            [...left, ...right].map((item) => [recordKey(item), item]),
+          ).values(),
+        ];
+        for (let page = 1; page <= requestedPages; page++) {
+          const current = await requestFetch<any>(url, {
+            query: { ...query, page },
+            signal,
           });
-          previousScope.value = responseScope(restarted);
-          return restarted;
+          const currentScope = responseScope(current);
+          if (
+            page === 1 &&
+            previousScope.value !== null &&
+            previousScope.value !== currentScope
+          ) {
+            previousScope.value = currentScope;
+            pageCount.value = 1;
+            return current;
+          }
+          if (result && responseScope(result) !== currentScope) {
+            pageCount.value = 1;
+            const restarted = await requestFetch<any>(url, {
+              query: { ...query, page: 1 },
+              signal,
+            });
+            previousScope.value = responseScope(restarted);
+            return restarted;
+          }
+          previousScope.value = currentScope;
+          if (!result) result = current;
+          else {
+            const previous = result;
+            result = { ...previous, ...current };
+            for (const name of names)
+              if (Array.isArray(current[name]))
+                result[name] = merge(previous[name], current[name]);
+            if (current.admin)
+              result.admin = {
+                ...current.admin,
+                pendingOpportunities: merge(
+                  previous.admin?.pendingOpportunities,
+                  current.admin.pendingOpportunities,
+                ),
+                appointments: merge(
+                  previous.admin?.appointments,
+                  current.admin.appointments,
+                ),
+              };
+            if (current.workload)
+              result.workload = {
+                ...current.workload,
+                records: merge(
+                  previous.workload?.records,
+                  current.workload.records,
+                ),
+              };
+            if (current.budget)
+              result.budget = {
+                ...current.budget,
+                opportunities: merge(
+                  previous.budget?.opportunities,
+                  current.budget.opportunities,
+                ),
+                scenarios: merge(
+                  previous.budget?.scenarios,
+                  current.budget.scenarios,
+                  (item) => `${item.opportunityId}:${item.positions}`,
+                ),
+              };
+          }
+          const more = current.pagination?.hasMore;
+          if (
+            !more ||
+            (typeof more === "object" && !Object.values(more).some(Boolean))
+          )
+            break;
         }
-        previousScope.value = currentScope;
-        if (!result) result = current;
-        else {
-          const previous = result;
-          result = { ...previous, ...current };
-          for (const name of names)
-            if (Array.isArray(current[name]))
-              result[name] = merge(previous[name], current[name]);
-          if (current.admin)
-            result.admin = {
-              ...current.admin,
-              pendingOpportunities: merge(
-                previous.admin?.pendingOpportunities,
-                current.admin.pendingOpportunities,
-              ),
-              appointments: merge(
-                previous.admin?.appointments,
-                current.admin.appointments,
-              ),
-            };
-          if (current.workload)
-            result.workload = {
-              ...current.workload,
-              records: merge(
-                previous.workload?.records,
-                current.workload.records,
-              ),
-            };
-          if (current.budget)
-            result.budget = {
-              ...current.budget,
-              opportunities: merge(
-                previous.budget?.opportunities,
-                current.budget.opportunities,
-              ),
-              scenarios: merge(
-                previous.budget?.scenarios,
-                current.budget.scenarios,
-                (item) => `${item.opportunityId}:${item.positions}`,
-              ),
-            };
+        return result;
+      } catch (failure: any) {
+        const status =
+          failure?.statusCode ||
+          failure?.response?.status ||
+          failure?.data?.statusCode;
+        if ([401, 403, 404].includes(status)) {
+          lastComplete = undefined;
+          throw failure;
         }
-        const more = current.pagination?.hasMore;
-        if (
-          !more ||
-          (typeof more === "object" && !Object.values(more).some(Boolean))
-        )
-          break;
+        if (lastComplete) return lastComplete;
+        throw failure;
       }
-      return result;
     },
-    { watch: options.watch },
+    { watch: options.watch, dedupe: "defer" },
   );
   guardStaffingAccess(state.data, state.error);
   watch(
     state.data,
     (value) => {
+      if (value) lastComplete = value;
       if (value?.viewer && value.currentCycle)
         capabilities.value = {
           viewer: value.viewer,
@@ -184,7 +211,7 @@ export function guardStaffingAccess(data: Ref<any>, error: Ref<any>) {
     { immediate: true },
   );
 }
-export function useStaffingMutation(refresh?: () => Promise<any>) {
+export function useStaffingMutation(refresh?: (options?: any) => Promise<any>) {
   const nuxtApp = useNuxtApp();
   const currentUser = useAuthUser();
   const authError = useAuthError();
@@ -198,7 +225,7 @@ export function useStaffingMutation(refresh?: () => Promise<any>) {
     message.value = "";
     try {
       const result = await action();
-      if (refresh) await refresh();
+      if (refresh) await refresh({ dedupe: "cancel" });
       message.value = success;
       return result;
     } catch (error: any) {
@@ -213,9 +240,18 @@ export function useStaffingMutation(refresh?: () => Promise<any>) {
         );
         return null;
       }
+      if ([403, 404].includes(status)) {
+        if (refresh) await refresh({ dedupe: "cancel" }).catch(() => {});
+        await nuxtApp.runWithContext(() =>
+          navigateTo("/courses", { replace: true }),
+        );
+        return null;
+      }
+      if (status === 409 && refresh)
+        await refresh({ dedupe: "cancel" }).catch(() => {});
       message.value = apiErrorMessage(
         error,
-        "The action could not be completed. Please refresh and try again.",
+        "The action could not be completed. Your changes are kept.",
       );
       return null;
     } finally {

@@ -99,9 +99,14 @@ useIntervalRefresh(refresh);
         <div class="panel-heading"><h2>Publication and Capacity</h2></div>
         <div class="panel-body">
           <p>
-            <span class="status" data-testid="opportunity-status">{{
-              staffingState(opportunity.status || opportunity.state)
-            }}</span>
+            <span
+              class="status"
+              data-testid="opportunity-status"
+              :data-version="opportunity.version"
+              >{{
+                staffingState(opportunity.status || opportunity.state)
+              }}</span
+            >
             · {{ opportunity.type?.toUpperCase() }} ·
             {{ opportunity.positions }} positions ·
             {{ opportunity.weeklyHours }} hours/week

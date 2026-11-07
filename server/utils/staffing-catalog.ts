@@ -88,7 +88,7 @@ export async function currentOpportunityInput(db: Db, session: ClientSession, ra
   const body = object(raw, 'Opportunity')
   const cycle = await getRecruitmentCycle(db, session)
   if (!cycle.termId) fail(409, 'An administrator must select the current recruitment semester')
-  if ((body.termId !== undefined && body.termId !== cycle.termId) || (previous && previous.termId !== cycle.termId)) fail(409, 'The recruitment semester changed. Refresh before saving.')
+  if ((body.termId !== undefined && body.termId !== cycle.termId) || (previous && previous.termId !== cycle.termId)) fail(409, 'The recruitment semester changed. Review the current semester before saving.')
   if (body.applicationDeadline !== undefined && date(body.applicationDeadline, 'Application deadline').getTime() !== cycle.closesAt!.getTime()) fail(409, 'The application deadline is controlled by the current recruitment cycle')
   const input = opportunityInput({ ...previous, ...body, projectId: body.projectId || '', termId: cycle.termId, appointmentStart: body.appointmentStart ?? previous?.appointmentStart?.toISOString() ?? cycle.startDate!.toISOString(), appointmentEnd: body.appointmentEnd ?? previous?.appointmentEnd?.toISOString() ?? cycle.endDate!.toISOString(), applicationDeadline: cycle.closesAt!.toISOString() })
   if (input.courseId) input.courseId = (await findCourse(db, input.courseId, session) || fail(404, 'Course offering not found')).id

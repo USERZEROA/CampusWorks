@@ -1,12 +1,22 @@
 <script setup lang="ts">
 const props = defineProps<{ opportunityId?: string }>();
 const nuxtApp = useNuxtApp();
-const currentUser = useAuthUser();
-const authError = useAuthError();
-const requestFetch = useRequestFetch();
-const { data, error } = await useStaffingOverview("staffing-create");
-const { busy, message, failure, run } = useStaffingMutation();
-const form = reactive({
+const { data, error, refresh } = await useStaffingOverview("staffing-create");
+const details = props.opportunityId
+  ? await useStaffingPagedRecord(
+      `staffing-editor-${props.opportunityId}`,
+      `/api/staffing/opportunities/${props.opportunityId}`,
+    )
+  : null;
+async function synchronize(options?: any) {
+  await Promise.all([
+    refresh(options),
+    ...(details ? [details.refresh(options)] : []),
+  ]);
+}
+const { busy, message, failure, run } = useStaffingMutation(synchronize);
+const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value));
+const initialForm = {
   title: "",
   type: "ta",
   courseId: "",
@@ -27,9 +37,15 @@ const form = reactive({
   approvalRequired: true,
   allowedPositionPreferences: ["full", "half", "either", "other"],
   duties: [{ kind: "office_hours", sessionsPerWeek: 1, minutesPerSession: 60 }],
-  questions: [] as Array<{ id: string; prompt: string; required: boolean; purpose?: 'qualification' }>,
+  questions: [] as Array<{
+    id: string;
+    prompt: string;
+    required: boolean;
+    purpose?: "qualification";
+  }>,
   requiredSlots: [] as Array<{ day: number; start: string; end: string }>,
-});
+};
+const form = reactive(clone(initialForm));
 const courses = computed(() =>
   (data.value?.courses || []).filter(
     (c: any) =>
@@ -45,50 +61,83 @@ if (!props.opportunityId && !courses.value.length) {
   ];
 }
 const originalVersion = ref<number | undefined>();
-const draftEditable = ref(!props.opportunityId);
-const editorError = ref("");
-if (props.opportunityId) {
-  try {
-    const current = await requestFetch<any>(
-      `/api/staffing/opportunities/${props.opportunityId}`,
-    );
-    draftEditable.value =
-      !!current.canManage &&
-      current.opportunity?.status === "draft" &&
-      current.opportunity.termId === data.value?.currentCycle?.termId &&
-      data.value?.currentCycle?.isOpen;
-    if (!draftEditable.value)
-      await nuxtApp.runWithContext(() =>
-        navigateTo(
-          current.canManage ? `/staffing/${props.opportunityId}` : "/courses",
-          { replace: true },
-        ),
-      );
-    const item = current.opportunity;
-    if (draftEditable.value) {
-      for (const key of Object.keys(form))
-        if (key in item) (form as any)[key] = item[key];
-      originalVersion.value = item.version;
-    }
-  } catch (error: any) {
-    draftEditable.value = false;
-    editorError.value = apiErrorMessage(
-      error,
-      "This opportunity draft is unavailable.",
-    );
-    if ([403, 404].includes(error?.statusCode || error?.response?.status))
-      await nuxtApp.runWithContext(() =>
+const blankForm = clone(form);
+const originalContent = ref("");
+const formBaseline = ref(staffingSnapshot(form));
+const formTerm = ref(data.value?.currentCycle?.termId || "");
+const editorConflict = ref(false);
+const formDirty = computed(() => staffingSnapshot(form) !== formBaseline.value);
+const editorError = computed(() =>
+  details?.error.value
+    ? apiErrorMessage(details.error.value, "This opportunity is unavailable.")
+    : "",
+);
+const draftEditable = computed(
+  () =>
+    !!data.value?.viewer?.canManageStaffing &&
+    !!data.value?.currentCycle?.isOpen &&
+    (!props.opportunityId ||
+      (details?.data.value?.canManage &&
+        details.data.value?.opportunity?.status === "draft" &&
+        details.data.value.opportunity.termId ===
+          data.value.currentCycle.termId)),
+);
+const inputOf = (record: any) =>
+  Object.fromEntries(
+    Object.entries(initialForm).map(([key, fallback]) => [
+      key,
+      clone(record[key] ?? fallback),
+    ]),
+  );
+function loadOpportunity(record = details?.data.value?.opportunity) {
+  if (record) {
+    Object.assign(form, inputOf(record));
+    originalVersion.value = record.version;
+    originalContent.value = staffingSnapshot(inputOf(record));
+  } else Object.assign(form, clone(blankForm));
+  formBaseline.value = staffingSnapshot(form);
+  formTerm.value = data.value?.currentCycle?.termId || "";
+  editorConflict.value = false;
+}
+watch(
+  [() => details?.data.value, busy],
+  ([current, saving]) => {
+    if (!current || saving) return;
+    if (!current.canManage) {
+      void nuxtApp.runWithContext(() =>
         navigateTo("/courses", { replace: true }),
       );
-    if ((error?.statusCode || error?.response?.status) === 401) {
-      currentUser.value = null;
-      authError.value = "Your session expired. Please sign in again.";
-      await nuxtApp.runWithContext(() =>
-        navigateTo("/login", { replace: true }),
-      );
+      return;
     }
-  }
-}
+    if (!originalVersion.value || !formDirty.value)
+      loadOpportunity(current.opportunity);
+    else if (
+      staffingSnapshot(inputOf(current.opportunity)) === originalContent.value
+    ) {
+      originalVersion.value = current.opportunity.version;
+      editorConflict.value = false;
+    } else editorConflict.value = true;
+  },
+  { immediate: true },
+);
+watch(
+  () => data.value?.viewer?.canManageStaffing,
+  (allowed) => {
+    if (allowed === false)
+      void nuxtApp.runWithContext(() =>
+        navigateTo("/courses", { replace: true }),
+      );
+  },
+  { immediate: true },
+);
+watch(
+  () => data.value?.currentCycle?.termId,
+  (termId) => {
+    if (props.opportunityId) return;
+    if (!formDirty.value) formTerm.value = termId || "";
+    editorConflict.value = formTerm.value !== (termId || "");
+  },
+);
 watch(
   () => form.type,
   (type) => {
@@ -110,11 +159,8 @@ watch(
     }
   },
 );
-if (!props.opportunityId && !data.value?.currentCycle?.isOpen)
-  await nuxtApp.runWithContext(() =>
-    navigateTo("/staffing", { replace: true }),
-  );
 async function save() {
+  if (!draftEditable.value || editorConflict.value) return;
   const result = await run(
     () =>
       staffingRequest<any>(
@@ -125,7 +171,10 @@ async function save() {
           method: props.opportunityId ? "PATCH" : "POST",
           body: {
             ...form,
-            questions: form.questions.map((question) => ({ ...question, purpose: 'qualification' })),
+            questions: form.questions.map((question) => ({
+              ...question,
+              purpose: "qualification",
+            })),
             expectedVersion: originalVersion.value,
             courseId: form.type === "ta" ? form.courseId : undefined,
           },
@@ -138,12 +187,15 @@ async function save() {
       navigateTo(`/staffing/${result.opportunity.id}`),
     );
 }
+useIntervalRefresh((options) =>
+  busy.value ? Promise.resolve() : synchronize(options),
+);
 function addQuestion() {
   form.questions.push({
     id: `question-${Date.now()}-${form.questions.length}`,
     prompt: "",
     required: true,
-    purpose: 'qualification',
+    purpose: "qualification",
   });
 }
 </script>
@@ -164,25 +216,45 @@ function addQuestion() {
     <p v-if="editorError" class="notice error" role="alert">
       {{ editorError }}
     </p>
+    <p
+      v-if="editorConflict"
+      class="notice"
+      role="status"
+      data-testid="opportunity-conflict"
+    >
+      Requirements changed elsewhere. Your edits are kept.
+    </p>
+    <p
+      v-else-if="!draftEditable && data?.viewer?.canManageStaffing"
+      class="notice"
+      role="status"
+    >
+      This draft is not currently editable.
+    </p>
+    <button
+      v-if="formDirty || editorConflict"
+      type="button"
+      class="secondary"
+      :disabled="busy"
+      @click="loadOpportunity()"
+      data-testid="opportunity-discard"
+    >
+      Discard changes
+    </button>
     <p v-if="data?.currentCycle?.termName" class="muted">
       {{ data.currentCycle.termName }} ·
       {{ staffingDate(data.currentCycle.startDate) }} –
       {{ staffingDate(data.currentCycle.endDate) }}
     </p>
     <form
-      v-if="
-        data?.viewer?.canManageStaffing &&
-        draftEditable &&
-        !error &&
-        !editorError
-      "
+      v-if="data?.viewer?.canManageStaffing && !error && !editorError"
       @submit.prevent="save"
       class="panel"
       :aria-busy="busy"
     >
       <div class="panel-heading"><h2>Opportunity Details</h2></div>
       <div class="panel-body">
-        <fieldset :disabled="busy">
+        <fieldset :disabled="busy || !draftEditable">
           <legend>Scope and schedule</legend>
           <div class="grid">
             <label
@@ -252,7 +324,7 @@ function addQuestion() {
             />
           </label>
         </fieldset>
-        <fieldset :disabled="busy">
+        <fieldset :disabled="busy || !draftEditable">
           <legend>Weekly work expectations</legend>
           <div v-if="form.type === 'ta'" class="grid">
             <label class="check"
@@ -381,7 +453,7 @@ function addQuestion() {
             Add required schedule slot
           </button>
         </fieldset>
-        <fieldset :disabled="busy">
+        <fieldset :disabled="busy || !draftEditable">
           <legend>Qualifications and application</legend>
           <label
             >Required skills<textarea
@@ -426,7 +498,7 @@ function addQuestion() {
             Add qualification question
           </button>
         </fieldset>
-        <fieldset :disabled="busy">
+        <fieldset :disabled="busy || !draftEditable">
           <legend>Budget and approval</legend>
           <div class="grid">
             <label
@@ -448,7 +520,12 @@ function addQuestion() {
             /></label>
           </div>
         </fieldset>
-        <button type="submit" :disabled="busy" data-testid="opportunity-save">
+        <button
+          v-if="draftEditable"
+          type="submit"
+          :disabled="busy || editorConflict"
+          data-testid="opportunity-save"
+        >
           {{
             busy
               ? "Saving…"

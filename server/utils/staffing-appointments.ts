@@ -118,7 +118,7 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
   const eligible = eligibility(application, opportunity)
   if (!eligible.eligible) fail(409, eligible.reasons.join('; '))
   if (application.applicantEmail === user.email) fail(403, 'Reviewers cannot select themselves')
-  if (await commitmentUnavailable(db, application.applicantId, opportunity.termId, opportunity.appointmentStart, opportunity.appointmentEnd, session)) fail(409, 'Candidate already holds an appointment in this term or overlapping these dates. Refresh to see the next eligible applicant.')
+  if (await commitmentUnavailable(db, application.applicantId, opportunity.termId, opportunity.appointmentStart, opportunity.appointmentEnd, session)) fail(409, 'Candidate already holds an appointment in this term or overlapping these dates. Available applicants update automatically.')
   // An expired offer does not reserve the applicant. Its original resource keeps
   // its financial reservation until maintenance releases it with the old offer ID.
   const offerId = uid()
