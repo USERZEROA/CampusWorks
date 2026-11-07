@@ -1,4 +1,5 @@
 import { MongoClient, type ClientSession, type Db, type IndexDescription } from 'mongodb'
+import { performance } from 'node:perf_hooks'
 import { createError } from 'h3'
 import { getServerConfig } from './config'
 import { seedDemoDataIfEmpty } from './seed'
@@ -15,7 +16,10 @@ export function getDb(): Promise<Db> {
 async function connect(): Promise<Db> {
   const config = getServerConfig()
   if (!config.mongodbUri) throw createError({ statusCode: 503, statusMessage: 'MONGODB_URI is not configured' })
-  const client = new MongoClient(config.mongodbUri, { serverSelectionTimeoutMS: 5000 })
+  const client = new MongoClient(config.mongodbUri, {
+    serverSelectionTimeoutMS: 5000, connectTimeoutMS: 5000,
+    waitQueueTimeoutMS: 5000, socketTimeoutMS: 30_000
+  })
   try {
     await client.connect()
     const db = client.db(config.mongodbDb)
@@ -44,10 +48,21 @@ async function connect(): Promise<Db> {
 export async function withTransaction<T>(work: (db: Db, session: ClientSession) => Promise<T>): Promise<T> {
   const db = await getDb()
   const session = connectedClient!.startSession()
+  const deadline = performance.now() + 30_000
+  const assertWorkBudget = () => {
+    if (performance.now() >= deadline) throw createError({ statusCode: 409, statusMessage: 'The transaction exceeded its work budget; refresh and try again' })
+  }
   try {
-    return await session.withTransaction(() => work(db, session), {
+    return await session.withTransaction(async () => {
+      assertWorkBudget()
+      const result = await work(db, session)
+      // Await every operation before aborting. An in-flight commit is always
+      // resolved by the driver, never abandoned by a competing timeout promise.
+      assertWorkBudget()
+      return result
+    }, {
       readConcern: { level: 'snapshot' }, writeConcern: { w: 'majority' }, readPreference: 'primary',
-      maxCommitTimeMS: 10_000, timeoutMS: 30_000
+      maxCommitTimeMS: 10_000
     }) as T
   } catch (error: any) {
     if (error?.code === 11000) throw createError({ statusCode: 409, statusMessage: 'A conflicting record already exists' })

@@ -1,6 +1,25 @@
-import type { Db, Document } from 'mongodb'
+import type { ClientSession, Db, Document } from 'mongodb'
 import { uid } from './staffing'
 import { getServerConfig } from './config'
+
+async function activeMockAdministrators(db: Db, session: ClientSession) {
+  const sessions = await db.collection('authSessions').find({ 'user.provider': 'mock', 'user.primaryRole': 'admin', expiresAt: { $gt: new Date() }, revokedAt: null }, { session, projection: { userId: 1, 'user.id': 1, 'user.email': 1 } }).toArray()
+  const pairs = new Map<string, Set<string>>()
+  for (const active of sessions) {
+    const id = active.user?.id
+    const email = active.user?.email
+    if (typeof id !== 'string' || typeof email !== 'string' || active.userId !== id) continue
+    const emails = pairs.get(id) || new Set<string>()
+    emails.add(email); pairs.set(id, emails)
+  }
+  if (!pairs.size) return []
+  const accounts = (await db.collection('users').find({ id: { $in: [...pairs.keys()] }, disabledAt: null, identityKind: { $ne: 'gitlab' } }, { session, projection: { id: 1, email: 1 } }).toArray()).filter(account => pairs.get(account.id)?.has(account.email))
+  if (!accounts.length) return []
+  const bindings = await db.collection('providerIdentities').find({ $or: [{ userId: { $in: accounts.map(account => account.id) } }, { email: { $in: accounts.map(account => account.email) } }] }, { session, projection: { userId: 1, email: 1 } }).toArray()
+  const boundIds = new Set(bindings.map(binding => binding.userId))
+  const boundEmails = new Set(bindings.map(binding => binding.email))
+  return accounts.filter(account => !boundIds.has(account.id) && !boundEmails.has(account.email)).map(account => account.id as string)
+}
 
 /** Durable, retry-safe in-app delivery. No external mail or model call occurs. */
 export async function processStaffingOutbox(db: Db) {
@@ -37,11 +56,7 @@ export async function processStaffingOutbox(db: Db) {
         const admins = await database.collection('users').find({ email: { $in: config.adminEmails }, disabledAt: null }, { session }).toArray()
         for (const admin of admins) recipients.add(admin.id)
         if (config.mockLoginEnabled) {
-          const activeSessions = await database.collection('authSessions').find({ 'user.provider': 'mock', 'user.primaryRole': 'admin', expiresAt: { $gt: new Date() }, revokedAt: null }, { session, projection: { 'user.id': 1, 'user.email': 1 } }).toArray()
-          for (const active of activeSessions) {
-            const account = await database.collection('users').findOne({ id: active.user?.id, email: active.user?.email, disabledAt: null, identityKind: { $ne: 'gitlab' } }, { session })
-            if (account && !(await database.collection('providerIdentities').findOne({ $or: [{ userId: account.id }, { email: account.email }] }, { session }))) recipients.add(account.id)
-          }
+          for (const id of await activeMockAdministrators(database, session)) recipients.add(id)
         }
         path = '/admin/staffing'; title = 'A staffing request is awaiting approval'; opportunity = null
       }
