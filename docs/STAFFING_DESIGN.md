@@ -10,7 +10,7 @@ The implemented loop is term configuration, authorized opportunity publication, 
 
 For TA appointments, activation is connected directly to the existing course permission boundary. For RA appointments, activation enables only the named research project. AI output cannot select an applicant, accept an offer, approve clearance, grant permissions, end employment or change a budget.
 
-The default allocation policy is exclusive within one term ID across TA and RA opportunities. Several applications and shortlists are allowed while the candidate remains available. The first successful server transaction claims the candidate; a browser click timestamp or AI order is not ownership.
+The allocation policy prohibits date-overlapping TA and RA commitments across all term IDs, including two half appointments, while retaining one live allocation per term. Several applications and shortlists are allowed while the candidate remains available. The first successful server transaction claims the candidate; a browser click timestamp or AI order is not ownership.
 
 ## 2. Resource and identity boundaries
 
@@ -99,7 +99,7 @@ The queue uses the same transactional resource boundary for joins, closing, assi
 
 Domain transitions record durable events. The in-app outbox claims an event and writes uniquely keyed notifications before marking delivery complete in the same transaction. Repeated or concurrent processing cannot duplicate notification rows. Model calls and external side effects are not placed inside a retried database transaction.
 
-Reconciliation handles due offer expiry, date activation and appointment end in bounded, resource-locked batches. Course transactions and staffing/task endpoints invoke the applicable maintenance. The administrator maintenance endpoint can drain additional work. Periodic deployment scheduling for unattended status/notification advancement remains an operational decision; date-based access checks already enforce the boundary.
+Reconciliation handles due offer expiry, date activation and appointment end in bounded, resource-locked batches. Course transactions and staffing/task endpoints invoke the applicable maintenance. The administrator maintenance endpoint can drain additional work. Configured AI workers also process due transitions for their active comparison service so timed candidate availability changes trigger reanalysis without an open browser. Provider-disabled instances perform no background AI work; date-based authorization remains authoritative.
 
 MongoDB's distinction between single-document atomicity and multi-document transactions is the basis of this architecture. [MongoDB atomicity documentation](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/)
 
@@ -127,22 +127,11 @@ Recorded queue use does not establish total teaching demand. Lecture attendance,
 
 Ending work before activation releases unused commitments. Once work has started, the commitment remains pending an administrator's approved incurred-cost settlement. Only the unused remainder is released; the application does not claim to run payroll.
 
-## 9. Decisions that remain with the owner
+## 9. Confirmed product policy
 
-The implementation has explicit defaults, but these policies are not inferred as institutional approval:
+The owner has prohibited overlapping TA/RA commitments and simultaneous half appointments, retained manager-controlled departure and the existing course/site administrator scopes, declined additional retention/document-processing/HR features, and authorized automatic candidate comparison updates after relevant list changes. See [PRODUCT_POLICY.md](PRODUCT_POLICY.md).
 
-1. Whether distinct overlapping terms and outside jobs need a shared date/hour conflict rule; current exclusivity is per term ID.
-2. Whether compatible half appointments may coexist, and how limits/consent/budget would change together.
-3. Whether students need a resignation request and notice/approval process after acceptance.
-4. Whether department-scoped administrators and independent second approval are required for publication, clearance or settlement.
-5. Which restricted administrative fields are actually necessary and which approved HR system should own them.
-6. Exact application, CV, administrative, audit and AI retention/deletion rules, including derived data and quota reclamation.
-7. Verified identity-change/recovery procedure; unsafe automatic linking is already blocked.
-8. Approved PDF extraction, malware scanning, private-data processing, real notification channels and payroll integration.
-9. Model/provider cost policy, provider-account spending caps and whether automatic paid refresh is permitted.
-10. Complete workload/coverage evidence and the human process for next-term staffing changes.
-
-There is no automatic student self-resignation, actual SSN collection, PDF extraction/OCR, antivirus certification, payroll, external email or automatic paid model refresh to describe as delivered. Current runtime controls, APIs and product boundaries are documented in [STAFFING_OPERATIONS.md](STAFFING_OPERATIONS.md).
+Automatic analysis remains evidence-based and advisory, subject to current permissions, available provider configuration and the established budgets. It does not select students or change their permissions. No student resignation workflow, department hierarchy, actual SSN collection, PDF extraction/OCR, antivirus certification, payroll or external messaging is added. Current runtime controls and technical boundaries are documented in [STAFFING_OPERATIONS.md](STAFFING_OPERATIONS.md).
 
 ## 10. Verification boundary
 

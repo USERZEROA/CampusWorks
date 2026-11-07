@@ -17,7 +17,7 @@ RA appointments provide a research-project workspace within these four identitie
 
 Faculty specify weekly hours and work frequency, attendance, lab/discussion duties, grading, office hours, schedules, skills, questions, vacancies and budget. Publication follows the term's approval policy. Submission freezes the reviewed answers and CV revision. Private administrative information is collected separately after an offer and excluded from ordinary faculty review and AI input.
 
-Selection reserves a candidate and vacancy atomically. A candidate can hold one allocation per recruitment term across TA and RA positions; another instructor receives an unavailable response. Acceptance, clearance and the appointment start date are required for access. Expiration, suspension or ending removes appointment-derived access and releases queue claims while preserving independently granted roles. See [staffing operations](docs/STAFFING_OPERATIONS.md) for transitions, permissions and policy choices.
+Selection reserves a candidate and vacancy atomically. TA and RA commitments cannot overlap in dates, even across different recruitment terms, and two half appointments cannot coexist. The one-live-allocation-per-term rule also remains. Acceptance, clearance and the appointment start date are required for access. Expiration, suspension or ending removes appointment-derived access and releases queue claims while preserving independently granted roles. See [product policy](docs/PRODUCT_POLICY.md) and [staffing operations](docs/STAFFING_OPERATIONS.md).
 
 ## Local demonstration
 
@@ -59,7 +59,7 @@ Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell), gen
 | `npm run test:e2e` | Playwright against an existing dedicated test app |
 | `npm run test:e2e:headed` | Visible browser tests |
 | `npm run test:e2e:ui` | Playwright test interface |
-| `npm run demo:windows` | Six isolated visible demonstration windows |
+| `npm run demo:windows` | Six isolated visible queue demonstration windows; set `DEMO_LAYOUT=staffing` for four roles plus application/recruitment windows |
 
 Install browsers once with `npx playwright install chromium firefox`. The complete suite requires Docker. Its runner creates a uniquely named, loopback-only disposable database, enables database fault injection only in that test container, starts two production app processes and cleans up its own resources. It uses local synthetic identity and AI providers. No real provider key or institutional login is required. Reports and traces stay in ignored directories. The runner rejects skipped, flaky and failed tests. Set `E2E_HEADED=1` to display browsers.
 
@@ -96,7 +96,7 @@ AI_MODEL=
 
 The base URL must expose an OpenAI-compatible `/chat/completions` endpoint. Missing configuration produces an explicit unavailable state; manual workflows remain usable. Real provider behavior requires a separate check after configuration.
 
-AI receives authorized evidence with references, excludes private administrative attributes, and returns validated suggestions for human review. It never selects applicants, grants roles or reduces staffing. Availability and evidence are rechecked after a response; a concurrent selection makes the result stale. Candidate pages disclose coverage. Background summaries currently use supplied profile and qualification text; binary PDF text extraction is not implemented.
+AI receives authorized evidence with references, excludes private administrative attributes, and returns validated suggestions for human review. It never selects applicants, grants roles or reduces staffing. Availability and evidence are rechecked after a response; a concurrent selection makes the result stale. Established candidate comparisons update automatically when candidate lists, qualifications or availability change, using a durable worker, current reviewer permissions and the existing budgets. Candidate pages disclose coverage. Background summaries currently use supplied profile and qualification text; binary PDF text extraction is not implemented.
 
 | AI setting | Default |
 | --- | --- |
@@ -116,7 +116,7 @@ Required indexes and transaction support are readiness requirements. Database/in
 
 Feedback remains identified to managers; declining contact does not make it anonymous. Queue help minutes are measured activity, while workload records are submitted work. Reports expose missing evidence and separate budget scenarios from measured cost. Neither establishes payroll or an automatic staffing reduction.
 
-Credentials, database data, browser sessions and raw artifacts are ignored and excluded from image builds. Private CVs use authorized downloads, attachment headers, quotas and basic format checks. Document malware scanning, retention periods and HR integration require institutional decisions.
+Credentials, database data, browser sessions and raw artifacts are ignored and excluded from image builds. Private CVs use authorized downloads, attachment headers, quotas and basic format checks. Additional retention, document-processing and HR integrations are outside the confirmed product scope.
 
 ## Deployment and evidence
 

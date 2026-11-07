@@ -4,9 +4,9 @@ Date: November 7, 2026. This record covers the implemented queue, TA/RA recruitm
 
 ## Final acceptance
 
-The final complete local run passed **92 tests**, with zero failed, skipped or flaky results. An additional **eight visible-browser tests** passed against the final Linux production container, also with zero failed, skipped or flaky results. Three dependency-security unit tests, application/server/test type checks and the production build passed before the complete run. Exact names, durations, evidence hashes and boundaries are recorded in [results.json](verification/results.json).
+The final complete local run passed **112 tests**, with zero failed, skipped or flaky results. An additional **twelve visible-browser tests** passed against the final Linux production container, also with zero failed, skipped or flaky results. Three dependency-security unit tests, application/server/test type checks and the production build passed before the complete run. Exact names, durations, evidence hashes and boundaries are recorded in [results.json](verification/results.json).
 
-The accessibility runs checked eighteen pages at two widths in Chromium and Firefox: 72 page/browser/width combinations in the complete run and another 72 against the visible-browser container target, with zero reported violations in the configured WCAG rules. Screenshots of the actual TA, RA and mobile application journeys were visually inspected.
+The accessibility and branding runs checked eighteen pages at 1440px, 768px, 390px and 320px in Chromium and Firefox: 144 page/browser/width combinations in the complete run and another 144 against the visible-browser container target, with zero reported violations in the configured WCAG rules. Paused queue dialogs and the configured institutional-login view received additional accessibility checks. Every matrix page asserts Duke blue, the Duke Computer Science PNG source, descriptive alternate text, successful image loading and viewport bounds; a separate HTTP check compares the served PNG bytes with the tracked asset. Screenshots of the actual TA, RA, automatic candidate update and mobile application journeys were visually inspected.
 
 | Check | Evidence and boundary |
 | --- | --- |
@@ -18,7 +18,7 @@ The accessibility runs checked eighteen pages at two widths in Chromium and Fire
 | Authenticated database bootstrap | Fresh local Compose project initializes its key file and replica set; bootstrap container exits zero |
 | Cross-instance acceptance | Separate production Node processes share a disposable MongoDB replica set, session secret and synthetic database |
 | Visible browsers | Chromium and Firefox exercise real pages, forms, uploads, downloads and navigation |
-| Accessibility | WCAG 2 A/AA and 2.1 AA axe scans of eighteen authorized screens at 1440px and 390px in both browsers; keyboard focus trap/Escape/restore checks |
+| Accessibility | WCAG 2 A/AA and 2.1 AA axe scans of eighteen authorized screens at 1440px, 768px, 390px and 320px in both browsers; keyboard focus trap/Escape/restore checks |
 | Container browser acceptance | Actual recruitment-to-queue and keyboard/accessibility journeys target the Linux production image with an authenticated database |
 | Content and Git | Naming, private-path and whitespace scans; functional changes have single-sentence English commit subjects |
 
@@ -34,11 +34,14 @@ The tests include the existing four-role queue journeys and these explicit bound
 - Copied-cookie logout revocation, forged sessions, shared rate limiting, origin checks, strict flag/pagination validation and live required-index readiness.
 - Institutional sign-in through a loopback fake provider, immutable subject binding, changed/reused email refusal and demo impersonation refusal.
 - Concurrent selection of one candidate across courses, the final vacancy/budget, withdrawal versus selection, stale edits and replayed commands.
+- Cross-term TA/RA half-appointment races, adjacent date intervals, consistent accept/clear/resume conflict checks, disabled-account suspension and release, and replacement allocation safety.
 - Offer acceptance/decline/expiry, date-valid activation, clearance restrictions, suspension/resume/end and preservation of manual roles.
 - Private draft/CV boundaries, submitted CV snapshots, invalid documents, required questions, restricted administrative information and restricted clearance reasons.
 - Administrator-owned publication approval, RA project-only access, workload bounds/idempotency, complete report aggregation and financial settlement before course deletion.
 - Durable offer notifications, recipient-only read state, duplicate-free delivery and rescinded-offer notification.
 - Unconfigured AI, configured loopback provider responses, evidence/privacy validation, invented evidence rejection, availability becoming stale during a call, safe provider failure and durable quota refusal before a provider call.
+- Automatic comparison updates across two configured workers, logged-out scoped faculty, changes during inference, time-only offer expiry, permission revocation, configuration restart/catch-up, failure retry prevention and durable quota blocking. An actual reviewer browser shows updated named candidate links without sending another analysis POST.
+- Independent term/report pagination preserves full aggregate values and resets report pages after scope changes. Interactive demonstration setup is repeatable and prepares submitted synthetic candidates for all four roles.
 - Faculty publishing, student application and CV upload, faculty shortlist/selection, student acceptance, administrator clearance, TA queue/duty and live removal of appointment-derived access through browser controls.
 - Desktop/mobile widths, retained Duke blue/logo, actual CSV parsing with formula protection, empty analytics, nearest-rank P90 and a complete single-TA ring using a labeled synthetic response fixture.
 
@@ -46,7 +49,7 @@ Synthetic metric fixtures do not represent actual course outcomes. A loopback fa
 
 ## Review coverage
 
-The final source review covered each line of maintained application/server code, scripts, test code, local dependency code and operational configuration through parallel domain review and a final integration pass. The core server reviewer re-read all 35 core TypeScript files (1,283 physical lines) and checked staffing/AI integration separately. The staffing reviewer covered the application, appointment, allocation, reporting, outbox and AI modules. The UI reviewer covered forms, authentication/context use, async failures, privacy cleanup, role changes, pagination, dates and keyboard behavior. The primary reviewer integrated findings, read the acceptance suites/configuration and exercised the production application.
+The final source review covered maintained application/server code, scripts, tests, the local dependency and operational configuration through domain review and an integration pass. The core reviewer checked commitment locking, all appointment transitions, disabled-account cleanup and private clearance reasons, then independently audited the automatic worker's generation, cache, event-claim and approval fences. The staffing reviewer covered the worker, provider adapter, subscriptions and seven automatic-update regressions. The interface reviewer read all 34 app files for style, logo, interaction and role consistency. The primary reviewer integrated findings, read the changed source and acceptance suites, added the actual automatic-advice browser check, and exercised the production application.
 
 The current [application inventory](verification/application-inventory.json) records delivered file hashes and physical line counts. The [final reading ledger](review/final-reading-ledger.json) identifies maintained source/test bytes covered by domain and integration review. An inventory is a coverage receipt rather than semantic proof. Initial review snapshots and their byte ledgers remain in [review/](review/) and are explicitly historical. Their unresolved findings do not describe current implementation status.
 
@@ -75,20 +78,18 @@ The lockfile was fully parsed and its dependency structure and override paths ch
 | Ended appointments could lose their settlement path | Unsettled commitments block course deletion until approved settlement; regression |
 | Rescinded offers lacked candidate notification | Durable candidate notification and browser/API-visible status |
 | Retention setting did nothing | Removed the misleading unused setting; institution must choose a real retention/deletion policy |
+| Different term IDs could bypass commitment exclusivity | Canonical applicant write serializes `[start,end)` overlap checks across TA/RA resources and terms; half appointments cannot coexist |
+| Candidate advice required manual recomputation | Durable scoped worker automatically updates changed evidence/availability with current authority, quotas, coalescing and generation fences |
+| Old worker observations could overwrite newer work | Conditional event claims, captured generations and approval versions fence invalidation, cache restoration and revocation |
+| Private rejection reasons could appear as end reasons | Generic public end reason plus restricted clearance fields, including legacy-row projection; professor/owner/admin regression |
+| Published schedule and role controls were ambiguous | Required slots are visible; manual grants are labeled and linked to appointment controls; course review has independent paging |
 
 The safe merge override uses a direct local dependency reference so npm resolves it consistently from the project root. A clean Linux build initially exposed an incorrect nested link that a warm Windows install had hidden; the corrected lockfile was verified by fresh Windows and Linux installs. The upstream MIT notice remains intact. [npm override documentation](https://docs.npmjs.com/cli/v11/configuring-npm/package-json/#overrides)
 
-## Remaining decisions and evidence limits
+## Confirmed policy and evidence limits
 
-The following choices remain with the owner. The implementation uses explicit safe defaults, and they are not represented as approved institutional rules:
+The owner has prohibited overlapping and simultaneous half appointments, retained existing manager-controlled departure and course/site administration, declined additional retention/document/HR features, and authorized automatic candidate reanalysis after relevant changes. [PRODUCT_POLICY.md](PRODUCT_POLICY.md) records those decisions. Provider credentials will be supplied separately; local tests use only synthetic loopback providers.
 
-1. Exclusivity is per term ID. Decide whether different overlapping terms and outside jobs need shared date/hour limits and whether two half appointments are permitted.
-2. Accepted appointments end through an authorized manager. Decide whether students need a resignation request, notice period and approval process.
-3. Site administrators approve, clear and settle. Decide department scope, delegation and whether independent second approval is required.
-4. Choose necessary post-offer fields, authoritative HR/payroll ownership and verified identity-amendment/account-recovery procedures.
-5. Choose application/CV/administrative/AI/audit retention periods, deletion/hold rules and quota reclamation. No automatic financial or applicant-history deletion was invented.
-6. Decide on malware scanning, PDF extraction, real notification channels and periodic unattended reconciliation. Current notifications are in-app and bounded maintenance is activity-driven or explicitly invoked.
-7. Supply an approved AI provider/model and private-data/cost policy. Real provider behavior, fairness, billing and recommendation quality remain unverified. Paid automatic refresh is not enabled.
-8. Collect complete workload/coverage and approved costs before relying on next-term scenarios. Queue demand alone cannot establish appropriate TA headcount or savings.
+Six isolated interactive windows were opened after acceptance: student queue, TA queue, instructor management, administrator staffing, student applications and faculty recruitment. They use a separate demonstration database at `http://localhost:3100`, with real AI and institutional providers disabled. The existing service on port 3000 was left running. The demo remains available for the owner; verification containers and processes are separate.
 
 Kubernetes runtime, failover/replica-set high availability, sustained production load, Safari/WebKit, screen-reader hardware, physical phones and hosted behavior were not verified. Basic document format checks are not antivirus certification. Feedback remains identified to managers. More detail is in [STAFFING_OPERATIONS.md](STAFFING_OPERATIONS.md).

@@ -16,7 +16,7 @@ CampusWorks retains four identities: student, TA, instructor, and administrator.
 
 The server checks current course enrollment or project ownership. A primary role label alone is not authority over an unrelated course. A person may apply while holding another platform identity, but a reviewer cannot select themselves. Project creation requires actual instructional/course-admin authority or site-admin authority.
 
-There is no department-admin resource hierarchy or independent second-approver workflow yet. Course administration stays course-scoped. Clearance and settlement use site-admin authority, including its broad institutional scope; an organization must decide whether that scope and separation of duties are appropriate before collecting real records.
+The owner has retained the existing course/site administration scopes without adding a department-admin hierarchy or independent second-approver workflow. Course administration stays course-scoped. Clearance and settlement use site-admin authority. See [PRODUCT_POLICY.md](PRODUCT_POLICY.md) for the confirmed scope.
 
 ## Runtime prerequisites
 
@@ -40,7 +40,7 @@ Use an explicit `SESSION_SECRET` of at least 32 characters in production. Set `P
 10. Ending, expiry or suspension removes appointment-derived authority. If no other valid staff grant remains, duty and live claims are cleared while the student request and accumulated help history are preserved. Independent manual instructor/admin/TA grants are retained.
 11. Course review combines recorded queue activity, submitted feedback, declared workload and explicit cost scenarios. Instructors and administrators decide the following term's requirements.
 
-The service also permits applying to several opportunities while available. Shortlisting does not reserve a student. Default exclusivity is one current allocation per stable applicant and term across both TA and RA opportunities.
+The service permits applying to several opportunities while available. Shortlisting does not reserve a student. A stable applicant cannot hold date-overlapping TA/RA commitments across any term IDs, including two half appointments. The existing one-live-allocation-per-term rule also remains. Date intervals include the start and exclude the end, so adjacent appointments may meet at the same instant.
 
 ## Opportunities and requirements
 
@@ -70,7 +70,7 @@ The first successful server-side selection transaction wins. Client clock, appli
 
 Offer response expires after seven days or at the appointment end, whichever arrives first. Acceptance checks server time and the current offer/allocation reference. Expired, declined or rescinded offers release commitments, and a pre-acceptance application can return to review. An accepted appointment is not released by an obsolete offer-expiry transition. Clearance still pending at the appointment end cannot extend privileges beyond that end.
 
-The applicant can withdraw before acceptance, including resolving an outstanding offer. After acceptance, withdrawal is blocked as an employment-ending shortcut. An authorized manager ends the appointment. Student self-resignation/request-and-approval behavior remains an explicit product decision.
+The applicant can withdraw before acceptance, including resolving an outstanding offer. After acceptance, withdrawal is blocked as an employment-ending shortcut. Instructors and administrators suspend or end the appointment through the existing controls. The owner has declined a student resignation workflow.
 
 Profile edits require `expectedVersion`; CV upload includes the current application version. Restricted administrative updates use `expectedAdministrativeVersion`. Stale edits receive a conflict. Selection commands replay their recorded outcome for the same key and application. Workload command replay returns the existing observation only when date, category, hours, notes and author match; reusing the key for different content receives a conflict.
 
@@ -118,13 +118,13 @@ Candidate comparisons scan past unavailable/ineligible submissions, then compare
 
 Provider JSON must contain `summary`, `summaryEvidenceRefs`, bounded `items` with `targetId`, `explanation`, `evidenceRefs`, and bounded `cautions`. References must exist in the supplied input; candidate items cannot cite another candidate's evidence. Uploaded text is untrusted content, not permission to alter criteria or execute commands. Structural validation does not establish semantic correctness or fair hiring outcomes.
 
-The service rechecks authorization and input hashes after the call and when reading completed tasks. Changed availability, qualifications or report evidence produces `stale`; invalid/failed/timeout/quota-limited calls produce `failed` with safe messages. Term-wide candidate availability changes invalidate affected completed comparisons. A page refresh does not automatically purchase another model call. The reviewer explicitly requests a fresh analysis; automatic paid recomputation needs a separate cost/consent policy.
+The service rechecks authorization and input hashes after the call and when reading completed tasks. Changed availability, qualifications or report evidence produces `stale`; invalid/failed/timeout/quota-limited calls expose safe messages. Established candidate comparisons automatically update when their candidate list, qualification evidence or cross-term availability changes. Durable work is scoped to the original reviewer, opportunity and comparison page; current permissions and configured budgets remain authoritative. Ordinary page polling does not purchase repeated calls for unchanged evidence. Missing configuration never calls a provider.
 
 ## Maintenance and in-app delivery
 
 Staffing/AI endpoints run bounded due-appointment reconciliation before their ordinary work. Course transactions also reconcile their locked resource. Date-valid authorization checks remain authoritative even before a displayed status has been reconciled.
 
-An authenticated site administrator can call `POST /api/staffing/reconcile`. It reports checked resources and outbox progress/`hasMore`. Repeated calls drain bounded batches. There is no separately scheduled always-running worker in this delivery; a deployment must arrange periodic calls if statuses and notifications need to advance while nobody visits. Access expiry does not rely solely on that schedule.
+An authenticated site administrator can call `POST /api/staffing/reconcile`. It reports checked resources and outbox progress/`hasMore`. Repeated calls drain bounded batches. A configured AI worker also reconciles due appointments while established comparison subscriptions exist, allowing offer expiry and other timed availability changes to trigger fresh analysis without an open browser. Provider-disabled instances perform no background AI scans or writes; ordinary resource access and explicit maintenance continue to reconcile their scope. Access expiry is also checked directly by authorization.
 
 Lifecycle events are stored with the domain transition. In-app delivery claims each pending event inside a transaction and inserts notifications with a unique event/recipient key before marking it delivered. Concurrent/repeated processing cannot deliver duplicate records. Offer recipients, current scoped reviewers and actual administrator identities determine recipients; the user account's displayed role is not treated as a stored authority field.
 
@@ -154,21 +154,8 @@ Institutional identity is bound to provider, issuer and subject with a stable us
 
 Demo sign-in cannot impersonate an institutional binding. Sessions reference revocable server records and the still-valid account/provider binding; logout revokes that session record. Email changes, identity consolidation and recovery require a separately verified administrator process. There is no self-service identity-linking or account-change reconciliation workflow to claim as completed.
 
-## Business decisions before institutional use
+## Confirmed product scope and external boundaries
 
-| Decision | Current rule/boundary | Decision still needed |
-| --- | --- | --- |
-| Appointment exclusivity | One allocation per applicant and term ID | Whether distinct overlapping terms or outside jobs must share a date/hour conflict rule |
-| Multiple half appointments | Multiple-course willingness is a preference, not an override | Whether to permit compatible concurrent fractions and under which approved limits |
-| Early departure | Applicant cannot self-end an accepted appointment | Whether to add a resignation request, notice period and approval/coverage process |
-| Administrative scope | Site admins handle approval, clearance and settlement | Department resource scope, delegated handlers and independent second approval |
-| Sensitive information | Minimal post-offer fields with restricted access | Which fields are actually required and which approved HR system should own them |
-| Retention | No automatic staffing-application/CV/AI deletion policy | Exact durations, applicant deletion requests, holds, derived-data deletion and quota reclamation |
-| Identity changes | Unsafe automatic linking is blocked | Verified administrator recovery/consolidation process and authorized identity source |
-| Budget accounting | Started work retains commitment until approved settlement | Actual pay/stipend/overhead, incurred-cost evidence, who approves it, and amendments |
-| Documents | Signature/type/size controls and attachment-only downloads | Approved antivirus/content-safety service, PDF extraction/OCR, and consent for external processing |
-| Notifications | In-app only; activity-driven/bounded reconciliation | Periodic deployment maintenance, real messaging recipients/templates and delivery policy |
-| AI processing | Explicit requests, budgets, evidence validation; no real provider configured by default | Approved provider, private-data processing terms, model/pricing, account spending caps and paid automatic refresh policy |
-| Staffing recommendations | Descriptive recorded evidence and unvalidated cost scenarios | Complete workload/coverage evidence and the department's decision process |
+The owner has prohibited overlapping appointments, including two half appointments; retained existing manager-controlled departure and course/site administration; declined additional retention/document/HR features; and authorized automatic candidate comparison updates after list changes. These decisions are recorded in [PRODUCT_POLICY.md](PRODUCT_POLICY.md).
 
-These are product, institutional and deployment decisions, not claims that external HR, provider, financial, legal or field behavior has been validated locally.
+Provider credentials will be supplied separately. No external model, real institutional identity, payroll, email or document-scanning service is established by local tests. In-app notifications and the current private attachment controls remain available. Descriptive workload and budget scenarios still require a human staffing decision; the software cannot validate unrecorded work or external expense evidence.
