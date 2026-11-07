@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import type { ClientSession, Db, Document } from 'mongodb'
 import { isGlobalAdmin } from './auth'
+import { invalidateCandidateRefresh } from './ai-refresh'
 import { releaseStaffClaims } from './queue'
 import { lockStaffingResource } from './staffing-catalog'
 import { actorId, applicationAccess, applicationDto, appointmentDto, assertOpportunityManager, assertVersion, commitmentUnavailable, eligibility, event, fail, findOpportunity, getAppointmentCourseRole, lockApplicantCommitments, number, object, publicRecord, text, uid, type StaffingActor } from './staffing'
@@ -33,6 +34,7 @@ async function releaseCommitments(db: Db, session: ClientSession, appointment: D
   await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: 'released', releasedAt: new Date() }, $inc: { version: 1 } }, { session })
   await db.collection('staffingOffers').updateOne({ id: appointment.offerId, status: { $in: ['issued', 'accepted'] } }, { $set: { status: status === 'expired' ? 'expired' : 'rescinded', resolvedAt: new Date() } }, { session })
   if (!appointment.acceptedAt) await db.collection('staffingApplications').updateOne({ id: appointment.applicationId, status: 'selected' }, { $set: { status: 'under_review', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
+  await invalidateCandidateRefresh(db, session, { applicantId: appointment.applicantId })
   await releaseAppointmentAuthority(db, session, appointment)
 }
 
@@ -56,6 +58,7 @@ export async function reconcileStaffing(db: Db, session: ClientSession, resource
         await db.collection('staffingAppointments').updateOne({ id: appointment.id, status: 'pending_start' }, { $set: { status: 'suspended', suspensionReason: 'Candidate account disabled before the appointment started' }, $inc: { version: 1 } }, { session })
         await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: 'suspended' }, $inc: { version: 1 } }, { session })
         await releaseAppointmentAuthority(db, session, appointment)
+        await invalidateCandidateRefresh(db, session, { applicantId: appointment.applicantId })
         await db.collection('staffingEvents').insertOne({ id: uid(), actorId: 'system', actorEmail: '', kind: 'AppointmentSuspend', targetId: appointment.id, details: { reason: 'Candidate account disabled before appointment start' }, createdAt: new Date(), delivery: 'pending' }, { session })
         continue
       }
@@ -122,6 +125,7 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
   await db.collection('staffingOpportunities').updateOne({ id: opportunity.id }, { $inc: { committedPositions: 1, committedBudget: opportunity.appointmentCost, version: 1 }, $set: { status: opportunity.committedPositions + 1 === opportunity.positions ? 'filled' : opportunity.status, updatedAt: new Date() } }, { session })
   await db.collection('staffingApplications').updateOne({ id: applicationId }, { $set: { status: 'selected', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
   await db.collection('staffingCommands').insertOne({ actorId: actorId(user), key, kind: 'select', applicationId, offerId, appointmentId, createdAt: new Date() }, { session })
+  await invalidateCandidateRefresh(db, session, { applicantId: application.applicantId })
   await event(db, session, user, 'OfferIssued', offerId, { opportunityId: opportunity.id, applicationId, appointmentId })
   return { offer: publicRecord(offer), appointment: appointmentDto(appointment, user), replayed: false }
 }
@@ -152,6 +156,7 @@ export async function offerAction(db: Db, session: ClientSession, user: Staffing
     await db.collection('staffingOffers').updateOne({ id: offerId }, { $set: { status: action === 'decline' ? 'declined' : 'rescinded', resolvedAt: new Date() }, $inc: { version: 1 } }, { session })
     await db.collection('staffingApplications').updateOne({ id: offer.applicationId }, { $set: { status: 'under_review', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
   }
+  if (action === 'accept') await invalidateCandidateRefresh(db, session, { applicantId: appointment.applicantId })
   await event(db, session, user, `Offer${action === 'accept' ? 'Accepted' : action === 'decline' ? 'Declined' : 'Rescinded'}`, offerId)
   return { offer: publicRecord(await db.collection('staffingOffers').findOne({ id: offerId }, { session })), appointment: appointmentDto(await db.collection('staffingAppointments').findOne({ id: appointment.id }, { session }), user) }
 }
@@ -201,6 +206,7 @@ export async function appointmentAction(db: Db, session: ClientSession, user: St
     await db.collection('staffingOpportunities').updateOne({ id: opportunity.id }, { $inc: { committedBudget: -unused, version: 1 } }, { session })
     await db.collection('staffingAppointments').updateOne({ id }, { $set: { budgetStatus: 'settled', incurredCost, releasedBudget: unused, settledBy: user.email }, $inc: { version: 1 } }, { session })
   } else fail(404, 'Unknown appointment action')
+  if (!['end', 'settle'].includes(action) && !(action === 'clearance' && body.status === 'not_cleared')) await invalidateCandidateRefresh(db, session, { applicantId: appointment.applicantId })
   await event(db, session, user, `Appointment${action[0]!.toUpperCase() + action.slice(1)}`, id)
   return { appointment: appointmentDto(await db.collection('staffingAppointments').findOne({ id }, { session }), user) }
 }
@@ -214,6 +220,7 @@ export async function withdrawApplication(db: Db, session: ClientSession, user: 
   const appointment = await db.collection('staffingAppointments').findOne({ applicationId: id, status: { $nin: terminalAppointments } }, { session })
   if (appointment?.acceptedAt) fail(409, 'An accepted appointment must be ended through its appointment lifecycle')
   if (appointment) await releaseCommitments(db, session, appointment, 'cancelled', 'Applicant withdrew before accepting')
+  else await invalidateCandidateRefresh(db, session, { opportunityId: opportunity.id })
   await db.collection('staffingApplications').updateOne({ id }, { $set: { status: 'withdrawn', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
   await event(db, session, user, 'ApplicationWithdrawn', id)
   return { application: applicationDto((await db.collection('staffingApplications').findOne({ id }, { session }))!, true) }

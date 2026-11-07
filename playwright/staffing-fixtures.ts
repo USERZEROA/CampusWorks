@@ -96,7 +96,7 @@ export const test = base.extend<{ space: StaffingSpace }>({
         try {
           const applications = await db.collection('staffingApplications').find({ opportunityId: { $in: opportunityIds } }).toArray();
           const applicationIds = applications.map(record => record.id);
-          for (const collection of ['staffingApplications', 'staffingDocuments', 'staffingOffers', 'staffingAppointments', 'staffingAllocations', 'staffingAiTasks']) await db.collection(collection).deleteMany({ opportunityId: { $in: opportunityIds } });
+          for (const collection of ['staffingApplications', 'staffingDocuments', 'staffingOffers', 'staffingAppointments', 'staffingAllocations', 'staffingAiTasks', 'staffingAiSubscriptions', 'staffingAiRefreshJobs', 'staffingAiResultCache']) await db.collection(collection).deleteMany({ opportunityId: { $in: opportunityIds } });
           await db.collection('staffingOpportunities').deleteMany({ id: { $in: opportunityIds } });
           await db.collection('staffingCommands').deleteMany({ applicationId: { $in: applicationIds } });
           await db.collection('researchProjects').deleteMany({ id: { $in: projectIds } });
