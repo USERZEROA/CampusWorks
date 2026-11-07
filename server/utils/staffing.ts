@@ -112,6 +112,7 @@ export function appointmentDto(appointment: Document | null | undefined, user: S
   if (!appointment) return null
   const dto = publicRecord(appointment)!
   if (!isGlobalAdmin(user) && appointment.applicantId !== actorId(user)) {
+    if (appointment.status === 'not_cleared') dto.endReason = 'Administrative clearance was not granted'
     delete dto.clearanceReason
     delete dto.clearedBy
     delete dto.administrative

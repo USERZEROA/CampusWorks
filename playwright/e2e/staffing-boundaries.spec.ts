@@ -53,6 +53,29 @@ test('ordinary review lists do not disclose restricted clearance reasons', async
   expect(JSON.stringify(owner)).toContain(reason);
 });
 
+test('clearance rejection keeps its reason private and reports the final clearance state consistently', async ({ space }) => {
+  const posting = await space.opportunity();
+  const application = await space.application(posting);
+  const chosen = await space.select(application);
+  await ok(space.student.api.post(`/api/staffing/offers/${chosen.offer.id}/accept`, { data: {} }));
+  const reason = 'RESTRICTED-SYNTHETIC-CLEARANCE-REJECTION';
+  const rejected = await json(space.admin.api.post(`/api/staffing/appointments/${chosen.appointment.id}/clearance`, { data: { status: 'not_cleared', reason } }));
+  expect(rejected.appointment).toMatchObject({ status: 'not_cleared', clearance: 'not_cleared', clearanceReason: reason, clearedBy: space.admin.email, endReason: 'Administrative clearance was not granted' });
+  for (const path of [`/api/staffing/opportunities/${posting.id}`, `/api/staffing/applications/${application.id}`, '/api/staffing/overview']) {
+    expect(JSON.stringify(await json(space.instructor.api.get(path)))).not.toContain(reason);
+  }
+  const owner = await json(space.student.api.get(`/api/staffing/applications/${application.id}`));
+  expect(JSON.stringify(owner)).toContain(reason);
+  const { client, db } = await database();
+  try {
+    // Older records with a private rejection in endReason receive the same redaction.
+    await db.collection('staffingAppointments').updateOne({ id: chosen.appointment.id }, { $set: { endReason: reason } });
+    const legacy = await json(space.instructor.api.get(`/api/staffing/opportunities/${posting.id}`));
+    expect(JSON.stringify(legacy)).not.toContain(reason);
+    expect(legacy.appointments[0].endReason).toBe('Administrative clearance was not granted');
+  } finally { await client.close(); }
+});
+
 test('workload commands are idempotent, bounds checked and reflected in complete term aggregates', async ({ space }) => {
   const posting = await space.opportunity();
   const application = await space.application(posting);

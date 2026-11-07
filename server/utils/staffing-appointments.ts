@@ -172,7 +172,10 @@ export async function appointmentAction(db: Db, session: ClientSession, user: St
     if (!appointment.acceptedAt || !['pending_clearance', 'pending_start'].includes(appointment.status)) fail(409, 'A candidate must accept the offer before clearance')
     if (appointment.endDate <= new Date()) fail(409, 'The appointment dates have ended')
     if (status === 'cleared' && await commitmentUnavailable(db, appointment.applicantId, appointment.termId, appointment.startDate, appointment.endDate, session, appointment.id)) fail(409, 'Another appointment conflicts with these dates')
-    if (status === 'not_cleared') await releaseCommitments(db, session, appointment, 'not_cleared', reason || 'Administrative clearance was not granted')
+    if (status === 'not_cleared') {
+      await releaseCommitments(db, session, appointment, 'not_cleared', 'Administrative clearance was not granted')
+      await db.collection('staffingAppointments').updateOne({ id }, { $set: { clearance: 'not_cleared', clearanceReason: reason, clearedBy: user.email } }, { session })
+    }
     else {
       const state = status === 'cleared' ? appointment.startDate <= new Date() ? 'active' : 'pending_start' : 'pending_clearance'
       await db.collection('staffingAppointments').updateOne({ id }, { $set: { clearance: status, clearanceReason: reason, clearedBy: user.email, status: state, ...(state === 'active' ? { activatedAt: new Date() } : {}) }, $inc: { version: 1 } }, { session })
