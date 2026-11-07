@@ -10,9 +10,9 @@ function definitions(path, names) {
   return source.statements.filter(node => (ts.isFunctionDeclaration(node) && names.includes(node.name?.text)) || (ts.isVariableStatement(node) && node.declarationList.declarations.some(declaration => names.includes(declaration.name.getText(source)))))
     .map(node => node.getText(source).replace(/^export\s+/, '')).join('\n');
 }
-const source = [definitions('server/utils/staffing.ts', ['fail', 'text', 'object', 'publicRecord']), definitions('server/utils/ai.ts', ['aiKinds', 'aiOutputTokenLimit', 'preparedAiInput', 'createAiTask'])].join('\n');
+const source = [definitions('server/utils/staffing.ts', ['fail', 'text', 'object', 'publicRecord']), definitions('server/utils/ai.ts', ['aiKinds', 'taskDirections', 'aiOutputTokenLimit', 'safeAiFailureCategory', 'preparedAiInput', 'createAiTask'])].join('\n');
 const javascript = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
-const build = (dependencies = {}) => new Function('createHash', 'createError', ...Object.keys(dependencies), `${javascript}\nreturn { preparedAiInput, createAiTask, aiOutputTokenLimit };`)(createHash, createError, ...Object.values(dependencies));
+const build = (dependencies = {}) => new Function('createHash', 'createError', ...Object.keys(dependencies), `${javascript}\nreturn { preparedAiInput, createAiTask, aiOutputTokenLimit, safeAiFailureCategory };`)(createHash, createError, ...Object.values(dependencies));
 const actual = build();
 const bytes = value => Buffer.byteLength(JSON.stringify(value), 'utf8');
 test('automatic output reservations fit each advisory task while manual limits remain compatible', () => {
@@ -21,6 +21,15 @@ test('automatic output reservations fit each advisory task while manual limits r
   assert.equal(actual.aiOutputTokenLimit('opportunity_draft', true), 1200);
   assert.equal(actual.aiOutputTokenLimit('term_review', true), 1800);
   for (const kind of ['candidate_fit', 'cv_summary', 'opportunity_draft', 'term_review']) assert.equal(actual.aiOutputTokenLimit(kind, false), 2500);
+});
+test('AI failure diagnostics retain only allowlisted categories and exclude provider or applicant text', () => {
+  for (const category of ['output_limit', 'invalid_json', 'summary_references', 'cross_candidate_reference', 'candidate_coverage']) {
+    const error = category === 'invalid_json' ? new SyntaxError('Private response content') : Object.assign(new Error('Private response content'), { aiFailureCategory: category });
+    assert.equal(actual.safeAiFailureCategory(error), category);
+  }
+  assert.equal(actual.safeAiFailureCategory(Object.assign(new Error('Private applicant content'), { aiFailureCategory: 'Private provider content' })), 'provider_or_validation');
+  assert.equal(actual.safeAiFailureCategory(Object.assign(new Error('Private provider content'), { name: 'AbortError' })), 'timeout_or_abort');
+  assert.equal(actual.safeAiFailureCategory({ quotaCode: 'daily', message: 'Private provider content' }), 'budget');
 });
 function fixture(long = false) {
   const targetIds = Array.from({ length: 10 }, (_, index) => `00000000-0000-4000-8000-${String(index).padStart(12, '0')}`);
@@ -113,4 +122,27 @@ test('structural overload stays complete and is refused before any budget reserv
   assert.equal(result.task.failureCode, 'input_budget');
   assert.equal(reservations, 0);
   assert.equal(calls, 0);
+});
+
+test('a provider output-limit response is rejected without retaining its content and releases its capacity lease', async () => {
+  const input = fixture();
+  let task, requests = 0, released = 0;
+  const database = { collection: () => ({
+    insertOne: async value => { task = structuredClone(value); },
+    updateOne: async (_query, update) => { if (update.$set) Object.assign(task, update.$set); if (update.$pull) released++; },
+    findOne: async () => task,
+  }) };
+  const runtime = build({
+    taskInput: async () => input, actorId: actor => actor.id, uid: () => 'synthetic-task', aiStatus: () => ({ configured: true }),
+    reserveAiBudget: async () => 'concurrency', confirmAiLease: async () => {},
+    fetch: async () => { requests++; return new Response(JSON.stringify({ choices: [{ finish_reason: 'length', message: { content: 'Private model text that must not be stored.' } }] })); },
+    process: { env: { AI_BASE_URL: 'http://127.0.0.1:1/v1', AI_API_KEY: 'synthetic-unused-key', AI_MODEL: 'synthetic-unused-model' } },
+  });
+  const result = await runtime.createAiTask(database, { id: 'synthetic-faculty', email: 'faculty@example.com' }, { kind: 'candidate_fit', targetId: 'synthetic-position', pageSize: 10 });
+  assert.equal(result.task.status, 'failed');
+  assert.equal(result.task.failureCategory, 'output_limit');
+  assert.equal(result.task.failureCode, 'provider_or_validation');
+  assert.equal(JSON.stringify(result).includes('Private model text'), false);
+  assert.equal(requests, 1);
+  assert.equal(released, 1);
 });

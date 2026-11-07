@@ -10,8 +10,17 @@ function aiOutputTokenLimit(kind: AiKind, automatic: boolean) {
   if (!automatic) return 2500
   return { candidate_fit: 2500, cv_summary: 900, opportunity_draft: 1200, term_review: 1800 }[kind]
 }
+function safeAiFailureCategory(error: unknown) {
+  const category = (error as any)?.aiFailureCategory
+  if (['output_limit', 'response_shape', 'response_size', 'provider_http', 'summary_references', 'item_references', 'unauthorized_target', 'missing_candidate_reference', 'cross_candidate_reference', 'candidate_coverage', 'result_shape'].includes(category)) return category as string
+  if (error instanceof SyntaxError) return 'invalid_json'
+  if (error instanceof Error && ['AbortError', 'TimeoutError'].includes(error.name)) return 'timeout_or_abort'
+  if ((error as any)?.quotaCode) return 'budget'
+  if ((error as any)?.aiFailureCode === 'input_budget') return 'input_budget'
+  return 'provider_or_validation'
+}
 const taskDirections: Record<AiKind, string> = {
-  candidate_fit: 'Compare only the supplied eligible candidate page against the stated requirements. Return exactly one item for every supplied target ID, without duplicates or omissions. Explain demonstrated strengths and missing evidence for each candidate; do not imply an overall ranking beyond this page.',
+  candidate_fit: 'Compare only the supplied eligible candidate page against the stated requirements. Return exactly one item for every supplied target ID in its supplied order, without duplicates or omissions. Keep the summary within 25 words about this page, citing 1–2 scope or requirement references. For each candidate use at most 24 words for one demonstrated strength and one uncertainty, with 1–2 exact evidence references. At least one item reference must start with app:<that exact targetId>:; never cite another applicant in that item. Do not repeat evidence values or identifiers in prose. Use at most one caution of 20 words. Do not imply an overall ranking beyond this page.',
   cv_summary: 'Summarize the applicant qualification profile, qualification text and screening answers. Identify relevant experience and unanswered qualification questions. No PDF contents have been extracted.',
   opportunity_draft: 'Suggest concise, usable requirement wording and qualification-focused screening questions for this TA or RA position. Treat suggestions as proposed wording rather than established facts. Do not suggest questions about protected or administrative characteristics.',
   term_review: 'Suggest evidence-linked course improvements, workload follow-up questions and conditional staffing or budget scenarios. Explicitly preserve missing-data limitations; recorded demand alone cannot establish the required headcount or justify a budget cut.'
@@ -310,24 +319,38 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
           { role: 'user', content: JSON.stringify({ kind, evidence: input.evidence, targetIds: input.targetIds }) }
         ] })
       })
-      if (!response.ok) throw new Error(`AI provider returned HTTP ${response.status}`)
+      if (!response.ok) throw Object.assign(new Error('AI provider request failed'), { aiFailureCategory: 'provider_http' })
       const reader = response.body?.getReader()
-      if (!reader) throw new Error('AI provider returned an empty response')
+      if (!reader) throw Object.assign(new Error('AI provider returned an empty response'), { aiFailureCategory: 'response_shape' })
       const chunks: Uint8Array[] = []
       let size = 0
       for (;;) {
         const chunk = await reader.read()
         if (chunk.done) break
         size += chunk.value.byteLength
-        if (size > 100000) { await reader.cancel(); throw new Error('AI provider response exceeds the supported size') }
+        if (size > 100000) { await reader.cancel(); throw Object.assign(new Error('AI provider response exceeds the supported size'), { aiFailureCategory: 'response_size' }) }
         chunks.push(chunk.value)
       }
       encoded = Buffer.concat(chunks).toString('utf8')
     } finally { clearTimeout(timeout) }
     const envelope = JSON.parse(encoded)
+    if (envelope.choices?.[0]?.finish_reason === 'length') throw Object.assign(new Error('AI output reached its bounded output limit'), { aiFailureCategory: 'output_limit' })
     const content = envelope.choices?.[0]?.message?.content
-    if (typeof content !== 'string' || content.length > 50000) throw new Error('AI provider response has no bounded JSON content')
-    const result = validatedResult(JSON.parse(content), input.evidence, input.targetIds, kind)
+    if (typeof content !== 'string' || content.length > 50000) throw Object.assign(new Error('AI provider response has no bounded JSON content'), { aiFailureCategory: 'response_shape' })
+    const parsed = JSON.parse(content)
+    let result: ReturnType<typeof validatedResult>
+    try { result = validatedResult(parsed, input.evidence, input.targetIds, kind) }
+    catch (error) {
+      const categories: Record<string, string> = {
+        'Summary must cite supplied evidence references': 'summary_references',
+        'Item must cite supplied evidence references': 'item_references',
+        'AI output contains an unauthorized target': 'unauthorized_target',
+        'Candidate explanation must cite that applicant': 'missing_candidate_reference',
+        'Candidate explanation cites another applicant': 'cross_candidate_reference',
+        'Candidate comparison must cover each supplied target exactly once': 'candidate_coverage'
+      }
+      throw Object.assign(new Error('AI result did not match its required contract'), { aiFailureCategory: categories[error instanceof Error ? error.message : ''] || 'result_shape' })
+    }
     if ('omittedQuestions' in input.coverage && input.coverage.omittedQuestions) result.cautions.push('Unclassified or administrative screening questions were omitted from this analysis.')
     if ('evidenceExcerpt' in input.coverage && input.coverage.evidenceExcerpt) result.cautions.push('Long qualification text was excerpted; review the complete application before deciding. All candidates remain included.')
     // Recheck both authorization and input versions after the external call.
@@ -341,7 +364,7 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
   } catch (error) {
     // Provider messages are deliberately excluded: they may echo credentials or private text.
     const message = (error as any)?.aiFailureCode === 'input_budget' ? 'Evidence exceeds the automatic input budget; processing resumes when the evidence changes.' : (error as any)?.statusCode === 429 ? 'AI is waiting for request, concurrency, or token budget capacity.' : error instanceof Error && ['AbortError', 'TimeoutError'].includes(error.name) ? 'AI is waiting to retry after a provider timeout.' : 'AI guidance is temporarily unavailable; automatic processing will retry.'
-    await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: 'failed', message, failureCode: (error as any)?.aiFailureCode || ((error as any)?.quotaCode ? `quota_${(error as any).quotaCode}` : 'provider_or_validation'), completedAt: new Date() } })
+    await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: 'failed', message, failureCode: (error as any)?.aiFailureCode || ((error as any)?.quotaCode ? `quota_${(error as any).quotaCode}` : 'provider_or_validation'), failureCategory: safeAiFailureCategory(error), completedAt: new Date() } })
   } finally {
     if (budgetLease) await db.collection<any>('staffingAiBudgets').updateOne({ _id: budgetLease }, { $pull: { leases: { taskId: task.id } } } as any)
   }
