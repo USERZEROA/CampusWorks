@@ -56,7 +56,7 @@ export default defineEventHandler(async (event) => {
     const tokenRes = await $fetch<{ access_token?: string }>(
       `${config.gitlab.baseUrl}/oauth/token`,
       {
-        method: 'POST',
+        method: 'POST', timeout: 10000, retry: 0,
         body: new URLSearchParams({
           client_id: config.gitlab.clientId,
           client_secret: config.gitlab.clientSecret,
@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
   let gitlabUser: GitlabUser
   try {
     gitlabUser = await $fetch<GitlabUser>(`${config.gitlab.baseUrl}/api/v4/user`, {
-      headers: { Authorization: `Bearer ${accessToken}` }
+      headers: { Authorization: `Bearer ${accessToken}` }, timeout: 10000, retry: 0
     })
   } catch {
     throw createError({ statusCode: 502, statusMessage: 'Failed to fetch GitLab user profile' })

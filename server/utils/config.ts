@@ -5,7 +5,6 @@ export type ServerConfig = {
   mongodbUri: string; mongodbDb: string; sessionSecret: string
   mockLoginEnabled: boolean; seedDemoData: boolean; adminEmails: string[]; allowedEmailDomains: string[]
   publicOrigin: string; trustProxy: boolean; maxBodyBytes: number; apiRateLimit: number; loginRateLimit: number
-  historyRetentionDays: number
   gitlab: { baseUrl: string; clientId: string; clientSecret: string }
 }
 const toList = (value = '') => value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean)
@@ -35,7 +34,7 @@ export function getServerConfig(): ServerConfig {
   }
   if (gitlab.baseUrl) {
     const url = new URL(gitlab.baseUrl)
-    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || (production && url.protocol !== 'https:' && !['localhost', '127.0.0.1', '[::1]'].includes(url.hostname))) throw new Error('GITLAB_BASE_URL must use a trusted HTTPS provider in production')
+    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash || (production && url.protocol !== 'https:' && !['localhost', '127.0.0.1', '[::1]'].includes(url.hostname))) throw new Error('GITLAB_BASE_URL must use a trusted HTTPS provider in production')
   }
   if (production && gitlab.clientId && gitlab.clientSecret && !publicOrigin) throw new Error('PUBLIC_ORIGIN is required for production OAuth')
   cached = {
@@ -46,7 +45,7 @@ export function getServerConfig(): ServerConfig {
     maxBodyBytes: integer(env.MAX_BODY_BYTES, 12 * 1024 * 1024, 1024, 32 * 1024 * 1024),
     apiRateLimit: integer(env.API_RATE_LIMIT, 1800, 10, 100_000),
     loginRateLimit: integer(env.LOGIN_RATE_LIMIT, 300, 5, 10_000),
-    historyRetentionDays: integer(env.HISTORY_RETENTION_DAYS, 0, 0, 3650), gitlab
+    gitlab
   }
   return cached
 }
