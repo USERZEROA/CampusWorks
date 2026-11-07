@@ -70,7 +70,9 @@ export async function courseReview(db: Db, user: StaffingActor, courseId: string
   const opportunities = await db.collection('staffingOpportunities').find(opportunityFilter, { session }).sort({ createdAt: -1, id: 1 }).skip(offset).limit(100).toArray()
   const waitStats = await db.collection('helpSessions').aggregate([{ $match: waitFilter }, { $group: { _id: null, count: { $sum: 1 }, average: { $avg: '$waitMinutes' } } }], { session }).next()
   const percentile = waitStats?.count ? await db.collection('helpSessions').find(waitFilter, { session }).sort({ waitMinutes: 1, _id: 1 }).skip(Math.ceil(waitStats.count * .9) - 1).limit(1).next() : null
-  const byKind = Object.fromEntries(workloadGroups.map(row => [row._id, row.hours]))
+  // Aggregation groups have no natural order. Stable keys keep unchanged
+  // course evidence from triggering another automatic model request.
+  const byKind = Object.fromEntries(workloadGroups.sort((a, b) => String(a._id).localeCompare(String(b._id))).map(row => [row._id, row.hours]))
   const scenarios = opportunities.flatMap(o => [o.positions - 1, o.positions, o.positions + 1].filter(n => n >= 0).map(positions => ({ opportunityId: o.id, positions, weeklyHours: o.weeklyHours, weeks: o.weeks, hourlyRate: o.hourlyRate, estimatedCost: Math.round(positions * o.appointmentCost * 100) / 100, budgetCovered: positions * o.appointmentCost <= o.budget, coverageValidated: false })))
   return {
     course: { id: course.id, code: course.code, title: course.title }, termId: termId || null, currentCycle,
