@@ -13,10 +13,10 @@ export default defineEventHandler(event => withCourseTransaction(event, async (a
   if (body.paused) {
     if (!entry.paused) {
       await releaseEntry(access.db, entry, session, false, now)
-      await coll.updateOne({ _id }, { $set: { paused: true, pauseStartedAt: now } }, { session })
+      await coll.updateOne({ _id }, { $set: { paused: true, pauseStartedAt: now }, $inc: { revision: 1 } }, { session })
     }
   } else {
-    await coll.updateOne({ _id }, { $set: resumedPauseFields(entry, now), $unset: { pauseStartedAt: '' } }, { session })
+    await coll.updateOne({ _id }, { $set: resumedPauseFields(entry, now), $unset: { pauseStartedAt: '' }, $inc: { revision: 1 } }, { session })
   }
   return { ok: true }
 }))

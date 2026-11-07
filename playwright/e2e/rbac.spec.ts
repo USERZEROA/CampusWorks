@@ -63,8 +63,8 @@ test.describe('role-based access control (API)', () => {
   });
 
   test('students only see their own email in the queue and only edit their own entry', async () => {
-    expect((await student.post(`/api/courses/${code}/queue/join`, { data: { location: 'A' } })).status()).toBe(200);
-    expect((await other.post(`/api/courses/${code}/queue/join`, { data: { location: 'B' } })).status()).toBe(200);
+    expect((await student.post(`/api/courses/${code}/queue/join`, { data: { action: 'join', location: 'A' } })).status()).toBe(200);
+    expect((await other.post(`/api/courses/${code}/queue/join`, { data: { action: 'join', location: 'B' } })).status()).toBe(200);
 
     const view = await (await student.get(`/api/courses/${code}`)).json();
     const mine = view.queue.find((e: any) => e.isMine);
@@ -92,7 +92,7 @@ test.describe('role-based access control (API)', () => {
     expect(view.queue).toEqual([]);
     expect(view.queueLength).toBeGreaterThan(0);
 
-    expect((await outsider.post(`/api/courses/${code}/queue/join`, { data: { location: 'X' } })).status()).toBe(403);
+    expect((await outsider.post(`/api/courses/${code}/queue/join`, { data: { action: 'join', location: 'X' } })).status()).toBe(403);
     const feedback = await outsider.post(`/api/courses/${code}/feedback`, {
       data: { category: 'queue', rating: 5, positive: 'a', negative: 'b' },
     });
@@ -143,7 +143,7 @@ test.describe('role-based access control (API)', () => {
   test('input validation rejects malformed requests', async () => {
     expect((await ta.post(`/api/courses/${code}/queue/move`, { data: { entryId: 'nope', direction: 'up' } })).status()).toBe(400);
     expect((await ta.patch(`/api/courses/${code}/state`, { data: { state: 'party' } })).status()).toBe(400);
-    expect((await student.post(`/api/courses/${code}/queue/join`, { data: { location: '' } })).status()).toBe(400);
+    expect((await student.post(`/api/courses/${code}/queue/join`, { data: { action: 'join', location: '' } })).status()).toBe(400);
     expect(
       (await student.post(`/api/courses/${code}/feedback`, { data: { category: 'queue', rating: 9, positive: 'a', negative: 'b' } })).status()
     ).toBe(400);

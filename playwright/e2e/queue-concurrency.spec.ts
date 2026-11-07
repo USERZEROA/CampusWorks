@@ -14,7 +14,7 @@ test('joins and queue closure serialize across two application instances', async
   for (let round = 0; round < 6; round++) {
     await ok(space.admin.api.patch(`${path}/state`, { data: { state: 'open' } }));
     const attempts = await Promise.all([
-      ...students.map((student, index) => student.api.post(`${path}/queue/join`, { data: { location: `Room ${index}` } })),
+      ...students.map((student, index) => student.api.post(`${path}/queue/join`, { data: { action: 'join', location: `Room ${index}` } })),
       secondary.patch(`${path}/state`, { data: { state: 'closed' } }),
     ]);
     for (const response of attempts) expect([200, 409]).toContain(response.status());
@@ -31,7 +31,7 @@ test('concurrent claims, joins, duty toggles and moves retain queue invariants',
   await ok(ta.api.patch(`${path}/state`, { data: { state: 'open' } }));
   const students = await Promise.all(Array.from({ length: 10 }, (_, i) => space.actor(`parallel-${i}`)));
   for (const student of students) await enroll(space.admin, space.code, student);
-  await Promise.all(students.flatMap((student, index) => Array.from({ length: 2 }, () => ok(student.api.post(`${path}/queue/join`, { data: { location: `Room ${index}` } })))));
+  await Promise.all(students.flatMap((student, index) => Array.from({ length: 2 }, () => ok(student.api.post(`${path}/queue/join`, { data: { action: 'join', location: `Room ${index}` } })))));
   await Promise.all(Array.from({ length: 8 }, (_, i) => ok((i % 2 ? replica : ta.api).post(`${path}/ta-duty`, { data: { onDuty: true } }))));
   let view = await json(ta.api.get(path));
   expect(view.queue).toHaveLength(students.length);
@@ -53,18 +53,19 @@ test('an interrupted history insert rolls back removal and a retry archives exac
   await enroll(space.admin, space.code, space.student);
   await ok(space.admin.api.patch(`${path}/state`, { data: { state: 'open' } }));
   await ok(space.admin.api.post(`${path}/ta-duty`, { data: { onDuty: true } }));
-  await ok(space.student.api.post(`${path}/queue/join`, { data: { location: 'Fault test' } }));
-  const entry = (await json(space.admin.api.get(path))).queue[0];
+  await ok(space.student.api.post(`${path}/queue/join`, { data: { action: 'join', location: 'Fault test' } }));
+  let entry = (await json(space.admin.api.get(path))).queue[0];
   await ok(space.admin.api.post(`${path}/queue/assign`, { data: { entryId: entry.id, assign: true } }));
+  entry = (await json(space.admin.api.get(path))).queue[0];
   const { client, db } = await database();
   try {
     await client.db('admin').command({ configureFailPoint: 'failCommand', mode: { times: 1 }, data: { failCommands: ['insert'], errorCode: 2 } });
-    const interrupted = await space.admin.api.post(`${path}/queue/remove`, { data: { entryId: entry.id } });
+    const interrupted = await space.admin.api.post(`${path}/queue/remove`, { data: { action: 'complete', expectedRevision: entry.revision, entryId: entry.id } });
     expect(interrupted.status()).toBeGreaterThanOrEqual(500);
     expect(await db.collection('queueEntries').countDocuments({ courseId: space.code })).toBe(1);
     expect(await db.collection('helpSessions').countDocuments({ courseId: space.code })).toBe(0);
-    await ok(space.admin.api.post(`${path}/queue/remove`, { data: { entryId: entry.id } }));
-    const replay = await json(space.admin.api.post(`${path}/queue/remove`, { data: { entryId: entry.id } }));
+    await ok(space.admin.api.post(`${path}/queue/remove`, { data: { action: 'complete', expectedRevision: entry.revision, entryId: entry.id } }));
+    const replay = await json(space.admin.api.post(`${path}/queue/remove`, { data: { action: 'complete', expectedRevision: entry.revision, entryId: entry.id } }));
     expect(replay.removed).toBe(false);
     expect(await db.collection('queueEntries').countDocuments({ courseId: space.code })).toBe(0);
     expect(await db.collection('helpSessions').countDocuments({ courseId: space.code })).toBe(1);
@@ -81,7 +82,7 @@ test('help intervals exclude paused gaps and preserve both helpers after handoff
   await enroll(space.admin, space.code, space.student);
   await ok(space.admin.api.patch(`${path}/state`, { data: { state: 'open' } }));
   for (const actor of [space.admin, ta]) await ok(actor.api.post(`${path}/ta-duty`, { data: { onDuty: true } }));
-  await ok(space.student.api.post(`${path}/queue/join`, { data: { location: 'Intervals' } }));
+  await ok(space.student.api.post(`${path}/queue/join`, { data: { action: 'join', location: 'Intervals' } }));
   const entry = (await json(space.admin.api.get(path))).queue[0];
   await ok(space.admin.api.post(`${path}/queue/assign`, { data: { entryId: entry.id, assign: true } }));
   await delay(40);
@@ -90,7 +91,8 @@ test('help intervals exclude paused gaps and preserve both helpers after handoff
   await ok(space.student.api.post(`${path}/queue/pause`, { data: { entryId: entry.id, paused: false } }));
   await ok(ta.api.post(`${path}/queue/assign`, { data: { entryId: entry.id, assign: true } }));
   await delay(40);
-  await ok(ta.api.post(`${path}/queue/remove`, { data: { entryId: entry.id } }));
+  const completing = (await json(ta.api.get(path))).queue[0];
+  await ok(ta.api.post(`${path}/queue/remove`, { data: { action: 'complete', expectedRevision: completing.revision, entryId: entry.id } }));
   const history = (await json(space.admin.api.get(`${path}/admin`))).helpSessions[0];
   expect(history.helpSegments).toHaveLength(2);
   expect(history.helpSegments.map((segment: any) => segment.taEmail)).toEqual([space.admin.email, ta.email]);
@@ -105,7 +107,7 @@ test('staff authority is enforced on duty and revoked while claims race with dem
   await enroll(space.admin, space.code, ta, 'ta');
   await enroll(space.admin, space.code, space.student);
   await ok(space.admin.api.patch(`${path}/state`, { data: { state: 'open' } }));
-  await ok(space.student.api.post(`${path}/queue/join`, { data: { location: 'Revocation' } }));
+  await ok(space.student.api.post(`${path}/queue/join`, { data: { action: 'join', location: 'Revocation' } }));
   const entry = (await json(space.admin.api.get(path))).queue[0];
   expect((await ta.api.post(`${path}/queue/assign`, { data: { entryId: entry.id, assign: true } })).status()).toBe(403);
   await ok(ta.api.post(`${path}/ta-duty`, { data: { onDuty: true } }));
@@ -160,21 +162,27 @@ test('API rate limits are shared across application instances', async ({ space }
   }
 });
 
-test('readiness rejects a missing allocation constraint on every application instance', async ({ space }) => {
+test('readiness rejects missing allocation, command, notification and restriction constraints on every instance', async ({ space }) => {
   const replica = await space.secondary(space.admin);
   const { client, db } = await database();
-  const collection = db.collection('staffingAllocations');
-  const index = (await collection.listIndexes().toArray()).find(item => item.unique && item.key.termId === 1 && item.key.applicantId === 1)!;
-  expect(index?.name).toBeTruthy();
   try {
-    await collection.dropIndex(index.name!);
-    for (const api of [space.admin.api, replica]) {
-      const response = await api.get('/api/health');
-      expect(response.status()).toBe(503);
-      expect((await response.json()).indexes).toBe('unavailable');
+    for (const name of ['staffingAllocations', 'staffingCommands', 'staffingNotifications', 'courseRestrictions']) {
+      const collection = db.collection(name);
+      const index = (await collection.listIndexes().toArray()).find(item => item.unique && Object.keys(item.key).length === 2)!;
+      expect(index?.name, name).toBeTruthy();
+      try {
+        await collection.dropIndex(index.name!);
+        for (const api of [space.admin.api, replica]) {
+          const response = await api.get('/api/health');
+          expect(response.status(), name).toBe(503);
+          expect((await response.json()).indexes).toBe('unavailable');
+        }
+      } finally {
+        await collection.createIndex(index.key, { name: index.name, unique: true });
+      }
+      expect((await space.admin.api.get('/api/health')).status(), name).toBe(200);
     }
   } finally {
-    await collection.createIndex(index.key, { name: index.name, unique: true });
     await client.close();
   }
   expect((await space.admin.api.get('/api/health')).status()).toBe(200);

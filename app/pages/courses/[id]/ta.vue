@@ -5,7 +5,7 @@ const navigateWithContext = (target: string, options?: any) =>
   navigationApp.runWithContext(() => navigateTo(target, options));
 const busyActions = ref(false);
 
-import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, watch } from "vue";
 import {
   useRoute,
   useRouter,
@@ -24,6 +24,7 @@ type Announcement = {
 
 type QueueEntry = {
   id: string;
+  revision: number;
   email: string;
   name: string;
   location: string;
@@ -60,7 +61,8 @@ const requestFetch = useRequestFetch();
 
 const { data, error } = await useAsyncData<CourseApiResult>(
   `course-ta-${courseId}`,
-  () => requestFetch<CourseApiResult>(`/api/courses/${courseId}`),
+  (_app, { signal }) => requestFetch<CourseApiResult>(`/api/courses/${courseId}`, { signal }),
+  { dedupe: "defer" },
 );
 
 if (error.value) {
@@ -221,7 +223,7 @@ const assignOrComplete = async (entry: QueueEntry) => {
         // Mark as completed.
         await $fetch(`/api/courses/${courseId}/queue/remove`, {
           method: "POST",
-          body: { entryId: entry.id },
+          body: { entryId: entry.id, action: "complete", expectedRevision: entry.revision },
         });
       } else {
         await $fetch(`/api/courses/${courseId}/queue/assign`, {
@@ -309,7 +311,7 @@ const removeEntry = async (entry: QueueEntry) => {
     try {
       await $fetch(`/api/courses/${courseId}/queue/remove`, {
         method: "POST",
-        body: { entryId: entry.id },
+        body: { entryId: entry.id, action: "remove" },
       });
       await refreshNuxtData(`course-ta-${courseId}`);
     } catch (err: any) {
@@ -408,34 +410,11 @@ const formatAt = (at: string) => {
 /**
  * Poll server for live updates.
  */
-let timer: any = null;
-
-onMounted(() => {
-  timer = setInterval(() => {
-    if (!document.hidden) refreshNuxtData(`course-ta-${courseId}`);
-  }, 3000);
-});
-
-onBeforeUnmount(() => {
-  if (timer) clearInterval(timer);
-});
-
-/**
- * Navigation / auth.
- */
+useIntervalRefresh(() => refreshNuxtData(`course-ta-${courseId}`), 3000);
 const logout = signOut;
-
-const goBack = () => {
-  router.push("/courses");
-};
-
-const goHelp = () => {
-  navigateWithContext("/help");
-};
-
-const goAnalytics = () => {
-  router.push(`/courses/${courseId}/admin`);
-};
+const goBack = () => router.push("/courses");
+const goHelp = () => navigateWithContext("/help");
+const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 </script>
 
 <template>

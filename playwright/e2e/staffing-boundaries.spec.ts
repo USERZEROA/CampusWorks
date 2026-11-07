@@ -136,7 +136,7 @@ test('a TA cannot manufacture a helped session by claiming their own queue entry
   await ok(space.admin.api.patch(`/api/courses/${space.code}/enrollments/role`, { data: { email: space.student.email, role: 'ta' } }));
   await ok(space.student.api.patch(`/api/courses/${space.code}/state`, { data: { state: 'open' } }));
   await ok(space.student.api.post(`/api/courses/${space.code}/ta-duty`, { data: { onDuty: true } }));
-  await ok(space.student.api.post(`/api/courses/${space.code}/queue/join`, { data: { location: 'Own question' } }));
+  await ok(space.student.api.post(`/api/courses/${space.code}/queue/join`, { data: { action: 'join', location: 'Own question' } }));
   const own = (await json(space.student.api.get(`/api/courses/${space.code}`))).queue.find((item: any) => item.isMine);
   expect((await space.student.api.post(`/api/courses/${space.code}/queue/assign`, { data: { entryId: own.id, assign: true } })).status()).toBe(400);
 });

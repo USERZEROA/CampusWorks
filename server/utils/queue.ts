@@ -3,6 +3,11 @@ import { ObjectId } from 'mongodb'
 import { createError } from 'h3'
 
 export type QueueEndReason = 'completed' | 'removed' | 'left' | 'queue-closed' | 'kicked'
+export const queueRevision = (entry: Document) => Number.isSafeInteger(entry.revision) && entry.revision >= 0 ? entry.revision : 0
+export function assertQueueRevision(entry: Document, expected: unknown) {
+  if (!Number.isSafeInteger(expected) || Number(expected) < 0) throw createError({ statusCode: 400, statusMessage: 'expectedRevision required' })
+  if (expected !== queueRevision(entry)) throw createError({ statusCode: 409, statusMessage: 'Queue entry changed; refresh before continuing' })
+}
 export function parseEntryId(value: unknown): ObjectId {
   if (typeof value !== 'string' || !/^[a-fA-F0-9]{24}$/.test(value)) throw createError({ statusCode: 400, statusMessage: 'Invalid entryId' })
   return new ObjectId(value)
@@ -24,7 +29,7 @@ export function completedSegments(entry: Document, now: Date): HelpSegment[] {
 export async function releaseEntry(db: Db, entry: WithId<Document>, session: ClientSession, otherTa = false, now = new Date()) {
   if (!session?.inTransaction()) throw new Error('Queue changes require an active transaction')
   await db.collection('queueEntries').updateOne({ _id: entry._id }, {
-    $set: { helpSegments: completedSegments(entry, now), otherTa },
+    $set: { helpSegments: completedSegments(entry, now), otherTa }, $inc: { revision: 1 },
     $unset: { ta: '', taEmail: '', activeHelpStartAt: '' }
   }, { session })
 }
@@ -73,7 +78,7 @@ export async function archiveAllEntries(db: Db, courseId: string, opts: { reason
 export function toQueueEntryDto(entry: WithId<Document>, viewer: { email: string; isStaff: boolean }) {
   const isMine = entry.studentEmail === viewer.email
   return {
-    id: entry._id.toString(), email: viewer.isStaff || isMine ? entry.studentEmail : '',
+    id: entry._id.toString(), revision: queueRevision(entry), email: viewer.isStaff || isMine ? entry.studentEmail : '',
     name: entry.studentName || '', location: entry.location || '', question: entry.question || '',
     paused: !!entry.paused, ta: entry.ta || '', otherTa: !!entry.otherTa,
     position: typeof entry.position === 'number' ? entry.position : 0, joinedAt: entry.createdAt || null,

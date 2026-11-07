@@ -94,17 +94,17 @@ test('queue edits, ordering, pause, handoff and removal preserve lifecycle invar
   for (const staff of [ta, nextTa]) {
     await successful(staff.api.post(`${endpoint}/ta-duty`, { data: { onDuty: true } }));
   }
-  await successful(first.api.post(`${endpoint}/queue/join`, { data: { location: 'Room A', question: 'First question' } }));
-  await successful(second.api.post(`${endpoint}/queue/join`, { data: { location: 'Room B' } }));
+  await successful(first.api.post(`${endpoint}/queue/join`, { data: { action: 'join', location: 'Room A', question: 'First question' } }));
+  await successful(second.api.post(`${endpoint}/queue/join`, { data: { action: 'join', location: 'Room B' } }));
   const before = await courseView(ta.api, code);
   const firstEntry = before.queue.find((entry: any) => entry.email === first.email);
   const secondEntry = before.queue.find((entry: any) => entry.email === second.email);
   expect(before.queue.map((entry: any) => entry.id)).toEqual([firstEntry.id, secondEntry.id]);
 
   await successful(ta.api.patch(`${endpoint}/state`, { data: { state: 'paused' } }));
-  expect((await newcomer.api.post(`${endpoint}/queue/join`, { data: { location: 'Room C' } })).status()).toBe(409);
+  expect((await newcomer.api.post(`${endpoint}/queue/join`, { data: { action: 'join', location: 'Room C' } })).status()).toBe(409);
   await successful(first.api.post(`${endpoint}/queue/join`, {
-    data: { location: '  Room A revised  ', question: '  Updated question  ' },
+    data: { action: 'edit', entryId: firstEntry.id, location: '  Room A revised  ', question: '  Updated question  ' },
   }));
   const edited = (await courseView(ta.api, code)).queue.find((entry: any) => entry.id === firstEntry.id);
   expect(edited).toMatchObject({
@@ -137,8 +137,8 @@ test('queue edits, ordering, pause, handoff and removal preserve lifecycle invar
 
   // Repeated staff requests cannot archive the same entry twice.
   const completions = await Promise.all([
-    nextTa.api.post(`${endpoint}/queue/remove`, { data: { entryId: firstEntry.id } }),
-    nextTa.api.post(`${endpoint}/queue/remove`, { data: { entryId: firstEntry.id } }),
+    nextTa.api.post(`${endpoint}/queue/remove`, { data: { action: 'complete', expectedRevision: claimed.revision, entryId: firstEntry.id } }),
+    nextTa.api.post(`${endpoint}/queue/remove`, { data: { action: 'complete', expectedRevision: claimed.revision, entryId: firstEntry.id } }),
   ]);
   for (const response of completions) expect(response.status()).toBe(200);
   expect((await Promise.all(completions.map((response) => response.json()))).filter((body) => body.removed)).toHaveLength(1);
@@ -167,13 +167,13 @@ test('course identifiers and current roles bound announcements and staff authori
     await successful(admin.patch(`${path}/state`, { data: { state: 'open' } }));
   }
   await successful(ta.api.post(`${firstPath}/ta-duty`, { data: { onDuty: true } }));
-  await successful(student.api.post(`${firstPath}/queue/join`, { data: { location: 'A' } }));
-  await successful(otherStudent.api.post(`${otherPath}/queue/join`, { data: { location: 'B' } }));
+  await successful(student.api.post(`${firstPath}/queue/join`, { data: { action: 'join', location: 'A' } }));
+  await successful(otherStudent.api.post(`${otherPath}/queue/join`, { data: { action: 'join', location: 'B' } }));
   const otherEntry = (await courseView(admin, otherCode)).queue[0];
   expect((await ta.api.post(`${otherPath}/announcements`, { data: { message: 'Unauthorized' } })).status()).toBe(403);
   expect((await instructor.api.get(`${otherPath}/admin`)).status()).toBe(403);
   expect((await ta.api.post(`${firstPath}/queue/assign`, { data: { entryId: otherEntry.id, assign: true } })).status()).toBe(404);
-  const wrongRemoval = await (await successful(ta.api.post(`${firstPath}/queue/remove`, { data: { entryId: otherEntry.id } }))).json();
+  const wrongRemoval = await (await successful(ta.api.post(`${firstPath}/queue/remove`, { data: { action: 'remove', entryId: otherEntry.id } }))).json();
   expect(wrongRemoval.removed).toBe(false);
   expect((await courseView(admin, otherCode)).queue).toHaveLength(1);
 
@@ -208,7 +208,7 @@ test('all four roles retain usable Duke blue screens at a 390px viewport', async
   const instructor = await space.member('mobile-instructor', 'instructor');
   await successful(space.admin.patch(`/api/courses/${space.code}/state`, { data: { state: 'open' } }));
   await successful(student.api.post(`/api/courses/${space.code}/queue/join`, {
-    data: { location: 'Room 202', question: 'A deliberately long question about recursion and stack frames during office hours.' },
+    data: { action: 'join', location: 'Room 202', question: 'A deliberately long question about recursion and stack frames during office hours.' },
   }));
   const identities = [
     { ...student, path: `/courses/${space.code}/student` },
@@ -284,8 +284,9 @@ test('downloaded history CSV preserves multiline answers and neutralizes formula
   const path = `/api/courses/${space.code}`;
   const question = '@SUM("first",\n"second")';
   await successful(space.admin.patch(`${path}/state`, { data: { state: 'open' } }));
-  await successful(student.api.post(`${path}/queue/join`, { data: { location: '=1+1', question } }));
-  await successful(student.api.post(`${path}/queue/leave`));
+  await successful(student.api.post(`${path}/queue/join`, { data: { action: 'join', location: '=1+1', question } }));
+  const currentEntry = (await courseView(student.api, space.code)).queue.find((entry: any) => entry.isMine);
+  await successful(student.api.post(`${path}/queue/leave`, { data: { entryId: currentEntry.id } }));
   await successful(page.request.post('/api/auth/mock', { data: { as: 'admin', email: space.adminEmail } }));
   await openPage(page, `/courses/${space.code}/admin`);
   const pending = page.waitForEvent('download');
@@ -332,6 +333,8 @@ test('synthetic analytics render an empty range, nearest-rank P90 and a full sin
       wasHelped: true, endReason: 'completed',
     };
   });
+  // Refresh through a user action instead of racing the 15-second polling boundary.
+  await page.getByRole('button', { name: 'Open', exact: true }).click();
   await expect(page.getByTestId('session-row')).toHaveCount(2, { timeout: 15_000 });
   await expect.soft(metric('P90 Wait (min)')).toHaveText('9.0');
   await expect(metric('Avg Wait (min)')).toHaveText('5.0');
@@ -354,7 +357,7 @@ test('desktop navigation and all four workspaces retain their visual contracts',
   const ta = await space.member('desktop-ta', 'ta');
   const instructor = await space.member('desktop-instructor', 'instructor');
   await successful(space.admin.patch(`/api/courses/${space.code}/state`, { data: { state: 'open' } }));
-  await successful(student.api.post(`/api/courses/${space.code}/queue/join`, { data: { location: 'Room 301', question: 'Desktop queue check' } }));
+  await successful(student.api.post(`/api/courses/${space.code}/queue/join`, { data: { action: 'join', location: 'Room 301', question: 'Desktop queue check' } }));
   const identities = [
     { ...student, path: `/courses/${space.code}/student` },
     { ...ta, path: `/courses/${space.code}/ta` },

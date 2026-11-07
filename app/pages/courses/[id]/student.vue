@@ -6,7 +6,7 @@ const navigateWithContext = (target: string, options?: any) =>
 import { vAccessibleDialog } from "../../../directives/accessibleDialog";
 const busyActions = ref(false);
 
-import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, watch } from "vue";
 import {
   useRoute,
   useRouter,
@@ -43,6 +43,7 @@ type CourseApiResult = {
   state: string;
   role?: string | null;
   enrolled: boolean;
+  restricted?: boolean;
   isStaff: boolean;
   user: { email: string; name?: string };
   announcements: Announcement[];
@@ -61,7 +62,8 @@ const requestFetch = useRequestFetch();
 
 const { data, error } = await useAsyncData<CourseApiResult>(
   `course-student-${courseId}`,
-  () => requestFetch<CourseApiResult>(`/api/courses/${courseId}`),
+  (_app, { signal }) => requestFetch<CourseApiResult>(`/api/courses/${courseId}`, { signal }),
+  { dedupe: "defer" },
 );
 
 if (error.value) {
@@ -197,6 +199,7 @@ const enroll = async () => {
  */
 const showJoinModal = ref(false);
 const joinLocation = ref("");
+const editingEntryId = ref<string | null>(null);
 const joinQuestion = ref("");
 
 /**
@@ -282,6 +285,7 @@ const formatAt = (at: string) => {
  * Open join/edit modal with state validation.
  */
 const openJoinModal = () => {
+  editingEntryId.value = myEntry.value?.id || null;
   if (myEntry.value) {
     joinLocation.value = myEntry.value.location || "";
     joinQuestion.value = myEntry.value.question || "";
@@ -328,7 +332,7 @@ const submitJoin = async () => {
     try {
       await $fetch(`/api/courses/${courseId}/queue/join`, {
         method: "POST",
-        body: { location, question },
+        body: { action: editingEntryId.value ? "edit" : "join", entryId: editingEntryId.value || undefined, location, question },
       });
       showJoinModal.value = false;
       await refreshNuxtData(`course-student-${courseId}`);
@@ -351,6 +355,7 @@ const leaveQueue = async () => {
     try {
       await $fetch(`/api/courses/${courseId}/queue/leave`, {
         method: "POST",
+        body: { entryId: myEntry.value.id },
       });
       await refreshNuxtData(`course-student-${courseId}`);
     } catch (e: any) {
@@ -389,17 +394,7 @@ const togglePauseSelf = async () => {
 /**
  * Lightweight polling to keep queue state fresh (skipped in background tabs).
  */
-let timer: any = null;
-
-onMounted(() => {
-  timer = setInterval(() => {
-    if (!document.hidden) refreshNuxtData(`course-student-${courseId}`);
-  }, 2000);
-});
-
-onBeforeUnmount(() => {
-  if (timer) clearInterval(timer);
-});
+useIntervalRefresh(() => refreshNuxtData(`course-student-${courseId}`), 2000);
 
 /**
  * Navigation + auth actions.
@@ -532,7 +527,8 @@ const goHelp = () => {
           <section class="panel">
             <div class="panel-header">Queue Controls</div>
             <div class="panel-body controls-body">
-              <template v-if="!isEnrolled">
+              <p v-if="course.restricted" class="enroll-hint">Course access restricted.</p>
+              <template v-else-if="!isEnrolled">
                 <p class="enroll-hint">
                   You are not enrolled in this course yet. Enroll to join the
                   queue and leave feedback.

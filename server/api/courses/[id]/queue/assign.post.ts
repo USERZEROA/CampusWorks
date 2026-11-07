@@ -20,7 +20,7 @@ export default defineEventHandler(event => withCourseTransaction(event, async (a
     await coll.updateOne({ _id }, { $set: {
       ta: staffLabel(user), taEmail: user.email, otherTa: false, activeHelpStartAt: now,
       ...(!entry.helpStartAt ? { helpStartAt: now } : {})
-    } }, { session })
+    }, $inc: { revision: 1 } }, { session })
   } else {
     if (entry.taEmail !== user.email) throw createError({ statusCode: 403, statusMessage: 'Only the current helper can release or hand off this entry' })
     await releaseEntry(db, entry, session, body.assign === 'other')
