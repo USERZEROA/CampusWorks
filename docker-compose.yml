@@ -1,0 +1,48 @@
+# Local demo stack: MongoDB + CampusWorks with demo accounts and demo data.
+#   docker compose up --build   →   http://localhost:3000
+#
+# Values below are development defaults. Optional overrides (e.g. GITLAB_*)
+# can be put in a `.env` file next to this one; see .env.example.
+services:
+  mongo:
+    image: mongo:7
+    container_name: campusworks-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: campusworks
+      MONGO_INITDB_ROOT_PASSWORD: campusworks-dev
+    ports:
+      # Exposed on localhost only, for tools like MongoDB Compass.
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  campusworks:
+    build: .
+    image: campusworks:latest
+    container_name: campusworks-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      MONGODB_URI: "mongodb://campusworks:campusworks-dev@mongo:27017/?authSource=admin"
+      MONGODB_DB: "campusworks"
+      SESSION_SECRET: "${SESSION_SECRET:-campusworks-compose-demo-secret-change-me-0123456789}"
+      ENABLE_MOCK_LOGIN: "${ENABLE_MOCK_LOGIN:-true}"
+      SEED_DEMO_DATA: "${SEED_DEMO_DATA:-true}"
+      ADMIN_EMAILS: "${ADMIN_EMAILS:-}"
+      ALLOWED_EMAIL_DOMAINS: "${ALLOWED_EMAIL_DOMAINS:-}"
+      GITLAB_BASE_URL: "${GITLAB_BASE_URL:-}"
+      GITLAB_CLIENT_ID: "${GITLAB_CLIENT_ID:-}"
+      GITLAB_CLIENT_SECRET: "${GITLAB_CLIENT_SECRET:-}"
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongo-data:
