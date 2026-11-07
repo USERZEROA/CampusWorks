@@ -669,7 +669,7 @@ const goHelp = () => {
             <div class="panel-header">
               Live Queue
             </div>
-            <div class="panel-body">
+            <div class="panel-body queue-panel">
               <table class="queue-table">
                 <thead>
                   <tr>
