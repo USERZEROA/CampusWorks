@@ -56,12 +56,15 @@ export async function reconcileStaffing(db: Db, session: ClientSession, resource
       await releaseCommitments(db, session, appointment, 'ended', 'Appointment end date reached')
       await db.collection('staffingEvents').insertOne({ id: uid(), actorId: 'system', actorEmail: '', kind: 'AppointmentEnded', targetId: appointment.id, details: {}, createdAt: new Date(), delivery: 'pending' }, { session })
     } else if (appointment.status === 'pending_start' && appointment.startDate <= new Date() && appointment.clearance === 'cleared' && appointment.acceptedAt) {
-      if (!await db.collection('users').findOne({ id: appointment.applicantId, disabledAt: null }, { session, projection: { _id: 1 } })) {
-        await db.collection('staffingAppointments').updateOne({ id: appointment.id, status: 'pending_start' }, { $set: { status: 'suspended', suspensionReason: 'Candidate account disabled before the appointment started' }, $inc: { version: 1 } }, { session })
+      const accountActive = !!await db.collection('users').findOne({ id: appointment.applicantId, disabledAt: null }, { session, projection: { _id: 1 } })
+      const restricted = appointment.type === 'ta' && !!await db.collection('courseRestrictions').findOne({ courseId: appointment.courseId, userEmail: appointment.applicantEmail }, { session, projection: { _id: 1 } })
+      if (!accountActive || restricted) {
+        const suspensionReason = restricted ? 'Course access restricted before the appointment started' : 'Candidate account disabled before the appointment started'
+        await db.collection('staffingAppointments').updateOne({ id: appointment.id, status: 'pending_start' }, { $set: { status: 'suspended', suspensionReason }, $inc: { version: 1 } }, { session })
         await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: 'suspended' }, $inc: { version: 1 } }, { session })
         await releaseAppointmentAuthority(db, session, appointment)
         await invalidateCandidateRefresh(db, session, { applicantId: appointment.applicantId })
-        await db.collection('staffingEvents').insertOne({ id: uid(), actorId: 'system', actorEmail: '', kind: 'AppointmentSuspend', targetId: appointment.id, details: { reason: 'Candidate account disabled before appointment start' }, createdAt: new Date(), delivery: 'pending' }, { session })
+        await db.collection('staffingEvents').insertOne({ id: uid(), actorId: 'system', actorEmail: '', kind: 'AppointmentSuspend', targetId: appointment.id, details: { reason: suspensionReason }, createdAt: new Date(), delivery: 'pending' }, { session })
         continue
       }
       await db.collection('staffingAppointments').updateOne({ id: appointment.id, status: 'pending_start' }, { $set: { status: 'active', activatedAt: new Date() }, $inc: { version: 1 } }, { session })
@@ -106,6 +109,7 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
   await assertRecruitmentGate(db, session, initial.opportunity.termId, 'review')
   const application = await db.collection('staffingApplications').findOne({ id: applicationId }, { session }) || fail(404, 'Application not found')
   const opportunity = await findOpportunity(db, application.opportunityId, session)
+  if (opportunity.type === 'ta' && await db.collection('courseRestrictions').findOne({ courseId: opportunity.courseId, userEmail: application.applicantEmail }, { session })) fail(409, 'Restore the candidate course access before offering a teaching appointment')
   await lockApplicantCommitments(db, application.applicantId, session)
   assertVersion(application, body.expectedVersion)
   if (!['submitted', 'under_review', 'shortlisted'].includes(application.status)) fail(409, 'Only current submitted applications may be selected')
@@ -138,6 +142,7 @@ export async function offerAction(db: Db, session: ClientSession, user: Staffing
   const opportunity = await findOpportunity(db, offer.opportunityId, session)
   await lockStaffingResource(db, opportunity, session)
   const appointment = await db.collection('staffingAppointments').findOne({ id: offer.appointmentId }, { session }) || fail(404, 'Appointment not found')
+  if (appointment.type === 'ta') appointment.courseId = opportunity.courseId
   const owner = offer.applicantId === actorId(user)
   if (action === 'rescind') await assertOpportunityManager(db, opportunity, user, session)
   else if (!owner) fail(403, 'Only the candidate may answer this offer')
@@ -161,16 +166,18 @@ export async function offerAction(db: Db, session: ClientSession, user: Staffing
   }
   if (action === 'accept') await invalidateCandidateRefresh(db, session, { applicantId: appointment.applicantId })
   await event(db, session, user, `Offer${action === 'accept' ? 'Accepted' : action === 'decline' ? 'Declined' : 'Rescinded'}`, offerId)
-  return { offer: publicRecord(await db.collection('staffingOffers').findOne({ id: offerId }, { session })), appointment: appointmentDto(await db.collection('staffingAppointments').findOne({ id: appointment.id }, { session }), user) }
+  return { offer: publicRecord(await db.collection('staffingOffers').findOne({ id: offerId }, { session })), appointment: appointmentDto(await db.collection('staffingAppointments').findOne({ id: appointment.id }, { session }), user), application: applicationDto((await db.collection('staffingApplications').findOne({ id: offer.applicationId }, { session }))!, owner || isGlobalAdmin(user)) }
 }
 
 export async function appointmentAction(db: Db, session: ClientSession, user: StaffingActor, id: string, action: string, raw: unknown) {
   const appointment = await db.collection('staffingAppointments').findOne({ id }, { session }) || fail(404, 'Appointment not found')
   const opportunity = await findOpportunity(db, appointment.opportunityId, session)
   await lockStaffingResource(db, opportunity, session)
+  if (appointment.type === 'ta') appointment.courseId = opportunity.courseId
   const body = object(raw || {}, 'Appointment action')
   const grantsAuthority = action === 'resume' || (action === 'clearance' && body.status === 'cleared')
   await assertOpportunityManager(db, opportunity, user, session)
+  if (grantsAuthority && opportunity.type === 'ta' && await db.collection('courseRestrictions').findOne({ courseId: opportunity.courseId, userEmail: appointment.applicantEmail }, { session })) fail(409, 'Restore course access before activating this teaching appointment')
   await lockApplicantCommitments(db, appointment.applicantId, session, !grantsAuthority)
   const reason = text(body.reason, 'Reason', 2000)
   if (['clearance', 'settle'].includes(action) && !isGlobalAdmin(user)) fail(403, 'Only site administrators may process clearance or financial settlement')
@@ -210,7 +217,7 @@ export async function appointmentAction(db: Db, session: ClientSession, user: St
     await db.collection('staffingAppointments').updateOne({ id }, { $set: { budgetStatus: 'settled', incurredCost, releasedBudget: unused, settledBy: user.email }, $inc: { version: 1 } }, { session })
   } else fail(404, 'Unknown appointment action')
   if (!['end', 'settle'].includes(action) && !(action === 'clearance' && body.status === 'not_cleared')) await invalidateCandidateRefresh(db, session, { applicantId: appointment.applicantId })
-  await event(db, session, user, `Appointment${action[0]!.toUpperCase() + action.slice(1)}`, id)
+  await event(db, session, user, `Appointment${action[0]!.toUpperCase() + action.slice(1)}`, id, action === 'settle' ? { incurredCost: body.incurredCost } : {})
   return { appointment: appointmentDto(await db.collection('staffingAppointments').findOne({ id }, { session }), user) }
 }
 

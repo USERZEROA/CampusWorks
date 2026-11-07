@@ -18,6 +18,7 @@ const notificationPath = (item: any) =>
     : "/applications";
 const titleOf = (item: any) =>
   item.opportunityTitle ||
+  item.title ||
   (data.value?.opportunities || []).find(
     (o: any) => o.id === item.opportunityId,
   )?.title ||
@@ -128,7 +129,9 @@ useIntervalRefresh(refresh);
             {{ staffingDate(item.endDate || item.appointmentEnd) }}
           </p>
           <NuxtLink
-            v-if="item.status === 'active' && item.courseId"
+            v-if="
+              item.type === 'ta' && item.status === 'active' && item.courseId
+            "
             class="button"
             :to="`/courses/${item.courseId}/ta`"
             data-testid="appointment-workspace"

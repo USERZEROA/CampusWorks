@@ -1,12 +1,14 @@
 import type { ClientSession, Db, Document } from 'mongodb'
 import { isGlobalAdmin } from './auth'
-import { lockCourse } from './courses'
+import { findCourse, lockCourse } from './courses'
 import { actorId, appointmentDto, date, event, fail, flag, number, object, pageLimit, publicRecord, slots, staffingCapabilities, text, uid, type StaffingActor } from './staffing'
 import { getRecruitmentCycle, lockRecruitmentCycle } from './staffing-cycle'
+import { qualificationQuestionPurpose } from './qualification-questions'
 
 async function lockInstructionalAuthority(db: Db, user: StaffingActor, session: ClientSession, courseId?: string) {
   if (isGlobalAdmin(user)) return courseId ? await lockCourse(db, courseId, session) || fail(404, 'Course offering not found') : null
-  const enrollment = await db.collection('enrollments').findOne({ userEmail: user.email, ...(courseId ? { courseId } : {}), role: { $in: ['instructor', 'admin'] } }, { session, sort: { courseId: 1 } })
+  const requested = courseId ? await lockCourse(db, courseId, session) : null
+  const enrollment = await db.collection('enrollments').findOne({ userEmail: user.email, ...(requested ? { courseId: requested.id } : {}), role: { $in: ['instructor', 'admin'] } }, { session, sort: { courseId: 1 } })
   if (!enrollment) fail(403, 'Only authorized instructors or administrators publish positions')
   const course = await lockCourse(db, enrollment.courseId, session) || fail(404, 'Course offering not found')
   if (!await db.collection('enrollments').findOne({ courseId: course.id, userEmail: user.email, role: { $in: ['instructor', 'admin'] } }, { session })) fail(403, 'Instructional authority changed')
@@ -15,7 +17,15 @@ async function lockInstructionalAuthority(db: Db, user: StaffingActor, session: 
 
 export async function lockStaffingResource(db: Db, resource: Document, session: ClientSession) {
   await lockRecruitmentCycle(db, session)
-  if (resource.type === 'ta') return await lockCourse(db, resource.courseId, session) || fail(404, 'Course offering not found')
+  if (resource.type === 'ta') {
+    const course = await lockCourse(db, resource.courseId, session) || fail(404, 'Course offering not found')
+    const aliases = [...new Set([course.id, course.code].filter(Boolean))].map((value: string) => new RegExp(`^${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i'))
+    for (const collection of ['staffingOpportunities', 'staffingAppointments', 'staffingOffers', 'staffingWorkload']) {
+      await db.collection(collection).updateMany({ courseId: { $in: aliases, $ne: course.id } }, { $set: { courseId: course.id } }, { session })
+    }
+    resource.courseId = course.id
+    return course
+  }
   const opportunityId = resource.opportunityId || resource.id
   const opportunity = await db.collection('staffingOpportunities').findOne({ id: opportunityId }, { session }) || fail(404, 'Opportunity not found')
   // Instructional membership changes share this course fence; the RA record
@@ -50,11 +60,12 @@ export function opportunityInput(raw: unknown) {
   if (!Array.isArray(questions) || questions.length > 20) fail(400, 'Questions must contain at most 20 items')
   const normalizedQuestions = questions.map((raw, index) => {
     const item = object(raw, 'Question')
-    return { id: text(item.id, 'Question ID', 64) || `q${index + 1}`, prompt: text(item.prompt, 'Question', 1000, true), required: flag(item.required, 'Question required', true) }
+    const prompt = text(item.prompt, 'Question', 1000, true)
+    return { id: text(item.id, 'Question ID', 64) || `q${index + 1}`, prompt, purpose: qualificationQuestionPurpose(prompt, item.purpose), required: flag(item.required, 'Question required', true) }
   })
   if (new Set(normalizedQuestions.map(q => q.id)).size !== normalizedQuestions.length || normalizedQuestions.some(q => !/^[a-zA-Z0-9_-]+$/.test(q.id) || ['__proto__', 'prototype', 'constructor'].includes(q.id))) fail(400, 'Question IDs must be unique safe identifiers')
   const hourlyRate = number(body.hourlyRate, 'Hourly rate', 0, 1000, 0)
-  const budget = number(body.budget, 'Approved budget', 0, 10000000, 0)
+  const budget = number(body.budget, 'Position budget', 0, 10000000, 0)
   const weeks = Math.ceil((appointmentEnd.getTime() - appointmentStart.getTime()) / (7 * 86400000))
   const appointmentCost = Math.round(weeklyHours * weeks * hourlyRate * 100) / 100
   if (budget + 0.001 < appointmentCost * positions) fail(400, 'Budget does not cover the advertised positions and hours')
@@ -80,6 +91,7 @@ export async function currentOpportunityInput(db: Db, session: ClientSession, ra
   if ((body.termId !== undefined && body.termId !== cycle.termId) || (previous && previous.termId !== cycle.termId)) fail(409, 'The recruitment semester changed. Refresh before saving.')
   if (body.applicationDeadline !== undefined && date(body.applicationDeadline, 'Application deadline').getTime() !== cycle.closesAt!.getTime()) fail(409, 'The application deadline is controlled by the current recruitment cycle')
   const input = opportunityInput({ ...previous, ...body, projectId: body.projectId || '', termId: cycle.termId, appointmentStart: body.appointmentStart ?? previous?.appointmentStart?.toISOString() ?? cycle.startDate!.toISOString(), appointmentEnd: body.appointmentEnd ?? previous?.appointmentEnd?.toISOString() ?? cycle.endDate!.toISOString(), applicationDeadline: cycle.closesAt!.toISOString() })
+  if (input.courseId) input.courseId = (await findCourse(db, input.courseId, session) || fail(404, 'Course offering not found')).id
   if (input.appointmentStart < cycle.startDate! || input.appointmentEnd > cycle.endDate!) fail(400, 'Appointment dates must be within the current semester')
   return input
 }
@@ -100,7 +112,8 @@ export async function createOpportunity(db: Db, session: ClientSession, user: St
   if (!(await staffingCapabilities(db, user, session)).canManageStaffing) fail(403, 'Only authorized instructors or administrators publish positions')
   await lockRecruitmentCycle(db, session)
   const input = await currentOpportunityInput(db, session, raw)
-  await lockInstructionalAuthority(db, user, session, input.courseId || undefined)
+  const course = await lockInstructionalAuthority(db, user, session, input.courseId || undefined)
+  if (input.courseId && course) input.courseId = course.id
   const term = await db.collection('staffingTerms').findOne({ id: input.termId }, { session }) || fail(409, 'Recruitment semester is unavailable')
   const approvalRequired = term.requiresApproval !== false || input.approvalRequired
   const opportunity = { ...input, approvalRequired, id: uid(), status: 'draft', version: 1, mutationVersion: 0, requirementsVersion: 1, ownerEmail: user.email, ownerId: actorId(user), approved: isGlobalAdmin(user) || !approvalRequired, committedPositions: 0, committedBudget: 0, createdAt: new Date(), updatedAt: new Date() }
@@ -114,7 +127,9 @@ export async function overview(db: Db, user: StaffingActor, page = 1) {
   const currentCycle = await getRecruitmentCycle(db)
   const offset = (page - 1) * pageLimit
   const managerCourseIds = viewer.canManageStaffing ? await db.collection('enrollments').distinct('courseId', { userEmail: user.email, role: { $in: ['instructor', 'admin'] } }) : []
-  const manageable: Document = viewer.isGlobalAdmin ? {} : { $or: [{ type: 'ta', courseId: { $in: managerCourseIds } }, { type: 'ra', ownerId: actorId(user) }] }
+  const managerCourses = managerCourseIds.length ? await db.collection('courses').find({ id: { $in: managerCourseIds } }, { projection: { id: 1, code: 1 } }).toArray() : []
+  const managerAliases = [...new Set(managerCourses.flatMap(course => [course.id, course.code]).filter(Boolean))].map((value: string) => new RegExp(`^${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i'))
+  const manageable: Document = viewer.isGlobalAdmin ? {} : { $or: [{ type: 'ta', courseId: { $in: managerAliases } }, { type: 'ra', ownerId: actorId(user) }] }
   const current = { termId: currentCycle.termId || '' }
   const queries: Record<string, { collection: string; filter: Document; sort: Record<string, 1 | -1> }> = {
     myApplications: { collection: 'staffingApplications', filter: { applicantId: actorId(user) }, sort: { updatedAt: -1, id: 1 } },
@@ -138,11 +153,13 @@ export async function overview(db: Db, user: StaffingActor, page = 1) {
     values[key] = rows; totals[key] = total
   }))
   const posting = (record: Document) => ({ ...publicRecord(record), ...(record.termId === currentCycle.termId ? { applicationDeadline: currentCycle.closesAt } : {}) })
+  const ownOpportunityIds = [...new Set([...(values.myApplications || []), ...(values.myAppointments || [])].map(record => record.opportunityId))]
+  const ownTitles = new Map((await db.collection('staffingOpportunities').find({ id: { $in: ownOpportunityIds } }, { projection: { id: 1, title: 1 } }).toArray()).map(record => [record.id, record.title]))
   return {
     viewer, currentCycle, serverTime: new Date(), terms: (values.terms || []).map(publicRecord),
     courses: (values.courses || []).map(c => ({ id: c.id, code: c.code, title: c.title, role: viewer.isGlobalAdmin ? 'admin' : 'instructor' })),
-    opportunities: (values.opportunities || []).map(posting), myApplications: values.myApplications!.map(a => { const { administrative, revisions, ...dto } = publicRecord(a)!; return dto }),
-    myAppointments: values.myAppointments!.map(a => appointmentDto(a, user)), managedOpportunities: (values.managedOpportunities || []).map(posting),
+    opportunities: (values.opportunities || []).map(posting), myApplications: values.myApplications!.map(a => { const { administrative, revisions, ...dto } = publicRecord(a)!; return { ...dto, opportunityTitle: ownTitles.get(a.opportunityId) || '' } }),
+    myAppointments: values.myAppointments!.map(a => ({ ...appointmentDto(a, user), opportunityTitle: a.title || ownTitles.get(a.opportunityId) || '' })), managedOpportunities: (values.managedOpportunities || []).map(posting),
     adminAppointments: (values.adminAppointments || []).map(a => appointmentDto(a, user)),
     admin: viewer.isGlobalAdmin ? { pendingOpportunities: (values.pendingOpportunities || []).map(posting), appointments: (values.adminAppointments || []).map(a => appointmentDto(a, user)) } : null,
     policy: { exclusivePerTerm: true, exclusiveAcrossOverlappingDates: true, multipleHalfAppointments: false, manualDecision: true, clearanceRequired: true, administratorControlledCycle: true },
