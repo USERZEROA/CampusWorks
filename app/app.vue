@@ -1,9 +1,11 @@
 <script setup lang="ts">
 const authError = useAuthError();
+const demoLabel = useRuntimeConfig().public.demoLabel;
 </script>
 
 <template>
   <a href="#main-content" class="skip-link">Skip to main content</a>
+  <aside v-if="demoLabel" class="demo-context" aria-label="Demonstration data">{{ demoLabel }}</aside>
   <p v-if="authError" class="global-auth-error" role="alert">{{ authError }}</p>
   <NuxtLayout>
     <NuxtPage />
@@ -11,6 +13,14 @@ const authError = useAuthError();
 </template>
 
 <style>
+.demo-context {
+  padding: 5px 16px;
+  color: #012169;
+  background: #e8effb;
+  text-align: center;
+  font: 600 11px system-ui;
+  letter-spacing: 0.025em;
+}
 .skip-link {
   position: fixed;
   left: 12px;

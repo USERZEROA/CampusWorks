@@ -23,6 +23,28 @@ const titleOf = (item: any) =>
     (o: any) => o.id === item.opportunityId,
   )?.title ||
   item.opportunityId;
+const state = ref("");
+const applications = computed(() =>
+  (data.value?.myApplications || []).filter(
+    (item: any) => !state.value || (item.status || item.state) === state.value,
+  ),
+);
+const summary = computed(() =>
+  [
+    {
+      label: "Applications",
+      value: data.value?.pagination?.totals?.myApplications,
+    },
+    {
+      label: "Appointments",
+      value: data.value?.pagination?.totals?.myAppointments,
+    },
+    {
+      label: "Notifications",
+      value: data.value?.pagination?.totals?.notifications,
+    },
+  ].filter((item) => Number.isFinite(item.value)),
+);
 useIntervalRefresh(refresh);
 </script>
 <template>
@@ -33,22 +55,35 @@ useIntervalRefresh(refresh);
     <p v-if="message" class="notice" :class="{ error: failure }" role="status">
       {{ message }}
     </p>
+    <StaffingSummary
+      v-if="data && !error"
+      :items="summary"
+      label="Application overview"
+    />
     <section v-if="!error" id="notifications" class="panel">
       <div class="panel-heading"><h2>Notifications</h2></div>
-      <div class="panel-body">
+      <div
+        class="panel-body notification-feed"
+        tabindex="0"
+        role="region"
+        aria-label="Notifications"
+      >
         <article
           v-for="item in data?.notifications || []"
           :key="item.id"
-          class="opportunity-card"
+          class="notification-row"
+          :class="{ 'is-unread': !item.read }"
           :data-testid="`notification-${item.id}`"
         >
-          <h3>
-            <NuxtLink :to="notificationPath(item)">{{ item.title }}</NuxtLink>
-          </h3>
-          <p class="muted">
-            {{ staffingDate(item.createdAt) }} ·
-            {{ item.read ? "Read" : "Unread" }}
-          </p>
+          <div>
+            <h3>
+              <NuxtLink :to="notificationPath(item)">{{ item.title }}</NuxtLink>
+            </h3>
+            <p class="muted">
+              {{ staffingDate(item.createdAt) }} ·
+              {{ item.read ? "Read" : "Unread" }}
+            </p>
+          </div>
           <button
             v-if="!item.read"
             type="button"
@@ -66,13 +101,30 @@ useIntervalRefresh(refresh);
     </section>
     <section v-if="!error" class="panel">
       <div class="panel-heading"><h2>Applications</h2></div>
+      <div v-if="data?.myApplications?.length" class="list-toolbar">
+        <label
+          >Application state<select
+            v-model="state"
+            data-testid="my-application-state"
+          >
+            <option value="">All states</option>
+            <option value="draft">Draft</option>
+            <option value="submitted">Submitted</option>
+            <option value="under_review">Under review</option>
+            <option value="shortlisted">Shortlisted</option>
+            <option value="selected">Selected</option>
+            <option value="not_selected">Not selected</option>
+            <option value="withdrawn">Withdrawn</option>
+          </select></label
+        >
+      </div>
       <div
         class="panel-body table-scroll"
         tabindex="0"
         role="region"
         aria-label="My applications table"
       >
-        <table v-if="data?.myApplications?.length">
+        <table v-if="applications.length">
           <thead>
             <tr>
               <th>Opportunity</th>
@@ -83,15 +135,15 @@ useIntervalRefresh(refresh);
           </thead>
           <tbody>
             <tr
-              v-for="item in data.myApplications"
+              v-for="item in applications"
               :key="item.id"
               :data-testid="`application-row-${item.id}`"
             >
-              <td>{{ titleOf(item) }}</td>
               <td>
-                <span class="status">{{
-                  staffingState(item.status || item.state)
-                }}</span>
+                <span class="record-title">{{ titleOf(item) }}</span>
+              </td>
+              <td>
+                <StaffingStatus :state="item.status || item.state" />
               </td>
               <td>{{ staffingDate(item.updatedAt) }}</td>
               <td>
@@ -102,28 +154,39 @@ useIntervalRefresh(refresh);
             </tr>
           </tbody>
         </table>
+        <p v-else-if="state" class="empty">No matching loaded applications.</p>
         <p v-else class="empty">
           You have no applications yet.
           <NuxtLink to="/opportunities">Browse opportunities</NuxtLink>.
+        </p>
+        <p
+          v-if="
+            state ||
+            (data?.pagination?.totals?.myApplications || 0) >
+              (data?.myApplications?.length || 0)
+          "
+          class="record-count"
+          role="status"
+        >
+          {{ applications.length }} of
+          {{ data?.myApplications?.length || 0 }} loaded applications
         </p>
       </div>
     </section>
     <section v-if="!error" class="panel">
       <div class="panel-heading"><h2>Appointments</h2></div>
-      <div class="panel-body">
+      <div class="panel-body grid">
         <article
           v-for="item in data?.myAppointments || []"
           :key="item.id"
           class="opportunity-card"
           :data-testid="`my-appointment-${item.id}`"
         >
-          <h3>{{ titleOf(item) }}</h3>
-          <p>
-            <span class="status"
-              >{{ item.type?.toUpperCase() }} ·
-              {{ staffingState(item.status || item.state) }}</span
-            >
-          </p>
+          <div class="card-heading">
+            <span class="type-tag">{{ item.type?.toUpperCase() }}</span
+            ><StaffingStatus :state="item.status || item.state" />
+          </div>
+          <h3 class="record-title">{{ titleOf(item) }}</h3>
           <p>
             {{ staffingDate(item.startDate || item.appointmentStart) }} –
             {{ staffingDate(item.endDate || item.appointmentEnd) }}

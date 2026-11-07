@@ -5,13 +5,17 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'CampusWorks – Office Hours Queue',
+      title: 'CampusWorks | TA & RA',
       htmlAttrs: { lang: 'en' },
       meta: [
-        { name: 'description', content: 'Live office-hours help queue for students, TAs and instructors.' }
+        { name: 'description', content: 'TA and RA recruitment, appointments and course office hours.' }
       ],
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/campusworks-logo.svg' }]
     }
+  },
+
+  runtimeConfig: {
+    public: { demoLabel: '' }
   },
 
   nitro: {

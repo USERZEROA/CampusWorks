@@ -2,6 +2,16 @@
 const { data, error, refresh } = await useStaffingOverview("opportunities");
 const search = ref("");
 const kind = ref("");
+const duties = (item: any) =>
+  [
+    [item.requiresAttendance, "Attendance"],
+    [item.hasLab, "Lab"],
+    [item.hasDiscussion, "Discussion"],
+    [item.requiresGrading, "Grading"],
+    [item.holdsOfficeHours, "Office hours"],
+  ]
+    .filter(([enabled]) => enabled)
+    .map(([, label]) => String(label));
 const opportunities = computed(() =>
   (data.value?.opportunities || []).filter(
     (item: any) =>
@@ -40,30 +50,54 @@ useIntervalRefresh(refresh);
         >
       </div>
     </section>
-    <div class="grid" aria-live="polite">
+    <p v-if="search || kind" class="record-count" role="status">
+      {{ opportunities.length }} matching loaded positions
+    </p>
+    <div class="grid position-grid" aria-live="polite">
       <article
         v-for="item in opportunities"
         :key="item.id"
-        class="opportunity-card"
+        class="opportunity-card position-card"
         :data-testid="`opportunity-${item.id}`"
       >
-        <span class="status"
-          >{{ item.type?.toUpperCase() }} ·
-          {{ staffingState(item.state || item.status) }}</span
-        >
+        <div class="card-heading">
+          <span class="type-tag">{{ item.type?.toUpperCase() }}</span>
+          <StaffingStatus :state="item.state || item.status" />
+        </div>
         <h2>{{ item.title }}</h2>
-        <p class="muted">
-          {{ item.department }} · {{ item.weeklyHours }} hours/week ·
-          {{ item.positions }} position(s)
+        <p class="record-meta">
+          <template v-if="item.courseId"
+            >{{ item.courseId.toUpperCase() }} ·
+          </template>
+          {{ item.department }}
         </p>
-        <p>{{ item.description }}</p>
-        <p>
-          <strong>Apply by:</strong>
-          {{ staffingDate(item.applicationDeadline) }}
-        </p>
-        <NuxtLink class="button" :to="`/opportunities/${item.id}`"
-          >View requirements</NuxtLink
+        <p class="position-description">{{ item.description }}</p>
+        <dl class="position-facts">
+          <div>
+            <dt>Hours / week</dt>
+            <dd>{{ item.weeklyHours }}</dd>
+          </div>
+          <div>
+            <dt>Positions</dt>
+            <dd>{{ item.positions }}</dd>
+          </div>
+        </dl>
+        <div
+          v-if="duties(item).length"
+          class="position-tags"
+          aria-label="Responsibilities"
         >
+          <span v-for="duty in duties(item)" :key="duty">{{ duty }}</span>
+        </div>
+        <div class="position-footer">
+          <p>
+            <strong>Apply by:</strong>
+            {{ staffingDate(item.applicationDeadline) }}
+          </p>
+          <NuxtLink class="button" :to="`/opportunities/${item.id}`"
+            >View requirements</NuxtLink
+          >
+        </div>
       </article>
     </div>
     <p

@@ -82,7 +82,7 @@ useIntervalRefresh(refresh);
             <template v-if="data.course"
               ><dt>Course</dt>
               <dd>
-                {{ data.course.code }} ? {{ data.course.title }}
+                {{ data.course.code }} &middot; {{ data.course.title }}
               </dd></template
             >
           </dl>

@@ -86,6 +86,19 @@ const pending = computed(() => data.value?.admin?.pendingOpportunities || []);
 const appointments = computed(
   () => data.value?.admin?.appointments || data.value?.adminAppointments || [],
 );
+const summary = computed(() =>
+  [
+    {
+      label: "Publication approvals",
+      value: data.value?.pagination?.totals?.pendingOpportunities,
+    },
+    {
+      label: "Appointment records",
+      value: data.value?.pagination?.totals?.adminAppointments,
+    },
+    { label: "Semesters", value: data.value?.pagination?.totals?.terms },
+  ].filter((item) => Number.isFinite(item.value)),
+);
 async function createTerm() {
   await run(
     () =>
@@ -140,6 +153,11 @@ useIntervalRefresh((options) =>
     >
       {{ message }}
     </p>
+    <StaffingSummary
+      v-if="data && !error"
+      :items="summary"
+      label="Administration overview"
+    />
     <section v-if="!error" class="panel">
       <div class="panel-heading"><h2>Current Recruitment Cycle</h2></div>
       <form
@@ -243,10 +261,20 @@ useIntervalRefresh((options) =>
             Add semester
           </button>
         </form>
-        <ul>
+        <ul class="semester-list">
           <li v-for="item in data?.terms || []" :key="item.id">
-            {{ item.name }} · {{ staffingDate(item.startDate) }} –
-            {{ staffingDate(item.endDate) }}
+            <div>
+              <strong>{{ item.name }}</strong
+              ><span class="record-meta"
+                >{{ staffingDate(item.startDate) }} –
+                {{ staffingDate(item.endDate) }}</span
+              >
+            </div>
+            <StaffingStatus
+              v-if="item.id === data?.currentCycle?.termId"
+              state="active"
+              label="Current"
+            />
           </li>
         </ul>
       </div>
@@ -260,35 +288,41 @@ useIntervalRefresh((options) =>
             maxlength="1000"
             data-testid="admin-staffing-reason"
         /></label>
-        <article
-          v-for="item in pending"
-          :key="item.id"
-          class="opportunity-card"
-        >
-          <h3>{{ item.title }}</h3>
-          <p>
-            {{ item.type?.toUpperCase() }} · {{ item.positions }} position(s) ·
-            {{ item.weeklyHours }} hours/week · Budget {{ item.budget }}
-          </p>
-          <p>{{ item.description }}</p>
-          <div class="actions">
-            <NuxtLink :to="`/staffing/${item.id}`"
-              >Inspect requirements</NuxtLink
-            ><button
-              :disabled="busy"
-              @click="approve(item, true)"
-              :data-testid="`approve-opportunity-${item.id}`"
-            >
-              Approve and publish</button
-            ><button
-              class="secondary"
-              :disabled="busy || !reason.trim()"
-              @click="approve(item, false)"
-            >
-              Return to draft
-            </button>
-          </div>
-        </article>
+        <div class="card-list">
+          <article
+            v-for="item in pending"
+            :key="item.id"
+            class="opportunity-card"
+          >
+            <div class="card-heading">
+              <span class="type-tag">{{ item.type?.toUpperCase() }}</span
+              ><StaffingStatus :state="item.status || item.state" />
+            </div>
+            <h3 class="record-title">{{ item.title }}</h3>
+            <p>
+              {{ item.type?.toUpperCase() }} · {{ item.positions }} position(s)
+              · {{ item.weeklyHours }} hours/week · Budget {{ item.budget }}
+            </p>
+            <p>{{ item.description }}</p>
+            <div class="actions">
+              <NuxtLink :to="`/staffing/${item.id}`"
+                >Inspect requirements</NuxtLink
+              ><button
+                :disabled="busy"
+                @click="approve(item, true)"
+                :data-testid="`approve-opportunity-${item.id}`"
+              >
+                Approve and publish</button
+              ><button
+                class="secondary"
+                :disabled="busy || !reason.trim()"
+                @click="approve(item, false)"
+              >
+                Return to draft
+              </button>
+            </div>
+          </article>
+        </div>
         <p v-if="!pending.length" class="empty">
           No opportunities await approval.
         </p>
@@ -296,20 +330,20 @@ useIntervalRefresh((options) =>
     </section>
     <section v-if="!error" class="panel">
       <div class="panel-heading"><h2>Appointment Clearance</h2></div>
-      <div class="panel-body">
+      <div class="panel-body card-list">
         <article
           v-for="item in appointments"
           :key="item.id"
           class="opportunity-card"
           :data-testid="`admin-appointment-${item.id}`"
         >
-          <h3>
+          <h3 class="record-title">
             {{ item.applicantEmail || item.userEmail || item.studentEmail }} ·
             {{ item.type?.toUpperCase() }}
           </h3>
           <p>
-            Status: {{ staffingState(item.status) }} · Clearance:
-            {{ staffingState(item.clearanceStatus || item.clearance) }}
+            Status: <StaffingStatus :state="item.status" /> · Clearance:
+            <StaffingStatus :state="item.clearanceStatus || item.clearance" />
           </p>
           <p>
             {{ staffingDate(item.startDate || item.appointmentStart) }} –

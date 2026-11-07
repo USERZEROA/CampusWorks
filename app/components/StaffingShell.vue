@@ -299,6 +299,172 @@ const user = useAuthUser();
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+.staffing-root .record-title {
+  display: block;
+  color: #012169;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+.staffing-root .record-meta {
+  display: block;
+  margin-top: 4px;
+  color: #536174;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.staffing-root .opportunity-card .record-title {
+  font-size: 16px;
+  margin: 8px 0;
+}
+.staffing-root .record-count {
+  color: #536174;
+  font-size: 12px;
+  margin: 12px 0;
+}
+.staffing-root .list-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(150px, 1fr);
+  gap: 14px;
+  padding: 18px 18px 0;
+}
+.staffing-root .type-tag {
+  display: inline-flex;
+  border: 1px solid #c3d0e6;
+  border-radius: 5px;
+  padding: 3px 7px;
+  color: #012169;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.staffing-root .card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.staffing-root .card-list {
+  display: grid;
+  gap: 14px;
+}
+.staffing-root .position-grid {
+  align-items: stretch;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+}
+.staffing-root .position-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 3px solid #17408b;
+}
+.staffing-root .position-card h2 {
+  margin: 0;
+  line-height: 1.4;
+}
+.staffing-root .position-card p {
+  margin: 0;
+}
+.staffing-root .position-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  color: #536174;
+  font-size: 13px;
+}
+.staffing-root .position-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  margin: 0;
+  border-top: 1px solid #e0e6ef;
+  border-bottom: 1px solid #e0e6ef;
+}
+.staffing-root .position-facts dt {
+  color: #536174;
+  font-size: 11px;
+  font-weight: 500;
+}
+.staffing-root .position-facts dd {
+  color: #012169;
+  font-size: 17px;
+  font-weight: 650;
+  margin: 3px 0 0;
+}
+.staffing-root .position-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.staffing-root .position-tags span {
+  background: #f3f5fa;
+  border-radius: 4px;
+  padding: 4px 7px;
+  font-size: 11px;
+  color: #475569;
+}
+.staffing-root .position-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: auto;
+  font-size: 12px;
+}
+.staffing-root .notification-feed {
+  max-height: 310px;
+  overflow-y: auto;
+}
+.staffing-root .notification-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid #e0e6ef;
+  overflow-wrap: anywhere;
+}
+.staffing-root .notification-row:first-child {
+  padding-top: 0;
+}
+.staffing-root .notification-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.staffing-root .notification-row h3 {
+  font-size: 14px;
+  margin: 0 0 4px;
+}
+.staffing-root .notification-row p {
+  font-size: 12px;
+  margin: 0;
+}
+.staffing-root .notification-row.is-unread h3::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 7px 2px 0;
+  border-radius: 50%;
+  background: #17408b;
+}
+.staffing-root .semester-list {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.staffing-root .semester-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid #e0e6ef;
+  font-size: 13px;
+}
 @media (max-width: 700px) {
   .staffing-root .app-navbar {
     padding: 10px 12px;
@@ -329,6 +495,24 @@ const user = useAuthUser();
   }
   .staffing-root dd {
     margin-bottom: 8px;
+  }
+  .staffing-root .list-toolbar {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 14px 14px 0;
+  }
+  .staffing-root .position-facts {
+    grid-template-columns: 1fr 1fr;
+  }
+  .staffing-root .position-facts dd {
+    margin-bottom: 0;
+  }
+  .staffing-root .notification-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .staffing-root .notification-row button {
+    justify-self: start;
   }
 }
 </style>
