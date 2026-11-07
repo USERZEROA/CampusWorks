@@ -1,0 +1,57 @@
+{
+  "synthetic": true,
+  "source": "server/utils/ai-automation.ts",
+  "helper": "claimAutomaticJob",
+  "providerCalls": 0,
+  "applicationProcesses": 0,
+  "mongoClients": 2,
+  "databaseName": "campusworks_execution_claim_80dfff812f92",
+  "containerId": "3c3c9285e28920fd022708d4d7a557e5817778582f14efb07d8c8e64e8a692c8",
+  "containerName": "campusworks-execution-test-mw6wz53s-0ebmmj",
+  "loopbackPort": 61702,
+  "checks": [
+    {
+      "name": "cold control initialization and four-kind claim serialization",
+      "rounds": 12,
+      "concurrentClients": 2,
+      "claims": 48,
+      "passed": true
+    },
+    {
+      "name": "persistent progress despite continuously changing candidate work",
+      "claims": 40,
+      "firstFour": [
+        "candidate_fit",
+        "cv_summary",
+        "opportunity_draft",
+        "term_review"
+      ],
+      "passed": true
+    },
+    {
+      "name": "aborted claim and cursor write roll back together",
+      "passed": true
+    },
+    {
+      "name": "conflicting stale reader retries after another client commits its claim",
+      "transactionAttempts": 3,
+      "passed": true
+    },
+    {
+      "name": "expired execution is reclaimed while live and old-owner fences hold",
+      "passed": true
+    },
+    {
+      "name": "no due work leaves the persistent turn unchanged",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "containerCleaned": true,
+  "transactionAttempts": 118,
+  "startedAt": "2026-11-07T21:29:11.328Z",
+  "mongoVersion": "7.0.45",
+  "finishedAt": "2026-11-07T21:29:19.451Z",
+  "containerAbsentVerified": true,
+  "cleanupVerifiedAt": "2026-11-07T21:29:55.326Z"
+}

@@ -1,0 +1,89 @@
+{
+  "synthetic": true,
+  "provider": "OpenAI",
+  "status": "passed",
+  "checks": [
+    "Candidate Review Assistance",
+    "Course Suggestions"
+  ],
+  "screenshots": [
+    {
+      "path": "showcase-ai-candidates-desktop.png",
+      "source": "Actual local headless Chromium panel; synthetic evidence; real OpenAI response."
+    },
+    {
+      "path": "showcase-ai-course-review-desktop.png",
+      "source": "Actual local headless Chromium panel; synthetic evidence; real OpenAI response."
+    }
+  ],
+  "startedAt": "2026-11-07T21:38:31.637Z",
+  "database": "campusworks_showcase_mw6x7y84",
+  "featuredAiReady": true,
+  "counts": {
+    "people": 41,
+    "courses": 10,
+    "opportunities": 21,
+    "applications": 68,
+    "offers": 15,
+    "appointments": 15,
+    "workload": 30,
+    "history": 380,
+    "feedback": 80,
+    "queue": 11,
+    "notifications": 177
+  },
+  "providerCallsReservedAtWarmup": 26,
+  "aiAccessibility": [
+    {
+      "page": "Candidate Review Assistance",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "Candidate Review Assistance",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "page": "Candidate Review Assistance",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "Candidate Review Assistance",
+      "width": 320,
+      "violations": []
+    },
+    {
+      "page": "Course Suggestions",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "Course Suggestions",
+      "width": 768,
+      "violations": []
+    },
+    {
+      "page": "Course Suggestions",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "Course Suggestions",
+      "width": 320,
+      "violations": []
+    }
+  ],
+  "analysisPosts": 0,
+  "runtimeErrors": 0,
+  "cleanup": "complete",
+  "closedAt": "2026-11-07T21:38:46.764Z",
+  "providerCallsReservedAtClose": 28,
+  "completedAt": "2026-11-07T21:38:48.254Z",
+  "source": {
+    "commit": "ce6a247fd22d66335d68dc0fd727c1eb39621011",
+    "applicationSha256": "21c3704a6da36a05953fe24fbfd25f3784f7bb109d1851aaa865933f7357c8fe",
+    "buildEntrySha256": "444c92c4a9bd18740e5ba3138935d1266fcf7fd93ae9c2641c9eeab0130cdbc2"
+  }
+}

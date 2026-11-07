@@ -1,0 +1,226 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-07T21:45:39.138Z",
+  "localFile": true,
+  "visibleWindows": false,
+  "synthetic": true,
+  "gallery": {
+    "path": "docs/demo/index.html",
+    "sha256": "5aa7e458c5e006985555938ca4ab18dd6f9bac439e8fa0a2a6faf1e4b0278fc7"
+  },
+  "workflowCaptures": 8,
+  "realProviderCaptures": 2,
+  "realProviderSource": {
+    "receipt": ".cache/showcase-real-ai-proof.json",
+    "sha256": "b64d612d4238229dfb51c31528f6ed20f1a3c84bf079595cc9783de60045d315",
+    "provider": "OpenAI",
+    "syntheticEvidence": true,
+    "status": "passed",
+    "cumulativeReservations": 28
+  },
+  "screenshots": [
+    {
+      "path": "docs/demo/screenshots/showcase-recruitment-desktop.png",
+      "source": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-recruitment-desktop.png",
+      "kind": "local-browser-workflow-ai-unconfigured",
+      "bytes": 158651,
+      "sha256": "0599ca4b3ceba98a985b71f569b2a45fe1eb7f96594e205ebb12b4a79dc781e4",
+      "width": 1440,
+      "height": 2098
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-candidate-pool-desktop.png",
+      "source": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-candidate-pool-desktop.png",
+      "kind": "local-browser-workflow-ai-unconfigured",
+      "bytes": 220601,
+      "sha256": "dd7defdbdc91815122fe263f25f9aee77395ec97da65852113ca1e82c9dee82c",
+      "width": 1440,
+      "height": 2884
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-applicant-applications-desktop.png",
+      "source": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-applicant-applications-desktop.png",
+      "kind": "local-browser-workflow-ai-unconfigured",
+      "bytes": 93172,
+      "sha256": "188ab5f05f7eda1f06d5735f0c5226a9bb36bb56f96d4a76c80872857bd52621",
+      "width": 1440,
+      "height": 1352
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-clearance-desktop.png",
+      "source": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-clearance-desktop.png",
+      "kind": "local-browser-workflow-ai-unconfigured",
+      "bytes": 311603,
+      "sha256": "f5c42e7cc0b28392647e70d10efb064a460ceac3e79422e183b1bf7313346964",
+      "width": 1440,
+      "height": 5204
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-ta-queue-desktop.png",
+      "source": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-ta-queue-desktop.png",
+      "kind": "local-browser-workflow-ai-unconfigured",
+      "bytes": 115461,
+      "sha256": "ceb022ce8e14caae1bcae32cf7a93ebbf1f6b0919faebe4d7403951194d66069",
+      "width": 1440,
+      "height": 1040
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-course-report-desktop.png",
+      "source": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-course-report-desktop.png",
+      "kind": "local-browser-workflow-ai-unconfigured",
+      "bytes": 109539,
+      "sha256": "1b38742cf247d19f79fc5bcbca3b999ed66e7983a409b48ae6521567419685cb",
+      "width": 1440,
+      "height": 2015
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-position-catalog-mobile.png",
+      "source": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-position-catalog-mobile.png",
+      "kind": "local-browser-workflow-ai-unconfigured",
+      "bytes": 290380,
+      "sha256": "f04fc980ab786c6be24870f12023f3748dde59178666f99f9744468b5001821a",
+      "width": 390,
+      "height": 6375
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-applicant-offer-mobile.png",
+      "source": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-applicant-offer-mobile.png",
+      "kind": "local-browser-workflow-ai-unconfigured",
+      "bytes": 144454,
+      "sha256": "43fd919b0e275346f7b5769bd12c524bc5a9af6a718b40950e95f4d0d1b43f7f",
+      "width": 390,
+      "height": 3797
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-ai-candidates-desktop.png",
+      "source": ".cache/showcase-real-ai/showcase-ai-candidates-desktop.png",
+      "kind": "real-openai-response-on-synthetic-evidence",
+      "bytes": 142042,
+      "sha256": "ed8b97e9a91f48cccb1518d618fa2e0fa029e3edcc69bc7ba753d4cdc71db42d",
+      "width": 1200,
+      "height": 2199
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-ai-course-review-desktop.png",
+      "source": ".cache/showcase-real-ai/showcase-ai-course-review-desktop.png",
+      "kind": "real-openai-response-on-synthetic-evidence",
+      "bytes": 41198,
+      "sha256": "3050187a4f9cbfc42da209bcfbfa4863475438e3a8dafc044af8aeeb0e5876d4",
+      "width": 1200,
+      "height": 566
+    }
+  ],
+  "checks": [
+    {
+      "browser": "chromium",
+      "width": 1440,
+      "actualImagesLoaded": 10,
+      "imagesLoadedBeforeScroll": true,
+      "originalLinks": 10,
+      "originalFileOpened": true,
+      "dialogImagesLoaded": 10,
+      "axeScans": 2,
+      "violations": 0,
+      "keyboard": "passed",
+      "externalRequests": 0
+    },
+    {
+      "browser": "chromium",
+      "width": 768,
+      "actualImagesLoaded": 10,
+      "imagesLoadedBeforeScroll": true,
+      "originalLinks": 10,
+      "originalFileOpened": true,
+      "dialogImagesLoaded": 10,
+      "axeScans": 2,
+      "violations": 0,
+      "keyboard": "passed",
+      "externalRequests": 0
+    },
+    {
+      "browser": "chromium",
+      "width": 390,
+      "actualImagesLoaded": 10,
+      "imagesLoadedBeforeScroll": true,
+      "originalLinks": 10,
+      "originalFileOpened": true,
+      "dialogImagesLoaded": 10,
+      "axeScans": 2,
+      "violations": 0,
+      "keyboard": "passed",
+      "externalRequests": 0
+    },
+    {
+      "browser": "chromium",
+      "width": 320,
+      "actualImagesLoaded": 10,
+      "imagesLoadedBeforeScroll": true,
+      "originalLinks": 10,
+      "originalFileOpened": true,
+      "dialogImagesLoaded": 10,
+      "axeScans": 2,
+      "violations": 0,
+      "keyboard": "passed",
+      "externalRequests": 0
+    },
+    {
+      "browser": "firefox",
+      "width": 1440,
+      "actualImagesLoaded": 10,
+      "imagesLoadedBeforeScroll": true,
+      "originalLinks": 10,
+      "originalFileOpened": true,
+      "dialogImagesLoaded": 10,
+      "axeScans": 2,
+      "violations": 0,
+      "keyboard": "passed",
+      "externalRequests": 0
+    },
+    {
+      "browser": "firefox",
+      "width": 768,
+      "actualImagesLoaded": 10,
+      "imagesLoadedBeforeScroll": true,
+      "originalLinks": 10,
+      "originalFileOpened": true,
+      "dialogImagesLoaded": 10,
+      "axeScans": 2,
+      "violations": 0,
+      "keyboard": "passed",
+      "externalRequests": 0
+    },
+    {
+      "browser": "firefox",
+      "width": 390,
+      "actualImagesLoaded": 10,
+      "imagesLoadedBeforeScroll": true,
+      "originalLinks": 10,
+      "originalFileOpened": true,
+      "dialogImagesLoaded": 10,
+      "axeScans": 2,
+      "violations": 0,
+      "keyboard": "passed",
+      "externalRequests": 0
+    },
+    {
+      "browser": "firefox",
+      "width": 320,
+      "actualImagesLoaded": 10,
+      "imagesLoadedBeforeScroll": true,
+      "originalLinks": 10,
+      "originalFileOpened": true,
+      "dialogImagesLoaded": 10,
+      "axeScans": 2,
+      "violations": 0,
+      "keyboard": "passed",
+      "externalRequests": 0
+    }
+  ],
+  "boundaries": [
+    "Eight workflow screenshots use unconfigured AI panels. Two separate panels show actual OpenAI responses on synthetic evidence.",
+    "Static screenshot gallery; application state and provider behavior have separate acceptance evidence."
+  ],
+  "completedAt": "2026-11-07T21:45:51.558Z",
+  "axeScans": 16,
+  "screenshotCopiesMatch": true
+}

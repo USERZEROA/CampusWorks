@@ -1,0 +1,62 @@
+{
+  "synthetic": true,
+  "headless": true,
+  "savedKeyLoaded": false,
+  "startedAt": "2026-11-07T21:41:32.665Z",
+  "windows": [
+    {
+      "label": "Student Queue",
+      "role": "student",
+      "path": "/courses/cs101/student",
+      "status": 200,
+      "logoLoaded": true,
+      "runtimeErrors": 0
+    },
+    {
+      "label": "TA Queue",
+      "role": "ta",
+      "path": "/courses/cs101/ta",
+      "status": 200,
+      "logoLoaded": true,
+      "runtimeErrors": 0
+    },
+    {
+      "label": "Instructor Selection",
+      "role": "instructor",
+      "path": "/staffing/19a4084b-a6df-4960-9369-665945a113cf",
+      "status": 200,
+      "logoLoaded": true,
+      "runtimeErrors": 0
+    },
+    {
+      "label": "Administrator",
+      "role": "admin",
+      "path": "/admin/staffing",
+      "status": 200,
+      "logoLoaded": true,
+      "runtimeErrors": 0
+    },
+    {
+      "label": "Student Applications",
+      "role": "student",
+      "path": "/applications",
+      "status": 200,
+      "logoLoaded": true,
+      "runtimeErrors": 0
+    },
+    {
+      "label": "Second Instructor",
+      "role": "instructor",
+      "path": "/staffing/2e814cf5-a8de-455c-9b73-3c137f89f49e",
+      "status": 200,
+      "logoLoaded": true,
+      "runtimeErrors": 0
+    }
+  ],
+  "status": "passed",
+  "database": "campusworks_showcase_mw6x7y84",
+  "referenceTime": "2026-11-07T21:34:07.102Z",
+  "cleanup": "complete",
+  "providerRequestsUnchanged": true,
+  "completedAt": "2026-11-07T21:41:45.550Z"
+}

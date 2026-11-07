@@ -1,0 +1,48 @@
+{
+  "synthetic": true,
+  "earlierWorkflowRuns": [
+    {
+      "status": "passed",
+      "providerCallsReserved": 12,
+      "applicationSha256": "fc00b41eafb6d0403d1b32dd82477172f8f1d17d0961e9115f324405f2dfac7c",
+      "receipt": "ai-proof-before-compact.json"
+    },
+    {
+      "status": "passed",
+      "providerCallsReserved": 12,
+      "applicationSha256": "4cee41674581f40725b1700316be061911f8bfea19a96e076cc3c7fab8b53f2c",
+      "completedAt": "2026-11-07T21:12:54.605Z",
+      "receipt": "Summary of the sanitized receipt verified in this session before its final replacement."
+    }
+  ],
+  "failedShowcaseRuns": [
+    {
+      "status": "failed",
+      "providerCallsReserved": 67,
+      "receipt": "showcase-real-ai-failed-v4.json",
+      "detail": "The first ten-candidate response did not pass validation; the original response cause was not retained. Services stopped; an owned IPC launcher required explicit termination after its cleanup."
+    },
+    {
+      "status": "failed",
+      "providerCallsReserved": 78,
+      "receipt": "showcase-real-ai-failed-compact.json",
+      "detail": "Ten-candidate comparisons completed. Qualification summaries hit output bounds or malformed summary references; later task kinds remained queued. Safe diagnostics were retained, and owned services closed normally."
+    }
+  ],
+  "reservationMeaning": "These are conservative application reservations for attempted model requests, including failed or interrupted attempts; they are not confirmed billed usage or price.",
+  "finalWorkflowRun": {
+    "status": "passed",
+    "providerCallsReserved": 12,
+    "source": {
+      "commit": "ce6a247fd22d66335d68dc0fd727c1eb39621011",
+      "applicationSha256": "21c3704a6da36a05953fe24fbfd25f3784f7bb109d1851aaa865933f7357c8fe",
+      "buildEntrySha256": "444c92c4a9bd18740e5ba3138935d1266fcf7fd93ae9c2641c9eeab0130cdbc2"
+    }
+  },
+  "finalShowcaseRun": {
+    "status": "passed",
+    "providerCallsReserved": 28,
+    "database": "campusworks_showcase_mw6x7y84"
+  },
+  "totalReservedAttempts": 209
+}

@@ -1,16 +1,15 @@
 {
-  "recordedAt": "2026-11-07T19:17:18.361600+00:00",
+  "recordedAt": "2026-11-07T21:57:13.890133+00:00",
   "coverage": "Current domain/integration review for changed code plus matching byte receipts from the previous full-source review for unchanged code. No claim of exhaustive security proof.",
   "files": [
     {
       "path": "app/app.vue",
-      "bytes": 1397,
-      "sha256": "281d12363ae7b75e79c06599ed1062f32e017e6af2c131f6a509bbd218231c46",
-      "physicalLines": 72,
+      "bytes": 1712,
+      "sha256": "c0d98a75666d5ffdb49b94396c7bc3cfc8804c0836d80fd8adc626404577c1c1",
+      "physicalLines": 82,
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
-        "interface reviewer",
-        "primary integration reviewer"
+        "interface reviewer"
       ]
     },
     {
@@ -18,17 +17,17 @@
       "bytes": 12265,
       "sha256": "7d62dfc3e322f70299648eb6bd28b1ad095c48c2c43228ca3f4063c6a6660fd3",
       "physicalLines": 324,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
     },
     {
       "path": "app/components/OpportunityEditor.vue",
-      "bytes": 17203,
-      "sha256": "4b5f59308fa87fe4c2391f073f96ea761cc5959c29b46797b4f63c9946c6e7e3",
-      "physicalLines": 544,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 17233,
+      "sha256": "4f7c6c822536aff3d02c73f5b6f14296dae26ea95dd51740dccc4c111231b78c",
+      "physicalLines": 545,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -48,7 +47,7 @@
       "bytes": 1474,
       "sha256": "b69514b15db2c6b09ac6e66e2eff075baac31f743b2ec3184858dfa5fc3ec203",
       "physicalLines": 55,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -65,9 +64,29 @@
     },
     {
       "path": "app/components/StaffingShell.vue",
-      "bytes": 6530,
-      "sha256": "163b0581001cea0b17471f054b9c2e49586986e84dad5d3dec16ec22fff91a23",
-      "physicalLines": 334,
+      "bytes": 10345,
+      "sha256": "0fd5db5a8b1869d9f74f17f881905e232c8ace39f049f0bfa30504c8f93a9571",
+      "physicalLines": 518,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "interface reviewer"
+      ]
+    },
+    {
+      "path": "app/components/StaffingStatus.vue",
+      "bytes": 1404,
+      "sha256": "b75007b1d1efe850e78eb745c8e4f39f4ead7884ef254e774448cfb5f7b8583f",
+      "physicalLines": 69,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "interface reviewer"
+      ]
+    },
+    {
+      "path": "app/components/StaffingSummary.vue",
+      "bytes": 1011,
+      "sha256": "43e585bc6d692d7d8bd6c87ba539ba9c4c62e16c83a3a3467c301e77c5aae517",
+      "physicalLines": 49,
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
@@ -99,7 +118,7 @@
       "bytes": 1692,
       "sha256": "578790d0849cca07c1f68dc752ed041a9bf20ff16454f797fbf19aeadfdbf385",
       "physicalLines": 51,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -109,7 +128,7 @@
       "bytes": 2525,
       "sha256": "3b97be1900fdf5cc004755a55f17d47e85b89c54ecb8a7c8251664024af55bb8",
       "physicalLines": 84,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -119,7 +138,7 @@
       "bytes": 8521,
       "sha256": "1ad9fd92ce48452d8ccd1351e31e9e644ac5a06ea22f8da9f56277419e85859a",
       "physicalLines": 262,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -150,36 +169,36 @@
       "bytes": 11659,
       "sha256": "f512cf4188ba8ac37a21b51ce38eea613421ffe8cde9a0936e8d438770e21742",
       "physicalLines": 537,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
     },
     {
       "path": "app/pages/admin/staffing.vue",
-      "bytes": 11774,
-      "sha256": "50443054c6b4b3d41d2bd8a45c3e3f4f736d0771b6b8cc5c159e9b93e3179793",
-      "physicalLines": 363,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 12977,
+      "sha256": "4e90e588f07bca411c567ec7923405a9b7ae9e297b5246fa6a4d0bab4d424f44",
+      "physicalLines": 397,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
     },
     {
       "path": "app/pages/applications/[id].vue",
-      "bytes": 26788,
-      "sha256": "02c44f7a3304518a90781b269912340fa847dd293d914ee18c2942fb644896d8",
-      "physicalLines": 803,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 26817,
+      "sha256": "ff759db47be9b8dceff1b20f249a55437372bb8b8613bea628a8fecc3167e2f5",
+      "physicalLines": 804,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
     },
     {
       "path": "app/pages/applications/index.vue",
-      "bytes": 4733,
-      "sha256": "6c8c1e8fbf1097e0c197252c2a38ff3ddb248a9ac97e29b299022d163ab2fe2a",
-      "physicalLines": 151,
+      "bytes": 6815,
+      "sha256": "00194578e48c6a427336f00f72fe6e7b6b91e42d6cc62f587f63ad4882c7d03b",
+      "physicalLines": 214,
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
@@ -201,7 +220,7 @@
       "bytes": 66507,
       "sha256": "111e5bf4882c8e083ae0c0a0eadf8ee08795e4616ca01c92ef4e5f9c58d2188a",
       "physicalLines": 2544,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -211,7 +230,7 @@
       "bytes": 4349,
       "sha256": "03419c77a4aa00799a137cb44c45dc018a2144c8799d7f0d742fa8fd9f8850c6",
       "physicalLines": 123,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -221,7 +240,7 @@
       "bytes": 36329,
       "sha256": "6762f2695403dfb5e6000b3a891e8550f217134c8581884a7c9615b15bbb809d",
       "physicalLines": 1523,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -231,7 +250,7 @@
       "bytes": 36492,
       "sha256": "ff8cf9fbabc587154cdb8871c2ba20c72ff12cab3b93d764a5f8189b24b5d89d",
       "physicalLines": 1513,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -241,7 +260,7 @@
       "bytes": 16016,
       "sha256": "e9280482f7d006d1f619e0f9309f9f86cece55a211d71322a6c7abd08faa9ec3",
       "physicalLines": 709,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -279,30 +298,30 @@
     },
     {
       "path": "app/pages/opportunities/[id].vue",
-      "bytes": 6657,
-      "sha256": "8e40dac2a88d8b4c71848bf65377ddcbda7f7fcc72fa0f60926dc65cb48dd520",
+      "bytes": 6664,
+      "sha256": "5509dd20160164c4e159e557238cf488d3eb4c3c49b41b49f3737719daaafd0f",
       "physicalLines": 197,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
     },
     {
       "path": "app/pages/opportunities/index.vue",
-      "bytes": 2541,
-      "sha256": "5a84684f53d94b82f5aa72b57ecdc261c763b2599ac9d435cf5bf58616538a51",
-      "physicalLines": 78,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 3670,
+      "sha256": "1d8f40a58d8bb5695a11d748601352d8d5a22e8789db02983d44160db2bb0764",
+      "physicalLines": 112,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
     },
     {
       "path": "app/pages/staffing/[id].vue",
-      "bytes": 15510,
-      "sha256": "299900cc43a2bb6ba5db1c9bf8fb883f273d88e077597c3ef89421f0fc1fc0fb",
-      "physicalLines": 442,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 16612,
+      "sha256": "aab047a930542fc33706ddd8bd930cc083be87297cb7a243e7bb9b6e3e6a3a44",
+      "physicalLines": 476,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
       ]
@@ -320,9 +339,9 @@
     },
     {
       "path": "app/pages/staffing/index.vue",
-      "bytes": 2496,
-      "sha256": "f9e5a61057c4996c1d620d38c07cab060a98504d984796530dc80268317b817a",
-      "physicalLines": 81,
+      "bytes": 5171,
+      "sha256": "2189e052cfa6f1ab1a688e210fcc4e656fc28dbec76f275b1201d3ad5b47d8c8",
+      "physicalLines": 157,
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
@@ -354,7 +373,7 @@
       "bytes": 16623,
       "sha256": "b3fee0f9c955353fe2072bb1d2c544808452c8d37841acd19d1d17499b14d450",
       "physicalLines": 502,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "integration reviewer"
       ]
@@ -364,7 +383,7 @@
       "bytes": 11915,
       "sha256": "8d42b457b2c1480abae4c7b1eb6cb19a275b80a751c39886239801c1e180c4b9",
       "physicalLines": 363,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
@@ -374,7 +393,7 @@
       "bytes": 21817,
       "sha256": "ea3740b15fa047dc401f867c1dac48641d8f6c5f595ff2066bbbcf9e8f5126de",
       "physicalLines": 635,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
@@ -384,17 +403,17 @@
       "bytes": 16173,
       "sha256": "92640282213318232eaa4f81932f0633a59ef995f7940e0973de942764d8d9ba",
       "physicalLines": 259,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
     },
     {
       "path": "playwright/e2e/ai-refresh.spec.ts",
-      "bytes": 28278,
-      "sha256": "0b0a48bd46bfcf17e86d2b30ba2866f5d082ef8a29df46891976763f13aeb26c",
-      "physicalLines": 388,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 36262,
+      "sha256": "700625b20fd25ea32bcc464f14c12fa4921dd82b250d58445e90d682ca090994",
+      "physicalLines": 491,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
@@ -434,7 +453,7 @@
       "bytes": 24264,
       "sha256": "33ed5c44008e565cbf80ac8ef5bfa296b2dc9d2dc2c2d18ebad4e729dee5a04e",
       "physicalLines": 402,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "integration reviewer"
       ]
@@ -464,7 +483,7 @@
       "bytes": 12413,
       "sha256": "640ffad06bb7025492523526a53bd2485a36b9910c6adecaf580e20bdc126b46",
       "physicalLines": 189,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "integration reviewer"
       ]
@@ -500,11 +519,41 @@
       ]
     },
     {
+      "path": "playwright/e2e/showcase-ai.spec.ts",
+      "bytes": 7843,
+      "sha256": "e34f4062daeebcbf21693ce6d3872389be5307ad99ee9ccc6e1193ddbda88374",
+      "physicalLines": 93,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "integration reviewer"
+      ]
+    },
+    {
+      "path": "playwright/e2e/showcase-flow.spec.ts",
+      "bytes": 15316,
+      "sha256": "c2ba66a6adaf9e19edb6c32e6fd5067e58a885fafb33dba419c0c3b25501bebd",
+      "physicalLines": 186,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "integration reviewer"
+      ]
+    },
+    {
+      "path": "playwright/e2e/showcase-visual.spec.ts",
+      "bytes": 17256,
+      "sha256": "3a24468949b00c4101659aac9db84eebfe25e0e8e4ff9a69b543b6aa99e553be",
+      "physicalLines": 448,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "integration reviewer"
+      ]
+    },
+    {
       "path": "playwright/e2e/silent-refresh-browser.spec.ts",
       "bytes": 16111,
       "sha256": "9eab96deb2a9958141f959adbd050e7332dcc55e231abc617c4121b91de25310",
       "physicalLines": 254,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "integration reviewer"
       ]
@@ -514,7 +563,7 @@
       "bytes": 15258,
       "sha256": "236b4e8dc6a2cbc031e17d32bcb20821958d77b974d0481dd95ed184246df0c1",
       "physicalLines": 167,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "integration reviewer"
       ]
@@ -534,7 +583,7 @@
       "bytes": 39581,
       "sha256": "784c3c02a12729afb7d4bbdaad155531713ac0da3f01a584fec944fb8fafd6ba",
       "physicalLines": 1067,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "integration reviewer"
       ]
@@ -554,7 +603,7 @@
       "bytes": 12049,
       "sha256": "18d2ea6ae0bc22e528c92871be00308d2543df6fbd15cd94db0e8b618b271b0c",
       "physicalLines": 105,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "integration reviewer"
       ]
@@ -577,6 +626,16 @@
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "primary verification reviewer"
+      ]
+    },
+    {
+      "path": "playwright/showcase-fixtures.ts",
+      "bytes": 7964,
+      "sha256": "9003482cce67b6c8423a1dbb45b3449bd655f26287af4c09d2514dae5f7a332a",
+      "physicalLines": 152,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "integration reviewer"
       ]
     },
     {
@@ -604,7 +663,7 @@
       "bytes": 22135,
       "sha256": "91587bfb3bcdf021f4aa867eca87bac39efadd7efd6cc3d866769641354199ef",
       "physicalLines": 300,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
@@ -640,6 +699,46 @@
       ]
     },
     {
+      "path": "scripts/demo-catalog.mjs",
+      "bytes": 25954,
+      "sha256": "00838173c37c6041016316a48754b9862025e2e66128b76c4d5ea5e73e10ccc6",
+      "physicalLines": 295,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "AI and integration reviewer"
+      ]
+    },
+    {
+      "path": "scripts/demo-showcase-api.mjs",
+      "bytes": 15484,
+      "sha256": "7696006950840c08a2b320a4bf7c699963a7fc1a211cd7915692da134253830a",
+      "physicalLines": 177,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "AI and integration reviewer"
+      ]
+    },
+    {
+      "path": "scripts/demo-showcase-data.mjs",
+      "bytes": 9706,
+      "sha256": "43c2fa5cb329fb78f9d2afeeaa57a5339453bb72fa2c4bc6c4d71e17a2419db4",
+      "physicalLines": 129,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "AI and integration reviewer"
+      ]
+    },
+    {
+      "path": "scripts/demo-showcase.mjs",
+      "bytes": 4684,
+      "sha256": "ecdb2a1637a10fed7fe5ca57a432ae3f1895eb4aca1ff3b038f89c10bd83a5c1",
+      "physicalLines": 65,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "AI and integration reviewer"
+      ]
+    },
+    {
       "path": "scripts/demo-staffing.mjs",
       "bytes": 7666,
       "sha256": "5712a9410b0c7edea6b5756c085c801fd3c642b505a60e37a476ebb16763c37f",
@@ -651,12 +750,12 @@
     },
     {
       "path": "scripts/demo-windows.mjs",
-      "bytes": 5450,
-      "sha256": "125b45c9915d16d0b437ef382dfce2fa3efc5e9b708e21399425a016def5a682",
-      "physicalLines": 127,
+      "bytes": 6318,
+      "sha256": "9f1e7a78f94b475cb478763c84285e622e60afbcb1b55a6652414f4829bcf8a2",
+      "physicalLines": 131,
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
-        "primary verification reviewer"
+        "AI and integration reviewer"
       ]
     },
     {
@@ -667,6 +766,16 @@
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "primary verification reviewer"
+      ]
+    },
+    {
+      "path": "scripts/showcase-runner.mjs",
+      "bytes": 14401,
+      "sha256": "3387cd8fbe47627009f559ce3d9e9249a5ddafca6772ff0e101528987afd2fcb",
+      "physicalLines": 207,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "AI and integration reviewer"
       ]
     },
     {
@@ -874,7 +983,7 @@
       "bytes": 2524,
       "sha256": "f2f7e60337877f2a47b8721acd892e90b9a4a0bfc0dbda581b7dc6e70f0058fe",
       "physicalLines": 32,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
@@ -884,7 +993,7 @@
       "bytes": 834,
       "sha256": "f7a1b94a13bacd8f7ba93eeed562e9302cd6505d012ff00f7ea5613ff73a2023",
       "physicalLines": 11,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
@@ -1021,7 +1130,7 @@
       "bytes": 1543,
       "sha256": "b5911b37c6d2426ad4153644485f346e6018c03f75ef8ffb4747bebe14faca56",
       "physicalLines": 28,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
@@ -1031,47 +1140,47 @@
       "bytes": 1090,
       "sha256": "c09d2b6c1fd51939bef1033ee7577b78f6fec81586deba4b62943b5a28893058",
       "physicalLines": 32,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
     },
     {
       "path": "server/utils/ai-automation-indexes.ts",
-      "bytes": 531,
-      "sha256": "5f8739a77e6c84805c1a6ffe6532bf42ea7e980efd6dfd62ba3d302ff79f3ba2",
-      "physicalLines": 11,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 781,
+      "sha256": "bfc1fb7a9ea764c1984aa47a30cc59c8c277935cc4beb9e4c5866a9579280ce2",
+      "physicalLines": 17,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
     },
     {
       "path": "server/utils/ai-automation.ts",
-      "bytes": 31303,
-      "sha256": "9ab6e92ac1075ce7cbb314d55d3118fc9728d6438518b5d6b053d42c24f3dcc5",
-      "physicalLines": 363,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 34361,
+      "sha256": "030d5e6c87c26046656ec13e422d82cc24ec782e07ca4335c1fb256722f36e79",
+      "physicalLines": 414,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
     },
     {
       "path": "server/utils/ai-refresh.ts",
-      "bytes": 24494,
-      "sha256": "52d30b8358b3ffb184e39f450b29d6b640beca9dd084854681c7d91abbf49d11",
-      "physicalLines": 302,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 26036,
+      "sha256": "6e258e9e64dcb4252932c68d7ffab1aa61dc51da89214aa61012429184a2dd37",
+      "physicalLines": 322,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
     },
     {
       "path": "server/utils/ai.ts",
-      "bytes": 39671,
-      "sha256": "a1f1995e57db70d528062beaa91dea9352cfa5f51b686370ffe3fb2f74b425a5",
-      "physicalLines": 431,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 42760,
+      "sha256": "dfdbaec771db33f352eae45ebb6e2e46c481a4f58e84fdc0d77b98227fd0ea7a",
+      "physicalLines": 459,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
@@ -1113,7 +1222,7 @@
       "bytes": 6044,
       "sha256": "806ac3a19f1ab21204f6425427a6c8466ea6718e66e073273084363f8f19f9d6",
       "physicalLines": 114,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
@@ -1133,7 +1242,7 @@
       "bytes": 5816,
       "sha256": "269a716bd553413352b2e529e8738a35084c5aa53e6fbe78311c13c6c5877e59",
       "physicalLines": 87,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
@@ -1151,10 +1260,10 @@
     },
     {
       "path": "server/utils/staffing-applications.ts",
-      "bytes": 17880,
-      "sha256": "b975de34d852298495169c908f9e09b33b8fbfee2f664f38df397b19f9c0b3ca",
-      "physicalLines": 175,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 18859,
+      "sha256": "f2b5ec81a0b4afe6ae53cde8528e3083e50bb5d00a9fb49f84baaa2efad5ffe4",
+      "physicalLines": 185,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
@@ -1164,17 +1273,17 @@
       "bytes": 26420,
       "sha256": "62a50871cebd209870bac75825806c40d0c30726e97a9596fa702c459d209ce9",
       "physicalLines": 237,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
     },
     {
       "path": "server/utils/staffing-catalog.ts",
-      "bytes": 15786,
-      "sha256": "1b23ecd2bdf2e01a50de0f455f5d8553689ecf108005b893e302ec377c0ffc69",
-      "physicalLines": 168,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 15906,
+      "sha256": "e3c9e6c39d2d5d2293c4fca44cdcd400896e02f00996778e7916e7bb4d5c1df6",
+      "physicalLines": 169,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
@@ -1184,7 +1293,7 @@
       "bytes": 3685,
       "sha256": "de3b89f48e7a03d3455dc082260fea8eca6b5437f7153d7e29a2c4e453f6f4f6",
       "physicalLines": 49,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
@@ -1194,7 +1303,7 @@
       "bytes": 5386,
       "sha256": "b83c54248d7769bd99b60c078095d0e2a350d99e51abb7035f3975c771311917",
       "physicalLines": 93,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
@@ -1211,9 +1320,9 @@
     },
     {
       "path": "server/utils/staffing-reports.ts",
-      "bytes": 10245,
-      "sha256": "83a07c37a8e1d7f029f4a559c30dce762403f57d300617112bd6e5ee892f3a5a",
-      "physicalLines": 86,
+      "bytes": 10448,
+      "sha256": "ba1bd65a77cb39d09ae88ea869bf77638cca16c08cb566611c85187e5e466fee",
+      "physicalLines": 88,
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
@@ -1224,7 +1333,7 @@
       "bytes": 14396,
       "sha256": "c71fa48bd9ff0fc7c78135290d5d340e9163fffc775c67811b2f263c9dfe0641",
       "physicalLines": 203,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "database and domain reviewer"
       ]
@@ -1234,17 +1343,27 @@
       "bytes": 5209,
       "sha256": "0d95b5b0b5c6b0b2c855d9332bed4dfc61911d4f52823c773847e019dd269731",
       "physicalLines": 85,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
     },
     {
       "path": "tests/ai-automatic-input.test.mjs",
-      "bytes": 7176,
-      "sha256": "14564ad428bf0e08a785a597abc7d5dcd062924d14fd7291b24a8b96fc9dc167",
-      "physicalLines": 109,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "bytes": 10312,
+      "sha256": "0ebfe2e040f37288dde2b7bbf31fc94a6590103381dbac436d2b031189dcc757",
+      "physicalLines": 148,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "AI and integration reviewer"
+      ]
+    },
+    {
+      "path": "tests/ai-discovery-scale.test.mjs",
+      "bytes": 15762,
+      "sha256": "096dec53564fa94b92918838c7d8f7de76672d11d9d7e80132eec7359145ff84",
+      "physicalLines": 225,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
       ]
@@ -1254,6 +1373,16 @@
       "bytes": 4929,
       "sha256": "433dd07b7d4bf103069e556d46c36a7b046bfc64ddd7138be977b73057152714",
       "physicalLines": 59,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "AI and integration reviewer"
+      ]
+    },
+    {
+      "path": "tests/ai-execution-fairness.test.mjs",
+      "bytes": 12945,
+      "sha256": "4adc6de1aa344ecccc500a5bce9b3b104f1ab33f084f776ca154cc8e46e18324",
+      "physicalLines": 219,
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
@@ -1270,6 +1399,46 @@
       ]
     },
     {
+      "path": "tests/ai-refresh-durability.test.mjs",
+      "bytes": 12779,
+      "sha256": "2ba3156f2b9adb41b69a5857369d85f517756612b21453e22ae2dc1a45fb66e8",
+      "physicalLines": 186,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "AI and integration reviewer"
+      ]
+    },
+    {
+      "path": "tests/course-report-stability.test.mjs",
+      "bytes": 1935,
+      "sha256": "1da8c9e99750dfb9a8123bc3a1a82504d42301c882434315e440f7735915f6db",
+      "physicalLines": 29,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "integration reviewer"
+      ]
+    },
+    {
+      "path": "tests/demo-catalog.test.mjs",
+      "bytes": 9418,
+      "sha256": "f32b043b3ee35396a8b46da128714355612acea1a50b8a9697258acde6190119",
+      "physicalLines": 128,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "integration reviewer"
+      ]
+    },
+    {
+      "path": "tests/demo-showcase-data.test.mjs",
+      "bytes": 4677,
+      "sha256": "9f6a4e25dae164ea2cd1a39552fdd95e0ac08cb519407a487b72eac3faa2d5a6",
+      "physicalLines": 70,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "integration reviewer"
+      ]
+    },
+    {
       "path": "tests/dependency-security.test.mjs",
       "bytes": 1887,
       "sha256": "c6e8565c82e67d4fbe99a46826938a3348809d71e8cf882a6ebc3af9dbbef630",
@@ -1280,11 +1449,21 @@
       ]
     },
     {
+      "path": "tests/staffing-duty-types.test.mjs",
+      "bytes": 2585,
+      "sha256": "ee3afed3d7cbab2e53992b1efc6d45ffec3ae37eceddfbbcdddf0d47bbadf9e9",
+      "physicalLines": 40,
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "reviewers": [
+        "integration reviewer"
+      ]
+    },
+    {
       "path": "tests/staffing-maintenance.test.mjs",
       "bytes": 5330,
       "sha256": "3eb655c8943b6cfecf381f521ea3f168a7a0af22ace8ad10a8aeed4bb5a4ba36",
       "physicalLines": 104,
-      "review": "Current source and changed behavior read by the responsible domain reviewer and checked in final integration.",
+      "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "integration reviewer"
       ]

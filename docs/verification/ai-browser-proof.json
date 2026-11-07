@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "startedAt": "2026-11-07T19:04:31.387Z",
+  "startedAt": "2026-11-07T21:33:48.892Z",
   "synthetic": true,
   "headless": true,
   "automatic": true,
@@ -15,42 +15,7 @@
       "compared": 2
     },
     {
-      "kind": "candidate_fit",
-      "trigger": "automatic_without_page",
-      "status": "completed",
-      "validated": true,
-      "compared": 2
-    },
-    {
       "kind": "cv_summary",
-      "trigger": "automatic_without_page",
-      "status": "completed",
-      "validated": true,
-      "compared": null
-    },
-    {
-      "kind": "cv_summary",
-      "trigger": "automatic_without_page",
-      "status": "completed",
-      "validated": true,
-      "compared": null
-    },
-    {
-      "kind": "cv_summary",
-      "trigger": "automatic_without_page",
-      "status": "completed",
-      "validated": true,
-      "compared": null
-    },
-    {
-      "kind": "cv_summary",
-      "trigger": "automatic_without_page",
-      "status": "completed",
-      "validated": true,
-      "compared": null
-    },
-    {
-      "kind": "opportunity_draft",
       "trigger": "automatic_without_page",
       "status": "completed",
       "validated": true,
@@ -65,6 +30,41 @@
     },
     {
       "kind": "term_review",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "candidate_fit",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": 2
+    },
+    {
+      "kind": "cv_summary",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "opportunity_draft",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "cv_summary",
+      "trigger": "automatic_without_page",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "cv_summary",
       "trigger": "automatic_without_page",
       "status": "completed",
       "validated": true,
@@ -100,8 +100,8 @@
     "model": "gpt-5.4-mini"
   },
   "source": {
-    "commit": "085175686d8f723baead2b9882fdc3c1d94ba9cc",
-    "applicationSha256": "5377f9d0d865afd8a8d4bb70d1cb19640052c74efc161bf81cfafbc3c8f01214",
+    "commit": "ce6a247fd22d66335d68dc0fd727c1eb39621011",
+    "applicationSha256": "21c3704a6da36a05953fe24fbfd25f3784f7bb109d1851aaa865933f7357c8fe",
     "buildEntrySha256": "444c92c4a9bd18740e5ba3138935d1266fcf7fd93ae9c2641c9eeab0130cdbc2"
   },
   "sharedResourceResults": true,
@@ -120,5 +120,5 @@
   "remainingLeases": 0,
   "offerRequiresAcceptanceAndClearance": true,
   "cleanup": "complete",
-  "completedAt": "2026-11-07T19:05:53.409Z"
+  "completedAt": "2026-11-07T21:34:41.787Z"
 }
