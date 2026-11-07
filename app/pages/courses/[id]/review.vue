@@ -29,11 +29,8 @@ const opportunityTitles = computed(
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load this review.") }}
     </p>
-    <button class="secondary" :disabled="pending" @click="refresh()">
-      Refresh
-    </button>
-    <p v-if="pending" class="notice" role="status">Loading review…</p>
-    <template v-if="data && !error">
+    <p v-if="pending && !data" class="notice" role="status">Loading review…</p>
+    <template v-if="data">
       <section class="panel">
         <div class="panel-heading"><h2>Course Activity</h2></div>
         <div class="panel-body">

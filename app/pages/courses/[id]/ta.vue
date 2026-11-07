@@ -12,7 +12,6 @@ import {
   useAsyncData,
   useRequestFetch,
   navigateTo,
-  refreshNuxtData,
 } from "#app";
 
 type Announcement = {
@@ -59,18 +58,31 @@ const router = useRouter();
 const courseId = route.params.id as string;
 const requestFetch = useRequestFetch();
 
-const { data, error } = await useAsyncData<CourseApiResult>(
+let lastComplete: CourseApiResult | undefined;
+const loadCourse = async (_app: unknown, { signal }: { signal: AbortSignal }): Promise<CourseApiResult> => {
+  try {
+    const current = await requestFetch<CourseApiResult>(`/api/courses/${courseId}`, { signal });
+    lastComplete = current;
+    return current;
+  } catch (error: any) {
+    const status = error?.statusCode || error?.response?.status;
+    if (lastComplete && ![401, 403, 404].includes(status) && !signal.aborted) return lastComplete;
+    throw error;
+  }
+};
+const { data, error, refresh } = await useAsyncData<CourseApiResult>(
   `course-ta-${courseId}`,
-  (_app, { signal }) => requestFetch<CourseApiResult>(`/api/courses/${courseId}`, { signal }),
+  loadCourse,
   { dedupe: "defer" },
 );
+lastComplete = data.value || lastComplete;
 
 if (error.value) {
   const status = (error.value as any).statusCode;
   if (status === 401) {
     capturedUser.value = null;
     await navigateWithContext("/login");
-  } else {
+  } else if (status === 403 || status === 404) {
     await navigateWithContext("/courses");
   }
 }
@@ -80,7 +92,7 @@ watch(error, (value) => {
   if (status === 401) {
     capturedUser.value = null;
     navigateWithContext("/login");
-  } else if (status === 403) navigateWithContext("/courses");
+  } else if (status === 403 || status === 404) navigateWithContext("/courses");
 });
 const course = computed(() => data.value);
 const user = computed(() => course.value?.user || { email: "", name: "" });
@@ -143,7 +155,7 @@ const toggleOnDuty = async () => {
         method: "POST",
         body: { onDuty: !taOnDuty.value },
       });
-      await refreshNuxtData(`course-ta-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to toggle duty"));
     }
@@ -162,7 +174,7 @@ const setQueueStatus = async (status: "open" | "closed" | "paused") => {
         method: "PATCH",
         body: { state: status },
       });
-      await refreshNuxtData(`course-ta-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to update queue state"));
     }
@@ -232,7 +244,7 @@ const assignOrComplete = async (entry: QueueEntry) => {
         });
       }
 
-      await refreshNuxtData(`course-ta-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to update entry"));
     }
@@ -259,7 +271,7 @@ const moveEntry = async (index: number, direction: "up" | "down") => {
         method: "POST",
         body: { entryId: e.id, direction },
       });
-      await refreshNuxtData(`course-ta-${courseId}`);
+      await refresh();
     } catch (err: any) {
       alert(apiErrorMessage(err, "Failed to move entry"));
     }
@@ -287,7 +299,7 @@ const togglePauseEntry = async (entry: QueueEntry) => {
           paused: !entry.paused,
         },
       });
-      await refreshNuxtData(`course-ta-${courseId}`);
+      await refresh();
     } catch (err: any) {
       alert(apiErrorMessage(err, "Failed to pause entry"));
     }
@@ -313,7 +325,7 @@ const removeEntry = async (entry: QueueEntry) => {
         method: "POST",
         body: { entryId: entry.id, action: "remove" },
       });
-      await refreshNuxtData(`course-ta-${courseId}`);
+      await refresh();
     } catch (err: any) {
       alert(apiErrorMessage(err, "Failed to remove entry"));
     }
@@ -338,7 +350,7 @@ const handoffEntry = async (entry: QueueEntry) => {
         method: "POST",
         body: { entryId: entry.id, assign: "other" },
       });
-      await refreshNuxtData(`course-ta-${courseId}`);
+      await refresh();
     } catch (err: any) {
       alert(apiErrorMessage(err, "Failed to handoff entry"));
     }
@@ -366,7 +378,7 @@ const postAnnouncement = async () => {
         body: { message },
       });
       newAnnouncement.value = "";
-      await refreshNuxtData(`course-ta-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to post announcement"));
     }
@@ -385,7 +397,7 @@ const deleteAnnouncement = async (id: string) => {
         `/api/courses/${courseId}/announcements/${encodeURIComponent(id)}`,
         { method: "DELETE" },
       );
-      await refreshNuxtData(`course-ta-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to delete announcement"));
     }
@@ -410,7 +422,7 @@ const formatAt = (at: string) => {
 /**
  * Poll server for live updates.
  */
-useIntervalRefresh(() => refreshNuxtData(`course-ta-${courseId}`), 3000);
+useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(options), 3000);
 const logout = signOut;
 const goBack = () => router.push("/courses");
 const goHelp = () => navigateWithContext("/help");

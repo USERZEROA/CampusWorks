@@ -50,7 +50,7 @@ export async function withTransaction<T>(work: (db: Db, session: ClientSession) 
   const session = connectedClient!.startSession()
   const deadline = performance.now() + 30_000
   const assertWorkBudget = () => {
-    if (performance.now() >= deadline) throw createError({ statusCode: 409, statusMessage: 'The transaction exceeded its work budget; refresh and try again' })
+    if (performance.now() >= deadline) throw createError({ statusCode: 409, statusMessage: 'The transaction exceeded its work budget; current data will synchronize automatically' })
   }
   try {
     return await session.withTransaction(async () => {
@@ -67,7 +67,7 @@ export async function withTransaction<T>(work: (db: Db, session: ClientSession) 
   } catch (error: any) {
     if (error?.code === 11000) throw createError({ statusCode: 409, statusMessage: 'A conflicting record already exists' })
     if (error?.hasErrorLabel?.('TransientTransactionError') || error?.code === 50) {
-      throw createError({ statusCode: 409, statusMessage: 'The record changed; refresh and try again' })
+      throw createError({ statusCode: 409, statusMessage: 'The record changed; current data will synchronize automatically' })
     }
     throw error
   } finally { await session.endSession() }

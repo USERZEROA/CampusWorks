@@ -333,8 +333,7 @@ test('synthetic analytics render an empty range, nearest-rank P90 and a full sin
       wasHelped: true, endReason: 'completed',
     };
   });
-  // Refresh through a user action instead of racing the 15-second polling boundary.
-  await page.getByRole('button', { name: 'Open', exact: true }).click();
+  // New records arrive through background synchronization without a user action.
   await expect(page.getByTestId('session-row')).toHaveCount(2, { timeout: 15_000 });
   await expect.soft(metric('P90 Wait (min)')).toHaveText('9.0');
   await expect(metric('Avg Wait (min)')).toHaveText('5.0');

@@ -17,7 +17,6 @@ import {
   useAsyncData,
   useRequestFetch,
   navigateTo,
-  refreshNuxtData,
 } from "#app";
 
 type AdminCourse = {
@@ -162,7 +161,7 @@ const loadAdminData = async (_app: unknown, { signal }: { signal: AbortSignal })
   }
 };
 
-const { data, error } = await useAsyncData<AdminApiResult>(
+const { data, error, refresh } = await useAsyncData<AdminApiResult>(
   `course-admin-${courseId}`,
   loadAdminData,
   { dedupe: "defer" },
@@ -181,7 +180,7 @@ if (error.value) {
   if (status === 401) {
     capturedUser.value = null;
     await navigateWithContext("/login");
-  } else {
+  } else if (status === 403 || status === 404) {
     await navigateWithContext("/courses");
   }
 }
@@ -307,7 +306,7 @@ const setQueueState = async (state: "open" | "paused" | "closed") => {
         method: "PATCH",
         body: { state },
       });
-      await refreshNuxtData(`course-admin-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to update queue state"));
     }
@@ -896,10 +895,10 @@ const updateRole = async (
         result.role !== result.manualRole
           ? `The manual role for ${email} is now ${result.manualRole}. Their TA appointment still grants access.`
           : `The manual role for ${email} is now ${result.manualRole}.`;
-      await refreshNuxtData(`course-admin-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to update role"));
-      await refreshNuxtData(`course-admin-${courseId}`);
+      await refresh();
     }
   } finally {
     busyActions.value = false;
@@ -917,7 +916,7 @@ const kickUser = async (email: string, role: Enrollment["role"]) => {
         method: "POST",
         body: { email },
       });
-      await refreshNuxtData(`course-admin-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to remove user"));
     }
@@ -931,7 +930,7 @@ const restoreStudent = async (email: string) => {
   busyActions.value = true;
   try {
     await $fetch(`/api/courses/${courseId}/enrollments/restore`, { method: "POST", body: { email } });
-    await refreshNuxtData(`course-admin-${courseId}`);
+    await refresh();
   } catch (error: any) {
     alert(apiErrorMessage(error, "Failed to restore course access"));
   } finally {
@@ -963,7 +962,7 @@ const goHelp = () => {
   navigateWithContext("/help");
 };
 
-useIntervalRefresh(() => refreshNuxtData(`course-admin-${courseId}`), 15000);
+useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(options), 10000);
 </script>
 
 <template>

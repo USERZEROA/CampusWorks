@@ -11,7 +11,6 @@ import {
   useRequestFetch,
   useRouter,
   navigateTo,
-  refreshNuxtData,
 } from "#app";
 
 type CourseRow = {
@@ -38,14 +37,15 @@ type CoursesApiResult = {
 const router = useRouter();
 const requestFetch = useRequestFetch();
 const staffingAccess = useStaffingCapabilities();
-async function refreshStaffingAccess() {
+async function refreshStaffingAccess(signal?: AbortSignal) {
   try {
     staffingAccess.value = await requestFetch<StaffingCapabilities>(
-      "/api/staffing/capabilities",
+      "/api/staffing/capabilities", { signal },
     );
   } catch (error: any) {
-    staffingAccess.value = null;
-    if ((error?.statusCode || error?.response?.status) === 401) {
+    const status = error?.statusCode || error?.response?.status;
+    if ([401, 403, 404].includes(status)) staffingAccess.value = null;
+    if (status === 401) {
       capturedUser.value = null;
       await navigateWithContext("/login", { replace: true });
     }
@@ -53,11 +53,20 @@ async function refreshStaffingAccess() {
 }
 const catalog = useCourseCatalogLoader<CourseRow>();
 
-const { data, error } = await useAsyncData<CoursesApiResult>(
+const { data, error, refresh } = await useAsyncData<CoursesApiResult>(
   "courses",
   catalog.load,
   { dedupe: "defer" },
 );
+catalog.prime(data.value);
+watch(error, (value: any) => {
+  const status = value?.statusCode || value?.response?.status;
+  if (status === 401) {
+    capturedUser.value = null;
+    staffingAccess.value = null;
+    navigateWithContext("/login");
+  } else if (status === 403 || status === 404) navigateWithContext("/courses");
+});
 
 if (error.value) {
   const status = (error.value as any).statusCode;
@@ -81,9 +90,7 @@ const coursesState = ref<CourseRow[]>(data.value?.courses || []);
 watch(
   () => data.value?.courses,
   (val) => {
-    if (val) {
-      coursesState.value = val.map((c) => ({ ...c }));
-    }
+    coursesState.value = val ? val.map((c) => ({ ...c })) : [];
   },
 );
 
@@ -138,7 +145,7 @@ const toggleEnroll = async (course: CourseRow) => {
           enroll: willEnroll,
         },
       });
-      await refreshNuxtData("courses");
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Enroll failed"));
     }
@@ -158,8 +165,9 @@ const goToCourse = (course: CourseRow) => {
 };
 
 /** Periodically refresh course + enrollment data. */
-useIntervalRefresh(async () => {
-  await Promise.all([refreshNuxtData("courses"), refreshStaffingAccess()]);
+useIntervalRefresh(async (options) => {
+  if (busyActions.value) return;
+  await Promise.all([refresh(options), refreshStaffingAccess(options.signal)]);
 }, 5000);
 
 const logout = signOut;
@@ -348,7 +356,7 @@ const goAdminConsole = () => {
         <button
           type="button"
           :disabled="catalog.loadingMore.value"
-          @click="catalog.more(() => refreshNuxtData('courses'))"
+          @click="catalog.more(() => refresh())"
           data-testid="catalog-load-more"
         >
           Load more courses

@@ -6,7 +6,7 @@ export type QueueEndReason = 'completed' | 'removed' | 'left' | 'queue-closed' |
 export const queueRevision = (entry: Document) => Number.isSafeInteger(entry.revision) && entry.revision >= 0 ? entry.revision : 0
 export function assertQueueRevision(entry: Document, expected: unknown) {
   if (!Number.isSafeInteger(expected) || Number(expected) < 0) throw createError({ statusCode: 400, statusMessage: 'expectedRevision required' })
-  if (expected !== queueRevision(entry)) throw createError({ statusCode: 409, statusMessage: 'Queue entry changed; refresh before continuing' })
+  if (expected !== queueRevision(entry)) throw createError({ statusCode: 409, statusMessage: 'Queue entry changed; use its current controls' })
 }
 export function parseEntryId(value: unknown): ObjectId {
   if (typeof value !== 'string' || !/^[a-fA-F0-9]{24}$/.test(value)) throw createError({ statusCode: 400, statusMessage: 'Invalid entryId' })

@@ -14,7 +14,7 @@ export default defineEventHandler(event => withCourseTransaction(event, async (a
   const coll = db.collection('queueEntries')
   const filter = { courseId: courseKey, studentEmail: user.email }
   const existing = await coll.findOne(filter, { session })
-  if (body.action === 'edit' && (!existing || !existing._id.equals(expectedId!))) throw createError({ statusCode: 409, statusMessage: 'Your queue entry changed; refresh before editing' })
+  if (body.action === 'edit' && (!existing || !existing._id.equals(expectedId!))) throw createError({ statusCode: 409, statusMessage: 'This queue request ended; close this form to use the current queue' })
   if (course.state === 'closed' || (!existing && course.state !== 'open')) throw createError({ statusCode: 409, statusMessage: 'Queue is not open for new entries' })
   if (existing) {
     if (body.action === 'join') return { ok: true }

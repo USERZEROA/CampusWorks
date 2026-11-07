@@ -5,13 +5,11 @@ const navigateWithContext = (target: string, options?: any) =>
   navigationApp.runWithContext(() => navigateTo(target, options));
 const busyActions = ref(false);
 
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import {
   useAsyncData,
-  useRequestFetch,
   useRouter,
   navigateTo,
-  refreshNuxtData,
 } from "#app";
 
 type CourseRow = {
@@ -33,17 +31,28 @@ type CoursesApiResult = {
 };
 
 const router = useRouter();
-const requestFetch = useRequestFetch();
 const catalog = useCourseCatalogLoader<CourseRow>();
 
-const { data, error } = await useAsyncData<CoursesApiResult>(
+const { data, error, refresh } = await useAsyncData<CoursesApiResult>(
   "admin-courses",
   catalog.load,
+  { dedupe: "defer" },
 );
+catalog.prime(data.value);
+watch(error, (value: any) => {
+  const status = value?.statusCode || value?.response?.status;
+  if (status === 401) {
+    capturedUser.value = null;
+    navigateWithContext("/login");
+  } else if (status === 403 || status === 404) navigateWithContext("/courses");
+});
 
 if (error.value) {
-  capturedUser.value = null;
-  await navigateWithContext("/login");
+  const status = (error.value as any).statusCode;
+  if (status === 401) {
+    capturedUser.value = null;
+    await navigateWithContext("/login");
+  } else if (status === 403 || status === 404) await navigateWithContext("/courses");
 }
 
 const user = computed(() => data.value?.user || null);
@@ -54,6 +63,10 @@ const isAdmin = computed(() => !!user.value?.isGlobalAdmin);
 if (data.value && !isAdmin.value) {
   await navigateWithContext("/courses");
 }
+watch(data, (value) => {
+  if (value && !value.user.isGlobalAdmin) navigateWithContext("/courses");
+});
+useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(options));
 
 const courses = computed<CourseRow[]>(() => data.value?.courses || []);
 
@@ -80,7 +93,7 @@ const createCourse = async () => {
       });
       newCode.value = "";
       newTitle.value = "";
-      await refreshNuxtData("admin-courses");
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Create failed"));
     }
@@ -108,7 +121,7 @@ const deleteCourse = async (c: CourseRow) => {
       await $fetch(`/api/courses/${encodeURIComponent(c.id)}`, {
         method: "DELETE",
       });
-      await refreshNuxtData("admin-courses");
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Delete failed"));
     }
@@ -250,7 +263,7 @@ const goHelp = () => {
         <button
           type="button"
           :disabled="catalog.loadingMore.value"
-          @click="catalog.more(() => refreshNuxtData('admin-courses'))"
+          @click="catalog.more(() => refresh())"
           data-testid="catalog-load-more"
         >
           Load more courses

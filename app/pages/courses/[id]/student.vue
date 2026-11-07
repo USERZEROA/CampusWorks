@@ -13,7 +13,6 @@ import {
   useAsyncData,
   useRequestFetch,
   navigateTo,
-  refreshNuxtData,
 } from "#app";
 
 type Announcement = {
@@ -60,18 +59,31 @@ const router = useRouter();
 const courseId = route.params.id as string;
 const requestFetch = useRequestFetch();
 
-const { data, error } = await useAsyncData<CourseApiResult>(
+let lastComplete: CourseApiResult | undefined;
+const loadCourse = async (_app: unknown, { signal }: { signal: AbortSignal }): Promise<CourseApiResult> => {
+  try {
+    const current = await requestFetch<CourseApiResult>(`/api/courses/${courseId}`, { signal });
+    lastComplete = current;
+    return current;
+  } catch (error: any) {
+    const status = error?.statusCode || error?.response?.status;
+    if (lastComplete && ![401, 403, 404].includes(status) && !signal.aborted) return lastComplete;
+    throw error;
+  }
+};
+const { data, error, refresh } = await useAsyncData<CourseApiResult>(
   `course-student-${courseId}`,
-  (_app, { signal }) => requestFetch<CourseApiResult>(`/api/courses/${courseId}`, { signal }),
+  loadCourse,
   { dedupe: "defer" },
 );
+lastComplete = data.value || lastComplete;
 
 if (error.value) {
   const status = (error.value as any).statusCode;
   if (status === 401) {
     capturedUser.value = null;
     await navigateWithContext("/login");
-  } else {
+  } else if (status === 403 || status === 404) {
     await navigateWithContext("/courses");
   }
 }
@@ -81,7 +93,7 @@ watch(error, (value) => {
   if (status === 401) {
     capturedUser.value = null;
     navigateWithContext("/login");
-  } else if (status === 403) navigateWithContext("/courses");
+  } else if (status === 403 || status === 404) navigateWithContext("/courses");
 });
 const course = computed(() => data.value);
 const user = computed(() => course.value?.user || { email: "", name: "" });
@@ -183,7 +195,7 @@ const enroll = async () => {
         method: "POST",
         body: { courseId, enroll: true },
       });
-      await refreshNuxtData(`course-student-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Enroll failed"));
     } finally {
@@ -335,7 +347,7 @@ const submitJoin = async () => {
         body: { action: editingEntryId.value ? "edit" : "join", entryId: editingEntryId.value || undefined, location, question },
       });
       showJoinModal.value = false;
-      await refreshNuxtData(`course-student-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to join queue"));
     }
@@ -357,7 +369,7 @@ const leaveQueue = async () => {
         method: "POST",
         body: { entryId: myEntry.value.id },
       });
-      await refreshNuxtData(`course-student-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to leave queue"));
     }
@@ -382,7 +394,7 @@ const togglePauseSelf = async () => {
           paused: !myEntry.value.paused,
         },
       });
-      await refreshNuxtData(`course-student-${courseId}`);
+      await refresh();
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to update status"));
     }
@@ -394,7 +406,7 @@ const togglePauseSelf = async () => {
 /**
  * Lightweight polling to keep queue state fresh (skipped in background tabs).
  */
-useIntervalRefresh(() => refreshNuxtData(`course-student-${courseId}`), 2000);
+useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(options), 2000);
 
 /**
  * Navigation + auth actions.
