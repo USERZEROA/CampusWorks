@@ -1,4 +1,4 @@
-import type { Ref } from "vue";
+import type { Ref, WatchSource } from "vue";
 
 export const staffingId = (value: any): string =>
   String(value?.id || value?._id || "");
@@ -18,61 +18,102 @@ export function staffingRequest<T = any>(
 export function useStaffingOverview(key = "staffing-overview") {
   return useStaffingPagedRecord(key, "/api/staffing/overview");
 }
-export function useStaffingPagedRecord(key: string, url: string) {
+export function useStaffingPagedRecord(
+  key: string,
+  url: string,
+  options: {
+    query?: () => Record<string, any>;
+    watch?: WatchSource[];
+  } = {},
+) {
   const requestFetch = useRequestFetch();
   const pageCount = useState<number>(`${key}-page-count`, () => 1);
-  const state = useAsyncData<any>(key, async () => {
-    let result: any;
-    const names = [
-      "terms",
-      "courses",
-      "projects",
-      "opportunities",
-      "myApplications",
-      "myAppointments",
-      "managedOpportunities",
-      "adminAppointments",
-      "applications",
-      "appointments",
-      "offers",
-      "notifications",
-      "entries",
-    ];
-    const merge = (left: any[] = [], right: any[] = []) => [
-      ...new Map(
-        [...left, ...right].map((item) => [staffingId(item), item]),
-      ).values(),
-    ];
-    for (let page = 1; page <= pageCount.value; page++) {
-      const current = await requestFetch<any>(url, { query: { page } });
-      if (!result) result = current;
-      else {
-        for (const name of names)
-          if (Array.isArray(current[name]))
-            result[name] = merge(result[name], current[name]);
-        if (current.admin)
-          result.admin = {
-            ...current.admin,
-            pendingOpportunities: merge(
-              result.admin?.pendingOpportunities,
-              current.admin.pendingOpportunities,
-            ),
-            appointments: merge(
-              result.admin?.appointments,
-              current.admin.appointments,
-            ),
-          };
-        result.pagination = current.pagination;
+  const state = useAsyncData<any>(
+    key,
+    async () => {
+      const query = options.query?.() || {};
+      const requestedPages = pageCount.value;
+      let result: any;
+      const names = [
+        "terms",
+        "courses",
+        "projects",
+        "opportunities",
+        "myApplications",
+        "myAppointments",
+        "managedOpportunities",
+        "adminAppointments",
+        "applications",
+        "appointments",
+        "offers",
+        "notifications",
+        "entries",
+      ];
+      const merge = (
+        left: any[] = [],
+        right: any[] = [],
+        recordKey: (item: any) => string = staffingId,
+      ) => [
+        ...new Map(
+          [...left, ...right].map((item) => [recordKey(item), item]),
+        ).values(),
+      ];
+      for (let page = 1; page <= requestedPages; page++) {
+        const current = await requestFetch<any>(url, {
+          query: { ...query, page },
+        });
+        if (!result) result = current;
+        else {
+          const previous = result;
+          result = { ...previous, ...current };
+          for (const name of names)
+            if (Array.isArray(current[name]))
+              result[name] = merge(previous[name], current[name]);
+          if (current.admin)
+            result.admin = {
+              ...current.admin,
+              pendingOpportunities: merge(
+                previous.admin?.pendingOpportunities,
+                current.admin.pendingOpportunities,
+              ),
+              appointments: merge(
+                previous.admin?.appointments,
+                current.admin.appointments,
+              ),
+            };
+          if (current.workload)
+            result.workload = {
+              ...current.workload,
+              records: merge(
+                previous.workload?.records,
+                current.workload.records,
+              ),
+            };
+          if (current.budget)
+            result.budget = {
+              ...current.budget,
+              opportunities: merge(
+                previous.budget?.opportunities,
+                current.budget.opportunities,
+              ),
+              scenarios: merge(
+                previous.budget?.scenarios,
+                current.budget.scenarios,
+                (item) => `${item.opportunityId}:${item.positions}`,
+              ),
+            };
+        }
+        const more = current.pagination?.hasMore;
+        if (
+          !more ||
+          (typeof more === "object" && !Object.values(more).some(Boolean))
+        )
+          break;
       }
-      const more = current.pagination?.hasMore;
-      if (
-        !more ||
-        (typeof more === "object" && !Object.values(more).some(Boolean))
-      )
-        break;
-    }
-    return result;
-  });
+      return result;
+    },
+    { watch: options.watch },
+  );
   guardStaffingAccess(state.data, state.error);
   return state;
 }

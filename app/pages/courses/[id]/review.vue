@@ -1,19 +1,23 @@
 <script setup lang="ts">
 const courseId = String(useRoute().params.id);
-const { data: overview } = await useStaffingOverview(
-  `review-terms-${courseId}`,
-);
+const termsCacheKey = `review-terms-${courseId}`;
+const reportCacheKey = `term-review-${courseId}`;
+const { data: overview, error: termsError } =
+  await useStaffingOverview(termsCacheKey);
 const termId = ref(String(useRoute().query.termId || ""));
-const requestFetch = useRequestFetch();
-const { data, error, refresh } = await useAsyncData<any>(
-  `term-review-${courseId}`,
-  () =>
-    requestFetch(`/api/staffing/reviews/${courseId}`, {
-      query: { termId: termId.value || undefined },
-    }),
-  { watch: [termId] },
+const reportPages = useState<number>(`${reportCacheKey}-page-count`, () => 1);
+watch(
+  termId,
+  () => {
+    reportPages.value = 1;
+  },
+  { flush: "sync" },
 );
-guardStaffingAccess(data, error);
+const { data, error, refresh, pending } = await useStaffingPagedRecord(
+  reportCacheKey,
+  `/api/staffing/reviews/${courseId}`,
+  { query: () => ({ termId: termId.value || undefined }), watch: [termId] },
+);
 </script>
 <template>
   <StaffingShell
@@ -24,11 +28,16 @@ guardStaffingAccess(data, error);
     <p v-if="error" class="notice error" role="alert">
       {{ apiErrorMessage(error, "Unable to load this course review.") }}
     </p>
+    <p v-if="termsError" class="notice error" role="alert">
+      {{
+        apiErrorMessage(termsError, "Unable to load available review terms.")
+      }}
+    </p>
     <section class="panel">
       <div class="panel-body">
         <label
           >Term<select v-model="termId" data-testid="review-term">
-            <option value="">Current course term</option>
+            <option value="">All recorded terms</option>
             <option
               v-for="term in overview?.terms || []"
               :key="term.id"
@@ -37,10 +46,19 @@ guardStaffingAccess(data, error);
               {{ term.name }}
             </option>
           </select></label
-        ><button class="secondary" @click="refresh()">Refresh review</button>
+        ><button class="secondary" :disabled="pending" @click="refresh()">
+          Refresh review
+        </button>
+        <StaffingPaging
+          :cache-key="termsCacheKey"
+          :pagination="overview?.pagination"
+        />
       </div>
     </section>
-    <template v-if="data && !error"
+    <p v-if="pending" class="notice" role="status">
+      Loading the selected review…
+    </p>
+    <template v-if="data && !error && !pending"
       ><section class="panel">
         <div class="panel-heading"><h2>Recorded Course Activity</h2></div>
         <div class="panel-body">
@@ -105,6 +123,12 @@ guardStaffingAccess(data, error);
       <section class="panel">
         <div class="panel-heading"><h2>Budget Scenarios</h2></div>
         <div class="panel-body">
+          <p class="muted">
+            Metrics and budget totals cover all matching records. Scenario
+            details currently include
+            {{ data.budget?.opportunities?.length || 0 }} of
+            {{ data.pagination?.totals?.opportunities || 0 }} opportunities.
+          </p>
           <p>
             Committed budget:
             {{ data.budget?.committedBudget ?? "Unavailable" }}
@@ -131,6 +155,10 @@ guardStaffingAccess(data, error);
           </p>
         </div>
       </section>
+      <StaffingPaging
+        :cache-key="reportCacheKey"
+        :pagination="data.pagination"
+      />
       <AiAssistance
         kind="term_review"
         :term-id="termId"
