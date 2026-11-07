@@ -20,6 +20,7 @@
     "verify:local": "node scripts/local-test.mjs"
   },
   "dependencies": {
+    "deepmerge": "file:vendor/safe-deepmerge",
     "mongodb": "^7.0.0",
     "nuxt": "4.6.4",
     "vue": "^3.5.22",
@@ -34,7 +35,7 @@
     "vue-tsc": "3.1.1"
   },
   "overrides": {
-    "deepmerge": "file:vendor/safe-deepmerge",
+    "deepmerge": "$deepmerge",
     "glob": "14.0.4",
     "minimatch": "11.0.5"
   }
