@@ -1,0 +1,213 @@
+<script setup lang="ts">
+const { data, error, refresh } = await useStaffingOverview(
+  "staffing-administration",
+);
+const { busy, message, failure, run } = useStaffingMutation(refresh);
+const term = reactive({ name: "", startDate: "", endDate: "" });
+const clearance = reactive<Record<string, string>>({});
+const reason = ref("");
+const pending = computed(() => data.value?.admin?.pendingOpportunities || []);
+const appointments = computed(
+  () => data.value?.admin?.appointments || data.value?.adminAppointments || [],
+);
+async function createTerm() {
+  await run(
+    () =>
+      staffingRequest("/api/staffing/terms", {
+        method: "POST",
+        body: {
+          name: term.name,
+          startDate: new Date(term.startDate).toISOString(),
+          endDate: new Date(term.endDate).toISOString(),
+        },
+      }),
+    "Term created.",
+  );
+}
+async function approve(id: string, approved: boolean) {
+  await run(
+    () =>
+      staffingRequest(`/api/staffing/opportunities/${id}/approve`, {
+        method: "POST",
+        body: { approved, reason: reason.value },
+      }),
+    approved
+      ? "Opportunity approved and published."
+      : "Opportunity returned to draft.",
+  );
+}
+async function decide(item: any) {
+  await run(
+    () =>
+      staffingRequest(`/api/staffing/appointments/${item.id}/clearance`, {
+        method: "POST",
+        body: { status: clearance[item.id] || "cleared", reason: reason.value },
+      }),
+    "Clearance recorded and appointment activation rechecked.",
+  );
+}
+useIntervalRefresh(refresh);
+</script>
+<template>
+  <StaffingShell
+    title="Staffing Administration"
+    subtitle="Maintain terms, approve staffing plans, and record restricted appointment clearance."
+  >
+    <p v-if="error" class="notice error" role="alert">
+      {{ apiErrorMessage(error, "Unable to load staffing administration.") }}
+    </p>
+    <p
+      v-if="message"
+      class="notice"
+      :class="{ error: failure, success: !failure }"
+      role="status"
+      data-testid="admin-staffing-notice"
+    >
+      {{ message }}
+    </p>
+    <section class="panel">
+      <div class="panel-heading"><h2>Academic Terms</h2></div>
+      <div class="panel-body">
+        <form @submit.prevent="createTerm" :aria-busy="busy">
+          <div class="grid">
+            <label
+              >Term name<input
+                v-model="term.name"
+                required
+                maxlength="100"
+                data-testid="term-name" /></label
+            ><label
+              >Term starts (your local time)<input
+                v-model="term.startDate"
+                type="datetime-local"
+                required
+                data-testid="term-start" /></label
+            ><label
+              >Term ends (your local time)<input
+                v-model="term.endDate"
+                type="datetime-local"
+                required
+                data-testid="term-end"
+            /></label>
+          </div>
+          <button type="submit" :disabled="busy" data-testid="term-create">
+            Create term
+          </button>
+        </form>
+        <ul>
+          <li v-for="item in data?.terms || []" :key="item.id">
+            {{ item.name }} · {{ staffingDate(item.startDate) }} –
+            {{ staffingDate(item.endDate) }}
+          </li>
+        </ul>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-heading"><h2>Publication Approvals</h2></div>
+      <div class="panel-body">
+        <label
+          >Administrative decision reason<input
+            v-model="reason"
+            maxlength="1000"
+            data-testid="admin-staffing-reason"
+        /></label>
+        <article
+          v-for="item in pending"
+          :key="item.id"
+          class="opportunity-card"
+        >
+          <h3>{{ item.title }}</h3>
+          <p>
+            {{ item.type?.toUpperCase() }} · {{ item.positions }} position(s) ·
+            {{ item.weeklyHours }} hours/week · Budget {{ item.budget }}
+          </p>
+          <p>{{ item.description }}</p>
+          <div class="actions">
+            <NuxtLink :to="`/staffing/${item.id}`"
+              >Inspect requirements</NuxtLink
+            ><button
+              :disabled="busy"
+              @click="approve(item.id, true)"
+              :data-testid="`approve-opportunity-${item.id}`"
+            >
+              Approve and publish</button
+            ><button
+              class="secondary"
+              :disabled="busy || !reason.trim()"
+              @click="approve(item.id, false)"
+            >
+              Return to draft
+            </button>
+          </div>
+        </article>
+        <p v-if="!pending.length" class="empty">
+          No opportunities await approval.
+        </p>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="panel-heading"><h2>Appointment Clearance</h2></div>
+      <div class="panel-body">
+        <p class="notice">
+          Clearance records are separate from qualification review. Only an
+          accepted, cleared appointment within its approved dates can grant
+          staff access. Actual SSN values and immigration documents are not
+          collected in this form.
+        </p>
+        <article
+          v-for="item in appointments"
+          :key="item.id"
+          class="opportunity-card"
+          :data-testid="`admin-appointment-${item.id}`"
+        >
+          <h3>
+            {{ item.applicantEmail || item.userEmail || item.studentEmail }} ·
+            {{ item.type?.toUpperCase() }}
+          </h3>
+          <p>
+            Status: {{ staffingState(item.status) }} · Clearance:
+            {{ staffingState(item.clearanceStatus || item.clearance) }} ·
+            {{ item.courseId || item.projectId }}
+          </p>
+          <p>
+            {{ staffingDate(item.startDate || item.appointmentStart) }} –
+            {{ staffingDate(item.endDate || item.appointmentEnd) }}
+          </p>
+          <div
+            v-if="
+              !['ended', 'cancelled', 'not_cleared', 'expired'].includes(
+                item.status,
+              )
+            "
+            class="grid"
+          >
+            <label
+              >Clearance decision<select
+                v-model="clearance[item.id]"
+                :data-testid="`clearance-status-${item.id}`"
+              >
+                <option :value="undefined">Cleared</option>
+                <option value="cleared">Cleared</option>
+                <option value="needs_information">Needs information</option>
+                <option value="not_cleared">Not cleared</option>
+              </select></label
+            ><button
+              :disabled="
+                busy || (clearance[item.id] === 'not_cleared' && !reason.trim())
+              "
+              @click="decide(item)"
+              :data-testid="`clearance-${item.id}`"
+            >
+              Record clearance
+            </button>
+          </div>
+        </article>
+        <p v-if="!appointments.length" class="empty">No appointments yet.</p>
+      </div>
+    </section>
+    <StaffingPaging
+      cache-key="staffing-administration"
+      :pagination="data?.pagination"
+    />
+  </StaffingShell>
+</template>
