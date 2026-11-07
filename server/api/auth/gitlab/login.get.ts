@@ -8,7 +8,7 @@ import {
   sendRedirect,
   setCookie
 } from 'h3'
-import { getServerConfig, isGitlabConfigured } from '../../../utils/config'
+import { getServerConfig, isGitlabConfigured, requestOrigin, secureRequest } from '../../../utils/config'
 import { OAUTH_STATE_COOKIE } from '../../../utils/auth'
 
 /**
@@ -22,14 +22,14 @@ export default defineEventHandler((event) => {
     throw createError({ statusCode: 404, statusMessage: 'GitLab login is not configured' })
   }
 
-  const { origin } = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true })
+  const origin = requestOrigin(event)
   const state = randomBytes(16).toString('hex')
 
   setCookie(event, OAUTH_STATE_COOKIE, state, {
     path: '/api/auth',
     httpOnly: true,
     sameSite: 'lax',
-    secure: getRequestProtocol(event) === 'https',
+    secure: secureRequest(event),
     maxAge: 10 * 60
   })
 

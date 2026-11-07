@@ -8,7 +8,7 @@ import {
   getRequestURL,
   sendRedirect
 } from 'h3'
-import { getServerConfig, isEmailDomainAllowed, isGitlabConfigured } from '../../utils/config'
+import { getServerConfig, isEmailDomainAllowed, isGitlabConfigured, requestOrigin } from '../../utils/config'
 import { normalizeEmail, OAUTH_STATE_COOKIE, setSessionUser } from '../../utils/auth'
 
 type GitlabUser = {
@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid OAuth state, please sign in again' })
   }
 
-  const { origin } = getRequestURL(event, { xForwardedHost: true, xForwardedProto: true })
+  const origin = requestOrigin(event)
 
   // 1) Exchange authorization code for access token
   let accessToken: string | undefined

@@ -1,128 +1,94 @@
-// server/utils/auth.ts
-import type { H3Event } from 'h3'
-import {
-  createError,
-  deleteCookie,
-  getCookie,
-  getRequestProtocol,
-  unsealSession,
-  useSession
-} from 'h3'
-import type { SessionConfig } from 'h3'
-import { getServerConfig } from './config'
+import { createHash, randomBytes, randomUUID } from 'node:crypto'
+import type { H3Event, SessionConfig } from 'h3'
+import { createError, deleteCookie, getCookie, unsealSession, useSession } from 'h3'
+import { getServerConfig, secureRequest } from './config'
+import { getDb } from './db'
 
 export type PrimaryRole = 'student' | 'ta' | 'instructor' | 'admin'
-
-export type SessionUser = {
-  email: string
-  name: string
-  primaryRole: PrimaryRole
-  provider: 'mock' | 'gitlab'
-}
-
-type SessionData = { user?: SessionUser }
-
+export type SessionUser = { id: string; email: string; name: string; primaryRole: PrimaryRole; provider: 'mock' | 'gitlab' }
+type SessionData = { sid?: string }
 const SESSION_COOKIE = 'campusworks_session'
-const SESSION_MAX_AGE = 60 * 60 * 24 * 7 // 7 days
-
-/** Short-lived cookie holding the OAuth `state` value (CSRF protection). */
+const SESSION_MAX_AGE = 60 * 60 * 24 * 7
 export const OAUTH_STATE_COOKIE = 'campusworks_oauth_state'
-
-// Cookies written by older versions (plain, unsigned JSON). Never trusted.
-const LEGACY_COOKIES = ['campusworks_user']
-
 const PRIMARY_ROLES: PrimaryRole[] = ['student', 'ta', 'instructor', 'admin']
+const tokenHash = (token: string) => createHash('sha256').update(token).digest('hex')
+export const normalizeEmail = (email: string) => email.trim().toLowerCase()
+export const validEmail = (email: unknown): email is string => typeof email === 'string' && email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
 function sessionConfig(event: H3Event): SessionConfig {
   return {
-    name: SESSION_COOKIE,
-    password: getServerConfig().sessionSecret,
-    maxAge: SESSION_MAX_AGE,
-    sessionHeader: false,
-    cookie: {
-      path: '/',
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: getRequestProtocol(event) === 'https'
-    }
+    name: SESSION_COOKIE, password: getServerConfig().sessionSecret, maxAge: SESSION_MAX_AGE, sessionHeader: false,
+    cookie: { path: '/', httpOnly: true, sameSite: 'lax', secure: secureRequest(event) }
   }
 }
-
-export const normalizeEmail = (email: string) => email.trim().toLowerCase()
-
-const toSessionUser = (raw: any): SessionUser | null => {
-  if (!raw || typeof raw.email !== 'string' || !raw.email.includes('@')) {
-    return null
-  }
-  return {
-    email: normalizeEmail(raw.email),
-    name: String(raw.name || raw.email).trim(),
-    primaryRole: PRIMARY_ROLES.includes(raw.primaryRole) ? raw.primaryRole : 'student',
-    provider: raw.provider === 'gitlab' ? 'gitlab' : 'mock'
-  }
+async function sealedToken(event: H3Event): Promise<string | null> {
+  const sealed = getCookie(event, SESSION_COOKIE)
+  if (!sealed) return null
+  try {
+    const session = await unsealSession(event, sessionConfig(event), sealed)
+    const sid = (session.data as SessionData | undefined)?.sid
+    return typeof sid === 'string' && /^[a-f0-9]{64}$/.test(sid) ? sid : null
+  } catch { return null }
 }
 
-/**
- * The signed-in user for this request, or null.
- * The session cookie is sealed (encrypted + signed), so it cannot be forged.
- */
+/** The sealed cookie references a revocable server record; it carries no trusted role claim. */
 export async function getSessionUser(event: H3Event): Promise<SessionUser | null> {
   if (event.context.campusworksUser !== undefined) return event.context.campusworksUser
-
+  const token = await sealedToken(event)
   let user: SessionUser | null = null
-  const sealed = getCookie(event, SESSION_COOKIE)
-  if (sealed) {
-    try {
-      const session = await unsealSession(event, sessionConfig(event), sealed)
-      user = toSessionUser((session.data as SessionData | undefined)?.user)
-    } catch {
-      user = null // tampered or expired
-    }
+  if (token) {
+    const db = await getDb()
+    const record = await db.collection<any>('authSessions').findOne({ _id: tokenHash(token), expiresAt: { $gt: new Date() } })
+    const raw = record?.user
+    if (raw && typeof raw.id === 'string' && validEmail(raw.email) && PRIMARY_ROLES.includes(raw.primaryRole)) user = raw
   }
-
   event.context.campusworksUser = user
   return user
 }
-
 export async function requireUser(event: H3Event): Promise<SessionUser> {
   const user = await getSessionUser(event)
-  if (!user) {
-    throw createError({ statusCode: 401, statusMessage: 'Not authenticated' })
-  }
+  if (!user) throw createError({ statusCode: 401, statusMessage: 'Not authenticated' })
   return user
 }
 
-export async function setSessionUser(event: H3Event, user: SessionUser) {
-  const session = await useSession<SessionData>(event, sessionConfig(event))
-  await session.update({ user })
-  event.context.campusworksUser = user
-}
-
-export function clearSessionUser(event: H3Event) {
-  for (const name of [SESSION_COOKIE, ...LEGACY_COOKIES]) {
-    deleteCookie(event, name, { path: '/' })
+export async function setSessionUser(event: H3Event, input: Omit<SessionUser, 'id'> & { id?: string }): Promise<SessionUser> {
+  const db = await getDb()
+  const email = normalizeEmail(input.email)
+  if (!validEmail(email)) throw createError({ statusCode: 400, statusMessage: 'Invalid email' })
+  const now = new Date()
+  const users = db.collection<any>('users')
+  let account: any
+  try {
+    account = await users.findOneAndUpdate({ email }, {
+      $set: { email, name: input.name.slice(0, 80), updatedAt: now },
+      $setOnInsert: { id: randomUUID(), createdAt: now }
+    }, { upsert: true, returnDocument: 'after' })
+  } catch (error: any) {
+    if (error?.code !== 11000) throw error
+    account = await users.findOne({ email })
   }
+  if (!account?.id) throw createError({ statusCode: 503, statusMessage: 'Unable to establish account identity' })
+  const user: SessionUser = { ...input, id: account.id, email, name: input.name.slice(0, 80) }
+  const previous = await sealedToken(event)
+  if (previous) await db.collection<any>('authSessions').deleteOne({ _id: tokenHash(previous) })
+  const token = randomBytes(32).toString('hex')
+  await db.collection<any>('authSessions').insertOne({
+    _id: tokenHash(token), userId: user.id, user, createdAt: now, expiresAt: new Date(now.getTime() + SESSION_MAX_AGE * 1000)
+  })
+  const session = await useSession<SessionData>(event, sessionConfig(event))
+  await session.update({ sid: token })
+  event.context.campusworksUser = user
+  return user
+}
+export async function clearSessionUser(event: H3Event) {
+  const token = await sealedToken(event)
+  if (token) await (await getDb()).collection<any>('authSessions').deleteOne({ _id: tokenHash(token) })
+  for (const name of [SESSION_COOKIE, 'campusworks_user']) deleteCookie(event, name, { path: '/' })
   event.context.campusworksUser = null
 }
-
-/**
- * Global (site-wide) admin: may create/delete courses and has staff rights
- * in every course. Granted by the mock "admin" role or by ADMIN_EMAILS.
- */
 export function isGlobalAdmin(user: SessionUser | null | undefined) {
-  if (!user) return false
-  return (
-    user.primaryRole === 'admin' ||
-    getServerConfig().adminEmails.includes(user.email)
-  )
+  return !!user && ((user.provider === 'mock' && getServerConfig().mockLoginEnabled && user.primaryRole === 'admin') || getServerConfig().adminEmails.includes(user.email))
 }
-
 export function publicUser(user: SessionUser) {
-  return {
-    email: user.email,
-    name: user.name,
-    primaryRole: user.primaryRole,
-    provider: user.provider,
-    isGlobalAdmin: isGlobalAdmin(user)
-  }
+  return { id: user.id, email: user.email, name: user.name, primaryRole: user.primaryRole, provider: user.provider, isGlobalAdmin: isGlobalAdmin(user) }
 }
