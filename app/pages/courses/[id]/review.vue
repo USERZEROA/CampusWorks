@@ -76,10 +76,14 @@ const opportunityTitles = computed(
         <div class="panel-heading"><h2>Staffing Budget</h2></div>
         <div class="panel-body">
           <dl>
-            <dt>Approved</dt>
+            <dt>Requested position plans</dt>
+            <dd>{{ data.budget?.requestedBudget ?? "Unavailable" }}</dd>
+            <dt>Approved position plans</dt>
             <dd>{{ data.budget?.approvedBudget ?? "Unavailable" }}</dd>
-            <dt>Committed</dt>
+            <dt>Outstanding commitments</dt>
             <dd>{{ data.budget?.committedBudget ?? "Unavailable" }}</dd>
+            <dt>Settled costs</dt>
+            <dd>{{ data.budget?.settledBudget ?? "Unavailable" }}</dd>
           </dl>
           <p class="muted">
             {{ data.budget?.opportunities?.length || 0 }} of
