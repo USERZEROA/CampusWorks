@@ -1,0 +1,123 @@
+{
+    "reviewedOn":  "2026-11-07",
+    "scope":  "Complete application source and public assets",
+    "applicationTextFileCount":  12,
+    "applicationTextLines":  7640,
+    "publicTextFileCount":  2,
+    "publicBinaryFileCount":  2,
+    "identityAssetPathsUseCampusWorksNaming":  true,
+    "files":  [
+                  {
+                      "path":  "app/app.vue",
+                      "lines":  5,
+                      "bytes":  71,
+                      "snapshotSha256":  "63c1fb3634b5ab76dca3c9935629cda7582f157b4638da766f73b8f690864f7e",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/composables/useAuth.ts",
+                      "lines":  42,
+                      "bytes":  1228,
+                      "snapshotSha256":  "212b3442115b357b6850883ce4348aa4e9af23358bdc8d02739867220db82060",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/middleware/auth.global.ts",
+                      "lines":  32,
+                      "bytes":  804,
+                      "snapshotSha256":  "5b7bfaf11257057ae35df0116a22436231bf08f33e5a299731b37d0a1bf449b2",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/pages/admin/courses.vue",
+                      "lines":  477,
+                      "bytes":  9069,
+                      "snapshotSha256":  "b5736f8b98e98a46ffc98a225db1cb1ca4c22f6c1d3b80f504edfff1b9800e5d",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/pages/courses/[id].vue",
+                      "lines":  20,
+                      "bytes":  498,
+                      "snapshotSha256":  "1cfecf9681b371e7b650d48f864314df996faa14b15cec91b390cb419ebc7a2d",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/pages/courses/[id]/admin.vue",
+                      "lines":  2421,
+                      "bytes":  56198,
+                      "snapshotSha256":  "991006418cdb896722be579ab7b0abf4a8aada79881d854b2aa5766c7e168bfd",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/pages/courses/[id]/student.vue",
+                      "lines":  1566,
+                      "bytes":  32857,
+                      "snapshotSha256":  "75dc39c2ac72f93455a8244a95b951651ed12a352192a4c5a45584776e0cc463",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/pages/courses/[id]/ta.vue",
+                      "lines":  1563,
+                      "bytes":  33946,
+                      "snapshotSha256":  "3e7c09c9fbeda4f35de9ada16765691c708156739e2550b2b4daf9b2664d01ec",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/pages/courses/index.vue",
+                      "lines":  681,
+                      "bytes":  13317,
+                      "snapshotSha256":  "2a9830411548c2d422fbe177b90a651046fa01266a0251dd891d01d7210a3b3f",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/pages/help.vue",
+                      "lines":  280,
+                      "bytes":  7103,
+                      "snapshotSha256":  "b2fb6f3dd1fba99918e708e08ff93d3b9f9817e84789569ec58df2d743af28a4",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/pages/index.vue",
+                      "lines":  7,
+                      "bytes":  140,
+                      "snapshotSha256":  "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "app/pages/login.vue",
+                      "lines":  546,
+                      "bytes":  11428,
+                      "snapshotSha256":  "0943c7acda6071c99825cc7f49de8f777d6baadc35254c29dfaa58c9a930e539",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "public/duke-cs-logo.png",
+                      "lines":  null,
+                      "bytes":  10497,
+                      "snapshotSha256":  "f13da47b151485056dee3e755a28e194c6b5e5846bbcb44ce700378de668e1f6",
+                      "state":  "visually_inspected"
+                  },
+                  {
+                      "path":  "public/favicon.ico",
+                      "lines":  null,
+                      "bytes":  4286,
+                      "snapshotSha256":  "1057b17aec08a7191d134000203947f195a8aa7c84c39f1164cee8d01279762a",
+                      "state":  "binary_inventoried_not_rendered"
+                  },
+                  {
+                      "path":  "public/campusworks-logo.svg",
+                      "lines":  5,
+                      "bytes":  319,
+                      "snapshotSha256":  "c2b6dbc70681dcc4a474ec15b3616dbecf307da4123fde49e742b7c610f17d85",
+                      "state":  "fully_read"
+                  },
+                  {
+                      "path":  "public/robots.txt",
+                      "lines":  2,
+                      "bytes":  24,
+                      "snapshotSha256":  "e1f21c9aa28d50ca112ed357f34b67c550597effd4d42fd55b4e27300dd8f9c1",
+                      "state":  "fully_read"
+                  }
+              ]
+}

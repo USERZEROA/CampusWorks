@@ -1,0 +1,210 @@
+{
+  "scope": "Configuration, operations, documentation, and test files",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 14016,
+      "lines": 318,
+      "sha256": "c927716d76709dc911588913e1e68e78310750848ad958a97f7b02e0b84bf954",
+      "review": "Complete text read"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 922,
+      "lines": 18,
+      "sha256": "25a2f64d480b1ca2ec042e9bdcebff8c903ec26b56f0be264fff86c3ca8fbde4",
+      "review": "Complete text read"
+    },
+    {
+      "path": "package.json",
+      "bytes": 704,
+      "lines": 29,
+      "sha256": "d5c446e0a74d2481697e3e1675f25278ed7e138c7191f90af67cd74b69557236",
+      "review": "Complete text read"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 314890,
+      "lines": 8947,
+      "sha256": "f4df6fdba968046b6c2efaa84c404a7ab28017909aa263dd73eb5ca83a3e7b76",
+      "review": "Complete JSON parse and package metadata inspection"
+    },
+    {
+      "path": "nuxt.config.ts",
+      "bytes": 726,
+      "lines": 24,
+      "sha256": "f3f57174c63e248c4a59438b44cb482096cd0ec9821c6cb3408fa881b12cddc4",
+      "review": "Complete text read"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 320,
+      "lines": 18,
+      "sha256": "5dcf8b6d48da0438811c1b22d010604192d0898742331bcee8cf7998e1a1ff45",
+      "review": "Complete text read"
+    },
+    {
+      "path": "playwright.config.ts",
+      "bytes": 768,
+      "lines": 30,
+      "sha256": "1e3702c0dd9ef4591fb4af837d470b2718565a9fd183fd45527b70457f3b1e37",
+      "review": "Complete text read"
+    },
+    {
+      "path": ".env.example",
+      "bytes": 1879,
+      "lines": 36,
+      "sha256": "4f2ae72730b093be8b4351fe0f7403ad0304fd15f8946231ed960a564053cb57",
+      "review": "Complete text read"
+    },
+    {
+      "path": ".dockerignore",
+      "bytes": 343,
+      "lines": 27,
+      "sha256": "5f2fa0df284d6a027a0180cc2f5bc9e846f011f4578f05022bf0cd66c61ce030",
+      "review": "Complete text read"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 883,
+      "lines": 44,
+      "sha256": "73feedfc43c1ffb865f1171f10f51a2d2c0cf708f107c38f5ff387072a31ab8e",
+      "review": "Complete text read"
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "lines": 1,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "review": "Complete text read"
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 629,
+      "lines": 27,
+      "sha256": "5ad6a6fdaeaf7caa9e711243f3865f4e4d56bc0fd4e25ecaaf8e465f56c793d5",
+      "review": "Complete text read"
+    },
+    {
+      "path": "docker-compose.yml",
+      "bytes": 1551,
+      "lines": 48,
+      "sha256": "153fab9bfa3572e1b115a14888012c7baa705c0122c7a430ef78a8cf279dee1b",
+      "review": "Complete text read"
+    },
+    {
+      "path": "k8s/namespace.yaml",
+      "bytes": 58,
+      "lines": 4,
+      "sha256": "66421ea0127308d2d5aa8ba9181bb62c9906d50418123be6c35d63cd31240e7b",
+      "review": "Complete text read"
+    },
+    {
+      "path": "k8s/secret-mongo.yaml",
+      "bytes": 303,
+      "lines": 11,
+      "sha256": "5ba2d8dbc121000986438ffe1ea4c828769a9e4703848caf389a21a264df3f6b",
+      "review": "Complete text read"
+    },
+    {
+      "path": "k8s/secret-app.yaml",
+      "bytes": 580,
+      "lines": 19,
+      "sha256": "995773382e4eeea7526190664d39e061b4a3d859da5b51d02c6410bb8bbc13eb",
+      "review": "Complete text read"
+    },
+    {
+      "path": "k8s/mongo.yaml",
+      "bytes": 1209,
+      "lines": 54,
+      "sha256": "c27dd3ea29ffe7b31b2dfe0c5ebbe9dbac46820f9762ba1ae620919044683c12",
+      "review": "Complete text read"
+    },
+    {
+      "path": "k8s/app.yaml",
+      "bytes": 1771,
+      "lines": 65,
+      "sha256": "f137788f073ca6bb98c4cf94a3bc32a744afeea268912f2be3e7299f148720bd",
+      "review": "Complete text read"
+    },
+    {
+      "path": "scripts/demo-windows.mjs",
+      "bytes": 4229,
+      "lines": 109,
+      "sha256": "a483fc03a29ecf99430187eb118b355a4f281bca7f329fbf693ed9a4280fd151",
+      "review": "Complete text read"
+    },
+    {
+      "path": "playwright/helpers.ts",
+      "bytes": 2199,
+      "lines": 59,
+      "sha256": "4045bc3c4289450ee1881aea771b8263a5d3657971190c52449b0d2f61e78261",
+      "review": "Complete text read"
+    },
+    {
+      "path": "playwright/e2e/auth.spec.ts",
+      "bytes": 4210,
+      "lines": 97,
+      "sha256": "241a00b1b645027273bac17aa8e828de9037c0e61f519f2aa86740bb21b164f5",
+      "review": "Complete text read"
+    },
+    {
+      "path": "playwright/e2e/rbac.spec.ts",
+      "bytes": 7470,
+      "lines": 152,
+      "sha256": "ab7f23a3a6b6f923031f8a8cb55192137bd7b39bb990f14ac21171e9c7cc953f",
+      "review": "Complete text read"
+    },
+    {
+      "path": "playwright/e2e/queue-flow.spec.ts",
+      "bytes": 9700,
+      "lines": 217,
+      "sha256": "1813fea44af09eff928c8af386571175da7a7e31ad4433a5f50711a08c7991f1",
+      "review": "Complete text read"
+    }
+  ],
+  "localContextReadings": [
+    {
+      "path": "private/README.md",
+      "bytes": 2729,
+      "lines": 41,
+      "sha256": "12f42b95785d41b157bc85717699c0b203a093d5515b87c3ad88300fe53de657",
+      "review": "Complete text read for operational context; excluded from application deliverable"
+    },
+    {
+      "path": "private/HANDOFF.md",
+      "bytes": 12410,
+      "lines": 165,
+      "sha256": "045a14c221e19faa010823bf6262d9ae58f117944396bcd9296ead065f34e9bc",
+      "review": "Complete text read for operational context; excluded from application deliverable"
+    },
+    {
+      "path": "private/notes/audit-2026-10-29.md",
+      "bytes": 13978,
+      "lines": 113,
+      "sha256": "d555a1c6375177e00e9190bf031f139fb3de718491563488368d9827eb2453fa",
+      "review": "Complete text read for operational context; excluded from application deliverable"
+    },
+    {
+      "path": "private/sessions/2026-11-06-six-window-testing.md",
+      "bytes": 1002,
+      "lines": 11,
+      "sha256": "b68c41b5409540d6ed17613b847dbf56e8277358fa8d557113933753728153af",
+      "review": "Complete text read for operational context; excluded from application deliverable"
+    },
+    {
+      "path": "private/tools/archive-session.mjs",
+      "bytes": 5389,
+      "lines": 159,
+      "sha256": "167d84e9ca7f3a2a1435f628786fb404d344f06afed97cdd63a9a7b7a6cd9daa",
+      "review": "Complete text read for operational context; excluded from application deliverable"
+    },
+    {
+      "path": "private/archive/README.md",
+      "bytes": 1235,
+      "lines": 20,
+      "sha256": "8615f9f9a1677a22809e317371493308e414f6f86eb1a85418c2ff2ae0992553",
+      "review": "Complete text read for operational context; excluded from application deliverable"
+    }
+  ]
+}

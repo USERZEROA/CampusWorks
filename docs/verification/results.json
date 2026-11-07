@@ -1,0 +1,506 @@
+{
+  "date": "2026-11-07",
+  "environment": "Loopback production Docker app; isolated synthetic MongoDB database",
+  "versions": {
+    "windowsNode": "24.21.0",
+    "productionNode": "22.23.4",
+    "mongodbServer": "7.0.45",
+    "nuxt": "4.6.3",
+    "vue": "3.5.44",
+    "vueRouter": "5.4.0",
+    "mongodbDriver": "7.0.0",
+    "playwright": "1.56.1",
+    "typescript": "5.9.3",
+    "vueTsc": "3.1.1"
+  },
+  "image": {
+    "tag": "campusworks:verification",
+    "id": "sha256:e870ba98376134b3a5abc2cac54203aee09a0013a0db08915d912af5e7a130b7",
+    "user": "node",
+    "health": "healthy"
+  },
+  "checks": {
+    "typecheck": "passed",
+    "windowsProductionBuild": "passed",
+    "dockerProductionBuild": "passed",
+    "composeConfiguration": "passed",
+    "apiHealth": "passed",
+    "readingBaseline": {
+      "total": 73,
+      "covered": 73,
+      "missing": 0
+    },
+    "visualScreenshots": {
+      "total": 12,
+      "inspected": 12
+    }
+  },
+  "browserRun": {
+    "startedAt": "2026-11-07T06:59:47.241Z",
+    "durationMs": 30019.641,
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "tests": [
+      {
+        "file": "auth.spec.ts",
+        "name": "auth.spec.ts / authentication & sessions / visitors without a session are sent to /login",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 479
+          }
+        ]
+      },
+      {
+        "file": "auth.spec.ts",
+        "name": "auth.spec.ts / authentication & sessions / APIs reject requests without a valid session",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 20
+          }
+        ]
+      },
+      {
+        "file": "auth.spec.ts",
+        "name": "auth.spec.ts / authentication & sessions / forged or tampered cookies are not trusted",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 13
+          }
+        ]
+      },
+      {
+        "file": "auth.spec.ts",
+        "name": "auth.spec.ts / authentication & sessions / demo login, server-rendered reload and logout",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 706
+          }
+        ]
+      },
+      {
+        "file": "auth.spec.ts",
+        "name": "auth.spec.ts / authentication & sessions / one-click demo accounts sign in with their own names",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 315
+          }
+        ]
+      },
+      {
+        "file": "auth.spec.ts",
+        "name": "auth.spec.ts / authentication & sessions / only site admins can open the admin console",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 236
+          }
+        ]
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "name": "extended-flow.spec.ts / queue edits, ordering, pause, handoff and removal preserve lifecycle invariants",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 317
+          }
+        ]
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "name": "extended-flow.spec.ts / course identifiers and current roles bound announcements and staff authority",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 226
+          }
+        ]
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "name": "extended-flow.spec.ts / all four roles retain usable Duke blue screens at a 390px viewport",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 1256
+          }
+        ]
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "name": "extended-flow.spec.ts / downloaded history CSV preserves multiline answers and neutralizes formulas",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 362
+          }
+        ]
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "name": "extended-flow.spec.ts / synthetic analytics render an empty range, nearest-rank P90 and a full single-TA ring",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 4238
+          }
+        ]
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "name": "extended-flow.spec.ts / desktop navigation and all four workspaces retain their visual contracts",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 1632
+          }
+        ]
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / site admin creates the course and adds a TA",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 706
+          }
+        ]
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / TA opens the queue and goes on duty",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 725
+          }
+        ]
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / student must enroll before joining, then joins the queue",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 631
+          }
+        ]
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / TA picks the student up and completes the session",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 11973
+          }
+        ]
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / student leaves feedback for the course",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 202
+          }
+        ]
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / a second student who leaves on their own is also recorded",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 445
+          }
+        ]
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / instructor sees the sessions, outcomes and feedback",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 576
+          }
+        ]
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / closing the queue archives waiting students and clears duty",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 3028
+          }
+        ]
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / site admin deletes the course and all of its data",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 210
+          }
+        ]
+      },
+      {
+        "file": "rbac.spec.ts",
+        "name": "rbac.spec.ts / role-based access control (API) / students cannot use staff or admin endpoints",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 26
+          }
+        ]
+      },
+      {
+        "file": "rbac.spec.ts",
+        "name": "rbac.spec.ts / role-based access control (API) / students only see their own email in the queue and only edit their own entry",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 33
+          }
+        ]
+      },
+      {
+        "file": "rbac.spec.ts",
+        "name": "rbac.spec.ts / role-based access control (API) / users who are not enrolled cannot join, give feedback or see the queue",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 16
+          }
+        ]
+      },
+      {
+        "file": "rbac.spec.ts",
+        "name": "rbac.spec.ts / role-based access control (API) / TAs run the queue but cannot manage the course",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 30
+          }
+        ]
+      },
+      {
+        "file": "rbac.spec.ts",
+        "name": "rbac.spec.ts / role-based access control (API) / one active entry per TA: claiming a second entry releases the first",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 22
+          }
+        ]
+      },
+      {
+        "file": "rbac.spec.ts",
+        "name": "rbac.spec.ts / role-based access control (API) / instructors manage people but not the admin role or the course itself",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 30
+          }
+        ]
+      },
+      {
+        "file": "rbac.spec.ts",
+        "name": "rbac.spec.ts / role-based access control (API) / input validation rejects malformed requests",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 32
+          }
+        ]
+      }
+    ]
+  },
+  "dependencyAudit": {
+    "counts": {
+      "info": 0,
+      "low": 2,
+      "moderate": 11,
+      "high": 0,
+      "critical": 0,
+      "total": 13
+    },
+    "uniqueAdvisories": [
+      {
+        "package": "deepmerge",
+        "title": "deepmerge mergeObject() allows prototype poisoning of returned objects",
+        "url": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
+        "severity": "low",
+        "affectedRange": ">=4.2.0 <=4.3.1"
+      },
+      {
+        "package": "glob",
+        "title": "Glob: AbortSignal cancellation bypass allows post-timeout filesystem traversal",
+        "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4",
+        "severity": "moderate",
+        "affectedRange": ">=9.0.0 <=14.0.1"
+      },
+      {
+        "package": "minimatch",
+        "title": "minimatch has potential denial of service via globparts amplification",
+        "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+        "severity": "moderate",
+        "affectedRange": ">=7.0.0 <11.0.1"
+      }
+    ],
+    "affectedPackageEntries": [
+      {
+        "name": "@nuxt/nitro-server",
+        "severity": "moderate"
+      },
+      {
+        "name": "@nuxt/vite-builder",
+        "severity": "moderate"
+      },
+      {
+        "name": "@nuxt/vite-server",
+        "severity": "moderate"
+      },
+      {
+        "name": "@rollup/plugin-node-resolve",
+        "severity": "low"
+      },
+      {
+        "name": "@vercel/nft",
+        "severity": "moderate"
+      },
+      {
+        "name": "archiver",
+        "severity": "moderate"
+      },
+      {
+        "name": "archiver-utils",
+        "severity": "moderate"
+      },
+      {
+        "name": "deepmerge",
+        "severity": "low"
+      },
+      {
+        "name": "glob",
+        "severity": "moderate"
+      },
+      {
+        "name": "minimatch",
+        "severity": "moderate"
+      },
+      {
+        "name": "nitropack",
+        "severity": "moderate"
+      },
+      {
+        "name": "nuxt",
+        "severity": "moderate"
+      },
+      {
+        "name": "zip-stream",
+        "severity": "moderate"
+      }
+    ],
+    "observedScope": "Nitro build/tracing/archive dependency paths; runtime exploitability not established; no blanket runtime safety claim"
+  },
+  "evidence": {
+    "applicationInventorySha256": "fb52dd1b55264c0c944e0a486991cba408cf7fc481d2a82247a1134cce0ffec7",
+    "screenshots": [
+      {
+        "path": "screenshots/desktop-admin.png",
+        "sha256": "03021062559c061f5262f4de163416fe9cac9c9a179e094c6b897757d88a262f"
+      },
+      {
+        "path": "screenshots/desktop-directory.png",
+        "sha256": "f638e59e2d8333f360df195aa9ca6c51767f23d3268fcc5ce3caca0463327264"
+      },
+      {
+        "path": "screenshots/desktop-help.png",
+        "sha256": "d59d84516606fe1f210f0f784a61acb804d8d4d540db6b99b5a947083b30a312"
+      },
+      {
+        "path": "screenshots/desktop-instructor.png",
+        "sha256": "7f5186e8b696d3c82d08c9052c798d0d37224b298eb1b6e38731f18766bb1e79"
+      },
+      {
+        "path": "screenshots/desktop-login.png",
+        "sha256": "e3f70dd9e7c554672c372401beb072e8df898fa224ffd09b149fca13e2276d78"
+      },
+      {
+        "path": "screenshots/desktop-student.png",
+        "sha256": "0cc9d2459c8974f6d4c46175715551cee535adfb8abb9924abeb0eaf59344297"
+      },
+      {
+        "path": "screenshots/desktop-ta.png",
+        "sha256": "9937826e88734e26ac1d8d52ab05b011f66307a711f33813ca245211022512df"
+      },
+      {
+        "path": "screenshots/mobile-admin.png",
+        "sha256": "bb10b02df8adf8831cf3d1403c35a2ed83fa480abe26a672b07ed039f86d66d4"
+      },
+      {
+        "path": "screenshots/mobile-instructor.png",
+        "sha256": "ec209c7ae16abf0ca3d209836d26d1e8da65aef96e823b69ccf3f9d97255d1cb"
+      },
+      {
+        "path": "screenshots/mobile-student.png",
+        "sha256": "e2f3f7795ca3e826200c436c847f68b2e7f7a4c990a039731459ba810c685038"
+      },
+      {
+        "path": "screenshots/mobile-ta.png",
+        "sha256": "a8ce12453046c7f08b297553a43d81c751f5c48374f8ce3ee81e53e1a89885ca"
+      },
+      {
+        "path": "screenshots/synthetic-single-ta-analytics.png",
+        "sha256": "c3350cdeb29c678aeec68b3b8338b05790375768d3259621b72c16664cab71e3"
+      }
+    ]
+  },
+  "exclusions": [
+    "Real identity-provider sign-in",
+    "Private credentials and CVs",
+    "Hosted production and Kubernetes runtime",
+    "Multi-replica concurrency",
+    "Database fault injection",
+    "Physical-device and non-Chromium checks"
+  ],
+  "staffingFeatures": "Design only; not implemented"
+}

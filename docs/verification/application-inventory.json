@@ -1,0 +1,382 @@
+{
+  "date": "2026-11-07",
+  "baselineFileCount": 73,
+  "additionalValidationFiles": 2,
+  "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 343,
+      "sha256": "5f2fa0df284d6a027a0180cc2f5bc9e846f011f4578f05022bf0cd66c61ce030"
+    },
+    {
+      "path": ".env.example",
+      "bytes": 1900,
+      "sha256": "20c9056b22e73449d4084571d0c90fd18b706312eb1174ee3116503ef9db32ec"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 883,
+      "sha256": "73feedfc43c1ffb865f1171f10f51a2d2c0cf708f107c38f5ff387072a31ab8e"
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 629,
+      "sha256": "5ad6a6fdaeaf7caa9e711243f3865f4e4d56bc0fd4e25ecaaf8e465f56c793d5"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 922,
+      "sha256": "25a2f64d480b1ca2ec042e9bdcebff8c903ec26b56f0be264fff86c3ca8fbde4"
+    },
+    {
+      "path": "README.md",
+      "bytes": 17385,
+      "sha256": "a458c8ee940c0d7382fdd9863b5cc803ed4ebd0f337b3c0c4a763eb4ce6d7317"
+    },
+    {
+      "path": "app/app.vue",
+      "bytes": 71,
+      "sha256": "63c1fb3634b5ab76dca3c9935629cda7582f157b4638da766f73b8f690864f7e"
+    },
+    {
+      "path": "app/composables/useAuth.ts",
+      "bytes": 1228,
+      "sha256": "212b3442115b357b6850883ce4348aa4e9af23358bdc8d02739867220db82060"
+    },
+    {
+      "path": "app/middleware/auth.global.ts",
+      "bytes": 804,
+      "sha256": "5b7bfaf11257057ae35df0116a22436231bf08f33e5a299731b37d0a1bf449b2"
+    },
+    {
+      "path": "app/pages/admin/courses.vue",
+      "bytes": 9244,
+      "sha256": "274c12b5127b779e60384f85c3d4339125bc0beaacbc9f105c20472c66fb2eb2"
+    },
+    {
+      "path": "app/pages/courses/[id].vue",
+      "bytes": 498,
+      "sha256": "1cfecf9681b371e7b650d48f864314df996faa14b15cec91b390cb419ebc7a2d"
+    },
+    {
+      "path": "app/pages/courses/[id]/admin.vue",
+      "bytes": 56475,
+      "sha256": "3ab2d515a3d79052c4116b6b16e907530c60ebbce449b8d2d88f8d3d5996a808"
+    },
+    {
+      "path": "app/pages/courses/[id]/student.vue",
+      "bytes": 32890,
+      "sha256": "71d1cb0e5175d941095c92f7fd226e7cea0b36caf8a29f435d889e804618dd83"
+    },
+    {
+      "path": "app/pages/courses/[id]/ta.vue",
+      "bytes": 33960,
+      "sha256": "e7f48383c6936148c38528e890f86f6610162eb19de05be4799e023da144b0da"
+    },
+    {
+      "path": "app/pages/courses/index.vue",
+      "bytes": 13324,
+      "sha256": "6710b8bcfd607168bc9a82e4cd634bcb8c30c003c8f96a6bafd58369f63c7b70"
+    },
+    {
+      "path": "app/pages/help.vue",
+      "bytes": 7138,
+      "sha256": "1d32358addac04d8d5de6da54dcb22e654e2825d99efa997854895781402641d"
+    },
+    {
+      "path": "app/pages/index.vue",
+      "bytes": 140,
+      "sha256": "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c"
+    },
+    {
+      "path": "app/pages/login.vue",
+      "bytes": 11449,
+      "sha256": "b586ba837b6d6a06657d0a87aabaceeb5d0a194062c9b3621f8bbba7a97ad7a4"
+    },
+    {
+      "path": "docker-compose.yml",
+      "bytes": 1628,
+      "sha256": "ca9d9d88c942e73537bbf3e1ad06d9802aceb6a457cd206caa439f3684bc211f"
+    },
+    {
+      "path": "k8s/app.yaml",
+      "bytes": 1848,
+      "sha256": "853caaae3833feaefa33ed805c2513909c90c270bfaa47a54bf75bf2983fdc8d"
+    },
+    {
+      "path": "k8s/mongo.yaml",
+      "bytes": 1223,
+      "sha256": "1fcc94bb891eda007287d3d2a9613b19a92e7312c88074a1d15ddb4601c12656"
+    },
+    {
+      "path": "k8s/namespace.yaml",
+      "bytes": 65,
+      "sha256": "70f21aad337640eb878994cb57d1d0b2cfe8b52fe21670f906f50372119a287b"
+    },
+    {
+      "path": "k8s/secret-app.yaml",
+      "bytes": 601,
+      "sha256": "5909d556b10736671d2a6dd180885fccb28eff7f13e5db6133f3b078e4c589c3"
+    },
+    {
+      "path": "k8s/secret-mongo.yaml",
+      "bytes": 324,
+      "sha256": "d0657a71ccb8e72d14e299d9cb761464186475fe98c34a6a975df610c45af8eb"
+    },
+    {
+      "path": "nuxt.config.ts",
+      "bytes": 740,
+      "sha256": "346fa5e905e670b1801dce83ace348e9b912c00d72bb6e90749ad679ced15497"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 318115,
+      "sha256": "e0f7dc51627c85e4914189aea3bfa9da449944718212d4d9f937481c2b79aadd"
+    },
+    {
+      "path": "package.json",
+      "bytes": 864,
+      "sha256": "7ca9564018574981d225baaf87a8406ead55a9dfd0efa4ba360d1b2312a9a6a7"
+    },
+    {
+      "path": "playwright.config.ts",
+      "bytes": 775,
+      "sha256": "163416193a5aec52e9ee4a44826b6a9d043bc4845f345aa030c5d6d3a3740d79"
+    },
+    {
+      "path": "playwright/e2e/auth.spec.ts",
+      "bytes": 4231,
+      "sha256": "4a52abca79e21702f86028e0f28bdcca405834855f584863b246f961c3b5d4ae"
+    },
+    {
+      "path": "playwright/e2e/extended-flow.spec.ts",
+      "bytes": 22937,
+      "sha256": "e694b92fe3fd6b23e8f1f85ba0fa9986b672d5ca9ac585e726c5c4f9b6f914ac"
+    },
+    {
+      "path": "playwright/e2e/queue-flow.spec.ts",
+      "bytes": 9700,
+      "sha256": "1813fea44af09eff928c8af386571175da7a7e31ad4433a5f50711a08c7991f1"
+    },
+    {
+      "path": "playwright/e2e/rbac.spec.ts",
+      "bytes": 7470,
+      "sha256": "ab7f23a3a6b6f923031f8a8cb55192137bd7b39bb990f14ac21171e9c7cc953f"
+    },
+    {
+      "path": "playwright/helpers.ts",
+      "bytes": 2199,
+      "sha256": "4045bc3c4289450ee1881aea771b8263a5d3657971190c52449b0d2f61e78261"
+    },
+    {
+      "path": "playwright/tsconfig.json",
+      "bytes": 257,
+      "sha256": "9b5e0b22573f9a24d39b4557dd93ca6d9a8f34230b4131643984b8478f9c624f"
+    },
+    {
+      "path": "public/campusworks-logo.svg",
+      "bytes": 269,
+      "sha256": "005d99ecc9d7e34894ed539c0132f381902e2ed780d269838112bc327c6b6109"
+    },
+    {
+      "path": "public/duke-cs-logo.png",
+      "bytes": 10497,
+      "sha256": "f13da47b151485056dee3e755a28e194c6b5e5846bbcb44ce700378de668e1f6"
+    },
+    {
+      "path": "public/favicon.ico",
+      "bytes": 4286,
+      "sha256": "1057b17aec08a7191d134000203947f195a8aa7c84c39f1164cee8d01279762a"
+    },
+    {
+      "path": "public/robots.txt",
+      "bytes": 24,
+      "sha256": "e1f21c9aa28d50ca112ed357f34b67c550597effd4d42fd55b4e27300dd8f9c1"
+    },
+    {
+      "path": "scripts/demo-windows.mjs",
+      "bytes": 4236,
+      "sha256": "cbb4611d7dcf6d8841ed8a44e1cb4f0294aad38718f321cba3c94f8a237d2fca"
+    },
+    {
+      "path": "server/api/[...slug].ts",
+      "bytes": 361,
+      "sha256": "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8"
+    },
+    {
+      "path": "server/api/auth/gitlab.get.ts",
+      "bytes": 3627,
+      "sha256": "3690febb74cedf86c2381accb66b82681a00b2a75e6b226afaf5e5810682427a"
+    },
+    {
+      "path": "server/api/auth/gitlab/login.get.ts",
+      "bytes": 1350,
+      "sha256": "fbd30a25261f46fb9478bf5e1b57ebcd109bb1546b1af989893fdcf76142e92e"
+    },
+    {
+      "path": "server/api/auth/logout.post.ts",
+      "bytes": 332,
+      "sha256": "1bfe895bef48f59dca632e3c7886207d7caed41e245307eebe945051c2c24c32"
+    },
+    {
+      "path": "server/api/auth/me.get.ts",
+      "bytes": 359,
+      "sha256": "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64"
+    },
+    {
+      "path": "server/api/auth/mock.post.ts",
+      "bytes": 1778,
+      "sha256": "a6670047a918f44099a584f07068f9ef51bf613626139cc7d04704a04129e8a4"
+    },
+    {
+      "path": "server/api/auth/providers.get.ts",
+      "bytes": 638,
+      "sha256": "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233"
+    },
+    {
+      "path": "server/api/courses/[id].delete.ts",
+      "bytes": 857,
+      "sha256": "bb90bcc2ce4ffd08fd05777e093c009f4188edab1ff48465a3653174e99b1481"
+    },
+    {
+      "path": "server/api/courses/[id].get.ts",
+      "bytes": 1753,
+      "sha256": "965a5700fbb77bd8d1138cae36275945417eb14abdc9e6c8137096f14f14313e"
+    },
+    {
+      "path": "server/api/courses/[id]/admin.get.ts",
+      "bytes": 1467,
+      "sha256": "e5c6280346402984d2f6f5357a1c3b498361abe8fdcc1b3479b3ff5d1025082c"
+    },
+    {
+      "path": "server/api/courses/[id]/announcements.post.ts",
+      "bytes": 909,
+      "sha256": "3616a975cbfe392213f344befc5305e75363e83e314c2d981cf81bfa78915d5f"
+    },
+    {
+      "path": "server/api/courses/[id]/announcements/[announcementId].delete.ts",
+      "bytes": 953,
+      "sha256": "df642847ee5512c0feb22f1e45e104014d06edd65df5125f70ae2bb4e4c2ca20"
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/kick.post.ts",
+      "bytes": 1841,
+      "sha256": "ade402612e4853905cc37059d433c53ee1fadd65011daf846f4d7f636d516fb2"
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/role.patch.ts",
+      "bytes": 2398,
+      "sha256": "c7ff55252d18ddf3c38c2429907e5db55cb7645446bcbec21dac4b8321bf6bd2"
+    },
+    {
+      "path": "server/api/courses/[id]/feedback.post.ts",
+      "bytes": 1513,
+      "sha256": "7ce583536c740542b6a0be9991f360686e96af84515011ce111d24ac545d5a1b"
+    },
+    {
+      "path": "server/api/courses/[id]/queue/assign.post.ts",
+      "bytes": 2637,
+      "sha256": "bc5ed62c12daefef2aec0b9a975a709f50539aa1755ffd9a38d77f9216299e07"
+    },
+    {
+      "path": "server/api/courses/[id]/queue/join.post.ts",
+      "bytes": 2635,
+      "sha256": "e78192820154499ddbcf78165fdfa9a0cc1f09c61ff4bb709a0f203a8792432b"
+    },
+    {
+      "path": "server/api/courses/[id]/queue/leave.post.ts",
+      "bytes": 660,
+      "sha256": "8898f66bc619d7878054fa08fdf0452e92a4406586e5e5d1876914dbaa882bfa"
+    },
+    {
+      "path": "server/api/courses/[id]/queue/move.post.ts",
+      "bytes": 2142,
+      "sha256": "e703949d754e71fbcd487d674226430f5a6b131aa6cff1451a870c412df7c531"
+    },
+    {
+      "path": "server/api/courses/[id]/queue/pause.post.ts",
+      "bytes": 1489,
+      "sha256": "9b4f49fbfab921103f29f0ef8dc59ac1eb58c38d66a2c1eafd6b1c54f838d789"
+    },
+    {
+      "path": "server/api/courses/[id]/queue/remove.post.ts",
+      "bytes": 1082,
+      "sha256": "50da22bce2452619e8dcae6a7e30cbc304a1eedb4aba9c0ab4cb543c607aeb74"
+    },
+    {
+      "path": "server/api/courses/[id]/state.patch.ts",
+      "bytes": 1390,
+      "sha256": "cbeaa2ae698637ba50a1a3dfb43fd6ca8e9ee8f15233326748dcc12f2a6baf62"
+    },
+    {
+      "path": "server/api/courses/[id]/ta-duty.post.ts",
+      "bytes": 1315,
+      "sha256": "c5b24cfc065645572e333516237c9597ac93b015bae53c60682b8b5e95f494f3"
+    },
+    {
+      "path": "server/api/courses/enroll.post.ts",
+      "bytes": 1941,
+      "sha256": "6e23262e2e2a88d650a0f7ef15bb683bc508dcb342885bb3ef823900d2d63eb6"
+    },
+    {
+      "path": "server/api/courses/index.get.ts",
+      "bytes": 1386,
+      "sha256": "ce5ae74cfb001d7c69ea3e450077eb8de2d3e451a8e390f3fc0e42f6149a20e2"
+    },
+    {
+      "path": "server/api/courses/index.post.ts",
+      "bytes": 1798,
+      "sha256": "262b2ab385213ce92758299926b9d70a7bd797d175b985bd62183551cee5188e"
+    },
+    {
+      "path": "server/api/health.get.ts",
+      "bytes": 507,
+      "sha256": "bec5ec8747f8686fde35f05ca39b3fe54841af5e33cd3534f9407c8f326d55a0"
+    },
+    {
+      "path": "server/middleware/logging.ts",
+      "bytes": 684,
+      "sha256": "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156"
+    },
+    {
+      "path": "server/utils/auth.ts",
+      "bytes": 3676,
+      "sha256": "babe351aed1554eca2f11bb587ca6df3ed5ae2e3b9826c2ccc1a49a1b8026737"
+    },
+    {
+      "path": "server/utils/config.ts",
+      "bytes": 3337,
+      "sha256": "b86f10c213a833db95a0edf09b5665f6ab6b8171f2ae6cf5f50a63e5c02bd9d2"
+    },
+    {
+      "path": "server/utils/courses.ts",
+      "bytes": 4402,
+      "sha256": "1aab376c5306d29238d8630fc919b5db900fdecd94cea7e6f0480fa2f3f5ee64"
+    },
+    {
+      "path": "server/utils/db.ts",
+      "bytes": 2384,
+      "sha256": "a3cd1a2b1134f7fc6d8ec0bc93d0e2d6ac16a07bec239fe02edcb8b4bd8d2a7b"
+    },
+    {
+      "path": "server/utils/queue.ts",
+      "bytes": 3822,
+      "sha256": "15cd6fef2412eebc441618151ff7dd54285b693cf75173a41a8ff0fc99d65205"
+    },
+    {
+      "path": "server/utils/seed.ts",
+      "bytes": 4575,
+      "sha256": "da6e9fb395e0f25b113b77b17ad3454cf000ed901339e7041b39340cb7b13860"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 320,
+      "sha256": "5dcf8b6d48da0438811c1b22d010604192d0898742331bcee8cf7998e1a1ff45"
+    }
+  ]
+}

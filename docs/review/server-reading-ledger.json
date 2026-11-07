@@ -1,0 +1,315 @@
+{
+    "reviewDate":  "2026-11-07",
+    "scope":  "All server application files",
+    "fileCount":  34,
+    "totalPhysicalLines":  1884,
+    "verification":  "Complete static reading; runtime verification is recorded separately.",
+    "files":  [
+                  {
+                      "path":  "server/api/[...slug].ts",
+                      "physicalLineCount":  10,
+                      "bytes":  361,
+                      "reviewedSha256":  "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/auth/gitlab.get.ts",
+                      "physicalLineCount":  110,
+                      "bytes":  3627,
+                      "reviewedSha256":  "3690febb74cedf86c2381accb66b82681a00b2a75e6b226afaf5e5810682427a",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/auth/gitlab/login.get.ts",
+                      "physicalLineCount":  45,
+                      "bytes":  1350,
+                      "reviewedSha256":  "fbd30a25261f46fb9478bf5e1b57ebcd109bb1546b1af989893fdcf76142e92e",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/auth/logout.post.ts",
+                      "physicalLineCount":  12,
+                      "bytes":  332,
+                      "reviewedSha256":  "1bfe895bef48f59dca632e3c7886207d7caed41e245307eebe945051c2c24c32",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/auth/me.get.ts",
+                      "physicalLineCount":  12,
+                      "bytes":  359,
+                      "reviewedSha256":  "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/auth/mock.post.ts",
+                      "physicalLineCount":  47,
+                      "bytes":  1778,
+                      "reviewedSha256":  "a6670047a918f44099a584f07068f9ef51bf613626139cc7d04704a04129e8a4",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/auth/providers.get.ts",
+                      "physicalLineCount":  19,
+                      "bytes":  638,
+                      "reviewedSha256":  "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id].delete.ts",
+                      "physicalLineCount":  26,
+                      "bytes":  857,
+                      "reviewedSha256":  "bb90bcc2ce4ffd08fd05777e093c009f4188edab1ff48465a3653174e99b1481",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id].get.ts",
+                      "physicalLineCount":  53,
+                      "bytes":  1753,
+                      "reviewedSha256":  "965a5700fbb77bd8d1138cae36275945417eb14abdc9e6c8137096f14f14313e",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/admin.get.ts",
+                      "physicalLineCount":  44,
+                      "bytes":  1467,
+                      "reviewedSha256":  "e5c6280346402984d2f6f5357a1c3b498361abe8fdcc1b3479b3ff5d1025082c",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/announcements.post.ts",
+                      "physicalLineCount":  31,
+                      "bytes":  909,
+                      "reviewedSha256":  "3616a975cbfe392213f344befc5305e75363e83e314c2d981cf81bfa78915d5f",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/announcements/[announcementId].delete.ts",
+                      "physicalLineCount":  28,
+                      "bytes":  953,
+                      "reviewedSha256":  "df642847ee5512c0feb22f1e45e104014d06edd65df5125f70ae2bb4e4c2ca20",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/enrollments/kick.post.ts",
+                      "physicalLineCount":  48,
+                      "bytes":  1841,
+                      "reviewedSha256":  "ade402612e4853905cc37059d433c53ee1fadd65011daf846f4d7f636d516fb2",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/enrollments/role.patch.ts",
+                      "physicalLineCount":  60,
+                      "bytes":  2398,
+                      "reviewedSha256":  "c7ff55252d18ddf3c38c2429907e5db55cb7645446bcbec21dac4b8321bf6bd2",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/feedback.post.ts",
+                      "physicalLineCount":  51,
+                      "bytes":  1513,
+                      "reviewedSha256":  "7ce583536c740542b6a0be9991f360686e96af84515011ce111d24ac545d5a1b",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/queue/assign.post.ts",
+                      "physicalLineCount":  70,
+                      "bytes":  2637,
+                      "reviewedSha256":  "bc5ed62c12daefef2aec0b9a975a709f50539aa1755ffd9a38d77f9216299e07",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/queue/join.post.ts",
+                      "physicalLineCount":  83,
+                      "bytes":  2635,
+                      "reviewedSha256":  "e78192820154499ddbcf78165fdfa9a0cc1f09c61ff4bb709a0f203a8792432b",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/queue/leave.post.ts",
+                      "physicalLineCount":  22,
+                      "bytes":  660,
+                      "reviewedSha256":  "8898f66bc619d7878054fa08fdf0452e92a4406586e5e5d1876914dbaa882bfa",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/queue/move.post.ts",
+                      "physicalLineCount":  68,
+                      "bytes":  2142,
+                      "reviewedSha256":  "e703949d754e71fbcd487d674226430f5a6b131aa6cff1451a870c412df7c531",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/queue/pause.post.ts",
+                      "physicalLineCount":  45,
+                      "bytes":  1489,
+                      "reviewedSha256":  "9b4f49fbfab921103f29f0ef8dc59ac1eb58c38d66a2c1eafd6b1c54f838d789",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/queue/remove.post.ts",
+                      "physicalLineCount":  33,
+                      "bytes":  1082,
+                      "reviewedSha256":  "50da22bce2452619e8dcae6a7e30cbc304a1eedb4aba9c0ab4cb543c607aeb74",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/state.patch.ts",
+                      "physicalLineCount":  42,
+                      "bytes":  1390,
+                      "reviewedSha256":  "cbeaa2ae698637ba50a1a3dfb43fd6ca8e9ee8f15233326748dcc12f2a6baf62",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/[id]/ta-duty.post.ts",
+                      "physicalLineCount":  37,
+                      "bytes":  1315,
+                      "reviewedSha256":  "c5b24cfc065645572e333516237c9597ac93b015bae53c60682b8b5e95f494f3",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/enroll.post.ts",
+                      "physicalLineCount":  59,
+                      "bytes":  1941,
+                      "reviewedSha256":  "6e23262e2e2a88d650a0f7ef15bb683bc508dcb342885bb3ef823900d2d63eb6",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/index.get.ts",
+                      "physicalLineCount":  47,
+                      "bytes":  1386,
+                      "reviewedSha256":  "ce5ae74cfb001d7c69ea3e450077eb8de2d3e451a8e390f3fc0e42f6149a20e2",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/courses/index.post.ts",
+                      "physicalLineCount":  58,
+                      "bytes":  1798,
+                      "reviewedSha256":  "262b2ab385213ce92758299926b9d70a7bd797d175b985bd62183551cee5188e",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/api/health.get.ts",
+                      "physicalLineCount":  19,
+                      "bytes":  507,
+                      "reviewedSha256":  "bec5ec8747f8686fde35f05ca39b3fe54841af5e33cd3534f9407c8f326d55a0",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/middleware/logging.ts",
+                      "physicalLineCount":  21,
+                      "bytes":  684,
+                      "reviewedSha256":  "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/utils/auth.ts",
+                      "physicalLineCount":  128,
+                      "bytes":  3620,
+                      "reviewedSha256":  "e24e0f56cfcca2f785ccf08d9b4cf9f7f2393a4eaf281019b18268150b79398b",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/utils/config.ts",
+                      "physicalLineCount":  99,
+                      "bytes":  3309,
+                      "reviewedSha256":  "0888e8ce01626b4617a371d999b77c2a2633a6a96cc5e7fdc42287753c455f3b",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/utils/courses.ts",
+                      "physicalLineCount":  145,
+                      "bytes":  4402,
+                      "reviewedSha256":  "1aab376c5306d29238d8630fc919b5db900fdecd94cea7e6f0480fa2f3f5ee64",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/utils/db.ts",
+                      "physicalLineCount":  85,
+                      "bytes":  2370,
+                      "reviewedSha256":  "126c2f9ca5c4b0dd267e427a440f4a87cdeb1e9c3f85451bd0ecb0d8f0b7da24",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/utils/queue.ts",
+                      "physicalLineCount":  112,
+                      "bytes":  3822,
+                      "reviewedSha256":  "15cd6fef2412eebc441618151ff7dd54285b693cf75173a41a8ff0fc99d65205",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  },
+                  {
+                      "path":  "server/utils/seed.ts",
+                      "physicalLineCount":  115,
+                      "bytes":  4568,
+                      "reviewedSha256":  "a0096d2053ad3a641c4f05e4ba272740a29863dd854c7f4da547f5582f84ec40",
+                      "readStatus":  "complete",
+                      "semanticReview":  "complete",
+                      "reviewDocument":  "docs/review/server-review.md"
+                  }
+              ]
+}
