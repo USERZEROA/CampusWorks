@@ -1,4 +1,4 @@
-export const DEMO_CATALOG_VERSION = 3;
+export const DEMO_CATALOG_VERSION = 4;
 const DAY = 86400000;
 const MINUTE = 60000;
 
@@ -139,9 +139,9 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
       preferredSkills: type === 'ta' ? 'Peer tutoring, rubric-based feedback and collaborative communication' : 'Version control, reproducibility and collaborative documentation',
       requiredSlots: type === 'ta' ? [{ day: 2, start: '14:00', end: '15:00' }] : [],
       questions: [
-        { id: 'experience', prompt: 'Which coursework or experience best prepares you for this position?', purpose: 'qualification', required: true },
-        { id: 'approach', prompt: type === 'ta' ? 'How would you help a student reason through a difficult problem?' : 'How would you verify and document a reproducible result?', purpose: 'qualification', required: true },
-        { id: 'availability', prompt: 'How will you organize the stated weekly duties and required availability?', purpose: 'qualification', required: true },
+        { id: 'experience', prompt: 'Relevant preparation?', purpose: 'qualification', required: true },
+        { id: 'approach', prompt: type === 'ta' ? 'Teaching approach?' : 'Verification approach?', purpose: 'qualification', required: true },
+        { id: 'availability', prompt: 'Weekly availability?', purpose: 'qualification', required: true },
       ],
       allowedPositionPreferences: ['half', 'either'], cvRequired: true, approvalRequired: true,
       hourlyRate, budget: Math.ceil(appointmentCost * positions * 1.12 / 100) * 100,
@@ -155,33 +155,45 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
     if (!actor || !opportunity) throw new Error('The demonstration application has an invalid reference.');
     const prior = Number(actorKey.replace('candidate-', '')) % 3 === 0;
     const strength = variant % 3;
-    const experience = [
-      'Led weekly peer-study sessions, wrote small reproducible examples and explained trade-offs through tests and diagrams.',
-      'Completed related coursework with a project that combines tests, documentation and a clear explanation of design decisions.',
-      'Built practical course projects, reviewed teammates\' work and improved written instructions after collecting feedback.',
-    ][strength];
+    const experience = (opportunity.input.type === 'ta' ? [
+      'Led peer study sessions.',
+      'Built a tested course project.',
+      'Reviewed team project code.',
+    ] : [
+      'Documented reproducible experiments.',
+      'Built a tested data pipeline.',
+      'Reviewed evaluation scripts.',
+    ])[strength];
     const profile = {
       firstName: actor.firstName, lastName: actor.lastName, preferredEmail: actor.email,
       undergraduateMajors: strength === 2 ? 'Computer Science and Mathematics' : 'Computer Science', department: 'Computer Science',
       positionPreference: variant % 2 ? 'either' : 'half', priorTaExperience: prior,
-      priorCourses: prior ? 'Introductory programming and data-structures peer support (synthetic experience).' : '',
+      priorCourses: prior ? 'Programming and data-structures peer support.' : '',
       multipleCourses: false, graduationTerm: `Spring ${year + 1}`,
       availability: 'Tuesday and Thursday afternoons; the required Tuesday 14:00-15:00 session is available.',
       availableHours: 10 + (variant % 3) * 5,
       slots: [{ day: 1, start: '09:00', end: '12:00' }, { day: 2, start: '13:00', end: '17:00' }, { day: 4, start: '13:00', end: '17:00' }],
-      skills: `${opportunity.input.requiredSkills}; ${['peer explanations and test-driven debugging', 'project documentation and small-group facilitation', 'careful evaluation and collaborative review'][strength]}`,
+      skills: opportunity.input.requiredSkills,
       experience,
     };
     const answers = {
-      experience: `My preparation includes ${opportunity.input.requiredSkills.toLowerCase()}. ${experience}`,
-      approach: opportunity.input.type === 'ta' ? 'I would first ask the student to explain their current reasoning, identify one small failing example, and use a hint or a diagram before checking their understanding with a related example.' : 'I would record inputs and assumptions, run a small baseline, preserve the configuration in version control, and verify the result with independent checks before documenting limitations.',
-      availability: 'I can reserve two office-hour or work blocks, one scheduled session, and separate time for preparation and feedback within the published ten-hour weekly limit.',
+      experience: ['Tested recursion edge cases.', 'Compared two solution designs.', 'Revised project instructions.'][strength],
+      approach: (opportunity.input.type === 'ta' ? [
+        'Trace one example, give a hint, then check understanding.',
+        'Ask the student to predict a small program\'s output.',
+        'Compare solutions and check the student\'s reasoning.',
+      ] : [
+        'Record inputs and configuration, compare a baseline, and document limitations.',
+        'Repeat the run with fixed inputs and investigate any discrepancy.',
+        'Check a held-out example and preserve the reproducible command.',
+      ])[strength],
+      availability: `Tue 14:00-15:00; ${profile.availableHours}h/week.`,
     };
     if (stage === 'draft_missing_answers') delete answers.approach;
     const key = `${actorKey}--${opportunityKey}`;
     if (applications.some(application => application.key === key)) return;
     applications.push({ key, actorKey, opportunityKey, stage, seedActions: [...DEMO_STAGE_ACTIONS[stage]], profile, answers,
-      qualificationText: `Synthetic qualification record for a local demonstration. Preparation: ${profile.skills}. Experience: ${experience} Available for all stated required slots; no real individual is represented.`,
+      qualificationText: `Synthetic qualification record. ${['Explains with diagrams.', 'Documents assumptions.', 'Checks boundary cases.'][strength]}`,
       cv: stage === 'draft_missing_cv' ? null : { name: `${actor.firstName.toLowerCase()}-${actor.lastName.toLowerCase()}-demo-cv.txt`, text: `SYNTHETIC DEMONSTRATION CV\n${actor.name}\nComputer Science\nSkills: ${profile.skills}\nExperience: ${experience}\nAvailability: ${profile.availability}\nNo real individual or academic result is represented.\n` },
       administrative: { dukeUniqueId: `DEMO-${String(actors.indexOf(actor)).padStart(4, '0')}`, payrollBefore: false, hasSsn: false, citizenship: '', authorizationExpiry: '' },
       reason: ({ not_selected: 'The current opening prioritizes experience with the published lab workload.', needs_information: 'Synthetic clearance checklist: appointment information is awaiting confirmation.', suspended: 'Synthetic temporary scheduling review; independent course grants are preserved.', ended_unsettled: 'The workshop has ended; approved incurred costs are awaiting settlement.', ended_settled: 'The workshop is complete and its approved incurred costs are settled.', declined: 'The candidate chose to keep the semester schedule available.', rescinded: 'The planned support schedule changed before acceptance.', not_cleared: 'Synthetic clearance scenario; no real administrative determination.' })[stage] || '',
@@ -189,7 +201,7 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
     });
   };
   for (let number = 4; number <= 15; number++) add(`candidate-${String(number).padStart(2, '0')}`, 'intro-ta', number % 5 === 0 ? 'shortlisted' : number % 4 === 0 ? 'under_review' : 'submitted', number);
-  for (const [key, stage] of [['intro-ta', 'submitted'], ['structures-ta', 'offered'], ['discrete-ta', 'under_review'], ['systems-ta', 'shortlisted'], ['databases-ta', 'submitted'], ['ra-data-quality', 'submitted'], ['ra-systems', 'submitted']]) add('student-two', key, stage, 1);
+  for (const [key, stage] of [['software-ta', 'submitted'], ['structures-ta', 'offered'], ['discrete-ta', 'under_review'], ['systems-ta', 'shortlisted'], ['databases-ta', 'submitted'], ['ra-data-quality', 'submitted'], ['ra-systems', 'submitted']]) add('student-two', key, stage, 1);
   const pools = [
     ['structures-ta', [4, 7, 10, 13]], ['algorithms-ta', [5, 8, 11, 14]],
     ['databases-ta', [6, 9, 12, 15]], ['software-ta', [4, 8, 12]],
@@ -265,7 +277,7 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
     allowContact: index % 3 === 0, createdAt: at(-1 - index * 3, -courseIndex * 7),
   })));
   return {
-    version: DEMO_CATALOG_VERSION, synthetic: true, marker: 'campusworks-showcase-v3', referenceTime: instant.toISOString(),
+    version: DEMO_CATALOG_VERSION, synthetic: true, marker: `campusworks-showcase-v${DEMO_CATALOG_VERSION}`, referenceTime: instant.toISOString(),
     disclosure: 'All people, qualifications, appointments, workload, feedback and queue observations are synthetic demonstration records.',
     actors, terms, cycle, courses, opportunities, applications, workloads, queuePlans, history, feedback,
     featured: { courseKey: 'intro', opportunityKey: 'intro-ta', applicantKey: 'student-two', applicationKey: 'student-two--structures-ta',
