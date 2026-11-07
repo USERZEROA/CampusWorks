@@ -6,6 +6,10 @@ import { administrativeQuestion, aiQualificationQuestion } from './qualification
 
 export const aiKinds = ['candidate_fit', 'cv_summary', 'opportunity_draft', 'term_review'] as const
 export type AiKind = typeof aiKinds[number]
+function aiOutputTokenLimit(kind: AiKind, automatic: boolean) {
+  if (!automatic) return 2500
+  return { candidate_fit: 2500, cv_summary: 900, opportunity_draft: 1200, term_review: 1800 }[kind]
+}
 const taskDirections: Record<AiKind, string> = {
   candidate_fit: 'Compare only the supplied eligible candidate page against the stated requirements. Return exactly one item for every supplied target ID, without duplicates or omissions. Explain demonstrated strengths and missing evidence for each candidate; do not imply an overall ranking beyond this page.',
   cv_summary: 'Summarize the applicant qualification profile, qualification text and screening answers. Identify relevant experience and unanswered qualification questions. No PDF contents have been extracted.',
@@ -277,7 +281,8 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
     if (inputBytes > 50000) throw Object.assign(new Error('AI input exceeds the approved byte budget'), { aiFailureCode: 'input_budget' })
     // Reserve UTF-8 bytes plus the output cap conservatively, independent of a
     // provider's reported usage. Actual billing remains a provider-account control.
-    budgetLease = await reserveAiBudget(user, task.id, inputBytes + 2500)
+    const outputTokens = aiOutputTokenLimit(kind, !!execution.automationScopeId)
+    budgetLease = await reserveAiBudget(user, task.id, inputBytes + outputTokens)
     const authorized = preparedAiInput(await taskInput(db, user, kind, targetId, candidatePage, candidatePageSize, reportTermId), !!execution.automationScopeId)
     if (createHash('sha256').update(JSON.stringify(authorized)).digest('hex') !== task.inputHash) fail(409, 'AI evidence changed before analysis')
     if (execution.subscriptionId) {
@@ -293,8 +298,8 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
     const timeout = setTimeout(() => controller.abort(), 15000)
     const model = process.env.AI_MODEL!.trim()
     const providerOptions = base.hostname === 'api.openai.com'
-      ? { max_completion_tokens: 2500, store: false, ...(model === 'gpt-5.4-mini' || model.startsWith('gpt-5.4-mini-') ? { reasoning_effort: 'none' } : {}) }
-      : { temperature: 0, max_tokens: 2500 }
+      ? { max_completion_tokens: outputTokens, store: false, ...(model === 'gpt-5.4-mini' || model.startsWith('gpt-5.4-mini-') ? { reasoning_effort: 'none' } : {}) }
+      : { temperature: 0, max_tokens: outputTokens }
     let encoded: string
     try {
       if ('analysisExpiresAt' in input && new Date(input.analysisExpiresAt as string).getTime() <= Date.now()) fail(409, 'Candidate analysis has ended for this appointment')

@@ -10,11 +10,18 @@ function definitions(path, names) {
   return source.statements.filter(node => (ts.isFunctionDeclaration(node) && names.includes(node.name?.text)) || (ts.isVariableStatement(node) && node.declarationList.declarations.some(declaration => names.includes(declaration.name.getText(source)))))
     .map(node => node.getText(source).replace(/^export\s+/, '')).join('\n');
 }
-const source = [definitions('server/utils/staffing.ts', ['fail', 'text', 'object', 'publicRecord']), definitions('server/utils/ai.ts', ['aiKinds', 'preparedAiInput', 'createAiTask'])].join('\n');
+const source = [definitions('server/utils/staffing.ts', ['fail', 'text', 'object', 'publicRecord']), definitions('server/utils/ai.ts', ['aiKinds', 'aiOutputTokenLimit', 'preparedAiInput', 'createAiTask'])].join('\n');
 const javascript = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
-const build = (dependencies = {}) => new Function('createHash', 'createError', ...Object.keys(dependencies), `${javascript}\nreturn { preparedAiInput, createAiTask };`)(createHash, createError, ...Object.values(dependencies));
+const build = (dependencies = {}) => new Function('createHash', 'createError', ...Object.keys(dependencies), `${javascript}\nreturn { preparedAiInput, createAiTask, aiOutputTokenLimit };`)(createHash, createError, ...Object.values(dependencies));
 const actual = build();
 const bytes = value => Buffer.byteLength(JSON.stringify(value), 'utf8');
+test('automatic output reservations fit each advisory task while manual limits remain compatible', () => {
+  assert.equal(actual.aiOutputTokenLimit('candidate_fit', true), 2500);
+  assert.equal(actual.aiOutputTokenLimit('cv_summary', true), 900);
+  assert.equal(actual.aiOutputTokenLimit('opportunity_draft', true), 1200);
+  assert.equal(actual.aiOutputTokenLimit('term_review', true), 1800);
+  for (const kind of ['candidate_fit', 'cv_summary', 'opportunity_draft', 'term_review']) assert.equal(actual.aiOutputTokenLimit(kind, false), 2500);
+});
 function fixture(long = false) {
   const targetIds = Array.from({ length: 10 }, (_, index) => `00000000-0000-4000-8000-${String(index).padStart(12, '0')}`);
   const coverage = { page: 1, pageSize: 10, compared: 10, totalSubmitted: 10, hasMore: false };
