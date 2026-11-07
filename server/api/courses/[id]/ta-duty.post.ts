@@ -1,37 +1,14 @@
-// server/api/courses/[id]/ta-duty.post.ts
 import { defineEventHandler, readBody, createError } from 'h3'
-import { assertStaff, getCourseAccess, staffLabel } from '../../../utils/courses'
-
-/**
- * POST /api/courses/[id]/ta-duty
- *
- * Mark the caller on / off duty for this course. Course staff only.
- * On-duty staff are stored as { email, name } so that two TAs with the same
- * display name do not collide.
- *
- * Body: { onDuty: boolean }
- */
-export default defineEventHandler(async (event) => {
-  const access = await getCourseAccess(event)
+import { assertStaff, withCourseTransaction, staffLabel, onDutyList } from '../../../utils/courses'
+import { releaseStaffClaims } from '../../../utils/queue'
+export default defineEventHandler(event => withCourseTransaction(event, async (access, session) => {
   assertStaff(access)
-
-  const body = (await readBody<{ onDuty?: boolean }>(event)) || {}
-  if (typeof body.onDuty !== 'boolean') {
-    throw createError({ statusCode: 400, statusMessage: 'onDuty must be a boolean' })
-  }
-
-  const courses = access.db.collection('courses')
-  const { _id } = access.course
-  const { email } = access.user
-  const name = staffLabel(access.user)
-
-  // Remove any existing record for this user (object rows and legacy name rows).
-  await courses.updateOne({ _id }, { $pull: { onDutyTAs: { email } } as any })
-  await courses.updateOne({ _id }, { $pull: { onDutyTAs: name } as any })
-
-  if (body.onDuty) {
-    await courses.updateOne({ _id }, { $push: { onDutyTAs: { email, name } } as any })
-  }
-
+  const body = await readBody(event) || {}
+  if (typeof body.onDuty !== 'boolean') throw createError({ statusCode: 400, statusMessage: 'onDuty must be a boolean' })
+  if (body.onDuty && access.course.state === 'closed') throw createError({ statusCode: 409, statusMessage: 'Open the queue before starting duty' })
+  const duty = onDutyList(access.course).filter(item => item.email !== access.user.email)
+  if (body.onDuty) duty.push({ email: access.user.email, name: staffLabel(access.user) })
+  else await releaseStaffClaims(access.db, access.courseKey, access.user.email, session)
+  await access.db.collection('courses').updateOne({ _id: access.course._id }, { $set: { onDutyTAs: duty } }, { session })
   return { ok: true, onDuty: body.onDuty }
-})
+}))

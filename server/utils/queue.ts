@@ -1,112 +1,80 @@
-// server/utils/queue.ts
-import type { Db, Document, WithId } from 'mongodb'
+import type { ClientSession, Db, Document, WithId } from 'mongodb'
 import { ObjectId } from 'mongodb'
 import { createError } from 'h3'
 
-export type QueueEndReason =
-  | 'completed' // staff finished helping the student
-  | 'removed' // staff removed an entry nobody had picked up
-  | 'left' // student left the queue (or the course)
-  | 'queue-closed' // queue was closed with the entry still in it
-  | 'kicked' // student was removed from the course
-
+export type QueueEndReason = 'completed' | 'removed' | 'left' | 'queue-closed' | 'kicked'
 export function parseEntryId(value: unknown): ObjectId {
-  const id = String(value ?? '').trim()
-  if (!id || !ObjectId.isValid(id)) {
-    throw createError({ statusCode: 400, statusMessage: 'Invalid entryId' })
+  if (typeof value !== 'string' || !/^[a-fA-F0-9]{24}$/.test(value)) throw createError({ statusCode: 400, statusMessage: 'Invalid entryId' })
+  return new ObjectId(value)
+}
+export type HelpSegment = { taEmail: string; taName: string; startAt: Date; endAt: Date; durationMs: number }
+const dateValue = (value: unknown) => {
+  const date = value instanceof Date ? value : typeof value === 'string' ? new Date(value) : null
+  return date && Number.isFinite(date.getTime()) ? date : null
+}
+export function completedSegments(entry: Document, now: Date): HelpSegment[] {
+  const segments: HelpSegment[] = Array.isArray(entry.helpSegments) ? [...entry.helpSegments] : []
+  const start = dateValue(entry.activeHelpStartAt) || (entry.taEmail ? dateValue(entry.helpStartAt) : null)
+  if (entry.taEmail && start) {
+    const endAt = new Date(Math.max(now.getTime(), start.getTime()))
+    segments.push({ taEmail: entry.taEmail, taName: entry.ta || entry.taEmail, startAt: start, endAt, durationMs: endAt.getTime() - start.getTime() })
   }
-  return new ObjectId(id)
+  return segments
+}
+export async function releaseEntry(db: Db, entry: WithId<Document>, session: ClientSession, otherTa = false, now = new Date()) {
+  await db.collection('queueEntries').updateOne({ _id: entry._id }, {
+    $set: { helpSegments: completedSegments(entry, now), otherTa },
+    $unset: { ta: '', taEmail: '', activeHelpStartAt: '' }
+  }, { session })
+}
+export async function releaseStaffClaims(db: Db, courseId: string, email: string, session: ClientSession) {
+  const entries = await db.collection('queueEntries').find({ courseId, taEmail: email }, { session }).toArray()
+  for (const entry of entries) await releaseEntry(db, entry, session)
+}
+export function resumedPauseFields(entry: Document, now = new Date()) {
+  const started = dateValue(entry.pauseStartedAt)
+  return {
+    paused: false,
+    pausedBeforeHelpMs: Number(entry.pausedBeforeHelpMs || 0) + (!entry.helpStartAt && started ? Math.max(0, now.getTime() - started.getTime()) : 0)
+  }
 }
 
-/**
- * Atomically remove a queue entry and record it in `helpSessions`, so that
- * every entry that leaves the queue ends up in the course history exactly once.
- * Returns the archived entry, or null if it was already gone.
- */
-export async function archiveEntry(
-  db: Db,
-  filter: Document,
-  opts: { reason: QueueEndReason; endedBy: string; fallbackTa?: { email: string; name: string } }
-): Promise<WithId<Document> | null> {
-  const entry = await db.collection('queueEntries').findOneAndDelete(filter)
+/** History insertion and active-entry removal always share the caller's course transaction. */
+export async function archiveEntry(db: Db, filter: Document, opts: { reason: QueueEndReason; endedBy: string; fallbackTa?: { email: string; name: string } }, session: ClientSession): Promise<WithId<Document> | null> {
+  const entry = await db.collection('queueEntries').findOne(filter, { session })
   if (!entry) return null
-
-  await db.collection('helpSessions').insertOne(toHelpSession(entry, opts, new Date()))
+  const now = new Date()
+  const segments = completedSegments(entry, now)
+  const firstStart = dateValue(entry.helpStartAt)
+  const lastSegment = segments.at(-1)
+  const joined = dateValue(entry.createdAt) || now
+  const totalHelpMs = segments.reduce((sum, segment) => sum + Math.max(0, Number(segment.durationMs) || 0), 0)
+  const wasHelped = segments.length > 0
+  await db.collection('helpSessions').insertOne({
+    _id: entry._id, entryId: entry._id.toString(), courseId: entry.courseId,
+    studentEmail: entry.studentEmail || '', studentName: entry.studentName || entry.studentEmail || '',
+    taEmail: lastSegment?.taEmail || null, taName: lastSegment?.taName || null,
+    location: entry.location || '', question: entry.question || '', joinedAt: joined,
+    helpStartAt: firstStart, helpEndAt: lastSegment?.endAt || null, closedAt: wasHelped ? lastSegment?.endAt || now : null,
+    leftQueueAt: now, wasHelped, helpSegments: segments, helpMinutes: totalHelpMs / 60000,
+    waitMinutes: firstStart ? Math.max(0, firstStart.getTime() - joined.getTime() - Number(entry.pausedBeforeHelpMs || 0)) / 60000 : null,
+    endReason: opts.reason === 'completed' && !wasHelped ? 'removed' : opts.reason, removedBy: opts.endedBy
+  }, { session })
+  await db.collection('queueEntries').deleteOne({ _id: entry._id }, { session })
   return entry
 }
-
-/** Archive every entry of a course (used when the queue closes). */
-export async function archiveAllEntries(
-  db: Db,
-  courseKey: string,
-  opts: { reason: QueueEndReason; endedBy: string }
-) {
-  const entries = await db
-    .collection('queueEntries')
-    .find({ courseId: courseKey }, { projection: { _id: 1 } })
-    .toArray()
-
-  let archived = 0
-  for (const { _id } of entries) {
-    if (await archiveEntry(db, { _id, courseId: courseKey }, opts)) archived++
-  }
-  return archived
+export async function archiveAllEntries(db: Db, courseId: string, opts: { reason: QueueEndReason; endedBy: string }, session: ClientSession) {
+  const entries = await db.collection('queueEntries').find({ courseId }, { session, projection: { _id: 1 } }).toArray()
+  for (const { _id } of entries) await archiveEntry(db, { _id, courseId }, opts, session)
+  return entries.length
 }
-
-function toHelpSession(
-  entry: WithId<Document>,
-  opts: { reason: QueueEndReason; endedBy: string; fallbackTa?: { email: string; name: string } },
-  now: Date
-) {
-  const helpStartAt: Date | null = entry.helpStartAt || null
-  const wasHelped = !!helpStartAt
-
-  // Attribute the session to the TA who claimed the entry; older rows only
-  // stored a display label, in which case the staff member closing it is used.
-  const taEmail = entry.taEmail || (wasHelped ? opts.fallbackTa?.email : '') || null
-  const taName =
-    entry.ta || (wasHelped ? opts.fallbackTa?.name : '') || (taEmail ? taEmail : null)
-
-  return {
-    courseId: entry.courseId,
-    studentEmail: entry.studentEmail || '',
-    studentName: entry.studentName || entry.studentEmail || '',
-    taEmail: wasHelped ? taEmail : null,
-    taName: wasHelped ? taName : null,
-    location: entry.location || '',
-    question: entry.question || '',
-    joinedAt: entry.joinedAt || entry.createdAt || now,
-    helpStartAt,
-    closedAt: wasHelped ? now : null,
-    leftQueueAt: now,
-    wasHelped,
-    endReason: opts.reason === 'completed' && !wasHelped ? 'removed' : opts.reason,
-    removedBy: opts.endedBy
-  }
-}
-
-/**
- * Shape a queue entry for the API. Non-staff viewers only see the email
- * address on their own entry.
- */
-export function toQueueEntryDto(
-  entry: WithId<Document>,
-  viewer: { email: string; isStaff: boolean }
-) {
+export function toQueueEntryDto(entry: WithId<Document>, viewer: { email: string; isStaff: boolean }) {
   const isMine = entry.studentEmail === viewer.email
   return {
-    id: entry._id.toString(),
-    email: viewer.isStaff || isMine ? entry.studentEmail : '',
-    name: entry.studentName || '',
-    location: entry.location || '',
-    question: entry.question || '',
-    paused: !!entry.paused,
-    ta: entry.ta || '',
-    otherTa: !!entry.otherTa,
-    position: typeof entry.position === 'number' ? entry.position : 0,
-    joinedAt: entry.createdAt || null,
-    isMine,
-    assignedToMe:
-      viewer.isStaff && !entry.otherTa && !!entry.taEmail && entry.taEmail === viewer.email
+    id: entry._id.toString(), email: viewer.isStaff || isMine ? entry.studentEmail : '',
+    name: entry.studentName || '', location: entry.location || '', question: entry.question || '',
+    paused: !!entry.paused, ta: entry.ta || '', otherTa: !!entry.otherTa,
+    position: typeof entry.position === 'number' ? entry.position : 0, joinedAt: entry.createdAt || null,
+    isMine, assignedToMe: viewer.isStaff && !entry.otherTa && !!entry.taEmail && entry.taEmail === viewer.email
   }
 }
