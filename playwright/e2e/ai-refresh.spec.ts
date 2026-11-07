@@ -3,7 +3,7 @@ import { spawn, type ChildProcess } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { openSync, closeSync } from 'node:fs';
 import { request, type APIRequestContext } from '@playwright/test';
-import { test, expect, database, json, ok, type StaffingSpace } from '../staffing-fixtures';
+import { test, expect, database, json, ok, activateCycle, type StaffingSpace } from '../staffing-fixtures';
 
 function respond(input: any, response: ServerResponse) {
   const reference = input.evidence.find((entry: any) => entry.reference.startsWith('app:'))?.reference || input.evidence[0].reference;
@@ -28,7 +28,7 @@ async function exited(child: ChildProcess) {
     child.kill('SIGTERM');
   });
 }
-async function harness(space: StaffingSpace, handle: (input: any, response: ServerResponse, ordinal: number) => void | Promise<void> = (input, response) => respond(input, response)) {
+async function harness(space: StaffingSpace, handle: (input: any, response: ServerResponse, ordinal: number) => void | Promise<void> = (input, response) => respond(input, response), options: { automaticRefresh?: boolean } = {}) {
   const seen: any[] = [];
   const provider = createServer(async (req, res) => {
     let encoded = ''; for await (const chunk of req) encoded += chunk;
@@ -51,6 +51,7 @@ async function harness(space: StaffingSpace, handle: (input: any, response: Serv
         ENABLE_MOCK_LOGIN: 'true', SEED_DEMO_DATA: 'false', API_RATE_LIMIT: '10000', LOGIN_RATE_LIMIT: '1000',
         AI_BASE_URL: `http://127.0.0.1:${(provider.address() as any).port}/v1`, AI_API_KEY: 'synthetic-refresh-key', AI_MODEL: 'synthetic-refresh-model',
         AI_DAILY_REQUEST_LIMIT: '100', AI_DAILY_TOKEN_BUDGET: '1000000',
+        AI_AUTO_REFRESH_ENABLED: options.automaticRefresh === false ? 'false' : 'true',
       } });
       closeSync(log); children.push(child);
       let ready = false;
@@ -70,6 +71,68 @@ async function harness(space: StaffingSpace, handle: (input: any, response: Serv
 }
 const analysis = (api: APIRequestContext, opportunityId: string) => json(api.post('/api/ai/tasks', { data: { kind: 'candidate_fit', targetId: opportunityId } }));
 const history = (api: APIRequestContext, opportunityId: string) => json(api.get('/api/ai/tasks', { params: { kind: 'candidate_fit', targetId: opportunityId, page: 1, pageSize: 50 } }));
+
+test('exact candidate-page refresh metadata remains reachable beyond one hundred approved scopes', async ({ space }) => {
+  const posting = await space.opportunity();
+  const peer = await space.actor('metadata-peer', 'instructor');
+  await ok(space.admin.api.patch(`/api/courses/${space.code}/enrollments/role`, { data: { email: peer.email, role: 'instructor' } }));
+  const service = await harness(space, undefined, { automaticRefresh: false });
+  const { client, db } = await database();
+  const prefix = `metadata-${posting.id}`;
+  const lastScope = `${prefix}-101`;
+  const peerScope = `${prefix}-peer`;
+  try {
+    const createdAt = new Date();
+    await db.collection('staffingAiSubscriptions').insertMany([
+      ...Array.from({ length: 101 }, (_, index) => ({ id: `${prefix}-${String(index + 1).padStart(3, '0')}`, requesterId: space.instructor.user.id, requesterEmail: space.instructor.email, opportunityId: posting.id, kind: 'candidate_fit', page: index + 1, pageSize: 50, active: true, status: 'active', createdAt })),
+      { id: peerScope, requesterId: peer.user.id, requesterEmail: peer.email, opportunityId: posting.id, kind: 'candidate_fit', page: 101, pageSize: 50, active: true, status: 'active', createdAt },
+    ]);
+    await db.collection<any>('staffingAiRefreshJobs').insertMany([
+      { _id: lastScope, subscriptionId: lastScope, opportunityId: posting.id, status: 'queued', generation: 101, updatedAt: createdAt },
+      { _id: peerScope, subscriptionId: peerScope, opportunityId: posting.id, status: 'queued', generation: 77, updatedAt: createdAt },
+    ]);
+    await db.collection('staffingAiTasks').insertMany([
+      { id: `${prefix}-task`, kind: 'candidate_fit', targetId: posting.id, opportunityId: posting.id, targetType: 'opportunity', candidatePage: 101, candidatePageSize: 50, requestedBy: space.instructor.user.id, status: 'pending', refreshSubscriptionId: lastScope, createdAt },
+      { id: `${prefix}-peer-task`, kind: 'candidate_fit', targetId: posting.id, opportunityId: posting.id, targetType: 'opportunity', candidatePage: 101, candidatePageSize: 50, requestedBy: peer.user.id, status: 'pending', refreshSubscriptionId: peerScope, createdAt },
+    ]);
+    const params = { targetId: posting.id, kind: 'candidate_fit', page: 101, pageSize: 50 };
+    const exact = await json(service.apis[0]!.get('/api/ai/tasks', { params }));
+    expect(exact.refresh.subscriptions.map((scope: any) => scope.id)).toEqual([lastScope]);
+    expect(exact.refresh.jobs).toEqual([expect.objectContaining({ subscriptionId: lastScope, status: 'queued', generation: 101 })]);
+    expect(exact.tasks.map((task: any) => task.id)).toEqual([`${prefix}-task`]);
+    const bounded = await json(service.apis[0]!.get('/api/ai/tasks', { params: { kind: 'candidate_fit' } }));
+    expect(bounded.refresh.subscriptions).toHaveLength(100);
+    await ok(service.apis[1]!.post('/api/auth/mock', { data: { as: 'instructor', email: peer.email } }));
+    const peerView = await json(service.apis[1]!.get('/api/ai/tasks', { params }));
+    expect(peerView.refresh.subscriptions.map((scope: any) => scope.id)).toEqual([peerScope]);
+    expect(peerView.refresh.jobs.map((job: any) => job.subscriptionId)).toEqual([peerScope]);
+    expect(peerView.tasks.map((task: any) => task.id)).toEqual([`${prefix}-peer-task`]);
+    expect((await space.student.api.get('/api/ai/tasks', { params })).status()).toBe(403);
+    for (const invalid of [{ ...params, page: '0x65' }, { ...params, pageSize: '5e1' }, { ...params, kind: 'unknown' }]) {
+      expect((await service.apis[0]!.get('/api/ai/tasks', { params: invalid })).status()).toBe(400);
+    }
+    expect(service.seen).toHaveLength(0);
+  } finally { await service.close(); await client.close(); }
+});
+
+test('current-semester review survives application closing while a disabled cycle revokes automatic analysis', async ({ space }) => {
+  const posting = await space.opportunity();
+  await space.application(posting);
+  const service = await harness(space);
+  const { client, db } = await database();
+  try {
+    await activateCycle(space.admin, space.term, { closesAt: new Date(Date.now() - 1000).toISOString() });
+    expect((await analysis(service.apis[0]!, posting.id)).task.status).toBe('completed');
+    expect(service.seen).toHaveLength(1);
+    await activateCycle(space.admin, space.term, { enabled: false });
+    expect((await service.apis[0]!.post('/api/ai/tasks', { data: { kind: 'candidate_fit', targetId: posting.id } })).status()).toBe(409);
+    const immediate = await history(service.apis[0]!, posting.id);
+    expect(immediate.tasks.some((task: any) => task.status === 'completed' && task.result)).toBe(false);
+    await expect.poll(async () => (await db.collection('staffingAiSubscriptions').findOne({ opportunityId: posting.id }))?.active, { timeout: 15000 }).toBe(false);
+    await new Promise(resolve => setTimeout(resolve, 1200));
+    expect(service.seen).toHaveLength(1);
+  } finally { await service.close(); await client.close(); }
+});
 
 test('the reviewer browser updates named candidate advice automatically without another analysis request', async ({ space, browser }, testInfo) => {
   const posting = await space.opportunity({ positions: 2, budget: 2400 });

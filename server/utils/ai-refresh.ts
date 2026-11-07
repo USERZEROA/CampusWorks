@@ -7,7 +7,7 @@ const initialized = new WeakMap<Db, Promise<void>>()
 const jobs = (db: Db) => db.collection<any>('staffingAiRefreshJobs')
 const scopes = (db: Db) => db.collection<any>('staffingAiSubscriptions')
 const configured = () => !!(process.env.AI_BASE_URL?.trim() && process.env.AI_API_KEY?.trim() && process.env.AI_MODEL?.trim())
-const mutationKinds = ['ApplicationSubmitted', 'ApplicationRevised', 'ApplicationWithdrawn', 'ApplicationReviewed', 'CvUploaded', 'OfferIssued', 'OfferAccepted', 'OfferDeclined', 'OfferRescinded', 'AppointmentExpired', 'AppointmentEnded', 'AppointmentActivated', 'AppointmentClearance', 'AppointmentSuspend', 'AppointmentResume', 'OpportunityUpdated']
+const mutationKinds = ['ApplicationSubmitted', 'ApplicationRevised', 'ApplicationWithdrawn', 'ApplicationReviewed', 'CvUploaded', 'OfferIssued', 'OfferAccepted', 'OfferDeclined', 'OfferRescinded', 'AppointmentExpired', 'AppointmentEnded', 'AppointmentActivated', 'AppointmentClearance', 'AppointmentSuspend', 'AppointmentResume', 'OpportunityUpdated', 'RecruitmentCycleConfigured']
 
 export function initializeAiRefresh(db: Db) {
   let promise = initialized.get(db)
@@ -35,6 +35,9 @@ async function refreshActor(db: Db, subscription: Document): Promise<StaffingAct
   let actor: StaffingActor = { id: account.id, email: account.email, name: account.name || account.email, provider, primaryRole: 'student' }
   const opportunity = await db.collection('staffingOpportunities').findOne({ id: subscription.opportunityId, status: { $in: ['published', 'applications_closed', 'filled'] } })
   if (!opportunity) return null
+  const { getRecruitmentCycle } = await import('./staffing-cycle')
+  const cycle = await getRecruitmentCycle(db)
+  if (cycle.termId !== opportunity.termId || !cycle.canReview) return null
   try { await assertOpportunityManager(db, opportunity, actor); return actor } catch (error: any) { if (error?.statusCode !== 403) throw error }
   if (provider === 'mock' && config.mockLoginEnabled) {
     const admin = await db.collection('authSessions').findOne({ userId: account.id, 'user.id': account.id, 'user.email': account.email, 'user.provider': 'mock', 'user.primaryRole': 'admin', expiresAt: { $gt: new Date() }, revokedAt: null })
@@ -43,8 +46,9 @@ async function refreshActor(db: Db, subscription: Document): Promise<StaffingAct
   return null
 }
 
-async function affectedOpportunities(db: Db, change: { opportunityId?: string; applicantId?: string }, session?: ClientSession) {
+async function affectedOpportunities(db: Db, change: { opportunityId?: string; applicantId?: string; allSubscriptions?: boolean }, session?: ClientSession) {
   const ids = new Set<string>(change.opportunityId ? [change.opportunityId] : [])
+  if (change.allSubscriptions) for (const id of await scopes(db).distinct('opportunityId', { active: true }, session ? { session } : {})) ids.add(String(id))
   if (change.applicantId) for (const id of await db.collection('staffingApplications').distinct('opportunityId', { applicantId: change.applicantId }, session ? { session } : {})) ids.add(String(id))
   return [...ids]
 }
@@ -164,6 +168,7 @@ export async function requestCandidateRefresh(db: Db, user: StaffingActor, raw: 
 }
 
 async function eventChange(db: Db, item: Document) {
+  if (item.kind === 'RecruitmentCycleConfigured') return { allSubscriptions: true }
   if (item.kind.startsWith('Application') || item.kind === 'CvUploaded') {
     const app = await db.collection('staffingApplications').findOne({ id: item.targetId })
     return app ? { opportunityId: app.opportunityId, applicantId: app.applicantId } : {}
@@ -258,8 +263,14 @@ export async function runAiRefreshCycle(db: Db, signal?: AbortSignal) {
   if (lease) await execute(db, subscription, actor, snapshot, lease, signal)
 }
 
-export async function refreshMetadata(db: Db, user: StaffingActor, targetId?: string) {
-  const subscriptions = await scopes(db).find({ requesterId: actorId(user), active: true, ...(targetId ? { opportunityId: targetId } : {}) }).limit(100).toArray()
+export async function refreshMetadata(db: Db, user: StaffingActor, filter: { targetId?: string; kind?: string; page?: number; pageSize?: number } = {}) {
+  const subscriptions = await scopes(db).find({
+    requesterId: actorId(user), active: true,
+    ...(filter.targetId ? { opportunityId: filter.targetId } : {}),
+    ...(filter.kind ? { kind: filter.kind } : {}),
+    ...(filter.kind === 'candidate_fit' && filter.page !== undefined ? { page: filter.page } : {}),
+    ...(filter.kind === 'candidate_fit' && filter.pageSize !== undefined ? { pageSize: filter.pageSize } : {}),
+  }).sort({ id: 1 }).limit(100).toArray()
   const records = await jobs(db).find({ _id: { $in: subscriptions.map(s => s.id) } }).toArray()
   return { subscriptions: subscriptions.map(s => ({ id: s.id, kind: s.kind, targetId: s.opportunityId, page: s.page, pageSize: s.pageSize, status: s.status || 'active' })), jobs: records.map(j => ({ subscriptionId: j.subscriptionId, status: configured() ? j.status : 'unconfigured', generation: j.generation, reason: j.reason || '', updatedAt: j.updatedAt })) }
 }

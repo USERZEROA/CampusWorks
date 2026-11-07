@@ -3,7 +3,7 @@ import { runAiRefreshCycle } from '../utils/ai-refresh'
 
 export default defineNitroPlugin((nitro) => {
   // A provider-disabled app performs no background AI scans or writes.
-  if (!process.env.AI_BASE_URL?.trim() || !process.env.AI_API_KEY?.trim() || !process.env.AI_MODEL?.trim()) return
+  if (process.env.AI_AUTO_REFRESH_ENABLED === 'false' || !process.env.AI_BASE_URL?.trim() || !process.env.AI_API_KEY?.trim() || !process.env.AI_MODEL?.trim()) return
   const shutdown = new AbortController()
   let running: Promise<void> | null = null
   const tick = () => {
