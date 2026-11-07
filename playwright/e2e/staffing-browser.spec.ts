@@ -28,6 +28,136 @@ async function signIn(context: BrowserContext, actor: Actor) {
   );
 }
 
+test("application refresh observes a reopened cycle without reloading the browser", async ({
+  page,
+  space,
+}) => {
+  const posting = await space.opportunity();
+  const draft = (
+    await json(
+      space.student.api.post(
+        `/api/staffing/opportunities/${posting.id}/applications`,
+        { data: {} },
+      ),
+    )
+  ).application;
+  await activateCycle(space.admin, space.term, { enabled: false });
+  await signIn(page.context(), space.student);
+  await open(page, `/applications/${draft.id}`);
+  await expect(page.getByTestId("application-save")).toHaveCount(0);
+  await activateCycle(space.admin, space.term);
+  await page.getByTestId("application-refresh").click();
+  await expect(page.getByTestId("application-save")).toBeVisible();
+  await page.getByTestId("app-first-name").fill("Unsaved synthetic name");
+  await expect(page.getByTestId("app-first-name")).toHaveValue(
+    "Unsaved synthetic name",
+  );
+});
+
+test("successful submit, save, upload, withdrawal and resubmission retain the current local revision", async ({
+  page,
+  space,
+}) => {
+  const posting = await space.opportunity();
+  const application = await space.application(posting);
+  await signIn(page.context(), space.student);
+  await open(page, `/applications/${application.id}`);
+  await page.getByTestId("application-submit").click();
+  await expect(page.getByTestId("application-notice")).toContainText(
+    "Application submitted.",
+  );
+  await page.getByTestId("application-save").click();
+  await expect(page.getByTestId("application-notice")).toContainText(
+    "Application saved.",
+  );
+  await expect(page.getByTestId("application-status")).toHaveText(/draft/i);
+  await page.getByTestId("application-cv").setInputFiles({
+    name: "synthetic-revision.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("Synthetic revision CV\nAlgorithms and tutoring"),
+  });
+  await page.getByTestId("application-cv-upload").click();
+  await expect(page.getByTestId("application-notice")).toContainText(
+    "CV uploaded privately.",
+  );
+  await page.getByTestId("application-submit").click();
+  await expect(page.getByTestId("application-notice")).toContainText(
+    "Application submitted.",
+  );
+  await page.getByTestId("application-withdraw").click();
+  await expect(page.getByTestId("application-status")).toHaveText(/withdrawn/i);
+  await page.getByTestId("application-submit").click();
+  await expect(page.getByTestId("application-notice")).toContainText(
+    "Application submitted.",
+  );
+});
+
+test("a dirty recruitment schedule keeps its loaded version when another administrator saves", async ({
+  page,
+  space,
+}) => {
+  await signIn(page.context(), space.admin);
+  await open(page, "/admin/staffing");
+  const originalClose = await page.getByTestId("cycle-close").inputValue();
+  await page.getByTestId("cycle-enabled").uncheck();
+  const nextVersion =
+    (await json(space.admin.api.get("/api/staffing/cycle"))).cycle.version + 1;
+  const responsePromise = page.waitForResponse(
+    async (response) =>
+      response.url().includes("/api/staffing/overview") &&
+      response.status() === 200 &&
+      (await response.json()).currentCycle?.version === nextVersion,
+  );
+  const changed = await activateCycle(space.admin, space.term, {
+    closesAt: new Date(Date.now() + 7200000).toISOString(),
+  });
+  await responsePromise;
+  await expect(page.getByTestId("cycle-close")).toHaveValue(originalClose);
+  await page.getByTestId("cycle-save").click();
+  await expect(page.getByTestId("admin-staffing-notice")).toContainText(
+    /changed/i,
+  );
+  expect(
+    (await json(space.admin.api.get("/api/staffing/cycle"))).cycle,
+  ).toEqual(changed);
+  await page.getByTestId("cycle-reset").click();
+  await expect(page.getByTestId("cycle-enabled")).toBeChecked();
+  await expect(page.getByTestId("cycle-close")).not.toHaveValue(originalClose);
+});
+
+test("RA appointments carrying course metadata expose no TA queue links", async ({
+  page,
+  space,
+}) => {
+  const posting = await space.opportunity({ type: "ra", courseId: space.code });
+  const application = await space.application(posting);
+  const selected = await space.select(application);
+  await ok(
+    space.student.api.post(`/api/staffing/offers/${selected.offer.id}/accept`, {
+      data: {},
+    }),
+  );
+  await ok(
+    space.admin.api.post(
+      `/api/staffing/appointments/${selected.appointment.id}/clearance`,
+      { data: { status: "cleared" } },
+    ),
+  );
+  await signIn(page.context(), space.student);
+  await open(page, `/applications/${application.id}`);
+  await expect(page.getByTestId("appointment-workspace")).toHaveCount(0);
+  await open(page, "/applications");
+  await expect(
+    page.getByTestId("my-appointment-" + selected.appointment.id),
+  ).toContainText(posting.title);
+  await expect(page.getByTestId("appointment-workspace")).toHaveCount(0);
+  await signIn(page.context(), space.instructor);
+  await open(page, `/staffing/${posting.id}`);
+  await expect(
+    page.getByRole("link", { name: "Course review", exact: true }),
+  ).toHaveCount(0);
+});
+
 test("the Duke Computer Science PNG is served intact with the expected image type", async ({
   request,
 }) => {
@@ -91,7 +221,7 @@ test("browser users publish, apply, upload, select, accept, clear, operate and e
       .check();
     await faculty.getByTestId("opportunity-add-question").click();
     await faculty
-      .getByLabel("Question 1", { exact: true })
+      .getByLabel("Qualification question 1", { exact: true })
       .fill("Describe your relevant course experience.");
     await faculty.getByTestId("opportunity-save").click();
     await expect(faculty).toHaveURL(/\/staffing\/[a-f0-9-]+$/);
@@ -195,6 +325,19 @@ test("browser users publish, apply, upload, select, accept, clear, operate and e
     await expect(student.getByTestId("appointment-status")).toHaveText(
       /active/i,
     );
+    await expect(
+      student.getByLabel("Work category").locator('option[value="research"]'),
+    ).toHaveCount(0);
+    await open(admin, `/applications/${applicationId}`);
+    await admin.getByTestId("admin-duke-id").fill("SYNTHETIC-CORRECTED-ID");
+    await admin
+      .getByTestId("administrative-correction-reason")
+      .fill("Synthetic browser correction");
+    await admin.getByTestId("administrative-save").click();
+    await expect(admin.getByTestId("application-notice")).toContainText(
+      "details saved",
+    );
+    await expect(admin.getByTestId("appointment-status")).toHaveText(/active/i);
     await student.screenshot({
       path: testInfo.outputPath("active-ta-application.png"),
       fullPage: true,
@@ -220,6 +363,21 @@ test("browser users publish, apply, upload, select, accept, clear, operate and e
       new RegExp(`/courses/${space.code}/student$`),
       { timeout: 15000 },
     );
+    await expect(
+      faculty.getByTestId(`appointment-settle-${appointmentId}`),
+    ).toHaveCount(0);
+    await open(admin, "/admin/staffing");
+    await admin.getByTestId(`settlement-cost-${appointmentId}`).fill("100");
+    await admin.getByTestId(`appointment-settle-${appointmentId}`).click();
+    await expect(
+      admin.getByTestId(`appointment-settle-${appointmentId}`),
+    ).toHaveCount(0);
+    await faculty.reload();
+    await faculty.getByTestId("opportunity-archive").click();
+    await expect(faculty.getByTestId("opportunity-status")).toHaveText(
+      /archived/i,
+    );
+    await ok(space.admin.api.delete(`/api/courses/${space.code}`));
     expect(browserErrors).toEqual([]);
   } finally {
     for (const context of contexts) await context.close();
@@ -364,9 +522,15 @@ test("administrators set the shared recruitment window while closed-cycle applic
     );
     await expect(student.getByTestId("application-save")).toHaveCount(0);
     await expect(student.getByTestId("application-submit")).toHaveCount(0);
+    await expect(student.getByTestId("application-withdraw")).toBeVisible();
     await expect(student.getByTestId("cycle-term")).toHaveCount(0);
     await open(student, "/opportunities/" + posting.id);
     await expect(student.getByTestId("start-application")).toHaveCount(0);
+    await open(student, `/applications/${application.id}`);
+    await student.getByTestId("application-withdraw").click();
+    await expect(student.getByTestId("application-status")).toHaveText(
+      /withdrawn/i,
+    );
   } finally {
     await adminContext.close();
     await studentContext.close();
@@ -571,8 +735,11 @@ test("current-semester course review keeps complete aggregates when loading scen
             records: [{ id: "synthetic-workload-" + pageNumber, hours: 10 }],
           },
           budget: {
+            ...baseline.budget,
+            requestedBudget: 600,
             approvedBudget: 2000,
             committedBudget: 400,
+            settledBudget: 100,
             opportunities: [
               {
                 id: recordId,
@@ -621,7 +788,18 @@ test("current-semester course review keeps complete aggregates when loading scen
     page.getByRole("heading", { name: /Synthetic position 1/ }),
   ).toBeVisible();
   await expect(workload).toHaveText("20.0 hours");
-  await expect(page.locator('dt:has-text("Committed") + dd')).toHaveText("400");
+  await expect(
+    page.locator('dt:has-text("Requested position plans") + dd'),
+  ).toHaveText("600");
+  await expect(
+    page.locator('dt:has-text("Approved position plans") + dd'),
+  ).toHaveText("2000");
+  await expect(
+    page.locator('dt:has-text("Outstanding commitments") + dd'),
+  ).toHaveText("400");
+  await expect(page.locator('dt:has-text("Settled costs") + dd')).toHaveText(
+    "100",
+  );
   expect(requests.every((request) => request.termId === "")).toBe(true);
   expect(requests.at(-1)?.page).toBe(2);
   let nextTerm: any;
