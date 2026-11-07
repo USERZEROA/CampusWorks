@@ -53,6 +53,7 @@ export function opportunityInput(raw: unknown) {
     const item = object(raw, 'Duty')
     const kind = text(item.kind, 'Duty kind', 30, true)
     if (!['attendance', 'lab', 'discussion', 'grading', 'office_hours', 'preparation', 'research', 'coordination'].includes(kind)) fail(400, 'Unknown duty kind')
+    if (type === 'ta' && kind === 'research') fail(400, 'Research duties are available only for research appointments')
     return { kind, sessionsPerWeek: number(item.sessionsPerWeek, 'Sessions per week', 0, 30), minutesPerSession: number(item.minutesPerSession, 'Minutes per session', 0, 600) }
   })
   if (normalizedDuties.reduce((sum, d) => sum + d.sessionsPerWeek * d.minutesPerSession / 60, 0) > weeklyHours + 0.001) fail(400, 'Scheduled duties exceed the weekly hours')
