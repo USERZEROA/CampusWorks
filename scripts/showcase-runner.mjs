@@ -21,7 +21,10 @@ if ([...flags].some(flag => !accepted.includes(flag))) throw new Error('Unsuppor
 const port = Number(process.env.SHOWCASE_PORT || 3100);
 if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('SHOWCASE_PORT must be between 1024 and 65535.');
 const origin = `http://127.0.0.1:${port}`;
-const databaseName = flags.has('--fresh') ? `campusworks_showcase_${Date.now().toString(36)}` : process.env.SHOWCASE_DATABASE || `campusworks_showcase_v${DEMO_CATALOG_VERSION}`;
+let previousState;
+try { previousState = JSON.parse(readFileSync('.cache/showcase-state.json', 'utf8')); } catch {}
+const recentDatabase = previousState?.synthetic === true && previousState?.catalogVersion === DEMO_CATALOG_VERSION && /^campusworks_showcase(?:_[a-z0-9]+)*$/.test(previousState?.database || '') ? previousState.database : null;
+const databaseName = flags.has('--fresh') ? `campusworks_showcase_${Date.now().toString(36)}` : process.env.SHOWCASE_DATABASE || recentDatabase || `campusworks_showcase_v${DEMO_CATALOG_VERSION}`;
 if (!/^campusworks_showcase(?:_[a-z0-9]+)*$/.test(databaseName)) throw new Error('Use a dedicated showcase database name.');
 const privateSettings = existsSync('.env') ? parseEnv(readFileSync('.env', 'utf8')) : {};
 const mongoPassword = encodeURIComponent(process.env.MONGO_PASSWORD || privateSettings.MONGO_PASSWORD || 'campusworks-dev');
@@ -137,7 +140,7 @@ try {
   const windows = showcaseWindows(prepared.catalog, prepared.manifest);
   const collections = { people: 'users', courses: 'courses', opportunities: 'staffingOpportunities', applications: 'staffingApplications', offers: 'staffingOffers', appointments: 'staffingAppointments', workload: 'staffingWorkload', history: 'helpSessions', feedback: 'feedback', queue: 'queueEntries', notifications: 'staffingNotifications' };
   const counts = Object.fromEntries(await Promise.all(Object.entries(collections).map(async ([key, collection]) => [key, await db.collection(collection).countDocuments()])));
-  const safeState = { origin, database: databaseName, launcherPid: process.pid, appPid: app.pid, referenceTime: prepared.manifest.referenceTime, readyAt: new Date().toISOString(), windows, counts };
+  const safeState = { synthetic: true, catalogVersion: DEMO_CATALOG_VERSION, origin, database: databaseName, launcherPid: process.pid, appPid: app.pid, referenceTime: prepared.manifest.referenceTime, readyAt: new Date().toISOString(), windows, counts };
   writeFileSync('.cache/showcase-state.json', JSON.stringify(safeState, null, 2));
   writeFileSync('.cache/showcase-windows.json', JSON.stringify(windows, null, 2));
   let provider = null;
