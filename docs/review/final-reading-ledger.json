@@ -1,0 +1,1179 @@
+{
+  "recordedAt": "2026-11-07T08:54:41.467Z",
+  "coverage": "Full maintained source and test reading, semantic domain review and final integration review. This ledger records the reviewed delivered bytes; it is not an automated proof of semantic correctness.",
+  "files": [
+    {
+      "path": "app/app.vue",
+      "bytes": 1326,
+      "sha256": "46a12872bfe317b71c24b5aca95dd3cbde1014fb882ab813e9a084c3e6cdc9f1",
+      "physicalLines": 67,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/components/AiAssistance.vue",
+      "bytes": 3838,
+      "sha256": "b04adb73aa4dd48ee48f6ff73c01fbd3fe37099b3efa658812ee59e2ec69f6ca",
+      "physicalLines": 121,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/components/OpportunityEditor.vue",
+      "bytes": 17065,
+      "sha256": "6c1cc25cb16d2c97dbd185a30ae2b9c0f5463185b62c5aff9fadf72928182d48",
+      "physicalLines": 512,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/components/StaffingNavigation.vue",
+      "bytes": 1220,
+      "sha256": "c0564419d0fa49db0af7fbd64c31a1810fd188ed697e0368bc993116e41bf2c0",
+      "physicalLines": 56,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/components/StaffingPaging.vue",
+      "bytes": 1453,
+      "sha256": "1ad8c666d6f4f64d708a8f33985c767e479c983347a131ca8211380bbc49f390",
+      "physicalLines": 55,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/components/StaffingShell.vue",
+      "bytes": 6139,
+      "sha256": "b4aa7ad9b25b17b1ad3657a87849a89ee4f66f72977cbd52793d8473ada46ff9",
+      "physicalLines": 314,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/components/WorkloadRecorder.vue",
+      "bytes": 2724,
+      "sha256": "a489b7488ed7bb0d89ad9e02b68d7808e12b4c1531dc45677a6efb8e63e864b6",
+      "physicalLines": 86,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/composables/useAuth.ts",
+      "bytes": 2143,
+      "sha256": "38998126635af69610fa7cfbeb690aa005d16489b82e3986ac6c893f87692bff",
+      "physicalLines": 67,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/composables/useCourseCatalogLoader.ts",
+      "bytes": 1194,
+      "sha256": "239b0e0c42ecd2cfaf969e28264e797595f3fd1a74b810157436fbdf14428732",
+      "physicalLines": 40,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/composables/useIntervalRefresh.ts",
+      "bytes": 532,
+      "sha256": "c1176289db334af0ba4b5b8f439f50530b569fbd00182da01a10ea4f17657527",
+      "physicalLines": 19,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/composables/useStaffing.ts",
+      "bytes": 4390,
+      "sha256": "be38f64fffcecbbefb70cdb340c865c39e57154d887046f4978b7e795fe83962",
+      "physicalLines": 139,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/directives/accessibleDialog.ts",
+      "bytes": 3341,
+      "sha256": "fb6a1032bdd0ecf6a45cf8e5662ad883c98d7a0414f6f3ad5b7973616cd6148b",
+      "physicalLines": 100,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/middleware/auth.global.ts",
+      "bytes": 877,
+      "sha256": "f1cfd0aff5842c889ae67c2e11dc67da18aae0de1c88d71ddd3c12530a9752fa",
+      "physicalLines": 33,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/admin/courses.vue",
+      "bytes": 10466,
+      "sha256": "968ca13f6c887b79896dc24611dc138adc4682f5c11c2fa93eb4ec9490cc9963",
+      "physicalLines": 518,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/admin/staffing.vue",
+      "bytes": 7219,
+      "sha256": "f16f827464e83fed2350a438b5ddaab1e7b7085dae39b1f4bf48e3404e456062",
+      "physicalLines": 213,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/applications/[id].vue",
+      "bytes": 20874,
+      "sha256": "4d2fe1ffd68c2cbbd1931f0896b2754063348937385612a291ffac13f9f3ddf0",
+      "physicalLines": 589,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/applications/index.vue",
+      "bytes": 5285,
+      "sha256": "e621010c2cf7fbec22f839cfb4fe1c41d2ca7d84797a7815ac2f4ce0a569a566",
+      "physicalLines": 163,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/courses/[id].vue",
+      "bytes": 509,
+      "sha256": "599f2ab5bf1aca0b14526b9d12edbde831ac2a45125bd254ba905d056cea6a53",
+      "physicalLines": 22,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/courses/[id]/admin.vue",
+      "bytes": 62350,
+      "sha256": "546384561c947cf75c02c6862bf9811d4d2f266fa245b1eb71e6ce01836cb3a1",
+      "physicalLines": 2517,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/courses/[id]/review.vue",
+      "bytes": 4988,
+      "sha256": "5f9d1f19f177e2037472dc081f97752a82856a7e9695cf8be687d3fa71809260",
+      "physicalLines": 142,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/courses/[id]/student.vue",
+      "bytes": 33967,
+      "sha256": "b8c68c7cda0e779cd6f1d32d6f966590651fbd6c5e850d1e05af6594f8a5446c",
+      "physicalLines": 1506,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/courses/[id]/ta.vue",
+      "bytes": 34681,
+      "sha256": "b0c0748312091662981485aab7d24a7eee7cc408f0a02c3782bd998ee5ecc3de",
+      "physicalLines": 1516,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/courses/index.vue",
+      "bytes": 14260,
+      "sha256": "9305e98d2ba3f6099695b3fd697797a7a18dd42d21397d20d561d49d57433558",
+      "physicalLines": 686,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/help.vue",
+      "bytes": 7998,
+      "sha256": "9047e58a0128e96c58bc2e8474d39e0c8b5b4d792dee8470b6053bfd9bc9bcaa",
+      "physicalLines": 337,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/index.vue",
+      "bytes": 140,
+      "sha256": "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c",
+      "physicalLines": 7,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/login.vue",
+      "bytes": 11781,
+      "sha256": "3c0b82a538905b42151e77104a85fb42b82caf67ee416028273b8ed705f0791d",
+      "physicalLines": 555,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/opportunities/[id].vue",
+      "bytes": 5567,
+      "sha256": "157459be7627668aa5562f5067a64e39a226846258345c621753ab97eb9b38f4",
+      "physicalLines": 164,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/opportunities/index.vue",
+      "bytes": 3127,
+      "sha256": "45a209d62c0c53ac96941be04f2ae3445d48d2134479eca124381ec147453b51",
+      "physicalLines": 96,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/projects/[id].vue",
+      "bytes": 3905,
+      "sha256": "bf20a66b4b30f6f5c58b0278aaeb6547eda1d1f2242ab77cddc9ed7dbe599f9f",
+      "physicalLines": 117,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/projects/index.vue",
+      "bytes": 2690,
+      "sha256": "74dda863bf3c4a60e5e05f67abe72e909b09fbcc59a2db48f4a6e9b41091eeed",
+      "physicalLines": 84,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/staffing/[id].vue",
+      "bytes": 12944,
+      "sha256": "d17fae1ae04f880b632a77a78953d7af07ad2f7c742c3a8cde8128b1e2607d10",
+      "physicalLines": 351,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/staffing/edit.vue",
+      "bytes": 195,
+      "sha256": "3af13e79020185248fc17e55686ba2e2a5513d74eac08ee779c5ee8d18c7d05c",
+      "physicalLines": 5,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/staffing/index.vue",
+      "bytes": 2651,
+      "sha256": "be9bc02aa0d10efbbd44b1600fec4d1d0d4c6db45ec5bf7b0dd7d3b19b28631d",
+      "physicalLines": 80,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "app/pages/staffing/new.vue",
+      "bytes": 43,
+      "sha256": "13cbf69aeeb13060dfc0f52ee608fbc37d8eea89e3ee5bf9fcb429e0cb7e4d1d",
+      "physicalLines": 1,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "ops/init-mongo-replica.js",
+      "bytes": 1374,
+      "sha256": "689e664d58060813edcaf87204c86ecef55027b2291023d2e4dabf7a11efb1a6",
+      "physicalLines": 25,
+      "category": "asset or project documentation and configuration",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/ai-provider.spec.ts",
+      "bytes": 10443,
+      "sha256": "ba9726e171bd5f4d02b270f3f66aebc9c5826f8a7d2856194c17bd2c7cb50184",
+      "physicalLines": 182,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/auth.spec.ts",
+      "bytes": 4231,
+      "sha256": "4a52abca79e21702f86028e0f28bdcca405834855f584863b246f961c3b5d4ae",
+      "physicalLines": 97,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/extended-flow.spec.ts",
+      "bytes": 23333,
+      "sha256": "2fdb3a4e93743f3da1d8155a22fea58d6f27d530e1cd837fc4a5c37c0c989585",
+      "physicalLines": 400,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/institutional-identity.spec.ts",
+      "bytes": 4633,
+      "sha256": "6cf05acb47f43c8a681ac5d851701e12d0a9bc261ea368d8d2a27c5231f2e113",
+      "physicalLines": 76,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/queue-concurrency.spec.ts",
+      "bytes": 11486,
+      "sha256": "804ca416c10c3ae74c77cadb92368fb45e86590c2cf31e7028327c9356802e7c",
+      "physicalLines": 181,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/queue-flow.spec.ts",
+      "bytes": 9700,
+      "sha256": "1813fea44af09eff928c8af386571175da7a7e31ad4433a5f50711a08c7991f1",
+      "physicalLines": 217,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/rbac.spec.ts",
+      "bytes": 7678,
+      "sha256": "9823ca1428c99c545b48a95de0d6352912776d6f05ec222ba068ac7bf067f71b",
+      "physicalLines": 154,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/staffing-boundaries.spec.ts",
+      "bytes": 9801,
+      "sha256": "10e9b316086db1d57183bb6f87c89a5084548bd091150fb15dff48532a406422",
+      "physicalLines": 118,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/staffing-browser.spec.ts",
+      "bytes": 16861,
+      "sha256": "042daa2d84f940ade7489212e0260dd1833c2fb9318c01649311996a4dbd2690",
+      "physicalLines": 237,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/staffing-lifecycle.spec.ts",
+      "bytes": 18085,
+      "sha256": "88b31354e52f9ff16ba2c765baecc6d44b5a9c45ad6f2c522b4e490705a48116",
+      "physicalLines": 230,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/helpers.ts",
+      "bytes": 2288,
+      "sha256": "cfafc75c32e45455a79839bc82cc81e841efaa250d3c5e4aece5f2070a9a4af9",
+      "physicalLines": 60,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/staffing-fixtures.ts",
+      "bytes": 8319,
+      "sha256": "d3f5263f6af6244e5160bc58491bd7583fbcd07481fc3f8344a03369d327507f",
+      "physicalLines": 114,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/tsconfig.json",
+      "bytes": 257,
+      "sha256": "9b5e0b22573f9a24d39b4557dd93ca6d9a8f34230b4131643984b8478f9c624f",
+      "physicalLines": 12,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "scripts/demo-windows.mjs",
+      "bytes": 4236,
+      "sha256": "cbb4611d7dcf6d8841ed8a44e1cb4f0294aad38718f321cba3c94f8a237d2fca",
+      "physicalLines": 109,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "scripts/local-test.mjs",
+      "bytes": 6191,
+      "sha256": "bedf4bf919da1bc20462a4a171e0d469c8c09eee299ba7fc4c95dd5acaabac45",
+      "physicalLines": 104,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/[...slug].ts",
+      "bytes": 361,
+      "sha256": "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8",
+      "physicalLines": 10,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/ai/[...path].ts",
+      "bytes": 907,
+      "sha256": "83d0f6e4d17716f4535af2ca4724c6770fc7647b8f15c4e29e8bed7f2200b2cf",
+      "physicalLines": 17,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/auth/gitlab.get.ts",
+      "bytes": 4495,
+      "sha256": "ecc0a4c0b25a7939fd941b641f5e9d088eb138a3ab0f2a4caabf3260113e4678",
+      "physicalLines": 114,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/auth/gitlab/login.get.ts",
+      "bytes": 1271,
+      "sha256": "0fc448967c2aec42a618e3b0dc86278957e92ba23fd66a061d85e253eaa10ab5",
+      "physicalLines": 43,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/auth/logout.post.ts",
+      "bytes": 200,
+      "sha256": "f95c7ca6331d5647a17ca09a439252f234c44de377d86a6cb184e62ed0d110ea",
+      "physicalLines": 6,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/auth/me.get.ts",
+      "bytes": 359,
+      "sha256": "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64",
+      "physicalLines": 12,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/auth/mock.post.ts",
+      "bytes": 1622,
+      "sha256": "667ba436f40f6226a067dd2343d0a14ed4f041a7a26e07a3a4981761d6289902",
+      "physicalLines": 20,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/auth/providers.get.ts",
+      "bytes": 638,
+      "sha256": "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233",
+      "physicalLines": 19,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id].delete.ts",
+      "bytes": 1357,
+      "sha256": "f168401577f0ae60d642bf19abd123affde8645d0c4936f38857c8115e60b978",
+      "physicalLines": 13,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id].get.ts",
+      "bytes": 1361,
+      "sha256": "408bf69d3baee9fce3645c09f8710ee13bad027b68e4080d460412f4e304c39e",
+      "physicalLines": 18,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/admin.get.ts",
+      "bytes": 1931,
+      "sha256": "d912ebfe0eac3154b81b79db1694fe06a7b7c03714ef8174e725cb77af398702",
+      "physicalLines": 22,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/announcements.post.ts",
+      "bytes": 682,
+      "sha256": "649e675c52a937f9d47e9f3aa1ba794207ecb0e319e8732ec7963fd679b42fd8",
+      "physicalLines": 10,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/announcements/[announcementId].delete.ts",
+      "bytes": 649,
+      "sha256": "1d2a9b3a49edb1f6ef3a6b7dc35f5c544e2db13d47649f1956e67c147feffd93",
+      "physicalLines": 10,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/kick.post.ts",
+      "bytes": 1970,
+      "sha256": "3097c8f83bad7559022ba818a95ef2d3b3e3840197069c9e3ee6bbba4d12d67f",
+      "physicalLines": 21,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/role.patch.ts",
+      "bytes": 1932,
+      "sha256": "0602b8fcd7e28c81db16da545bb8e23fa4c9ee50c52676dd85e5e406c4626b69",
+      "physicalLines": 22,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/feedback.post.ts",
+      "bytes": 1208,
+      "sha256": "91df10bc221be5e89002ef41f8e1f4b67094f899b43f3dd844365658aa811288",
+      "physicalLines": 16,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/queue/assign.post.ts",
+      "bytes": 1858,
+      "sha256": "2e2206594969ab7ea7e2a3cca47dfb3b397b7b2746bb77b13dee4511f572cb25",
+      "physicalLines": 29,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/queue/join.post.ts",
+      "bytes": 1900,
+      "sha256": "75afc66371b86f04f8aef10e5b768783142e84e55325c641da50a5398eacbcf1",
+      "physicalLines": 27,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/queue/leave.post.ts",
+      "bytes": 431,
+      "sha256": "20cc094ff9633bc11ef099abe378d941dd66c331b9bbd4bfadd3a00d0da0fe7b",
+      "physicalLines": 7,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/queue/move.post.ts",
+      "bytes": 1174,
+      "sha256": "57cf331f1241660c28b27727bc5c1b8428515506475702b1dbeaedcfdcbea482",
+      "physicalLines": 17,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/queue/pause.post.ts",
+      "bytes": 1180,
+      "sha256": "5c820265d167ead96374022d45d738fec7d719f8f32de71df24baf6fed87a823",
+      "physicalLines": 22,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/queue/remove.post.ts",
+      "bytes": 602,
+      "sha256": "0cff2b8a3086cee1e70011f1b9827d027e8d99a36830877cd68734f0b6f0f4fa",
+      "physicalLines": 10,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/state.patch.ts",
+      "bytes": 968,
+      "sha256": "ba92a95252249919417134fccd680774021da2085fa4ea028794266f3be7fc9e",
+      "physicalLines": 12,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/[id]/ta-duty.post.ts",
+      "bytes": 1095,
+      "sha256": "2cb4222a3397fefef70f56668f9fbb56ef5a6da99d5a07ceb524dfde2b6f7b68",
+      "physicalLines": 14,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/enroll.post.ts",
+      "bytes": 1413,
+      "sha256": "b57b18e2a297ebaf9d1a3bd651d2c34bcc95af3c2ead8fac7c333c7500af6ed7",
+      "physicalLines": 22,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/index.get.ts",
+      "bytes": 984,
+      "sha256": "73af702f75b703bd3ebc940edfe68c929f33916e6d4940d14a311280a85d20b0",
+      "physicalLines": 17,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/courses/index.post.ts",
+      "bytes": 1509,
+      "sha256": "cd4e0652f026cea7d51c58604e969cecb085be5559a3ba03d00666c2047b54f7",
+      "physicalLines": 19,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/health.get.ts",
+      "bytes": 484,
+      "sha256": "316c4777ecf0b37009a080bcabe5c7c8b637e3b5eb8677bcfe7983943db7c228",
+      "physicalLines": 12,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/api/staffing/[...path].ts",
+      "bytes": 14256,
+      "sha256": "5c704bd6b14bae557258ed5873981497361910fdcdda134025c7ccb23bc8448b",
+      "physicalLines": 146,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/middleware/logging.ts",
+      "bytes": 684,
+      "sha256": "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156",
+      "physicalLines": 21,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/middleware/security.ts",
+      "bytes": 3388,
+      "sha256": "33913c84ab95284d0ae979491d191116eb8a5beadc332bc44c99e9ceedbd4ddb",
+      "physicalLines": 54,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/ai.ts",
+      "bytes": 22171,
+      "sha256": "7e6b603a7179c72fe35a2692412e495c064f5719fb6abd7a1e12dd6a157e966e",
+      "physicalLines": 251,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/auth.ts",
+      "bytes": 10418,
+      "sha256": "9499d6e2f2516032d85d8d40812e470380be5b294c185203a4597ad83746a580",
+      "physicalLines": 159,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/config.ts",
+      "bytes": 3828,
+      "sha256": "dfac743ef2683db45e3c34bc98117997007c23794efae8625f855a4d4f86c3f3",
+      "physicalLines": 60,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/courses.ts",
+      "bytes": 8381,
+      "sha256": "d468a4b3cffbf4a602e6a8560b2a57e44ae462d3230521ff89350200afa1b776",
+      "physicalLines": 127,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/db.ts",
+      "bytes": 5273,
+      "sha256": "74513fdeb5ddb1ef8d395c8ca1effae8649763fa990858a4b6f93d5998a2a3f4",
+      "physicalLines": 97,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/queue.ts",
+      "bytes": 5264,
+      "sha256": "c98af471970d5fd7ab2bd476eca363d63f10b67f01c26f74589f20d2610aad55",
+      "physicalLines": 82,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/seed.ts",
+      "bytes": 5028,
+      "sha256": "4dd1bde3c0d627e8f43cf942aa622d54c0fbb9c1c4e9c0c5e41f842a7b4d7821",
+      "physicalLines": 119,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/staffing-applications.ts",
+      "bytes": 16041,
+      "sha256": "068e4904ba6207f3522c0b0329c7914e3c0377e4a58745a65bacfa8c1be1de70",
+      "physicalLines": 160,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/staffing-appointments.ts",
+      "bytes": 22807,
+      "sha256": "c3e936b1c66870971df08630213de3bff4b200f191b9e6168fde9b3d17bfbfb8",
+      "physicalLines": 209,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/staffing-catalog.ts",
+      "bytes": 12882,
+      "sha256": "e382934c344f167d2ad24d4d0f96d15211590e5afaa26cb0afad050fb3a25e00",
+      "physicalLines": 142,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/staffing-outbox.ts",
+      "bytes": 4839,
+      "sha256": "3d1e783749f0e1c1960ed06b7b83bb11b5ac0120d551fc464f0eaefc819ff55a",
+      "physicalLines": 61,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/staffing-reports.ts",
+      "bytes": 11006,
+      "sha256": "d567e5bc3522ae0e20727409513cae3949f3682bd5cbed122fbc2f44ea545b0e",
+      "physicalLines": 106,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/staffing.ts",
+      "bytes": 11478,
+      "sha256": "3ee10d0814bcc9826c85e685f895b7b10978a654bd20622ff0876c90e16c93e1",
+      "physicalLines": 164,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "tests/dependency-security.test.mjs",
+      "bytes": 1887,
+      "sha256": "c6e8565c82e67d4fbe99a46826938a3348809d71e8cf882a6ebc3af9dbbef630",
+      "physicalLines": 40,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "vendor/safe-deepmerge/LICENSE",
+      "bytes": 1116,
+      "sha256": "6cfc4687cb2f2d86f4a77e6b526290d3878e5e512f3fec2f4cb36a9cb36f798b",
+      "physicalLines": 21,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "vendor/safe-deepmerge/README.md",
+      "bytes": 668,
+      "sha256": "0eed632aa2352bad3173089154d4e1756640c8baddf8a93649255f16753a8019",
+      "physicalLines": 5,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "vendor/safe-deepmerge/index.cjs",
+      "bytes": 2576,
+      "sha256": "91d7133da7ba8f8dc806b5381ad67208366b65ac0e4303ab38c5f8b8c342ed73",
+      "physicalLines": 56,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "vendor/safe-deepmerge/package.json",
+      "bytes": 218,
+      "sha256": "1504ece1f179a069202d97ca88d5460278cf40f780e5c121303aa969443d0f6f",
+      "physicalLines": 8,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    }
+  ],
+  "excludes": [
+    "Generated dependency and build trees",
+    "Private environments and databases",
+    "Raw conversation archives",
+    "Binary assets; visual inspection is described separately"
+  ]
+}

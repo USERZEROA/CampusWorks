@@ -1,382 +1,931 @@
 {
-  "date": "2026-11-07",
-  "baselineFileCount": 73,
-  "additionalValidationFiles": 2,
+  "recordedAt": "2026-11-07T08:54:41.467Z",
+  "count": 132,
+  "coverage": "Delivered file inventory; semantic review scope and boundaries are in docs/VERIFICATION.md.",
   "files": [
     {
       "path": ".dockerignore",
       "bytes": 343,
-      "sha256": "5f2fa0df284d6a027a0180cc2f5bc9e846f011f4578f05022bf0cd66c61ce030"
+      "sha256": "5f2fa0df284d6a027a0180cc2f5bc9e846f011f4578f05022bf0cd66c61ce030",
+      "physicalLines": 27,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": ".env.example",
-      "bytes": 1900,
-      "sha256": "20c9056b22e73449d4084571d0c90fd18b706312eb1174ee3116503ef9db32ec"
+      "bytes": 1151,
+      "sha256": "cce8c0ba5977d35a97b9524a91a19cb792283ad69a799751c126f52da1d8bab4",
+      "physicalLines": 35,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": ".gitignore",
       "bytes": 883,
-      "sha256": "73feedfc43c1ffb865f1171f10f51a2d2c0cf708f107c38f5ff387072a31ab8e"
+      "sha256": "73feedfc43c1ffb865f1171f10f51a2d2c0cf708f107c38f5ff387072a31ab8e",
+      "physicalLines": 44,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": ".nvmrc",
       "bytes": 3,
-      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "physicalLines": 1,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "Dockerfile",
-      "bytes": 629,
-      "sha256": "5ad6a6fdaeaf7caa9e711243f3865f4e4d56bc0fd4e25ecaaf8e465f56c793d5"
+      "bytes": 650,
+      "sha256": "b7b3cb9c183163706d9887a36b4a1e298b6d0ac1b4c1a5731c6ea9077e405066",
+      "physicalLines": 28,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "LICENSE",
       "bytes": 922,
-      "sha256": "25a2f64d480b1ca2ec042e9bdcebff8c903ec26b56f0be264fff86c3ca8fbde4"
+      "sha256": "25a2f64d480b1ca2ec042e9bdcebff8c903ec26b56f0be264fff86c3ca8fbde4",
+      "physicalLines": 18,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "README.md",
-      "bytes": 17385,
-      "sha256": "a458c8ee940c0d7382fdd9863b5cc803ed4ebd0f337b3c0c4a763eb4ce6d7317"
+      "bytes": 10524,
+      "sha256": "40ffc55e52e351d8f5921de916768f5ed83391865aafd23523051be440bc6d59",
+      "physicalLines": 129,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "app/app.vue",
-      "bytes": 71,
-      "sha256": "63c1fb3634b5ab76dca3c9935629cda7582f157b4638da766f73b8f690864f7e"
+      "bytes": 1326,
+      "sha256": "46a12872bfe317b71c24b5aca95dd3cbde1014fb882ab813e9a084c3e6cdc9f1",
+      "physicalLines": 67,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/components/AiAssistance.vue",
+      "bytes": 3838,
+      "sha256": "b04adb73aa4dd48ee48f6ff73c01fbd3fe37099b3efa658812ee59e2ec69f6ca",
+      "physicalLines": 121,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/components/OpportunityEditor.vue",
+      "bytes": 17065,
+      "sha256": "6c1cc25cb16d2c97dbd185a30ae2b9c0f5463185b62c5aff9fadf72928182d48",
+      "physicalLines": 512,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/components/StaffingNavigation.vue",
+      "bytes": 1220,
+      "sha256": "c0564419d0fa49db0af7fbd64c31a1810fd188ed697e0368bc993116e41bf2c0",
+      "physicalLines": 56,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/components/StaffingPaging.vue",
+      "bytes": 1453,
+      "sha256": "1ad8c666d6f4f64d708a8f33985c767e479c983347a131ca8211380bbc49f390",
+      "physicalLines": 55,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/components/StaffingShell.vue",
+      "bytes": 6139,
+      "sha256": "b4aa7ad9b25b17b1ad3657a87849a89ee4f66f72977cbd52793d8473ada46ff9",
+      "physicalLines": 314,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/components/WorkloadRecorder.vue",
+      "bytes": 2724,
+      "sha256": "a489b7488ed7bb0d89ad9e02b68d7808e12b4c1531dc45677a6efb8e63e864b6",
+      "physicalLines": 86,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/composables/useAuth.ts",
-      "bytes": 1228,
-      "sha256": "212b3442115b357b6850883ce4348aa4e9af23358bdc8d02739867220db82060"
+      "bytes": 2143,
+      "sha256": "38998126635af69610fa7cfbeb690aa005d16489b82e3986ac6c893f87692bff",
+      "physicalLines": 67,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/composables/useCourseCatalogLoader.ts",
+      "bytes": 1194,
+      "sha256": "239b0e0c42ecd2cfaf969e28264e797595f3fd1a74b810157436fbdf14428732",
+      "physicalLines": 40,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/composables/useIntervalRefresh.ts",
+      "bytes": 532,
+      "sha256": "c1176289db334af0ba4b5b8f439f50530b569fbd00182da01a10ea4f17657527",
+      "physicalLines": 19,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/composables/useStaffing.ts",
+      "bytes": 4390,
+      "sha256": "be38f64fffcecbbefb70cdb340c865c39e57154d887046f4978b7e795fe83962",
+      "physicalLines": 139,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/directives/accessibleDialog.ts",
+      "bytes": 3341,
+      "sha256": "fb6a1032bdd0ecf6a45cf8e5662ad883c98d7a0414f6f3ad5b7973616cd6148b",
+      "physicalLines": 100,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/middleware/auth.global.ts",
-      "bytes": 804,
-      "sha256": "5b7bfaf11257057ae35df0116a22436231bf08f33e5a299731b37d0a1bf449b2"
+      "bytes": 877,
+      "sha256": "f1cfd0aff5842c889ae67c2e11dc67da18aae0de1c88d71ddd3c12530a9752fa",
+      "physicalLines": 33,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/pages/admin/courses.vue",
-      "bytes": 9244,
-      "sha256": "274c12b5127b779e60384f85c3d4339125bc0beaacbc9f105c20472c66fb2eb2"
+      "bytes": 10466,
+      "sha256": "968ca13f6c887b79896dc24611dc138adc4682f5c11c2fa93eb4ec9490cc9963",
+      "physicalLines": 518,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/admin/staffing.vue",
+      "bytes": 7219,
+      "sha256": "f16f827464e83fed2350a438b5ddaab1e7b7085dae39b1f4bf48e3404e456062",
+      "physicalLines": 213,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/applications/[id].vue",
+      "bytes": 20874,
+      "sha256": "4d2fe1ffd68c2cbbd1931f0896b2754063348937385612a291ffac13f9f3ddf0",
+      "physicalLines": 589,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/applications/index.vue",
+      "bytes": 5285,
+      "sha256": "e621010c2cf7fbec22f839cfb4fe1c41d2ca7d84797a7815ac2f4ce0a569a566",
+      "physicalLines": 163,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/pages/courses/[id].vue",
-      "bytes": 498,
-      "sha256": "1cfecf9681b371e7b650d48f864314df996faa14b15cec91b390cb419ebc7a2d"
+      "bytes": 509,
+      "sha256": "599f2ab5bf1aca0b14526b9d12edbde831ac2a45125bd254ba905d056cea6a53",
+      "physicalLines": 22,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/pages/courses/[id]/admin.vue",
-      "bytes": 56475,
-      "sha256": "3ab2d515a3d79052c4116b6b16e907530c60ebbce449b8d2d88f8d3d5996a808"
+      "bytes": 62350,
+      "sha256": "546384561c947cf75c02c6862bf9811d4d2f266fa245b1eb71e6ce01836cb3a1",
+      "physicalLines": 2517,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/courses/[id]/review.vue",
+      "bytes": 4988,
+      "sha256": "5f9d1f19f177e2037472dc081f97752a82856a7e9695cf8be687d3fa71809260",
+      "physicalLines": 142,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/pages/courses/[id]/student.vue",
-      "bytes": 32890,
-      "sha256": "71d1cb0e5175d941095c92f7fd226e7cea0b36caf8a29f435d889e804618dd83"
+      "bytes": 33967,
+      "sha256": "b8c68c7cda0e779cd6f1d32d6f966590651fbd6c5e850d1e05af6594f8a5446c",
+      "physicalLines": 1506,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/pages/courses/[id]/ta.vue",
-      "bytes": 33960,
-      "sha256": "e7f48383c6936148c38528e890f86f6610162eb19de05be4799e023da144b0da"
+      "bytes": 34681,
+      "sha256": "b0c0748312091662981485aab7d24a7eee7cc408f0a02c3782bd998ee5ecc3de",
+      "physicalLines": 1516,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/pages/courses/index.vue",
-      "bytes": 13324,
-      "sha256": "6710b8bcfd607168bc9a82e4cd634bcb8c30c003c8f96a6bafd58369f63c7b70"
+      "bytes": 14260,
+      "sha256": "9305e98d2ba3f6099695b3fd697797a7a18dd42d21397d20d561d49d57433558",
+      "physicalLines": 686,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/pages/help.vue",
-      "bytes": 7138,
-      "sha256": "1d32358addac04d8d5de6da54dcb22e654e2825d99efa997854895781402641d"
+      "bytes": 7998,
+      "sha256": "9047e58a0128e96c58bc2e8474d39e0c8b5b4d792dee8470b6053bfd9bc9bcaa",
+      "physicalLines": 337,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/pages/index.vue",
       "bytes": 140,
-      "sha256": "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c"
+      "sha256": "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c",
+      "physicalLines": 7,
+      "category": "maintained source and verification code"
     },
     {
       "path": "app/pages/login.vue",
-      "bytes": 11449,
-      "sha256": "b586ba837b6d6a06657d0a87aabaceeb5d0a194062c9b3621f8bbba7a97ad7a4"
+      "bytes": 11781,
+      "sha256": "3c0b82a538905b42151e77104a85fb42b82caf67ee416028273b8ed705f0791d",
+      "physicalLines": 555,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/opportunities/[id].vue",
+      "bytes": 5567,
+      "sha256": "157459be7627668aa5562f5067a64e39a226846258345c621753ab97eb9b38f4",
+      "physicalLines": 164,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/opportunities/index.vue",
+      "bytes": 3127,
+      "sha256": "45a209d62c0c53ac96941be04f2ae3445d48d2134479eca124381ec147453b51",
+      "physicalLines": 96,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/projects/[id].vue",
+      "bytes": 3905,
+      "sha256": "bf20a66b4b30f6f5c58b0278aaeb6547eda1d1f2242ab77cddc9ed7dbe599f9f",
+      "physicalLines": 117,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/projects/index.vue",
+      "bytes": 2690,
+      "sha256": "74dda863bf3c4a60e5e05f67abe72e909b09fbcc59a2db48f4a6e9b41091eeed",
+      "physicalLines": 84,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/staffing/[id].vue",
+      "bytes": 12944,
+      "sha256": "d17fae1ae04f880b632a77a78953d7af07ad2f7c742c3a8cde8128b1e2607d10",
+      "physicalLines": 351,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/staffing/edit.vue",
+      "bytes": 195,
+      "sha256": "3af13e79020185248fc17e55686ba2e2a5513d74eac08ee779c5ee8d18c7d05c",
+      "physicalLines": 5,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/staffing/index.vue",
+      "bytes": 2651,
+      "sha256": "be9bc02aa0d10efbbd44b1600fec4d1d0d4c6db45ec5bf7b0dd7d3b19b28631d",
+      "physicalLines": 80,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "app/pages/staffing/new.vue",
+      "bytes": 43,
+      "sha256": "13cbf69aeeb13060dfc0f52ee608fbc37d8eea89e3ee5bf9fcb429e0cb7e4d1d",
+      "physicalLines": 1,
+      "category": "maintained source and verification code"
     },
     {
       "path": "docker-compose.yml",
-      "bytes": 1628,
-      "sha256": "ca9d9d88c942e73537bbf3e1ad06d9802aceb6a457cd206caa439f3684bc211f"
+      "bytes": 2868,
+      "sha256": "529ee55105b5caf346b29ab1b0763aec07d7e0cbc2a26bea84c1e5def3473db4",
+      "physicalLines": 75,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/IMPLEMENTATION_PLAN.md",
+      "bytes": 3384,
+      "sha256": "416bb8a6dbb3d3b62855a7a6a650bde94f32f736a96d035ae946002785e62ef5",
+      "physicalLines": 31,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/STAFFING_DESIGN.md",
+      "bytes": 16779,
+      "sha256": "b7f7a1c877d2ad19284ba0bd19d768f809c2f05aa0868bac5107dd0fd8a6d1bd",
+      "physicalLines": 151,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/STAFFING_OPERATIONS.md",
+      "bytes": 22612,
+      "sha256": "0bc8c4efe2fc61828f40b10e80aa0912fe247ed420bb9020f77ab5dfdff87f93",
+      "physicalLines": 174,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "bytes": 12589,
+      "sha256": "88787c38ae3eef1b6a624492a5c41ea827da0560d692a4a4a0a01f5e0a601731",
+      "physicalLines": 94,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/WORK_PLAN.md",
+      "bytes": 4033,
+      "sha256": "dc6dc612872d7b962d1ab1f2a8924813b72233b85740cd6be134f9e24ce2d057",
+      "physicalLines": 39,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/review/operations-reading-ledger.json",
+      "bytes": 6651,
+      "sha256": "31d8c797670eb7a703d5a5a2b3e5f1b8dbf4003c0f59cbd46859fcb1d4b61b9d",
+      "physicalLines": 210,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/review/operations-review.md",
+      "bytes": 9711,
+      "sha256": "23721160595f358312af312fa7732650187ca44b60387ff286df50f421dab4ee",
+      "physicalLines": 69,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/review/server-reading-ledger.json",
+      "bytes": 16856,
+      "sha256": "78bdb5fdbbb9a4bc9b5b8ccd450ca91b35ba2f44a4151fb58673a1533d0da1f2",
+      "physicalLines": 315,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/review/server-review.md",
+      "bytes": 11277,
+      "sha256": "77ebe9836f479a8757f09f68c44fc8dd32c26161db99b1edf708a489dbde45b7",
+      "physicalLines": 74,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/review/ui-reading-ledger.json",
+      "bytes": 5726,
+      "sha256": "c135d3fda4e687cd8526fd208c4e4a93011e89dded64d8c67a27032901dbb5ff",
+      "physicalLines": 123,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "docs/review/ui-review.md",
+      "bytes": 15556,
+      "sha256": "a64365c0d6265af469c2cda861cd6b550e18fdae6f30ab2e3337caea8bb32c02",
+      "physicalLines": 128,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "k8s/README.md",
+      "bytes": 1865,
+      "sha256": "5658e1ab22b40e80c75b147f717279e826d49d1786e897d35e85c8c1ef7d8eb0",
+      "physicalLines": 18,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "k8s/app.yaml",
-      "bytes": 1848,
-      "sha256": "853caaae3833feaefa33ed805c2513909c90c270bfaa47a54bf75bf2983fdc8d"
+      "bytes": 1584,
+      "sha256": "e0b0c8de8e28a83f50517e751355850000c64904239c39a95eafe22303f81fa3",
+      "physicalLines": 62,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "k8s/mongo-init.yaml",
+      "bytes": 672,
+      "sha256": "d3ed25c503d763a4cc31a58708726a3388eb99bde0b53fa03f562c63bec5b90e",
+      "physicalLines": 23,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "k8s/mongo.yaml",
-      "bytes": 1223,
-      "sha256": "1fcc94bb891eda007287d3d2a9613b19a92e7312c88074a1d15ddb4601c12656"
+      "bytes": 1945,
+      "sha256": "797b2c550bfe40b02cd47a116a935682120f6e38fc4cfe40042bcab6617624f8",
+      "physicalLines": 71,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "k8s/namespace.yaml",
       "bytes": 65,
-      "sha256": "70f21aad337640eb878994cb57d1d0b2cfe8b52fe21670f906f50372119a287b"
-    },
-    {
-      "path": "k8s/secret-app.yaml",
-      "bytes": 601,
-      "sha256": "5909d556b10736671d2a6dd180885fccb28eff7f13e5db6133f3b078e4c589c3"
-    },
-    {
-      "path": "k8s/secret-mongo.yaml",
-      "bytes": 324,
-      "sha256": "d0657a71ccb8e72d14e299d9cb761464186475fe98c34a6a975df610c45af8eb"
+      "sha256": "70f21aad337640eb878994cb57d1d0b2cfe8b52fe21670f906f50372119a287b",
+      "physicalLines": 4,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "nuxt.config.ts",
       "bytes": 740,
-      "sha256": "346fa5e905e670b1801dce83ace348e9b912c00d72bb6e90749ad679ced15497"
+      "sha256": "346fa5e905e670b1801dce83ace348e9b912c00d72bb6e90749ad679ced15497",
+      "physicalLines": 24,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "ops/init-mongo-replica.js",
+      "bytes": 1374,
+      "sha256": "689e664d58060813edcaf87204c86ecef55027b2291023d2e4dabf7a11efb1a6",
+      "physicalLines": 25,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "package-lock.json",
-      "bytes": 318115,
-      "sha256": "e0f7dc51627c85e4914189aea3bfa9da449944718212d4d9f937481c2b79aadd"
+      "bytes": 304889,
+      "sha256": "8175ca6cae47c1a271661846541e3f88495a0b9016d3a50cb2de112c41f0bc4a",
+      "physicalLines": 8701,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "package.json",
-      "bytes": 864,
-      "sha256": "7ca9564018574981d225baaf87a8406ead55a9dfd0efa4ba360d1b2312a9a6a7"
+      "bytes": 1175,
+      "sha256": "6d858eb63d06964ec4d4c303b45b5ba99a891591a6f5602d6cbb054e9c39c124",
+      "physicalLines": 42,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "playwright.config.ts",
-      "bytes": 775,
-      "sha256": "163416193a5aec52e9ee4a44826b6a9d043bc4845f345aa030c5d6d3a3740d79"
+      "bytes": 995,
+      "sha256": "03ec93478bdf7120896ca36defeee7fe9a81d1e9818ee7a8a91f774ba3c4acad",
+      "physicalLines": 37,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "playwright/e2e/ai-provider.spec.ts",
+      "bytes": 10443,
+      "sha256": "ba9726e171bd5f4d02b270f3f66aebc9c5826f8a7d2856194c17bd2c7cb50184",
+      "physicalLines": 182,
+      "category": "maintained source and verification code"
     },
     {
       "path": "playwright/e2e/auth.spec.ts",
       "bytes": 4231,
-      "sha256": "4a52abca79e21702f86028e0f28bdcca405834855f584863b246f961c3b5d4ae"
+      "sha256": "4a52abca79e21702f86028e0f28bdcca405834855f584863b246f961c3b5d4ae",
+      "physicalLines": 97,
+      "category": "maintained source and verification code"
     },
     {
       "path": "playwright/e2e/extended-flow.spec.ts",
-      "bytes": 22937,
-      "sha256": "e694b92fe3fd6b23e8f1f85ba0fa9986b672d5ca9ac585e726c5c4f9b6f914ac"
+      "bytes": 23333,
+      "sha256": "2fdb3a4e93743f3da1d8155a22fea58d6f27d530e1cd837fc4a5c37c0c989585",
+      "physicalLines": 400,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "playwright/e2e/institutional-identity.spec.ts",
+      "bytes": 4633,
+      "sha256": "6cf05acb47f43c8a681ac5d851701e12d0a9bc261ea368d8d2a27c5231f2e113",
+      "physicalLines": 76,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "playwright/e2e/queue-concurrency.spec.ts",
+      "bytes": 11486,
+      "sha256": "804ca416c10c3ae74c77cadb92368fb45e86590c2cf31e7028327c9356802e7c",
+      "physicalLines": 181,
+      "category": "maintained source and verification code"
     },
     {
       "path": "playwright/e2e/queue-flow.spec.ts",
       "bytes": 9700,
-      "sha256": "1813fea44af09eff928c8af386571175da7a7e31ad4433a5f50711a08c7991f1"
+      "sha256": "1813fea44af09eff928c8af386571175da7a7e31ad4433a5f50711a08c7991f1",
+      "physicalLines": 217,
+      "category": "maintained source and verification code"
     },
     {
       "path": "playwright/e2e/rbac.spec.ts",
-      "bytes": 7470,
-      "sha256": "ab7f23a3a6b6f923031f8a8cb55192137bd7b39bb990f14ac21171e9c7cc953f"
+      "bytes": 7678,
+      "sha256": "9823ca1428c99c545b48a95de0d6352912776d6f05ec222ba068ac7bf067f71b",
+      "physicalLines": 154,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "playwright/e2e/staffing-boundaries.spec.ts",
+      "bytes": 9801,
+      "sha256": "10e9b316086db1d57183bb6f87c89a5084548bd091150fb15dff48532a406422",
+      "physicalLines": 118,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "playwright/e2e/staffing-browser.spec.ts",
+      "bytes": 16861,
+      "sha256": "042daa2d84f940ade7489212e0260dd1833c2fb9318c01649311996a4dbd2690",
+      "physicalLines": 237,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "playwright/e2e/staffing-lifecycle.spec.ts",
+      "bytes": 18085,
+      "sha256": "88b31354e52f9ff16ba2c765baecc6d44b5a9c45ad6f2c522b4e490705a48116",
+      "physicalLines": 230,
+      "category": "maintained source and verification code"
     },
     {
       "path": "playwright/helpers.ts",
-      "bytes": 2199,
-      "sha256": "4045bc3c4289450ee1881aea771b8263a5d3657971190c52449b0d2f61e78261"
+      "bytes": 2288,
+      "sha256": "cfafc75c32e45455a79839bc82cc81e841efaa250d3c5e4aece5f2070a9a4af9",
+      "physicalLines": 60,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "playwright/staffing-fixtures.ts",
+      "bytes": 8319,
+      "sha256": "d3f5263f6af6244e5160bc58491bd7583fbcd07481fc3f8344a03369d327507f",
+      "physicalLines": 114,
+      "category": "maintained source and verification code"
     },
     {
       "path": "playwright/tsconfig.json",
       "bytes": 257,
-      "sha256": "9b5e0b22573f9a24d39b4557dd93ca6d9a8f34230b4131643984b8478f9c624f"
+      "sha256": "9b5e0b22573f9a24d39b4557dd93ca6d9a8f34230b4131643984b8478f9c624f",
+      "physicalLines": 12,
+      "category": "maintained source and verification code"
     },
     {
       "path": "public/campusworks-logo.svg",
       "bytes": 269,
-      "sha256": "005d99ecc9d7e34894ed539c0132f381902e2ed780d269838112bc327c6b6109"
+      "sha256": "005d99ecc9d7e34894ed539c0132f381902e2ed780d269838112bc327c6b6109",
+      "physicalLines": 4,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "public/duke-cs-logo.png",
       "bytes": 10497,
-      "sha256": "f13da47b151485056dee3e755a28e194c6b5e5846bbcb44ce700378de668e1f6"
+      "sha256": "f13da47b151485056dee3e755a28e194c6b5e5846bbcb44ce700378de668e1f6",
+      "physicalLines": null,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "public/favicon.ico",
       "bytes": 4286,
-      "sha256": "1057b17aec08a7191d134000203947f195a8aa7c84c39f1164cee8d01279762a"
+      "sha256": "1057b17aec08a7191d134000203947f195a8aa7c84c39f1164cee8d01279762a",
+      "physicalLines": null,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "public/robots.txt",
       "bytes": 24,
-      "sha256": "e1f21c9aa28d50ca112ed357f34b67c550597effd4d42fd55b4e27300dd8f9c1"
+      "sha256": "e1f21c9aa28d50ca112ed357f34b67c550597effd4d42fd55b4e27300dd8f9c1",
+      "physicalLines": 2,
+      "category": "asset or project documentation and configuration"
     },
     {
       "path": "scripts/demo-windows.mjs",
       "bytes": 4236,
-      "sha256": "cbb4611d7dcf6d8841ed8a44e1cb4f0294aad38718f321cba3c94f8a237d2fca"
+      "sha256": "cbb4611d7dcf6d8841ed8a44e1cb4f0294aad38718f321cba3c94f8a237d2fca",
+      "physicalLines": 109,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "scripts/local-test.mjs",
+      "bytes": 6191,
+      "sha256": "bedf4bf919da1bc20462a4a171e0d469c8c09eee299ba7fc4c95dd5acaabac45",
+      "physicalLines": 104,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/[...slug].ts",
       "bytes": 361,
-      "sha256": "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8"
+      "sha256": "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8",
+      "physicalLines": 10,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/api/ai/[...path].ts",
+      "bytes": 907,
+      "sha256": "83d0f6e4d17716f4535af2ca4724c6770fc7647b8f15c4e29e8bed7f2200b2cf",
+      "physicalLines": 17,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/auth/gitlab.get.ts",
-      "bytes": 3627,
-      "sha256": "3690febb74cedf86c2381accb66b82681a00b2a75e6b226afaf5e5810682427a"
+      "bytes": 4495,
+      "sha256": "ecc0a4c0b25a7939fd941b641f5e9d088eb138a3ab0f2a4caabf3260113e4678",
+      "physicalLines": 114,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/auth/gitlab/login.get.ts",
-      "bytes": 1350,
-      "sha256": "fbd30a25261f46fb9478bf5e1b57ebcd109bb1546b1af989893fdcf76142e92e"
+      "bytes": 1271,
+      "sha256": "0fc448967c2aec42a618e3b0dc86278957e92ba23fd66a061d85e253eaa10ab5",
+      "physicalLines": 43,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/auth/logout.post.ts",
-      "bytes": 332,
-      "sha256": "1bfe895bef48f59dca632e3c7886207d7caed41e245307eebe945051c2c24c32"
+      "bytes": 200,
+      "sha256": "f95c7ca6331d5647a17ca09a439252f234c44de377d86a6cb184e62ed0d110ea",
+      "physicalLines": 6,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/auth/me.get.ts",
       "bytes": 359,
-      "sha256": "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64"
+      "sha256": "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64",
+      "physicalLines": 12,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/auth/mock.post.ts",
-      "bytes": 1778,
-      "sha256": "a6670047a918f44099a584f07068f9ef51bf613626139cc7d04704a04129e8a4"
+      "bytes": 1622,
+      "sha256": "667ba436f40f6226a067dd2343d0a14ed4f041a7a26e07a3a4981761d6289902",
+      "physicalLines": 20,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/auth/providers.get.ts",
       "bytes": 638,
-      "sha256": "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233"
+      "sha256": "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233",
+      "physicalLines": 19,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id].delete.ts",
-      "bytes": 857,
-      "sha256": "bb90bcc2ce4ffd08fd05777e093c009f4188edab1ff48465a3653174e99b1481"
+      "bytes": 1357,
+      "sha256": "f168401577f0ae60d642bf19abd123affde8645d0c4936f38857c8115e60b978",
+      "physicalLines": 13,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id].get.ts",
-      "bytes": 1753,
-      "sha256": "965a5700fbb77bd8d1138cae36275945417eb14abdc9e6c8137096f14f14313e"
+      "bytes": 1361,
+      "sha256": "408bf69d3baee9fce3645c09f8710ee13bad027b68e4080d460412f4e304c39e",
+      "physicalLines": 18,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/admin.get.ts",
-      "bytes": 1467,
-      "sha256": "e5c6280346402984d2f6f5357a1c3b498361abe8fdcc1b3479b3ff5d1025082c"
+      "bytes": 1931,
+      "sha256": "d912ebfe0eac3154b81b79db1694fe06a7b7c03714ef8174e725cb77af398702",
+      "physicalLines": 22,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/announcements.post.ts",
-      "bytes": 909,
-      "sha256": "3616a975cbfe392213f344befc5305e75363e83e314c2d981cf81bfa78915d5f"
+      "bytes": 682,
+      "sha256": "649e675c52a937f9d47e9f3aa1ba794207ecb0e319e8732ec7963fd679b42fd8",
+      "physicalLines": 10,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/announcements/[announcementId].delete.ts",
-      "bytes": 953,
-      "sha256": "df642847ee5512c0feb22f1e45e104014d06edd65df5125f70ae2bb4e4c2ca20"
+      "bytes": 649,
+      "sha256": "1d2a9b3a49edb1f6ef3a6b7dc35f5c544e2db13d47649f1956e67c147feffd93",
+      "physicalLines": 10,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/enrollments/kick.post.ts",
-      "bytes": 1841,
-      "sha256": "ade402612e4853905cc37059d433c53ee1fadd65011daf846f4d7f636d516fb2"
+      "bytes": 1970,
+      "sha256": "3097c8f83bad7559022ba818a95ef2d3b3e3840197069c9e3ee6bbba4d12d67f",
+      "physicalLines": 21,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/enrollments/role.patch.ts",
-      "bytes": 2398,
-      "sha256": "c7ff55252d18ddf3c38c2429907e5db55cb7645446bcbec21dac4b8321bf6bd2"
+      "bytes": 1932,
+      "sha256": "0602b8fcd7e28c81db16da545bb8e23fa4c9ee50c52676dd85e5e406c4626b69",
+      "physicalLines": 22,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/feedback.post.ts",
-      "bytes": 1513,
-      "sha256": "7ce583536c740542b6a0be9991f360686e96af84515011ce111d24ac545d5a1b"
+      "bytes": 1208,
+      "sha256": "91df10bc221be5e89002ef41f8e1f4b67094f899b43f3dd844365658aa811288",
+      "physicalLines": 16,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/queue/assign.post.ts",
-      "bytes": 2637,
-      "sha256": "bc5ed62c12daefef2aec0b9a975a709f50539aa1755ffd9a38d77f9216299e07"
+      "bytes": 1858,
+      "sha256": "2e2206594969ab7ea7e2a3cca47dfb3b397b7b2746bb77b13dee4511f572cb25",
+      "physicalLines": 29,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/queue/join.post.ts",
-      "bytes": 2635,
-      "sha256": "e78192820154499ddbcf78165fdfa9a0cc1f09c61ff4bb709a0f203a8792432b"
+      "bytes": 1900,
+      "sha256": "75afc66371b86f04f8aef10e5b768783142e84e55325c641da50a5398eacbcf1",
+      "physicalLines": 27,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/queue/leave.post.ts",
-      "bytes": 660,
-      "sha256": "8898f66bc619d7878054fa08fdf0452e92a4406586e5e5d1876914dbaa882bfa"
+      "bytes": 431,
+      "sha256": "20cc094ff9633bc11ef099abe378d941dd66c331b9bbd4bfadd3a00d0da0fe7b",
+      "physicalLines": 7,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/queue/move.post.ts",
-      "bytes": 2142,
-      "sha256": "e703949d754e71fbcd487d674226430f5a6b131aa6cff1451a870c412df7c531"
+      "bytes": 1174,
+      "sha256": "57cf331f1241660c28b27727bc5c1b8428515506475702b1dbeaedcfdcbea482",
+      "physicalLines": 17,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/queue/pause.post.ts",
-      "bytes": 1489,
-      "sha256": "9b4f49fbfab921103f29f0ef8dc59ac1eb58c38d66a2c1eafd6b1c54f838d789"
+      "bytes": 1180,
+      "sha256": "5c820265d167ead96374022d45d738fec7d719f8f32de71df24baf6fed87a823",
+      "physicalLines": 22,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/queue/remove.post.ts",
-      "bytes": 1082,
-      "sha256": "50da22bce2452619e8dcae6a7e30cbc304a1eedb4aba9c0ab4cb543c607aeb74"
+      "bytes": 602,
+      "sha256": "0cff2b8a3086cee1e70011f1b9827d027e8d99a36830877cd68734f0b6f0f4fa",
+      "physicalLines": 10,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/state.patch.ts",
-      "bytes": 1390,
-      "sha256": "cbeaa2ae698637ba50a1a3dfb43fd6ca8e9ee8f15233326748dcc12f2a6baf62"
+      "bytes": 968,
+      "sha256": "ba92a95252249919417134fccd680774021da2085fa4ea028794266f3be7fc9e",
+      "physicalLines": 12,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/[id]/ta-duty.post.ts",
-      "bytes": 1315,
-      "sha256": "c5b24cfc065645572e333516237c9597ac93b015bae53c60682b8b5e95f494f3"
+      "bytes": 1095,
+      "sha256": "2cb4222a3397fefef70f56668f9fbb56ef5a6da99d5a07ceb524dfde2b6f7b68",
+      "physicalLines": 14,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/enroll.post.ts",
-      "bytes": 1941,
-      "sha256": "6e23262e2e2a88d650a0f7ef15bb683bc508dcb342885bb3ef823900d2d63eb6"
+      "bytes": 1413,
+      "sha256": "b57b18e2a297ebaf9d1a3bd651d2c34bcc95af3c2ead8fac7c333c7500af6ed7",
+      "physicalLines": 22,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/index.get.ts",
-      "bytes": 1386,
-      "sha256": "ce5ae74cfb001d7c69ea3e450077eb8de2d3e451a8e390f3fc0e42f6149a20e2"
+      "bytes": 984,
+      "sha256": "73af702f75b703bd3ebc940edfe68c929f33916e6d4940d14a311280a85d20b0",
+      "physicalLines": 17,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/courses/index.post.ts",
-      "bytes": 1798,
-      "sha256": "262b2ab385213ce92758299926b9d70a7bd797d175b985bd62183551cee5188e"
+      "bytes": 1509,
+      "sha256": "cd4e0652f026cea7d51c58604e969cecb085be5559a3ba03d00666c2047b54f7",
+      "physicalLines": 19,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/api/health.get.ts",
-      "bytes": 507,
-      "sha256": "bec5ec8747f8686fde35f05ca39b3fe54841af5e33cd3534f9407c8f326d55a0"
+      "bytes": 484,
+      "sha256": "316c4777ecf0b37009a080bcabe5c7c8b637e3b5eb8677bcfe7983943db7c228",
+      "physicalLines": 12,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/api/staffing/[...path].ts",
+      "bytes": 14256,
+      "sha256": "5c704bd6b14bae557258ed5873981497361910fdcdda134025c7ccb23bc8448b",
+      "physicalLines": 146,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/middleware/logging.ts",
       "bytes": 684,
-      "sha256": "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156"
+      "sha256": "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156",
+      "physicalLines": 21,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/middleware/security.ts",
+      "bytes": 3388,
+      "sha256": "33913c84ab95284d0ae979491d191116eb8a5beadc332bc44c99e9ceedbd4ddb",
+      "physicalLines": 54,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/utils/ai.ts",
+      "bytes": 22171,
+      "sha256": "7e6b603a7179c72fe35a2692412e495c064f5719fb6abd7a1e12dd6a157e966e",
+      "physicalLines": 251,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/utils/auth.ts",
-      "bytes": 3676,
-      "sha256": "babe351aed1554eca2f11bb587ca6df3ed5ae2e3b9826c2ccc1a49a1b8026737"
+      "bytes": 10418,
+      "sha256": "9499d6e2f2516032d85d8d40812e470380be5b294c185203a4597ad83746a580",
+      "physicalLines": 159,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/utils/config.ts",
-      "bytes": 3337,
-      "sha256": "b86f10c213a833db95a0edf09b5665f6ab6b8171f2ae6cf5f50a63e5c02bd9d2"
+      "bytes": 3828,
+      "sha256": "dfac743ef2683db45e3c34bc98117997007c23794efae8625f855a4d4f86c3f3",
+      "physicalLines": 60,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/utils/courses.ts",
-      "bytes": 4402,
-      "sha256": "1aab376c5306d29238d8630fc919b5db900fdecd94cea7e6f0480fa2f3f5ee64"
+      "bytes": 8381,
+      "sha256": "d468a4b3cffbf4a602e6a8560b2a57e44ae462d3230521ff89350200afa1b776",
+      "physicalLines": 127,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/utils/db.ts",
-      "bytes": 2384,
-      "sha256": "a3cd1a2b1134f7fc6d8ec0bc93d0e2d6ac16a07bec239fe02edcb8b4bd8d2a7b"
+      "bytes": 5273,
+      "sha256": "74513fdeb5ddb1ef8d395c8ca1effae8649763fa990858a4b6f93d5998a2a3f4",
+      "physicalLines": 97,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/utils/queue.ts",
-      "bytes": 3822,
-      "sha256": "15cd6fef2412eebc441618151ff7dd54285b693cf75173a41a8ff0fc99d65205"
+      "bytes": 5264,
+      "sha256": "c98af471970d5fd7ab2bd476eca363d63f10b67f01c26f74589f20d2610aad55",
+      "physicalLines": 82,
+      "category": "maintained source and verification code"
     },
     {
       "path": "server/utils/seed.ts",
-      "bytes": 4575,
-      "sha256": "da6e9fb395e0f25b113b77b17ad3454cf000ed901339e7041b39340cb7b13860"
+      "bytes": 5028,
+      "sha256": "4dd1bde3c0d627e8f43cf942aa622d54c0fbb9c1c4e9c0c5e41f842a7b4d7821",
+      "physicalLines": 119,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/utils/staffing-applications.ts",
+      "bytes": 16041,
+      "sha256": "068e4904ba6207f3522c0b0329c7914e3c0377e4a58745a65bacfa8c1be1de70",
+      "physicalLines": 160,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/utils/staffing-appointments.ts",
+      "bytes": 22807,
+      "sha256": "c3e936b1c66870971df08630213de3bff4b200f191b9e6168fde9b3d17bfbfb8",
+      "physicalLines": 209,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/utils/staffing-catalog.ts",
+      "bytes": 12882,
+      "sha256": "e382934c344f167d2ad24d4d0f96d15211590e5afaa26cb0afad050fb3a25e00",
+      "physicalLines": 142,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/utils/staffing-outbox.ts",
+      "bytes": 4839,
+      "sha256": "3d1e783749f0e1c1960ed06b7b83bb11b5ac0120d551fc464f0eaefc819ff55a",
+      "physicalLines": 61,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/utils/staffing-reports.ts",
+      "bytes": 11006,
+      "sha256": "d567e5bc3522ae0e20727409513cae3949f3682bd5cbed122fbc2f44ea545b0e",
+      "physicalLines": 106,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "server/utils/staffing.ts",
+      "bytes": 11478,
+      "sha256": "3ee10d0814bcc9826c85e685f895b7b10978a654bd20622ff0876c90e16c93e1",
+      "physicalLines": 164,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "tests/dependency-security.test.mjs",
+      "bytes": 1887,
+      "sha256": "c6e8565c82e67d4fbe99a46826938a3348809d71e8cf882a6ebc3af9dbbef630",
+      "physicalLines": 40,
+      "category": "maintained source and verification code"
     },
     {
       "path": "tsconfig.json",
       "bytes": 320,
-      "sha256": "5dcf8b6d48da0438811c1b22d010604192d0898742331bcee8cf7998e1a1ff45"
+      "sha256": "5dcf8b6d48da0438811c1b22d010604192d0898742331bcee8cf7998e1a1ff45",
+      "physicalLines": 18,
+      "category": "asset or project documentation and configuration"
+    },
+    {
+      "path": "vendor/safe-deepmerge/LICENSE",
+      "bytes": 1116,
+      "sha256": "6cfc4687cb2f2d86f4a77e6b526290d3878e5e512f3fec2f4cb36a9cb36f798b",
+      "physicalLines": 21,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "vendor/safe-deepmerge/README.md",
+      "bytes": 668,
+      "sha256": "0eed632aa2352bad3173089154d4e1756640c8baddf8a93649255f16753a8019",
+      "physicalLines": 5,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "vendor/safe-deepmerge/index.cjs",
+      "bytes": 2576,
+      "sha256": "91d7133da7ba8f8dc806b5381ad67208366b65ac0e4303ab38c5f8b8c342ed73",
+      "physicalLines": 56,
+      "category": "maintained source and verification code"
+    },
+    {
+      "path": "vendor/safe-deepmerge/package.json",
+      "bytes": 218,
+      "sha256": "1504ece1f179a069202d97ca88d5460278cf40f780e5c121303aa969443d0f6f",
+      "physicalLines": 8,
+      "category": "maintained source and verification code"
     }
   ]
 }

@@ -1,506 +1,887 @@
 {
-  "date": "2026-11-07",
-  "environment": "Loopback production Docker app; isolated synthetic MongoDB database",
-  "versions": {
-    "windowsNode": "24.21.0",
-    "productionNode": "22.23.4",
-    "mongodbServer": "7.0.45",
-    "nuxt": "4.6.3",
-    "vue": "3.5.44",
-    "vueRouter": "5.4.0",
-    "mongodbDriver": "7.0.0",
-    "playwright": "1.56.1",
-    "typescript": "5.9.3",
-    "vueTsc": "3.1.1"
-  },
-  "image": {
-    "tag": "campusworks:verification",
-    "id": "sha256:e870ba98376134b3a5abc2cac54203aee09a0013a0db08915d912af5e7a130b7",
-    "user": "node",
-    "health": "healthy"
-  },
-  "checks": {
-    "typecheck": "passed",
-    "windowsProductionBuild": "passed",
-    "dockerProductionBuild": "passed",
-    "composeConfiguration": "passed",
-    "apiHealth": "passed",
-    "readingBaseline": {
-      "total": 73,
-      "covered": 73,
-      "missing": 0
+  "recordedAt": "2026-11-07T08:54:41.465Z",
+  "data": "Synthetic loopback-only records; no real provider calls or external publication.",
+  "local": {
+    "command": "npm run verify:local",
+    "stats": {
+      "startTime": "2026-11-07T08:50:37.257Z",
+      "duration": 194163.92799999999,
+      "expected": 92,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
     },
-    "visualScreenshots": {
-      "total": 12,
-      "inspected": 12
-    }
-  },
-  "browserRun": {
-    "startedAt": "2026-11-07T06:59:47.241Z",
-    "durationMs": 30019.641,
-    "passed": 28,
-    "failed": 0,
-    "skipped": 0,
-    "flaky": 0,
     "tests": [
       {
-        "file": "auth.spec.ts",
-        "name": "auth.spec.ts / authentication & sessions / visitors without a session are sent to /login",
+        "file": "ai-provider.spec.ts",
+        "title": "configured AI uses a local provider, qualification evidence and validated citations",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 479
-          }
-        ]
+        "durationMs": 1045
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "AI results with invented or cross-candidate citations are rejected",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 903
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "AI output becomes stale when a candidate is reserved during analysis",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 939
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "provider failures expose a safe task error and leave manual staffing usable",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 925
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "durable per-user AI quota refuses a call before contacting the provider",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 896
       },
       {
         "file": "auth.spec.ts",
-        "name": "auth.spec.ts / authentication & sessions / APIs reject requests without a valid session",
+        "title": "visitors without a session are sent to /login",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 20
-          }
-        ]
+        "durationMs": 612
       },
       {
         "file": "auth.spec.ts",
-        "name": "auth.spec.ts / authentication & sessions / forged or tampered cookies are not trusted",
+        "title": "APIs reject requests without a valid session",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 13
-          }
-        ]
+        "durationMs": 34
       },
       {
         "file": "auth.spec.ts",
-        "name": "auth.spec.ts / authentication & sessions / demo login, server-rendered reload and logout",
+        "title": "forged or tampered cookies are not trusted",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 706
-          }
-        ]
+        "durationMs": 25
       },
       {
         "file": "auth.spec.ts",
-        "name": "auth.spec.ts / authentication & sessions / one-click demo accounts sign in with their own names",
+        "title": "demo login, server-rendered reload and logout",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 315
-          }
-        ]
+        "durationMs": 1002
       },
       {
         "file": "auth.spec.ts",
-        "name": "auth.spec.ts / authentication & sessions / only site admins can open the admin console",
+        "title": "one-click demo accounts sign in with their own names",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 236
-          }
-        ]
+        "durationMs": 394
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "only site admins can open the admin console",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 392
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "visitors without a session are sent to /login",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 2048
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "APIs reject requests without a valid session",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 126
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "forged or tampered cookies are not trusted",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 122
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "demo login, server-rendered reload and logout",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 1561
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "one-click demo accounts sign in with their own names",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 519
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "only site admins can open the admin console",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 599
       },
       {
         "file": "extended-flow.spec.ts",
-        "name": "extended-flow.spec.ts / queue edits, ordering, pause, handoff and removal preserve lifecycle invariants",
+        "title": "queue edits, ordering, pause, handoff and removal preserve lifecycle invariants",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 317
-          }
-        ]
+        "durationMs": 1285
       },
       {
         "file": "extended-flow.spec.ts",
-        "name": "extended-flow.spec.ts / course identifiers and current roles bound announcements and staff authority",
+        "title": "course identifiers and current roles bound announcements and staff authority",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 226
-          }
-        ]
+        "durationMs": 969
       },
       {
         "file": "extended-flow.spec.ts",
-        "name": "extended-flow.spec.ts / all four roles retain usable Duke blue screens at a 390px viewport",
+        "title": "all four roles retain usable Duke blue screens at a 390px viewport",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 1256
-          }
-        ]
+        "durationMs": 1834
       },
       {
         "file": "extended-flow.spec.ts",
-        "name": "extended-flow.spec.ts / downloaded history CSV preserves multiline answers and neutralizes formulas",
+        "title": "downloaded history CSV preserves multiline answers and neutralizes formulas",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 362
-          }
-        ]
+        "durationMs": 600
       },
       {
         "file": "extended-flow.spec.ts",
-        "name": "extended-flow.spec.ts / synthetic analytics render an empty range, nearest-rank P90 and a full single-TA ring",
+        "title": "synthetic analytics render an empty range, nearest-rank P90 and a full single-TA ring",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 4238
-          }
-        ]
+        "durationMs": 4447
       },
       {
         "file": "extended-flow.spec.ts",
-        "name": "extended-flow.spec.ts / desktop navigation and all four workspaces retain their visual contracts",
+        "title": "desktop navigation and all four workspaces retain their visual contracts",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 1632
-          }
-        ]
+        "durationMs": 2428
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "queue edits, ordering, pause, handoff and removal preserve lifecycle invariants",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 1840
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "course identifiers and current roles bound announcements and staff authority",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 1313
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "all four roles retain usable Duke blue screens at a 390px viewport",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 2754
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "downloaded history CSV preserves multiline answers and neutralizes formulas",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 802
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "synthetic analytics render an empty range, nearest-rank P90 and a full single-TA ring",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 4476
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "desktop navigation and all four workspaces retain their visual contracts",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 2636
+      },
+      {
+        "file": "institutional-identity.spec.ts",
+        "title": "institutional identity binding rejects email changes, reused addresses and demo impersonation",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 761
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "joins and queue closure serialize across two application instances",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 1540
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "concurrent claims, joins, duty toggles and moves retain queue invariants",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 1574
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "an interrupted history insert rolls back removal and a retry archives exactly once",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 495
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "help intervals exclude paused gaps and preserve both helpers after handoff",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 933
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "staff authority is enforced on duty and revoked while claims race with demotion",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 505
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "logout revokes a copied session on the other application instance",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 241
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "mutations reject cross-origin requests and malformed flags",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 315
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "API rate limits are shared across application instances",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 328
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "readiness rejects a missing allocation constraint on every application instance",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 292
       },
       {
         "file": "queue-flow.spec.ts",
-        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / site admin creates the course and adds a TA",
+        "title": "site admin creates the course and adds a TA",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 706
-          }
-        ]
+        "durationMs": 794
       },
       {
         "file": "queue-flow.spec.ts",
-        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / TA opens the queue and goes on duty",
+        "title": "TA opens the queue and goes on duty",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 725
-          }
-        ]
+        "durationMs": 842
       },
       {
         "file": "queue-flow.spec.ts",
-        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / student must enroll before joining, then joins the queue",
+        "title": "student must enroll before joining, then joins the queue",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 631
-          }
-        ]
+        "durationMs": 777
       },
       {
         "file": "queue-flow.spec.ts",
-        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / TA picks the student up and completes the session",
+        "title": "TA picks the student up and completes the session",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 11973
-          }
-        ]
+        "durationMs": 11966
       },
       {
         "file": "queue-flow.spec.ts",
-        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / student leaves feedback for the course",
+        "title": "student leaves feedback for the course",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 202
-          }
-        ]
+        "durationMs": 207
       },
       {
         "file": "queue-flow.spec.ts",
-        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / a second student who leaves on their own is also recorded",
+        "title": "a second student who leaves on their own is also recorded",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 445
-          }
-        ]
+        "durationMs": 551
       },
       {
         "file": "queue-flow.spec.ts",
-        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / instructor sees the sessions, outcomes and feedback",
+        "title": "instructor sees the sessions, outcomes and feedback",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 576
-          }
-        ]
+        "durationMs": 635
       },
       {
         "file": "queue-flow.spec.ts",
-        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / closing the queue archives waiting students and clears duty",
+        "title": "closing the queue archives waiting students and clears duty",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 3028
-          }
-        ]
+        "durationMs": 2561
       },
       {
         "file": "queue-flow.spec.ts",
-        "name": "queue-flow.spec.ts / office-hours queue: full loop with four identities / site admin deletes the course and all of its data",
+        "title": "site admin deletes the course and all of its data",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 210
-          }
-        ]
+        "durationMs": 264
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "site admin creates the course and adds a TA",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 908
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "TA opens the queue and goes on duty",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 891
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "student must enroll before joining, then joins the queue",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 871
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "TA picks the student up and completes the session",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 12003
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "student leaves feedback for the course",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 250
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "a second student who leaves on their own is also recorded",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 735
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "instructor sees the sessions, outcomes and feedback",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 824
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "closing the queue archives waiting students and clears duty",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 2625
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "site admin deletes the course and all of its data",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 330
       },
       {
         "file": "rbac.spec.ts",
-        "name": "rbac.spec.ts / role-based access control (API) / students cannot use staff or admin endpoints",
+        "title": "students cannot use staff or admin endpoints",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 26
-          }
-        ]
+        "durationMs": 101
       },
       {
         "file": "rbac.spec.ts",
-        "name": "rbac.spec.ts / role-based access control (API) / students only see their own email in the queue and only edit their own entry",
+        "title": "students only see their own email in the queue and only edit their own entry",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 33
-          }
-        ]
+        "durationMs": 159
       },
       {
         "file": "rbac.spec.ts",
-        "name": "rbac.spec.ts / role-based access control (API) / users who are not enrolled cannot join, give feedback or see the queue",
+        "title": "users who are not enrolled cannot join, give feedback or see the queue",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 16
-          }
-        ]
+        "durationMs": 79
       },
       {
         "file": "rbac.spec.ts",
-        "name": "rbac.spec.ts / role-based access control (API) / TAs run the queue but cannot manage the course",
+        "title": "TAs run the queue but cannot manage the course",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 30
-          }
-        ]
+        "durationMs": 182
       },
       {
         "file": "rbac.spec.ts",
-        "name": "rbac.spec.ts / role-based access control (API) / one active entry per TA: claiming a second entry releases the first",
+        "title": "one active entry per TA: claiming a second entry releases the first",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 22
-          }
-        ]
+        "durationMs": 112
       },
       {
         "file": "rbac.spec.ts",
-        "name": "rbac.spec.ts / role-based access control (API) / instructors manage people but not the admin role or the course itself",
+        "title": "instructors manage people but not the admin role or the course itself",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 30
-          }
-        ]
+        "durationMs": 152
       },
       {
         "file": "rbac.spec.ts",
-        "name": "rbac.spec.ts / role-based access control (API) / input validation rejects malformed requests",
+        "title": "input validation rejects malformed requests",
+        "browser": "chromium",
         "status": "expected",
-        "attempts": [
-          {
-            "status": "passed",
-            "durationMs": 32
-          }
-        ]
+        "durationMs": 138
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "course creation rejects reserved identifiers before storing an unreachable course",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 245
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "term policy prevents an instructor from bypassing department publication approval",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 526
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "parallel edits reject stale versions and post-offer administrative data stays separate",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 598
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "ordinary review lists do not disclose restricted clearance reasons",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 659
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "workload commands are idempotent, bounds checked and reflected in complete term aggregates",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 781
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "lifecycle outbox delivers an offer notification once and only the recipient can mark it read",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 732
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "course deletion preserves the settlement path until an activated appointment is financially closed",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 810
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "a TA cannot manufacture a helped session by claiming their own queue entry",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 341
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "browser users publish, apply, upload, select, accept, clear, operate and end an appointment",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 8333
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "keyboard dialogs trap focus, close with Escape and restore the initiating control",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 744
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "research assistants use their project workspace and workload form without course staff access",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 6685
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "desktop and mobile staffing and queue screens pass automated accessibility checks",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 24729
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "browser users publish, apply, upload, select, accept, clear, operate and end an appointment",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 9209
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "keyboard dialogs trap focus, close with Escape and restore the initiating control",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 787
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "research assistants use their project workspace and workload form without course staff access",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 7740
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "desktop and mobile staffing and queue screens pass automated accessibility checks",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 30686
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "accepted and cleared TA appointments open only the correct existing queue and revoke promptly",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 684
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "competing instructors cannot reserve the same candidate across course offerings",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 677
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "last vacancy and approved budget cannot be oversubscribed by concurrent selections",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 567
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "selection replay is idempotent and a declined offer frees the candidate and vacancy",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 585
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "withdrawal and selection resolve to a coherent ordered state",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 488
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "private drafts, current CVs and administrative fields cannot be read by unauthorized users",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 1137
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "invalid CVs, stale versions, malformed question IDs and absent required answers fail explicitly",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 669
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "offer expiry releases capacity and stale cleanup cannot revoke an accepted appointment",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 1135
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "future, suspended and ended appointment dates cannot grant queue authority",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 1258
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "ending a TA appointment preserves independently granted instructor authority",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 1354
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "RA appointments authorize a project without creating a fifth role or course privileges",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 1624
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "AI assistance reports missing configuration without fake results or private data disclosure",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 955
       }
-    ]
+    ],
+    "accessibility": [
+      {
+        "browser": "chromium",
+        "checkedScreens": 36,
+        "violations": []
+      },
+      {
+        "browser": "firefox",
+        "checkedScreens": 36,
+        "violations": []
+      }
+    ],
+    "appInstances": 2,
+    "database": "disposable MongoDB 7 replica set with local-only test fault commands",
+    "headed": false,
+    "unitTests": 3,
+    "typecheck": "passed",
+    "productionBuild": "passed"
+  },
+  "container": {
+    "command": "playwright test playwright/e2e/staffing-browser.spec.ts --headed",
+    "stats": {
+      "startTime": "2026-11-07T08:50:15.223Z",
+      "duration": 102943.42199999999,
+      "expected": 8,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "tests": [
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "browser users publish, apply, upload, select, accept, clear, operate and end an appointment",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 7997
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "keyboard dialogs trap focus, close with Escape and restore the initiating control",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 847
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "research assistants use their project workspace and workload form without course staff access",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 6476
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "desktop and mobile staffing and queue screens pass automated accessibility checks",
+        "browser": "chromium",
+        "status": "expected",
+        "durationMs": 27118
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "browser users publish, apply, upload, select, accept, clear, operate and end an appointment",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 12071
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "keyboard dialogs trap focus, close with Escape and restore the initiating control",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 1005
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "research assistants use their project workspace and workload form without course staff access",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 7075
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "desktop and mobile staffing and queue screens pass automated accessibility checks",
+        "browser": "firefox",
+        "status": "expected",
+        "durationMs": 36825
+      }
+    ],
+    "accessibility": [
+      {
+        "browser": "chromium",
+        "checkedScreens": 36,
+        "violations": []
+      },
+      {
+        "browser": "firefox",
+        "checkedScreens": 36,
+        "violations": []
+      }
+    ],
+    "image": "sha256:5b3cf0fecfa041c37929f249daeaf366aa29264bff89a53e28ef37398888effb",
+    "healthAndUser": "healthy node",
+    "node": "22.23.4",
+    "database": "authenticated local Compose replica set; separate synthetic test database",
+    "cleanInstallAndBuild": "passed",
+    "headed": true
   },
   "dependencyAudit": {
-    "counts": {
+    "recordedAt": "2026-11-07T08:54:41.466Z",
+    "vulnerabilities": {
       "info": 0,
-      "low": 2,
-      "moderate": 11,
+      "low": 0,
+      "moderate": 0,
       "high": 0,
       "critical": 0,
-      "total": 13
+      "total": 0
     },
-    "uniqueAdvisories": [
-      {
-        "package": "deepmerge",
-        "title": "deepmerge mergeObject() allows prototype poisoning of returned objects",
-        "url": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
-        "severity": "low",
-        "affectedRange": ">=4.2.0 <=4.3.1"
-      },
-      {
-        "package": "glob",
-        "title": "Glob: AbortSignal cancellation bypass allows post-timeout filesystem traversal",
-        "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4",
-        "severity": "moderate",
-        "affectedRange": ">=9.0.0 <=14.0.1"
-      },
-      {
-        "package": "minimatch",
-        "title": "minimatch has potential denial of service via globparts amplification",
-        "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
-        "severity": "moderate",
-        "affectedRange": ">=7.0.0 <11.0.1"
-      }
-    ],
-    "affectedPackageEntries": [
-      {
-        "name": "@nuxt/nitro-server",
-        "severity": "moderate"
-      },
-      {
-        "name": "@nuxt/vite-builder",
-        "severity": "moderate"
-      },
-      {
-        "name": "@nuxt/vite-server",
-        "severity": "moderate"
-      },
-      {
-        "name": "@rollup/plugin-node-resolve",
-        "severity": "low"
-      },
-      {
-        "name": "@vercel/nft",
-        "severity": "moderate"
-      },
-      {
-        "name": "archiver",
-        "severity": "moderate"
-      },
-      {
-        "name": "archiver-utils",
-        "severity": "moderate"
-      },
-      {
-        "name": "deepmerge",
-        "severity": "low"
-      },
-      {
-        "name": "glob",
-        "severity": "moderate"
-      },
-      {
-        "name": "minimatch",
-        "severity": "moderate"
-      },
-      {
-        "name": "nitropack",
-        "severity": "moderate"
-      },
-      {
-        "name": "nuxt",
-        "severity": "moderate"
-      },
-      {
-        "name": "zip-stream",
-        "severity": "moderate"
-      }
-    ],
-    "observedScope": "Nitro build/tracing/archive dependency paths; runtime exploitability not established; no blanket runtime safety claim"
+    "dependencies": {
+      "prod": 539,
+      "dev": 7,
+      "optional": 80,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 624
+    },
+    "lockfileSha256": "8175ca6cae47c1a271661846541e3f88495a0b9016d3a50cb2de112c41f0bc4a"
   },
-  "evidence": {
-    "applicationInventorySha256": "fb52dd1b55264c0c944e0a486991cba408cf7fc481d2a82247a1134cce0ffec7",
-    "screenshots": [
-      {
-        "path": "screenshots/desktop-admin.png",
-        "sha256": "03021062559c061f5262f4de163416fe9cac9c9a179e094c6b897757d88a262f"
-      },
-      {
-        "path": "screenshots/desktop-directory.png",
-        "sha256": "f638e59e2d8333f360df195aa9ca6c51767f23d3268fcc5ce3caca0463327264"
-      },
-      {
-        "path": "screenshots/desktop-help.png",
-        "sha256": "d59d84516606fe1f210f0f784a61acb804d8d4d540db6b99b5a947083b30a312"
-      },
-      {
-        "path": "screenshots/desktop-instructor.png",
-        "sha256": "7f5186e8b696d3c82d08c9052c798d0d37224b298eb1b6e38731f18766bb1e79"
-      },
-      {
-        "path": "screenshots/desktop-login.png",
-        "sha256": "e3f70dd9e7c554672c372401beb072e8df898fa224ffd09b149fca13e2276d78"
-      },
-      {
-        "path": "screenshots/desktop-student.png",
-        "sha256": "0cc9d2459c8974f6d4c46175715551cee535adfb8abb9924abeb0eaf59344297"
-      },
-      {
-        "path": "screenshots/desktop-ta.png",
-        "sha256": "9937826e88734e26ac1d8d52ab05b011f66307a711f33813ca245211022512df"
-      },
-      {
-        "path": "screenshots/mobile-admin.png",
-        "sha256": "bb10b02df8adf8831cf3d1403c35a2ed83fa480abe26a672b07ed039f86d66d4"
-      },
-      {
-        "path": "screenshots/mobile-instructor.png",
-        "sha256": "ec209c7ae16abf0ca3d209836d26d1e8da65aef96e823b69ccf3f9d97255d1cb"
-      },
-      {
-        "path": "screenshots/mobile-student.png",
-        "sha256": "e2f3f7795ca3e826200c436c847f68b2e7f7a4c990a039731459ba810c685038"
-      },
-      {
-        "path": "screenshots/mobile-ta.png",
-        "sha256": "a8ce12453046c7f08b297553a43d81c751f5c48374f8ce3ee81e53e1a89885ca"
-      },
-      {
-        "path": "screenshots/synthetic-single-ta-analytics.png",
-        "sha256": "c3350cdeb29c678aeec68b3b8338b05790375768d3259621b72c16664cab71e3"
-      }
-    ]
-  },
-  "exclusions": [
-    "Real identity-provider sign-in",
-    "Private credentials and CVs",
-    "Hosted production and Kubernetes runtime",
-    "Multi-replica concurrency",
-    "Database fault injection",
-    "Physical-device and non-Chromium checks"
+  "windowsCleanInstall": "npm ci passed on Node 24.21.0",
+  "composeBootstrap": "mongo-init exited 0; authenticated replica set ready",
+  "sourceReceiptSha256": "d495daba8fd149de33dcfe5879b704460ccd3a3f20ed101b7abb8a8bcbb13e08",
+  "screenshots": [
+    {
+      "path": "screenshots/mobile-admin.png",
+      "sha256": "08c251b2578316a9fd012716c0a1336aa7cbe8d9db020c9f69d0c62d1ff43539",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/mobile-instructor.png",
+      "sha256": "dd5cc1bceb1b14133ac4d5f4b928fac784adcde500ab98795cb49d3c0e9e20a4",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/mobile-student.png",
+      "sha256": "0a5aa26a408451c37b40444fa33d99ac612001722545e07b3c46a33a70aeea0a",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/mobile-ta.png",
+      "sha256": "c33898625a31dbd532d3423531784b1c4924ae44713e9d6b0d8ad6f9618d0675",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/desktop-admin.png",
+      "sha256": "00464c00807a9c00d8fed1c4ce5180ef76d6c0a16a0e9259382837adb78b1754",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/desktop-directory.png",
+      "sha256": "f7dc59cddfe4dd25bd82f21792713860bb09f8b1556ae1a8503994d75e8f31fc",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/desktop-help.png",
+      "sha256": "9735a032b109580c92175546cb95e47fd487f81205a77aff17b27047f6755286",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/desktop-instructor.png",
+      "sha256": "cb7b68157bdc894cdc623b0253c1e73a0ede9475a90aa2056cd1e897b96f9e52",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/desktop-login.png",
+      "sha256": "4a29ec66f1fb88c29d35492fa0d389fbef72978e198bdaf81748249649286291",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/desktop-student.png",
+      "sha256": "e095d4d0e9188bafa52f4ee25bb7d47306a2b65a97515536a57f2ce4e43d9b42",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/desktop-ta.png",
+      "sha256": "27f2ac391a7d36ca7a0296c24d18388e4edc5e070c7aef615768ae3534d40951",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/synthetic-single-ta-analytics.png",
+      "sha256": "bf2505eda83229b9c5d0f5700e2dc1d40d47ceee9a4c2062896204e3ccf99530",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/active-ta-application.png",
+      "sha256": "f9acd7a1ce818104c804c809b6eacf2378af7118eac78d4d108d8f274e3ffeb2",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/appointed-ta-queue.png",
+      "sha256": "c58f2495e273fa0a0bc0b0e1aa964acd5504121b6cbda51d2ed9a0e2dcf015aa",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/mobile-application.png",
+      "sha256": "86db7706e2732e99c21a838c62906d6985426aca5e0c3697d5ec71670d3a5c70",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/mobile-reviewer.png",
+      "sha256": "2e8be4ae5c45b1d4381cda35a640746c4784f5a69f1e044a3b2dad08e6a86a64",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/mobile-staffing-admin.png",
+      "sha256": "a0021071e09b5ff8e7ea7abac9e4af3c9c6e3d13d2fc3a08b7956e1cf004bcda",
+      "source": "passing local Chromium run; synthetic records"
+    },
+    {
+      "path": "screenshots/active-ra-project.png",
+      "sha256": "c5408a82f00b84a83263d4a4f4a8ebbc430e6173f0daf18a6a5dedfb1183a908",
+      "source": "passing local Chromium run; synthetic records"
+    }
   ],
-  "staffingFeatures": "Design only; not implemented"
+  "boundaries": [
+    "No real institutional SSO or model inference",
+    "No payroll, email, physical-device, hosted or Kubernetes runtime validation",
+    "Automated accessibility and keyboard checks are finite and do not certify all assistive technology",
+    "No sustained production load or high-availability failover check"
+  ]
 }
