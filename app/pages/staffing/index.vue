@@ -34,7 +34,12 @@ useIntervalRefresh(refresh);
       </div>
       <section class="panel">
         <div class="panel-heading"><h2>Managed Opportunities</h2></div>
-        <div class="panel-body table-scroll">
+        <div
+          class="panel-body table-scroll"
+          tabindex="0"
+          role="region"
+          aria-label="Managed opportunities table"
+        >
           <table v-if="data.managedOpportunities?.length">
             <thead>
               <tr>

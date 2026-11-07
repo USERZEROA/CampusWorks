@@ -124,7 +124,12 @@ useIntervalRefresh(refresh);
             committed selection holds the candidate for this term; competing
             selections receive a conflict and refresh the list.
           </p>
-          <div class="table-scroll">
+          <div
+            class="table-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Applicant review table"
+          >
             <table v-if="applications.length">
               <thead>
                 <tr>

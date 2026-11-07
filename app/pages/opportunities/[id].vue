@@ -102,7 +102,13 @@ async function apply() {
               {{ opportunity.holdsOfficeHours ? "Required" : "Not required" }}
             </li>
           </ul>
-          <div v-if="opportunity.duties?.length" class="table-scroll">
+          <div
+            v-if="opportunity.duties?.length"
+            class="table-scroll"
+            tabindex="0"
+            role="region"
+            aria-label="Published weekly duties table"
+          >
             <table>
               <caption class="muted">
                 Published weekly duties
