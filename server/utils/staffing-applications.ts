@@ -43,7 +43,7 @@ export async function createApplication(db: Db, session: ClientSession, user: St
   const opportunity = await findOpportunity(db, opportunityId, session)
   await lockStaffingResource(db, opportunity, session)
   await assertRecruitmentGate(db, session, opportunity.termId)
-  if (opportunity.status !== 'published') fail(409, 'Applications are not open')
+  if (opportunity.status !== 'published' || opportunity.appointmentEnd <= new Date()) fail(409, 'Applications are not open')
   const existing = await db.collection('staffingApplications').findOne({ opportunityId, applicantId: actorId(user) }, { session })
   if (existing) return { application: applicationDto(existing, true) }
   if (!(await staffingCapabilities(db, user, session)).canApplyStaffing) fail(403, 'Only students and teaching assistants may submit new applications')
@@ -56,7 +56,7 @@ export async function createApplication(db: Db, session: ClientSession, user: St
 export async function assertApplicationEditable(db: Db, application: Document, opportunity: Document, session: ClientSession) {
   await assertRecruitmentGate(db, session, opportunity.termId)
   if (!['draft', 'submitted', 'under_review', 'shortlisted', 'withdrawn', 'not_selected'].includes(application.status)) fail(409, 'Application is not editable')
-  if (opportunity.status !== 'published') fail(409, 'Applications are not open')
+  if (opportunity.status !== 'published' || opportunity.appointmentEnd <= new Date()) fail(409, 'Applications are not open')
   if (await db.collection('staffingOffers').findOne({ applicationId: application.id, status: { $in: ['issued', 'accepted'] } }, { session })) fail(409, 'Resolve the current offer before editing this application')
   if ((application.revisions || []).length >= 50) fail(409, 'Application revision limit reached; contact the reviewer')
 }
@@ -165,7 +165,7 @@ export async function updateAdministrative(db: Db, session: ClientSession, user:
   if (!amendment && !['offered', 'pending_clearance', 'pending_start'].includes(appointment.status)) fail(409, 'Administrative details are closed for this appointment')
   const reason = text(body.reason, 'Correction reason', 2000, amendment)
   const expected = number(body.expectedAdministrativeVersion, 'Administrative version', 0, 1000000)
-  if (expected !== (application.administrativeVersion || 0)) fail(409, 'Administrative details changed. Refresh before saving.')
+  if (expected !== (application.administrativeVersion || 0)) fail(409, 'Administrative details changed elsewhere. Your edits are kept.')
   const input = applicantInput({ profile: {}, administrative: body.administrative }).administrative
   await db.collection('staffingApplications').updateOne({ id: applicationId }, { $set: { administrative: input, administrativeUpdatedAt: new Date() }, $inc: { administrativeVersion: 1 } }, { session })
   const auditId = uid()

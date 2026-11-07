@@ -130,6 +130,24 @@ test('a course restriction prevents selection and future automatic TA activation
   } finally { await client.close(); }
 });
 
+test('position end closes new applications and all qualification writes even while the shared cycle remains open', async ({ space }) => {
+  const posting = await space.opportunity();
+  const application = await space.application(posting);
+  const saved = (await json(space.student.api.patch(`/api/staffing/applications/${application.id}`, { data: { expectedVersion: application.version, profile: application.profile, answers: application.answers, qualificationText: application.qualificationText } }))).application;
+  const late = await space.actor('ended-position-applicant');
+  const { client, db } = await database();
+  try {
+    await db.collection('staffingOpportunities').updateOne({ id: posting.id }, { $set: { appointmentEnd: new Date(Date.now() - 1000) } });
+    expect((await json(space.admin.api.get('/api/staffing/cycle'))).cycle.isOpen).toBe(true);
+    expect((await late.api.post(`/api/staffing/opportunities/${posting.id}/applications`, { data: {} })).status()).toBe(409);
+    expect((await space.student.api.patch(`/api/staffing/applications/${saved.id}`, { data: { expectedVersion: saved.version, profile: saved.profile, answers: saved.answers, qualificationText: 'This ended position must not accept changes.' } })).status()).toBe(409);
+    expect((await space.student.api.post(`/api/staffing/applications/${saved.id}/cv`, { multipart: { expectedVersion: String(saved.version), file: { name: 'synthetic-ended-cv.txt', mimeType: 'text/plain', buffer: Buffer.from('Synthetic closed-position CV') } } })).status()).toBe(409);
+    expect((await space.student.api.post(`/api/staffing/applications/${saved.id}/submit`, { data: { expectedVersion: saved.version } })).status()).toBe(409);
+    expect((await json(space.student.api.get(`/api/staffing/applications/${saved.id}`))).application).toEqual(saved);
+    await ok(space.student.api.post(`/api/staffing/applications/${saved.id}/withdraw`, { data: {} }));
+  } finally { await client.close(); }
+});
+
 test('historical applications retain their authorized position title outside the public catalog', async ({ space }) => {
   const posting = await space.opportunity();
   const application = await space.application(posting);
