@@ -10,6 +10,21 @@ const { busy, message, failure, run } = useStaffingMutation(refresh);
 const keys = new Map<string, string>();
 const reason = ref("");
 const applications = computed(() => data.value?.applications || []);
+const authorizedCandidateTargets = computed(() =>
+  applications.value.map((application: any) => {
+    const submitted = application.submittedSnapshot?.profile || {};
+    return {
+      id: application.id,
+      label:
+        [submitted.firstName, submitted.lastName]
+          .filter(Boolean)
+          .join(" ")
+          .trim() ||
+        application.applicantName ||
+        "",
+    };
+  }),
+);
 async function select(candidate: any) {
   const key = `${candidate.id}:${candidate.version}`;
   if (!keys.has(key)) keys.set(key, crypto.randomUUID());
@@ -22,7 +37,7 @@ async function select(candidate: any) {
           idempotencyKey: keys.get(key),
         },
       }),
-    "Candidate selected and offer issued. Other reviewers will see the updated term availability.",
+    "Candidate selected and offer issued. Other reviewers will see the updated appointment availability.",
   );
   if (failure.value) await refresh();
 }
@@ -121,8 +136,10 @@ useIntervalRefresh(refresh);
         <div class="panel-body">
           <p class="notice">
             A shortlist does not reserve a candidate. The first successfully
-            committed selection holds the candidate for this term; competing
-            selections receive a conflict and refresh the list.
+            committed selection reserves the candidate for this term and any
+            overlapping appointment dates across terms. Half appointments cannot
+            be combined. Competing selections receive a conflict and refresh the
+            list.
           </p>
           <div
             class="table-scroll"
@@ -159,7 +176,7 @@ useIntervalRefresh(refresh);
                     {{
                       candidate.available === false ||
                       candidate.availability?.unavailable === true
-                        ? "Unavailable for this term"
+                        ? "Unavailable for this term or overlapping appointment dates"
                         : "Rechecked at selection"
                     }}
                   </td>
@@ -335,6 +352,7 @@ useIntervalRefresh(refresh);
       <AiAssistance
         kind="candidate_fit"
         :target-id="id"
+        :authorized-targets="authorizedCandidateTargets"
         title="Candidate Review Assistance"
       />
       <AiAssistance
