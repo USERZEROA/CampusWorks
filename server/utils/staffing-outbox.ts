@@ -34,13 +34,13 @@ export async function processStaffingOutbox(db: Db) {
       opportunity = await database.collection('staffingOpportunities').findOne({ id: event.targetId, status: 'pending_approval' }, { session })
       if (opportunity) {
         const config = getServerConfig()
-        const admins = await database.collection('users').find({ email: { $in: config.adminEmails } }, { session }).toArray()
+        const admins = await database.collection('users').find({ email: { $in: config.adminEmails }, disabledAt: null }, { session }).toArray()
         for (const admin of admins) recipients.add(admin.id)
         if (config.mockLoginEnabled) {
           const activeSessions = await database.collection('authSessions').find({ 'user.provider': 'mock', 'user.primaryRole': 'admin', expiresAt: { $gt: new Date() }, revokedAt: null }, { session, projection: { 'user.id': 1, 'user.email': 1 } }).toArray()
           for (const active of activeSessions) {
-            const account = await database.collection('users').findOne({ id: active.user?.id, email: active.user?.email }, { session })
-            if (account) recipients.add(account.id)
+            const account = await database.collection('users').findOne({ id: active.user?.id, email: active.user?.email, disabledAt: null, identityKind: { $ne: 'gitlab' } }, { session })
+            if (account && !(await database.collection('providerIdentities').findOne({ $or: [{ userId: account.id }, { email: account.email }] }, { session }))) recipients.add(account.id)
           }
         }
         path = '/admin/staffing'; title = 'A staffing request is awaiting approval'; opportunity = null
