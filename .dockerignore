@@ -1,0 +1,27 @@
+# Never send secrets, local data or build output into the Docker build context.
+.env
+.env.*
+!.env.example
+private/
+docker-data/
+node_modules/
+.nuxt/
+.output/
+.data/
+.cache/
+.git/
+.github/
+playwright/
+scripts/
+playwright-report/
+test-results/
+k8s/
+*.log
+*.bundle
+Dockerfile
+docker-compose.yml
+README.md
+CLAUDE.local.md
+.claude/
+.vscode/
+.idea/

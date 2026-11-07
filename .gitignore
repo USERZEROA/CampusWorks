@@ -1,0 +1,44 @@
+# ───────── Nuxt / Nitro / Node ─────────
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+node_modules
+logs
+*.log
+
+# ───────── Local env / secrets ─────────
+.env
+.env.*
+!.env.example
+
+# ───────── Private, local-only material (handoff notes, session logs, archives) ─────────
+private/
+CLAUDE.local.md
+.claude/settings.local.json
+*.bundle
+
+# ───────── Editors / OS ─────────
+.DS_Store
+Thumbs.db
+.fleet
+.idea
+.vscode/
+
+# ───────── Docker / Mongo data ─────────
+docker-data/
+**/docker-data/
+WiredTiger*
+*.wt
+diagnostic.data/
+metrics*
+mongod.lock
+
+# ───────── Playwright / Test Artifacts ─────────
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+playwright/.auth/
