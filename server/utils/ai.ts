@@ -2,11 +2,12 @@ import { createHash } from 'node:crypto'
 import type { Db, Document } from 'mongodb'
 import { isGlobalAdmin } from './auth'
 import { actorId, commitmentUnavailable, applicationAccess, assertOpportunityManager, eligibility, fail, findOpportunity, manualCourseManager, object, publicRecord, text, uid, type StaffingActor } from './staffing'
+import { administrativeQuestion, aiQualificationQuestion } from './qualification-questions'
 
 export const aiKinds = ['candidate_fit', 'cv_summary', 'opportunity_draft', 'term_review'] as const
 export type AiKind = typeof aiKinds[number]
 const taskDirections: Record<AiKind, string> = {
-  candidate_fit: 'Compare only the supplied eligible candidate page against the stated requirements. Explain demonstrated strengths and missing evidence for each candidate; do not imply an overall ranking beyond this page.',
+  candidate_fit: 'Compare only the supplied eligible candidate page against the stated requirements. Return exactly one item for every supplied target ID, without duplicates or omissions. Explain demonstrated strengths and missing evidence for each candidate; do not imply an overall ranking beyond this page.',
   cv_summary: 'Summarize the applicant qualification profile, qualification text and screening answers. Identify relevant experience and unanswered qualification questions. No PDF contents have been extracted.',
   opportunity_draft: 'Suggest concise, usable requirement wording and qualification-focused screening questions for this TA or RA position. Treat suggestions as proposed wording rather than established facts. Do not suggest questions about protected or administrative characteristics.',
   term_review: 'Suggest evidence-linked course improvements, workload follow-up questions and conditional staffing or budget scenarios. Explicitly preserve missing-data limitations; recorded demand alone cannot establish the required headcount or justify a budget cut.'
@@ -45,10 +46,25 @@ async function reserveAiBudget(user: StaffingActor, taskId: string, reservedToke
   return 'concurrency'
 }
 
+async function confirmAiLease(db: Db, taskId: string) {
+  const now = new Date()
+  const expiresAt = new Date(now.getTime() + 30000)
+  const record = await db.collection<any>('staffingAiBudgets').findOneAndUpdate(
+    { _id: 'concurrency', leases: { $elemMatch: { taskId, expiresAt: { $gt: now } } } },
+    { $set: { 'leases.$.expiresAt': expiresAt } }, { returnDocument: 'after' },
+  )
+  // A delayed transaction confirmation or lease renewal must never authorize a
+  // provider call after another request has reclaimed that concurrency slot.
+  const lease = record?.leases?.find((item: any) => item.taskId === taskId)
+  if (!lease || new Date(lease.expiresAt).getTime() <= Date.now() + 15000) quotaError('concurrency')
+}
+
+export const candidateAnalysisEnded = (opportunity: Document) => new Date(opportunity.appointmentEnd).getTime() <= Date.now()
+
 type Evidence = { reference: string; value: unknown }
 const redactText = (value: unknown, application: Document) => {
   if (typeof value !== 'string') return value
-  let result = value.split(/\r?\n/).filter(line => !/\b(citizenship|nationality|social security|ssn|passport|visa|immigration|date of birth|payroll)\b/i.test(line)).join('\n')
+  let result = value.split(/\r?\n/).filter(line => !administrativeQuestion(line)).join('\n')
   result = result.replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[contact omitted]').replace(/\b\d{3}[- ]\d{2}[- ]\d{4}\b/g, '[identifier omitted]')
   for (const name of [application.applicantName, application.profile?.firstName, application.profile?.lastName]) if (typeof name === 'string' && name.length > 1) result = result.split(name).join('[name omitted]')
   return result
@@ -63,7 +79,7 @@ function qualificationEvidence(application: Document, opportunity: Document): Ev
   if (snapshot.qualificationText) evidence.push({ reference: `app:${application.id}:qualificationText`, value: redactText(String(snapshot.qualificationText).slice(0, 20000), application) })
   for (const [key, value] of Object.entries(snapshot.answers || {})) {
     const question = (opportunity.questions || []).find((q: Document) => q.id === key)
-    if (!question || /\b(citizenship|nationality|social security|ssn|passport|visa|immigration|birth|payroll|gender|race|religion|disability|health)\b/i.test(question.prompt)) continue
+    if (!question || !aiQualificationQuestion(question)) continue
     evidence.push({ reference: `app:${application.id}:answers.${key}`, value: { question: question.prompt, answer: redactText(value, application) } })
   }
   return evidence
@@ -73,8 +89,9 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
   if (kind === 'cv_summary') {
     const access = await applicationAccess(db, targetId, user)
     if (!access.owner && !access.canManage) fail(403, 'Application access required')
+    if (candidateAnalysisEnded(access.opportunity)) fail(409, 'Candidate analysis has ended for this appointment')
     const source = access.owner && access.application.status === 'draft' ? { ...access.application, submittedSnapshot: undefined } : access.application
-    return { targetType: 'application' as const, opportunityId: access.opportunity.id, termId: access.opportunity.termId, version: access.application.version, evidence: qualificationEvidence(source, access.opportunity), targetIds: [access.application.id], coverage: { source: 'Applicant qualification text and answers; no automatic PDF extraction' } }
+    return { targetType: 'application' as const, opportunityId: access.opportunity.id, termId: access.opportunity.termId, analysisExpiresAt: access.opportunity.appointmentEnd, version: access.application.version, evidence: qualificationEvidence(source, access.opportunity), targetIds: [access.application.id], coverage: { source: 'Applicant qualification text and answers; no automatic PDF extraction', omittedQuestions: (access.opportunity.questions || []).filter((question: Document) => !aiQualificationQuestion(question)).length } }
   }
   if (kind === 'term_review') {
     const course = await db.collection('courses').findOne({ id: targetId })
@@ -90,7 +107,7 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
           { reference: 'course:context', value: { code: course.code, title: course.title, termId: report.termId, scope: report.termId ? 'Selected term' : 'All recorded course terms' } },
           { reference: 'metrics:recorded_sessions', value: report.metrics },
           { reference: 'metrics:recorded_workload', value: { hours: report.workload.totalHours, count: report.workload.count, byKind: report.workload.byKind, source: report.workload.source } },
-          { reference: 'metrics:budget', value: { approvedBudget: report.budget.approvedBudget, committedBudget: report.budget.committedBudget } },
+          { reference: 'metrics:budget', value: { requestedBudget: report.budget.requestedBudget, approvedBudget: report.budget.approvedBudget, committedBudget: report.budget.committedBudget, settledBudget: report.budget.settledBudget } },
           { reference: 'metrics:limitations', value: report.missingEvidence }
         ],
         targetIds: [targetId],
@@ -102,12 +119,13 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
   await assertOpportunityManager(db, opportunity, user)
   if (kind === 'term_review' && reportTermId && reportTermId !== opportunity.termId) fail(400, 'The review term does not match this opportunity')
   const requirements: Evidence[] = [
-    { reference: 'opportunity:requirements', value: { type: opportunity.type, description: opportunity.description, requiredSkills: opportunity.requiredSkills, preferredSkills: opportunity.preferredSkills, weeklyHours: opportunity.weeklyHours, duties: opportunity.duties, requiredSlots: opportunity.requiredSlots, questions: (opportunity.questions || []).filter((question: Document) => !/\b(citizenship|nationality|social security|ssn|passport|visa|immigration|birth|payroll|gender|race|religion|disability|health)\b/i.test(question.prompt)).map((question: Document) => ({ prompt: question.prompt, required: question.required })) } }
+    { reference: 'opportunity:requirements', value: { type: opportunity.type, description: opportunity.description, requiredSkills: opportunity.requiredSkills, preferredSkills: opportunity.preferredSkills, weeklyHours: opportunity.weeklyHours, duties: opportunity.duties, requiredSlots: opportunity.requiredSlots, questions: (opportunity.questions || []).filter(aiQualificationQuestion).map((question: Document) => ({ prompt: question.prompt, required: question.required })) } }
   ]
   if (kind === 'candidate_fit') {
     const { getRecruitmentCycle } = await import('./staffing-cycle')
     const cycle = await getRecruitmentCycle(db)
     if (cycle.termId !== opportunity.termId || !cycle.canReview) fail(409, 'Candidate analysis is unavailable for this recruitment semester')
+    if (candidateAnalysisEnded(opportunity)) fail(409, 'Candidate analysis has ended for this appointment')
     const filter = { opportunityId: targetId, status: { $in: ['submitted', 'under_review', 'shortlisted'] } }
     const totalSubmitted = await db.collection('staffingApplications').countDocuments(filter)
     const cursor = db.collection('staffingApplications').find(filter).sort({ submittedAt: 1, id: 1 }).batchSize(50)
@@ -117,23 +135,26 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
     try {
       for await (const application of cursor) {
         inspected++
-        if (!await commitmentUnavailable(db, application.applicantId, opportunity.termId, opportunity.appointmentStart, opportunity.appointmentEnd) && eligibility(application, opportunity).eligible) {
+        const restricted = opportunity.type === 'ta' && !!await db.collection('courseRestrictions').findOne({ courseId: opportunity.courseId, userEmail: application.applicantEmail }, { projection: { _id: 1 } })
+        if (!restricted && !await commitmentUnavailable(db, application.applicantId, opportunity.termId, opportunity.appointmentStart, opportunity.appointmentEnd) && eligibility(application, opportunity).eligible) {
           eligibleCount++
           if (eligibleCount > (candidatePage - 1) * candidatePageSize) available.push(application)
           if (available.length >= candidatePageSize) break
         }
       }
     } finally { await cursor.close() }
-    const coverage = { page: candidatePage, pageSize: candidatePageSize, totalSubmitted, inspected, compared: available.length, hasMore: inspected < totalSubmitted, message: inspected < totalSubmitted ? 'This task compares one page of eligible applicants; it does not establish the best candidate across all pages.' : 'All current submitted applications were inspected for eligibility.' }
-    return { targetType: 'opportunity' as const, opportunityId: targetId, termId: opportunity.termId, version: opportunity.version, evidence: [...requirements, { reference: 'coverage:candidates', value: coverage }, ...available.flatMap(a => qualificationEvidence(a, opportunity))], targetIds: available.map(a => a.id), coverage }
+    const coverage = { page: candidatePage, pageSize: candidatePageSize, totalSubmitted, inspected, compared: available.length, hasMore: inspected < totalSubmitted, omittedQuestions: (opportunity.questions || []).filter((question: Document) => !aiQualificationQuestion(question)).length, message: inspected < totalSubmitted ? 'This task compares one page of eligible applicants; it does not establish the best candidate across all pages.' : 'All current submitted applications were inspected for eligibility.' }
+    return { targetType: 'opportunity' as const, opportunityId: targetId, termId: opportunity.termId, version: opportunity.version, analysisExpiresAt: opportunity.appointmentEnd, evidence: [...requirements, { reference: 'coverage:candidates', value: coverage }, ...available.flatMap(a => qualificationEvidence(a, opportunity))], targetIds: available.map(a => a.id), coverage }
   }
   if (kind === 'term_review') {
     const sessions = opportunity.type === 'ta' ? await db.collection('helpSessions').aggregate([{ $match: { courseId: opportunity.courseId, joinedAt: { $gte: opportunity.appointmentStart, $lt: opportunity.appointmentEnd } } }, { $group: { _id: null, sessions: { $sum: 1 }, helped: { $sum: { $cond: ['$wasHelped', 1, 0] } }, recordedHelpMinutes: { $sum: { $ifNull: ['$helpMinutes', 0] } } } }]).next() : null
     const workload = await db.collection('staffingWorkload').aggregate([{ $match: { opportunityId: targetId } }, { $group: { _id: null, entries: { $sum: 1 }, hours: { $sum: '$hours' } } }]).next()
+    const financial = await db.collection('staffingAppointments').aggregate([{ $match: { opportunityId: targetId } }, { $group: { _id: null, committedBudget: { $sum: { $cond: [{ $not: [{ $in: ['$budgetStatus', ['settled', 'released']] }] }, '$committedCost', 0] } }, settledBudget: { $sum: { $cond: [{ $eq: ['$budgetStatus', 'settled'] }, '$incurredCost', 0] } } } }]).next()
+    const approvedPlan = opportunity.approved && ['published', 'applications_closed', 'filled', 'archived'].includes(opportunity.status)
     return { targetType: 'opportunity' as const, opportunityId: targetId, termId: opportunity.termId, version: opportunity.version, evidence: [...requirements,
       { reference: 'metrics:recorded_sessions', value: { sessions: sessions?.sessions || 0, helped: sessions?.helped || 0, recordedHelpMinutes: sessions?.recordedHelpMinutes || 0 } },
       { reference: 'metrics:recorded_workload', value: { entries: workload?.entries || 0, hours: workload?.hours || 0 } },
-      { reference: 'metrics:budget', value: { approved: opportunity.budget, committed: opportunity.committedBudget, weeklyHours: opportunity.weeklyHours, positions: opportunity.positions } },
+      { reference: 'metrics:budget', value: { requestedBudget: !approvedPlan && !['cancelled', 'archived'].includes(opportunity.status) ? opportunity.budget : 0, approvedBudget: approvedPlan ? opportunity.budget : 0, committedBudget: financial?.committedBudget || 0, settledBudget: financial?.settledBudget || 0, weeklyHours: opportunity.weeklyHours, positions: opportunity.positions } },
       { reference: 'metrics:limitations', value: 'Recorded queue and self-reported workload do not establish total demand, paid hours, causal effects, or safe staffing cuts. No automatic budget reduction is allowed.' }
     ], targetIds: [targetId], coverage: { source: 'All matching recorded aggregates; no row-count truncation' } }
   }
@@ -159,11 +180,12 @@ function validatedResult(raw: unknown, evidence: Evidence[], targetIds: string[]
     if (kind === 'candidate_fit' && evidenceRefs.some(ref => ref.startsWith('app:') && !ref.startsWith(`app:${targetId}:`))) throw new Error('Candidate explanation cites another applicant')
     return { targetId, explanation: text(item.explanation, 'AI explanation', 3000, true), evidenceRefs }
   })
+  if (kind === 'candidate_fit' && (items.length !== targetIds.length || new Set(items.map(item => item.targetId)).size !== targetIds.length)) throw new Error('Candidate comparison must cover each supplied target exactly once')
   if (!Array.isArray(result.cautions) || result.cautions.length > 20) throw new Error('AI cautions must be a bounded array')
   return { summary, summaryEvidenceRefs, items, cautions: result.cautions.map((v: unknown) => text(v, 'AI caution', 1000, true)) }
 }
 
-export type AiExecution = { taskId?: string; subscriptionId?: string; generation?: number; signal?: AbortSignal }
+export type AiExecution = { taskId?: string; subscriptionId?: string; generation?: number; leaseToken?: string; signal?: AbortSignal }
 export async function candidateRefreshFingerprint(db: Db, user: StaffingActor, raw: unknown) {
   const body = object(raw, 'Candidate comparison')
   const targetId = text(body.targetId, 'AI target', 64, true)
@@ -208,6 +230,13 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
     // Reserve UTF-8 bytes plus the output cap conservatively, independent of a
     // provider's reported usage. Actual billing remains a provider-account control.
     budgetLease = await reserveAiBudget(user, task.id, inputBytes + 2500)
+    const authorized = await taskInput(db, user, kind, targetId, candidatePage, candidatePageSize, reportTermId)
+    if (createHash('sha256').update(JSON.stringify(authorized)).digest('hex') !== task.inputHash) fail(409, 'AI evidence changed before analysis')
+    if (execution.subscriptionId) {
+      const job = await db.collection<any>('staffingAiRefreshJobs').findOne({ _id: execution.subscriptionId, status: 'running', leaseToken: execution.leaseToken, runningGeneration: execution.generation, generation: execution.generation, dirty: false, leaseUntil: { $gt: new Date(Date.now() + 15000) } })
+      if (!job) fail(409, 'Automatic analysis approval changed before analysis')
+    }
+    await confirmAiLease(db, task.id)
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 15000)
     const model = process.env.AI_MODEL!.trim()
@@ -216,6 +245,7 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
       : { temperature: 0, max_tokens: 2500 }
     let encoded: string
     try {
+      if ('analysisExpiresAt' in input && new Date(input.analysisExpiresAt as string).getTime() <= Date.now()) fail(409, 'Candidate analysis has ended for this appointment')
       const response = await fetch(`${base.toString().replace(/\/$/, '')}/chat/completions`, {
         method: 'POST', redirect: 'error', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.AI_API_KEY}` }, signal: execution.signal ? AbortSignal.any([controller.signal, execution.signal]) : controller.signal,
         body: JSON.stringify({ model, ...providerOptions, response_format: { type: 'json_object' }, messages: [
@@ -241,6 +271,7 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
     const content = envelope.choices?.[0]?.message?.content
     if (typeof content !== 'string' || content.length > 50000) throw new Error('AI provider response has no bounded JSON content')
     const result = validatedResult(JSON.parse(content), input.evidence, input.targetIds, kind)
+    if ('omittedQuestions' in input.coverage && input.coverage.omittedQuestions) result.cautions.push('Unclassified or administrative screening questions were omitted from this analysis.')
     // Recheck both authorization and input versions after the external call.
     const current = await taskInput(db, user, kind, targetId, candidatePage, candidatePageSize, reportTermId)
     const changed = createHash('sha256').update(JSON.stringify(current)).digest('hex') !== task.inputHash
@@ -253,6 +284,14 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
     if (budgetLease) await db.collection<any>('staffingAiBudgets').updateOne({ _id: budgetLease }, { $pull: { leases: { taskId: task.id } } } as any)
   }
   return { task: publicRecord(await db.collection('staffingAiTasks').findOne({ id: task.id })) }
+}
+
+async function authorizeHistoricalSources(db: Db, user: StaffingActor, task: Document) {
+  if (task.kind === 'cv_summary') { await applicationAccess(db, task.targetId, user); return }
+  for (const item of task.result?.items || []) {
+    const source = await applicationAccess(db, item.targetId, user)
+    if (!source.canManage || source.opportunity.id !== task.opportunityId) fail(403, 'Historical candidate evidence is unavailable')
+  }
 }
 
 export async function listAiTasks(db: Db, user: StaffingActor, targetId?: string, kind?: string, termId?: string, page?: number, pageSize?: number) {
@@ -273,14 +312,23 @@ export async function listAiTasks(db: Db, user: StaffingActor, targetId?: string
         if (!await manualCourseManager(db, task.targetId, user) || !await db.collection('courses').findOne({ id: task.targetId })) fail(403, 'Course managers review course AI tasks')
       }
       else await assertOpportunityManager(db, await findOpportunity(db, task.targetId), user)
-      if (task.status === 'completed') {
+      const historical = ['candidate_fit', 'cv_summary'].includes(task.kind) && candidateAnalysisEnded(await findOpportunity(db, task.opportunityId || task.targetId))
+      if (historical) {
+        task.historical = true; task.message = 'Historical comparison; candidate analysis has ended.'
+        if (task.kind === 'candidate_fit' && task.status === 'stale' && task.completedAt && task.refreshSubscriptionId) {
+          const cached = await db.collection<any>('staffingAiResultCache').findOne({ _id: `${task.refreshSubscriptionId}:${task.inputHash}`, requesterId: actorId(user), opportunityId: task.opportunityId })
+          if (cached?.result) { task.result = cached.result; task.status = 'completed' }
+        }
+        await authorizeHistoricalSources(db, user, task)
+      }
+      if (task.status === 'completed' && !historical) {
         const current = await taskInput(db, user, task.kind, task.targetId, task.candidatePage || 1, task.candidatePageSize || 50, task.requestedTermId || '')
         if (createHash('sha256').update(JSON.stringify(current)).digest('hex') !== task.inputHash) {
           task.status = 'stale'; task.result = null; task.message = 'Inputs or availability changed. Request a fresh analysis.'
           await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: task.status, result: null, message: task.message } })
         }
       }
-      if (task.refreshSubscriptionId && task.status === 'completed') {
+      if (task.refreshSubscriptionId && task.status === 'completed' && !historical) {
         const job = await db.collection<any>('staffingAiRefreshJobs').findOne({ _id: task.refreshSubscriptionId })
         if (!job || job.status !== 'idle' || job.lastTaskId !== task.id || job.generation !== task.refreshGeneration) {
           task.status = job?.status === 'running' ? 'pending' : 'stale'; task.result = null
@@ -288,6 +336,12 @@ export async function listAiTasks(db: Db, user: StaffingActor, targetId?: string
       }
       authorized.push(task)
     } catch (error: any) {
+      if (error?.statusCode === 409 && ['candidate_fit', 'cv_summary'].includes(task.kind) && candidateAnalysisEnded(await findOpportunity(db, task.opportunityId || task.targetId))) {
+        await authorizeHistoricalSources(db, user, task)
+        task.historical = true; task.message = 'Historical comparison; candidate analysis has ended.'
+        authorized.push(task)
+        continue
+      }
       if (error?.statusCode === 409 && task.kind === 'candidate_fit') {
         task.status = 'stale'; task.result = null; task.message = 'Candidate analysis is unavailable for this recruitment semester.'
         await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: task.status, result: null, message: task.message } })
@@ -299,5 +353,10 @@ export async function listAiTasks(db: Db, user: StaffingActor, targetId?: string
   }
   const { refreshMetadata } = await import('./ai-refresh')
   const refresh = !kind || kind === 'candidate_fit' ? await refreshMetadata(db, user, { targetId, kind, page, pageSize }) : { subscriptions: [], jobs: [] }
-  return { tasks: authorized.map(publicRecord), ai: aiStatus(), refresh: { ...refresh, latest: publicRecord(authorized[0]) } }
+  let canAnalyze = true
+  if (targetId && ['candidate_fit', 'cv_summary'].includes(kind || '')) {
+    const opportunity = kind === 'cv_summary' ? (await applicationAccess(db, targetId, user)).opportunity : await findOpportunity(db, targetId)
+    canAnalyze = !candidateAnalysisEnded(opportunity)
+  }
+  return { tasks: authorized.map(publicRecord), ai: aiStatus(), canAnalyze, refresh: { ...refresh, latest: publicRecord(authorized[0]) } }
 }

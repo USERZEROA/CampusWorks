@@ -27,7 +27,7 @@ const form = reactive({
   approvalRequired: true,
   allowedPositionPreferences: ["full", "half", "either", "other"],
   duties: [{ kind: "office_hours", sessionsPerWeek: 1, minutesPerSession: 60 }],
-  questions: [] as Array<{ id: string; prompt: string; required: boolean }>,
+  questions: [] as Array<{ id: string; prompt: string; required: boolean; purpose?: 'qualification' }>,
   requiredSlots: [] as Array<{ day: number; start: string; end: string }>,
 });
 const courses = computed(() =>
@@ -125,6 +125,7 @@ async function save() {
           method: props.opportunityId ? "PATCH" : "POST",
           body: {
             ...form,
+            questions: form.questions.map((question) => ({ ...question, purpose: 'qualification' })),
             expectedVersion: originalVersion.value,
             courseId: form.type === "ta" ? form.courseId : undefined,
           },
@@ -142,6 +143,7 @@ function addQuestion() {
     id: `question-${Date.now()}-${form.questions.length}`,
     prompt: "",
     required: true,
+    purpose: 'qualification',
   });
 }
 </script>
@@ -399,7 +401,7 @@ function addQuestion() {
           >
           <div v-for="(question, index) in form.questions" :key="question.id">
             <label
-              >Question {{ index + 1
+              >Qualification question {{ index + 1
               }}<input
                 v-model="question.prompt"
                 required
@@ -421,7 +423,7 @@ function addQuestion() {
             @click="addQuestion"
             data-testid="opportunity-add-question"
           >
-            Add screening question
+            Add qualification question
           </button>
         </fieldset>
         <fieldset :disabled="busy">

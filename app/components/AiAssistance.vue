@@ -1,17 +1,20 @@
 <script setup lang="ts">
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   kind: "candidate_fit" | "cv_summary" | "opportunity_draft" | "term_review";
   targetId: string;
   title?: string;
   termId?: string;
   authorizedTargets?: Array<{ id: string; label: string }>;
-}>();
+  canAnalyze?: boolean;
+}>(), { canAnalyze: true });
 const nuxtApp = useNuxtApp();
 const currentUser = useAuthUser();
 const authError = useAuthError();
 const busy = ref(false);
 const loading = ref(false);
 const configured = ref<boolean | null>(null);
+const serverCanAnalyze = ref(true);
+const analysisAllowed = computed(() => props.canAnalyze !== false && serverCanAnalyze.value);
 const task = ref<any>(null);
 const refreshJobs = ref<any[]>([]);
 const subscriptions = ref<any[]>([]);
@@ -60,7 +63,7 @@ const refreshWorking = computed(() =>
 const completedTask = computed(() =>
   task.value?.status === "completed" &&
   matchesTask(task.value) &&
-  !refreshPending.value &&
+  (!refreshPending.value || task.value?.historical) &&
   !busy.value &&
   !failed.value
     ? task.value
@@ -110,6 +113,7 @@ function evidenceLabel(reference: string): string {
 }
 const statusMessage = computed(() => {
   if (failed.value) return message.value;
+  if (!analysisAllowed.value) return "Candidate analysis has ended; history remains available.";
   if (configured.value === false) return "AI is not configured.";
   const job = currentJob.value;
   if (job?.status === "queued") return "Updated candidate analysis is queued.";
@@ -161,6 +165,7 @@ async function loadTasks() {
     if (requestedScope !== scope.value || generation !== requestGeneration)
       return;
     configured.value = result.ai?.configured === true;
+    serverCanAnalyze.value = result.canAnalyze !== false;
     subscriptions.value = result.refresh?.subscriptions || [];
     refreshJobs.value = result.refresh?.jobs || [];
     task.value =
@@ -168,6 +173,7 @@ async function loadTasks() {
         .filter(matchesTask)
         .sort(
           (left, right) =>
+            (!analysisAllowed.value ? Number(right.status === 'completed' && !!right.result) - Number(left.status === 'completed' && !!left.result) : 0) ||
             new Date(right.createdAt).getTime() -
             new Date(left.createdAt).getTime(),
         )[0] || null;
@@ -182,7 +188,7 @@ async function loadTasks() {
   }
 }
 async function requestAssistance(page = comparisonPage.value) {
-  if (busy.value || configured.value !== true || !props.targetId) return;
+  if (busy.value || configured.value !== true || !props.targetId || !analysisAllowed.value) return;
   const requestedScope = scope.value;
   requestGeneration++;
   busy.value = true;
@@ -218,6 +224,7 @@ watch(scope, () => {
   refreshJobs.value = [];
   subscriptions.value = [];
   configured.value = null;
+  serverCanAnalyze.value = true;
   comparisonPage.value = 1;
   message.value = "Loading AI...";
   failed.value = false;
@@ -240,12 +247,12 @@ useIntervalRefresh(loadTasks, 2500);
       >
         {{ statusMessage }}
       </p>
-      <p v-if="kind === 'candidate_fit'" class="muted">
+      <p v-if="kind === 'candidate_fit' && analysisAllowed" class="muted">
         Recommendations update automatically when candidates or availability
         change.
       </p>
 
-      <div class="actions">
+      <div v-if="analysisAllowed" class="actions">
         <button
           type="button"
           :disabled="busy || refreshWorking || configured !== true || !targetId"
@@ -278,7 +285,7 @@ useIntervalRefresh(loadTasks, 2500);
         </button>
       </div>
       <p v-if="task" class="muted">
-        Analysis {{ staffingState(task.status) }} -
+        {{ task.historical ? 'Historical analysis' : `Analysis ${staffingState(task.status)}` }} -
         {{ staffingDate(task.completedAt || task.createdAt) }}
       </p>
       <p v-if="task?.coverage" class="muted" data-testid="ai-coverage">
@@ -289,7 +296,7 @@ useIntervalRefresh(loadTasks, 2500);
         </template>
       </p>
       <div v-if="completedTask?.result" data-testid="ai-result">
-        <h3>Suggestions</h3>
+        <h3>{{ completedTask.historical ? 'Historical suggestions' : 'Suggestions' }}</h3>
         <p class="preserve-lines">{{ completedTask.result.summary }}</p>
         <p
           v-if="completedTask.result.summaryEvidenceRefs?.length"

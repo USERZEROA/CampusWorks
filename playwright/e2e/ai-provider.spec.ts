@@ -5,7 +5,7 @@ import { openSync, closeSync } from 'node:fs';
 import { request, type APIRequestContext } from '@playwright/test';
 import { test, expect, json, ok, database, type StaffingSpace } from '../staffing-fixtures';
 
-type Provider = { api: APIRequestContext; seen: any[]; close: () => Promise<void> };
+type Provider = { api: APIRequestContext; origin: string; seen: any[]; close: () => Promise<void> };
 async function providerApp(space: StaffingSpace, responder: (input: any, response: ServerResponse) => void | Promise<void>): Promise<Provider> {
   const seen: any[] = [];
   const provider = createServer(async (req, res) => {
@@ -14,7 +14,7 @@ async function providerApp(space: StaffingSpace, responder: (input: any, respons
     const envelope = JSON.parse(encoded);
     const input = JSON.parse(envelope.messages.at(-1).content);
     seen.push({ input, envelope, authorization: req.headers.authorization });
-    try { await responder(input, res); } catch { res.writeHead(500).end(); }
+    try { await responder(input, res); } catch { if (!res.headersSent) res.writeHead(500).end(); else res.destroy(); }
   });
   await new Promise<void>(resolve => provider.listen(0, '127.0.0.1', resolve));
   const providerPort = (provider.address() as any).port;
@@ -29,6 +29,7 @@ async function providerApp(space: StaffingSpace, responder: (input: any, respons
     HOST: '127.0.0.1', PORT: String(appPort), PUBLIC_ORIGIN: origin, TRUST_PROXY: 'false',
     SESSION_SECRET: randomBytes(32).toString('hex'), ENABLE_MOCK_LOGIN: 'true', SEED_DEMO_DATA: 'false',
     API_RATE_LIMIT: '10000', LOGIN_RATE_LIMIT: '1000', AI_BASE_URL: `http://127.0.0.1:${providerPort}/v1`, AI_API_KEY: 'synthetic-provider-test-key', AI_MODEL: 'synthetic-evidence-model',
+    AI_AUTO_REFRESH_ENABLED: 'false',
   } });
   closeSync(log);
   let api: APIRequestContext | undefined;
@@ -48,7 +49,7 @@ async function providerApp(space: StaffingSpace, responder: (input: any, respons
     if (!ready) throw new Error('Provider test application did not become ready.');
     api = await request.newContext({ baseURL: origin });
     await ok(api.post('/api/auth/mock', { data: { as: space.instructor.role, email: space.instructor.email } }));
-    return { api, seen, close: stop };
+    return { api, origin, seen, close: stop };
   } catch (error) { await stop(); throw error; }
 }
 
@@ -83,6 +84,37 @@ test('configured AI uses a local provider, qualification evidence and validated 
   } finally { await provider.close(); }
 });
 
+for (const kind of ['term_review', 'opportunity_draft'] as const) {
+  test(`${kind} browser assistance keeps its default analysis control enabled and returns local-provider evidence`, async ({ space, browser }) => {
+    const posting = await space.opportunity();
+    const provider = await providerApp(space, (input, response) => answer(input, response));
+    const context = await browser.newContext({ baseURL: provider.origin, storageState: await provider.api.storageState() });
+    try {
+      const page = await context.newPage();
+      const errors: string[] = [];
+      page.on('pageerror', error => errors.push(error.message));
+      const courseReview = kind === 'term_review';
+      await page.goto(courseReview ? `/courses/${space.code}/review` : `/staffing/${posting.id}`);
+      const title = courseReview ? 'Course Suggestions' : 'Requirement Draft Assistance';
+      const panel = page.locator('section.panel').filter({ has: page.getByRole('heading', { name: title, exact: true }) });
+      const button = panel.getByTestId('ai-request');
+      await expect(button).toBeVisible();
+      await expect(button).toBeEnabled();
+      const response = page.waitForResponse(response => new URL(response.url()).pathname === '/api/ai/tasks' && response.request().method() === 'POST');
+      await button.click();
+      const submitted = await response;
+      expect(submitted.status()).toBe(200);
+      expect((await submitted.json()).task).toMatchObject({ kind, status: 'completed', result: expect.any(Object) });
+      await expect(panel.getByTestId('ai-result')).toBeVisible();
+      await expect(panel.getByTestId('ai-result')).toContainText('Synthetic evidence-linked background comparison.');
+      expect(provider.seen).toHaveLength(1);
+      expect(provider.seen[0].input.kind).toBe(kind);
+      expect((await json(provider.api.get(`/api/staffing/opportunities/${posting.id}`))).offers).toHaveLength(0);
+      expect(errors).toEqual([]);
+    } finally { await context.close(); await provider.close(); }
+  });
+}
+
 test('AI results with invented or cross-candidate citations are rejected', async ({ space }) => {
   const posting = await space.opportunity();
   await space.application(posting);
@@ -94,6 +126,55 @@ test('AI results with invented or cross-candidate citations are rejected', async
     expect((await json(space.instructor.api.get(`/api/staffing/opportunities/${posting.id}`))).offers).toHaveLength(0);
   } finally { await provider.close(); }
 });
+
+test('AI excludes administrative and unclassified screening while retaining technical qualification answers', async ({ space }) => {
+  const posting = await space.opportunity({ questions: [
+    { id: 'race', prompt: 'Explain race conditions and mutexes.', required: true, purpose: 'qualification' },
+    { id: 'health', prompt: 'Describe a software health check.', required: true, purpose: 'qualification' },
+  ] });
+  const { client, db } = await database();
+  const provider = await providerApp(space, (input, response) => answer(input, response));
+  try {
+    // Existing stored questions without a reviewed qualification purpose remain
+    // readable by people, but do not become model input through compatibility.
+    await db.collection('staffingOpportunities').updateOne({ id: posting.id }, { $push: { questions: { $each: [
+      { id: 'duke', prompt: 'Enter your Duke Unique ID.', required: false, purpose: 'qualification' },
+      { id: 'authorization', prompt: 'When does your work authorization expire?', required: false, purpose: 'qualification' },
+      { id: 'legacy', prompt: 'Describe relevant teaching experience.', required: false },
+    ] } } } as any);
+    const application = await space.application(posting, space.student, { answers: { race: 'Mutexes protect shared state.', health: 'Use readiness and liveness endpoints.', duke: '1234567', authorization: '2030-01-01', legacy: 'Synthetic legacy answer.' } });
+    const result = await json(provider.api.post('/api/ai/tasks', { data: { kind: 'candidate_fit', targetId: posting.id } }));
+    expect(result.task.status).toBe('completed');
+    const transmitted = JSON.stringify(provider.seen[0].input);
+    expect(transmitted).toContain(`app:${application.id}:answers.race`);
+    expect(transmitted).toContain(`app:${application.id}:answers.health`);
+    for (const omitted of ['1234567', '2030-01-01', 'Synthetic legacy answer.', 'Duke Unique ID', 'work authorization']) expect(transmitted).not.toContain(omitted);
+    expect(result.task.coverage.omittedQuestions).toBe(3);
+    expect(result.task.result.cautions).toContain('Unclassified or administrative screening questions were omitted from this analysis.');
+    for (const prompt of ['Enter your Duke Unique ID.', 'When does your work authorization expire?']) {
+      expect((await space.instructor.api.post('/api/staffing/opportunities', { data: { ...posting, title: 'Synthetic invalid question', questions: [{ id: 'admin', prompt, required: true, purpose: 'qualification' }] } })).status()).toBe(400);
+    }
+  } finally { await provider.close(); await client.close(); }
+});
+
+for (const invalid of ['empty', 'omitted', 'duplicate'] as const) {
+  test(`candidate comparison rejects ${invalid} target coverage`, async ({ space }) => {
+    const posting = await space.opportunity({ positions: 2, budget: 2400 });
+    await space.application(posting);
+    await space.application(posting, await space.actor(`coverage-${invalid}`));
+    const provider = await providerApp(space, (input, response) => {
+      const item = (targetId: string) => ({ targetId, explanation: 'Synthetic candidate evidence.', evidenceRefs: [input.evidence.find((entry: any) => entry.reference.startsWith(`app:${targetId}:`)).reference] });
+      const first = item(input.targetIds[0]);
+      answer(input, response, { items: invalid === 'empty' ? [] : invalid === 'omitted' ? [first] : [first, first] });
+    });
+    try {
+      const result = await json(provider.api.post('/api/ai/tasks', { data: { kind: 'candidate_fit', targetId: posting.id } }));
+      expect(result.task.status).toBe('failed');
+      expect(result.task.result).toBeFalsy();
+      expect(provider.seen).toHaveLength(1);
+    } finally { await provider.close(); }
+  });
+}
 
 test('AI output becomes stale when a candidate is reserved during analysis', async ({ space }) => {
   const posting = await space.opportunity();

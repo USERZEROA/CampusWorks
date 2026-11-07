@@ -35,6 +35,7 @@ async function refreshActor(db: Db, subscription: Document): Promise<StaffingAct
   let actor: StaffingActor = { id: account.id, email: account.email, name: account.name || account.email, provider, primaryRole: 'student' }
   const opportunity = await db.collection('staffingOpportunities').findOne({ id: subscription.opportunityId, status: { $in: ['published', 'applications_closed', 'filled'] } })
   if (!opportunity) return null
+  if (new Date(opportunity.appointmentEnd).getTime() <= Date.now()) return null
   const { getRecruitmentCycle } = await import('./staffing-cycle')
   const cycle = await getRecruitmentCycle(db)
   if (cycle.termId !== opportunity.termId || !cycle.canReview) return null
@@ -59,6 +60,12 @@ export async function invalidateCandidateRefresh(db: Db, session: ClientSession,
   if (!targetIds.length) return
   const subscriptions = await scopes(db).find({ opportunityId: { $in: targetIds }, active: true }, { session }).sort({ id: 1 }).toArray()
   for (const subscription of subscriptions) {
+    const opportunity = await db.collection('staffingOpportunities').findOne({ id: subscription.opportunityId }, { session })
+    if (opportunity && new Date(opportunity.appointmentEnd).getTime() <= Date.now()) {
+      await scopes(db).updateOne({ id: subscription.id }, { $set: { active: false, status: 'ended' } }, { session })
+      await jobs(db).updateOne({ _id: subscription.id }, { $set: { status: 'ended', dirty: false, updatedAt: new Date() }, $unset: { leaseToken: '', leaseUntil: '' } }, { session })
+      continue
+    }
     const job = await jobs(db).findOneAndUpdate({ _id: subscription.id }, { $inc: { fence: 1 } }, { session, returnDocument: 'after' })
     if (!job) continue
     const running = job.status === 'running' && job.leaseUntil > new Date()
@@ -108,7 +115,7 @@ async function execute(db: Db, subscription: Document, actor: StaffingActor, sna
   const { createAiTask, candidateRefreshFingerprint } = await import('./ai')
   let result: any
   try {
-    result = await createAiTask(db, actor, { kind: 'candidate_fit', targetId: subscription.opportunityId, page: subscription.page, pageSize: subscription.pageSize }, { taskId: lease.taskId, subscriptionId: subscription.id, generation: lease.generation, signal })
+    result = await createAiTask(db, actor, { kind: 'candidate_fit', targetId: subscription.opportunityId, page: subscription.page, pageSize: subscription.pageSize }, { taskId: lease.taskId, subscriptionId: subscription.id, generation: lease.generation, leaseToken: lease.token, signal })
   } catch (error: any) {
     await db.collection('staffingAiTasks').updateOne({ id: lease.taskId }, { $set: { status: 'failed', result: null, message: [403, 404].includes(error?.statusCode) ? 'Reviewer authority changed; analysis is disabled.' : 'Automatic analysis failed. Manual staffing remains available.' } })
   }
@@ -229,10 +236,28 @@ async function observeChanges(db: Db) {
   })
 }
 
+async function stopEndedCandidateRefresh(db: Db) {
+  const ended = await db.collection('staffingOpportunities').distinct('id', { appointmentEnd: { $lte: new Date() } })
+  if (!ended.length) return
+  const subscriptions = await scopes(db).find({ opportunityId: { $in: ended }, active: true }).sort({ id: 1 }).toArray()
+  if (!subscriptions.length) return
+  const { withTransaction } = await import('./db')
+  await withTransaction(async (database, session) => {
+    for (const subscription of subscriptions) {
+      await scopes(database).updateOne({ id: subscription.id, active: true }, { $set: { active: false, status: 'ended' } }, { session })
+      await jobs(database).updateOne({ _id: subscription.id }, { $set: { status: 'ended', dirty: false, updatedAt: new Date() }, $unset: { leaseToken: '', leaseUntil: '' } }, { session })
+      // Completed comparisons remain authorized history, while unfinished work
+      // cannot later publish a recruiting recommendation for an ended position.
+      await database.collection('staffingAiTasks').updateMany({ refreshSubscriptionId: subscription.id, status: 'pending' }, { $set: { status: 'stale', result: null, message: 'Candidate analysis has ended for this appointment.' } }, { session })
+    }
+  })
+}
+
 export async function runAiRefreshCycle(db: Db, signal?: AbortSignal) {
   if (!configured() || signal?.aborted) return
   await initializeAiRefresh(db)
   if (!await scopes(db).findOne({ active: true })) return
+  await stopEndedCandidateRefresh(db)
   const { reconcileDueStaffing } = await import('./staffing-appointments')
   await reconcileDueStaffing(db)
   await observeChanges(db)

@@ -9,7 +9,7 @@ function respond(input: any, response: ServerResponse) {
   const reference = input.evidence.find((entry: any) => entry.reference.startsWith('app:'))?.reference || input.evidence[0].reference;
   response.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify({ choices: [{ message: { content: JSON.stringify({
     summary: 'Synthetic automatic comparison using submitted evidence.', summaryEvidenceRefs: [reference],
-    items: input.targetIds.map((targetId: string) => ({ targetId, explanation: 'Synthetic evidence; a human must make the decision.', evidenceRefs: [input.evidence.find((entry: any) => entry.reference.startsWith(`app:${targetId}:`)).reference] })),
+    items: input.targetIds.map((targetId: string) => ({ targetId, explanation: 'Synthetic evidence; a human must make the decision.', evidenceRefs: [input.evidence.find((entry: any) => entry.reference.startsWith(`app:${targetId}:`))?.reference || reference] })),
     cautions: ['Local synthetic provider; no real hiring or paid model call.'],
   }) } }] }));
 }
@@ -34,7 +34,7 @@ async function harness(space: StaffingSpace, handle: (input: any, response: Serv
     let encoded = ''; for await (const chunk of req) encoded += chunk;
     const input = JSON.parse(JSON.parse(encoded).messages.at(-1).content);
     seen.push(input);
-    try { await handle(input, res, seen.length); } catch { res.writeHead(500).end(); }
+    try { await handle(input, res, seen.length); } catch { if (!res.headersSent) res.writeHead(500).end(); else res.destroy(); }
   });
   await new Promise<void>(resolve => provider.listen(0, '127.0.0.1', resolve));
   const children: ChildProcess[] = [];
@@ -132,6 +132,75 @@ test('current-semester review survives application closing while a disabled cycl
     await new Promise(resolve => setTimeout(resolve, 1200));
     expect(service.seen).toHaveLength(1);
   } finally { await service.close(); await client.close(); }
+});
+
+test('ended appointments stop new candidate analysis and automatic calls while retaining authorized history and course reviews', async ({ space, browser }) => {
+  const posting = await space.opportunity();
+  const application = await space.application(posting);
+  const service = await harness(space);
+  const { client, db } = await database();
+  const context = await browser.newContext({ baseURL: service.origins[0] });
+  try {
+    await db.collection('staffingOpportunities').updateOne({ id: posting.id }, { $set: { appointmentEnd: new Date(Date.now() + 5000) } });
+    const comparison = await analysis(service.apis[0]!, posting.id);
+    expect(comparison.task.status).toBe('completed');
+    expect((await json(service.apis[0]!.post('/api/ai/tasks', { data: { kind: 'cv_summary', targetId: application.id } }))).task.status).toBe('completed');
+    expect(service.seen).toHaveLength(2);
+    await expect.poll(async () => (await history(service.apis[0]!, posting.id)).canAnalyze, { timeout: 15000 }).toBe(false);
+    await expect.poll(async () => (await db.collection('staffingAiSubscriptions').findOne({ opportunityId: posting.id }))?.active, { timeout: 15000 }).toBe(false);
+    const historical = await history(service.apis[0]!, posting.id);
+    expect(historical.tasks.find((task: any) => task.id === comparison.task.id)).toMatchObject({ status: 'completed', historical: true, result: expect.any(Object) });
+    await db.collection('staffingAiTasks').updateOne({ id: comparison.task.id }, { $set: { status: 'stale', result: null } });
+    const cachedHistory = await history(service.apis[0]!, posting.id);
+    expect(cachedHistory.tasks.find((task: any) => task.id === comparison.task.id)).toMatchObject({ status: 'completed', historical: true, inputHash: comparison.task.inputHash, result: comparison.task.result });
+    for (const request of [{ kind: 'candidate_fit', targetId: posting.id }, { kind: 'cv_summary', targetId: application.id }]) {
+      expect((await service.apis[0]!.post('/api/ai/tasks', { data: request })).status()).toBe(409);
+    }
+    expect(service.seen).toHaveLength(2);
+    await ok(context.request.post('/api/auth/mock', { data: { as: 'instructor', email: space.instructor.email } }));
+    const page = await context.newPage();
+    await page.goto(`/staffing/${posting.id}`);
+    const panel = page.locator('section.panel').filter({ has: page.getByRole('heading', { name: 'Candidate Review Assistance', exact: true }) });
+    await expect(panel.getByTestId('ai-request')).toHaveCount(0);
+    await expect(panel.getByTestId('ai-result')).toBeVisible();
+    expect(service.seen).toHaveLength(2);
+    expect((await json(service.apis[0]!.post('/api/ai/tasks', { data: { kind: 'term_review', targetId: posting.id } }))).task.status).toBe('completed');
+    expect(service.seen).toHaveLength(3);
+    await db.collection('staffingApplications').updateOne({ id: application.id }, { $set: { status: 'draft' } });
+    expect((await history(service.apis[0]!, posting.id)).tasks).toEqual([]);
+    await db.collection('staffingApplications').updateOne({ id: application.id }, { $set: { status: 'submitted' } });
+    await ok(service.apis[1]!.post('/api/auth/mock', { data: { as: 'student', email: space.student.email } }));
+    expect((await service.apis[1]!.get('/api/ai/tasks', { params: { kind: 'candidate_fit', targetId: posting.id } })).status()).toBe(403);
+  } finally { await context.close(); await service.close(); await client.close(); }
+});
+
+test('course restrictions update TA recommendations automatically while leaving RA evidence and provider usage unchanged', async ({ space }) => {
+  const teaching = await space.opportunity({ positions: 2, budget: 2400 });
+  const research = await space.opportunity({ type: 'ra', courseId: '' });
+  const first = await space.application(teaching);
+  const second = await space.application(teaching, await space.actor('restriction-peer'));
+  const researchApplication = await space.application(research);
+  await ok(space.student.api.post('/api/courses/enroll', { data: { courseId: space.code, enroll: true } }));
+  const service = await harness(space);
+  try {
+    expect((await analysis(service.apis[0]!, teaching.id)).task.result.items.map((item: any) => item.targetId)).toEqual([first.id, second.id]);
+    expect((await analysis(service.apis[0]!, research.id)).task.result.items.map((item: any) => item.targetId)).toEqual([researchApplication.id]);
+    expect(service.seen).toHaveLength(2);
+    await ok(space.instructor.api.post(`/api/courses/${space.code}/enrollments/kick`, { data: { email: space.student.email } }));
+    expect((await space.instructor.api.post(`/api/staffing/applications/${first.id}/select`, { data: { expectedVersion: first.version, idempotencyKey: `restriction-${space.suffix}` } })).status()).toBe(409);
+    await expect.poll(async () => {
+      const current = await history(service.apis[0]!, teaching.id);
+      return current.tasks.find((task: any) => task.status === 'completed' && task.result)?.result.items.map((item: any) => item.targetId);
+    }, { timeout: 20000 }).toEqual([second.id]);
+    await expect.poll(async () => (await history(service.apis[0]!, research.id)).tasks.find((task: any) => task.status === 'completed' && task.result)?.result.items.map((item: any) => item.targetId), { timeout: 20000 }).toEqual([researchApplication.id]);
+    expect(service.seen).toHaveLength(3);
+    await ok(space.instructor.api.post(`/api/courses/${space.code}/enrollments/restore`, { data: { email: space.student.email } }));
+    await expect.poll(async () => (await history(service.apis[0]!, teaching.id)).tasks.find((task: any) => task.status === 'completed' && task.result)?.result.items.map((item: any) => item.targetId), { timeout: 20000 }).toEqual([first.id, second.id]);
+    await expect.poll(async () => (await history(service.apis[0]!, research.id)).tasks.find((task: any) => task.status === 'completed' && task.result)?.result.items.map((item: any) => item.targetId), { timeout: 20000 }).toEqual([researchApplication.id]);
+    // Both TA roster changes receive a fresh comparison. The unchanged RA
+    // evidence reuses its validated result without another provider request.
+    expect(service.seen).toHaveLength(4);
+  } finally { await service.close(); }
 });
 
 test('the reviewer browser updates named candidate advice automatically without another analysis request', async ({ space, browser }, testInfo) => {
