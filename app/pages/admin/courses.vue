@@ -453,6 +453,18 @@ const goHelp = () => {
     font-size: 13px;
   }
 
+  .course-table {
+    table-layout: fixed;
+  }
+
+  .course-table th:last-child {
+    width: 94px !important;
+  }
+
+  .course-table td {
+    overflow-wrap: anywhere;
+  }
+
   .actions {
     flex-direction: column;
     align-items: stretch;
