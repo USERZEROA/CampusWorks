@@ -73,6 +73,8 @@ The [demonstration guide](docs/DEMO_GUIDE.md) provides a repeatable ten-course s
 
 Open the [offline screenshot gallery](docs/demo/index.html) for desktop/mobile views captured from actual local browsers. Every person and workflow record in the gallery is synthetic.
 
+For a project showcase, follow the [five-minute product pitch](docs/ROADSHOW.md): one applicant's transition into course work, the department review and a measurable pilot proposal. A ninety-second version and evaluator answers are included.
+
 ## Configuration
 
 See [`.env.example`](.env.example) and [`server/utils/config.ts`](server/utils/config.ts).
