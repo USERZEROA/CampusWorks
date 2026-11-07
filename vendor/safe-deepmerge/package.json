@@ -1,0 +1,8 @@
+{
+  "name": "@campusworks/safe-deepmerge",
+  "version": "1.0.0",
+  "description": "Prototype-safe deep object merge for build tooling",
+  "main": "index.cjs",
+  "license": "MIT",
+  "engines": { "node": ">=22.21.0" }
+}

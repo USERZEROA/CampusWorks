@@ -15,18 +15,25 @@
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
-    "demo:windows": "node scripts/demo-windows.mjs"
+    "demo:windows": "node scripts/demo-windows.mjs",
+    "test:unit": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "mongodb": "^7.0.0",
-    "nuxt": "^4.2.1",
+    "nuxt": "4.6.4",
     "vue": "^3.5.22",
     "vue-router": "5.4.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@playwright/test": "^1.56.1",
     "@types/node": "^24.10.0",
     "typescript": "5.9.3",
     "vue-tsc": "3.1.1"
+  },
+  "overrides": {
+    "deepmerge": "file:vendor/safe-deepmerge",
+    "glob": "14.0.4",
+    "minimatch": "11.0.5"
   }
 }
