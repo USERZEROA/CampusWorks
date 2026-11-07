@@ -95,6 +95,9 @@ const loginWithGitlab = async () => {
           src="/duke-cs-logo.png"
           alt="Duke Department of Computer Science"
           class="app-logo"
+          width="381"
+          height="70"
+          decoding="async"
         />
         <div class="banner-text">
           <div class="banner-title">CampusWorks</div>
@@ -360,7 +363,7 @@ const loginWithGitlab = async () => {
 
 .role-btn.gitlab {
   background: #fc6d26;
-  color: #ffffff;
+  color: #1f0a00;
 }
 
 .role-btn.gitlab:hover:not(:disabled) {

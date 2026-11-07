@@ -26,8 +26,9 @@ const opportunities = computed(() =>
     </p>
     <p class="notice">
       You may apply to several opportunities. One appointment can be reserved or
-      held per term. A selection is confirmed by the server; a recommendation
-      does not reserve a position.
+      held per term, including half appointments. Appointment dates in different
+      terms must not overlap. A selection is confirmed by the server; a
+      recommendation does not reserve a position.
     </p>
     <section class="panel" aria-label="Filter opportunities">
       <div class="panel-body grid">

@@ -168,9 +168,16 @@ const goAdminConsole = () => {
 <template>
   <div class="page-root">
     <header class="app-navbar">
-      <div class="app-left">
-        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
-      </div>
+      <NuxtLink to="/courses" class="app-left" aria-label="CampusWorks courses">
+        <img
+          src="/duke-cs-logo.png"
+          alt="Duke Department of Computer Science"
+          class="app-logo"
+          width="381"
+          height="70"
+          decoding="async"
+        />
+      </NuxtLink>
       <div class="app-center">
         <div class="brand-main">CampusWorks</div>
       </div>

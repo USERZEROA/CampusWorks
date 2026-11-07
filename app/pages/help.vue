@@ -17,7 +17,14 @@ const goBack = () => {
         aria-label="Back to courses"
         @click="goBack"
       >
-        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
+        <img
+          src="/duke-cs-logo.png"
+          alt="Duke Department of Computer Science"
+          class="app-logo"
+          width="381"
+          height="70"
+          decoding="async"
+        />
       </button>
       <div class="app-center">
         <div class="brand-main">CampusWorks – Help &amp; Info</div>
@@ -140,6 +147,13 @@ const goBack = () => {
                 Manage <strong>enrollments &amp; roles</strong> (add TAs by
                 email, promote/demote, remove users). Only course admins can
                 grant the admin role.
+              </li>
+              <li>
+                A TA appointment can grant course access separately from a
+                manual enrollment. Setting the manual role to Student does not
+                revoke that appointment. Suspend or end it in
+                <NuxtLink to="/staffing">Staffing</NuxtLink>; independent manual
+                staff grants remain in place afterward.
               </li>
               <li>
                 Read structured <strong>course feedback</strong> from students.

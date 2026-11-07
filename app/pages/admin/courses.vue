@@ -133,7 +133,14 @@ const goHelp = () => {
         aria-label="Back to courses"
         @click="navigateTo('/courses')"
       >
-        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
+        <img
+          src="/duke-cs-logo.png"
+          alt="Duke Department of Computer Science"
+          class="app-logo"
+          width="381"
+          height="70"
+          decoding="async"
+        />
       </button>
       <div class="app-center">
         <div class="brand-main">CampusWorks – Admin Console</div>

@@ -874,6 +874,7 @@ const exportCsv = () => {
  * Enrollment and role management.
  */
 const newTaEmail = ref("");
+const roleNotice = ref("");
 
 const updateRole = async (
   email: string,
@@ -881,12 +882,17 @@ const updateRole = async (
 ) => {
   if (busyActions.value) return;
   busyActions.value = true;
+  roleNotice.value = "";
   try {
     try {
-      await $fetch(`/api/courses/${courseId}/enrollments/role`, {
+      const result = await $fetch(`/api/courses/${courseId}/enrollments/role`, {
         method: "PATCH",
         body: { email, role },
       });
+      roleNotice.value =
+        result.role !== result.manualRole
+          ? `The manual role for ${email} is now ${result.manualRole}. Their active TA appointment still grants TA access. Suspend or end that appointment in Staffing to remove its automatic grant.`
+          : `The manual role for ${email} is now ${result.manualRole}.`;
       await refreshNuxtData(`course-admin-${courseId}`);
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to update role"));
@@ -963,7 +969,14 @@ onBeforeUnmount(() => {
         aria-label="Back to courses"
         @click="goBack"
       >
-        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
+        <img
+          src="/duke-cs-logo.png"
+          alt="Duke Department of Computer Science"
+          class="app-logo"
+          width="381"
+          height="70"
+          decoding="async"
+        />
       </button>
       <div class="app-center">
         <div class="brand-main">CampusWorks – Course Admin</div>
@@ -1071,7 +1084,7 @@ onBeforeUnmount(() => {
           @click="loadMoreData"
           data-testid="admin-load-more"
         >
-          {{ loadingMore ? "Loading?" : "Load more records" }}
+          {{ loadingMore ? "Loading…" : "Load more records" }}
         </button>
       </p>
       <p class="analytics-note">
@@ -1589,6 +1602,16 @@ onBeforeUnmount(() => {
       <section class="panel">
         <div class="panel-header">Enrollments &amp; Roles</div>
         <div class="panel-body">
+          <p class="role-guidance">
+            These controls manage independent course enrollments. Setting a
+            manual role to Student does not remove access from an active TA
+            appointment. Use <NuxtLink to="/staffing">Staffing</NuxtLink> to
+            suspend or end the appointment. Independent manual staff grants
+            remain in place when an appointment ends.
+          </p>
+          <p v-if="roleNotice" class="role-guidance" role="status">
+            {{ roleNotice }}
+          </p>
           <div class="add-ta-row">
             <input
               v-model="newTaEmail"
@@ -1616,7 +1639,7 @@ onBeforeUnmount(() => {
             <thead>
               <tr>
                 <th>Email</th>
-                <th>Role</th>
+                <th>Manual role</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -1637,6 +1660,7 @@ onBeforeUnmount(() => {
                     v-model="enr.role"
                     :aria-label="`Course role for ${enr.userEmail}`"
                     :disabled="
+                      busyActions ||
                       enr.userEmail === viewer?.email ||
                       (enr.role === 'admin' && !canManageAdmins)
                     "
@@ -1728,6 +1752,14 @@ details > summary {
 .muted-text {
   color: #596579;
   font-size: 12px;
+}
+.role-guidance {
+  color: #374151;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.role-guidance a {
+  color: #17408b;
 }
 
 .app-navbar {

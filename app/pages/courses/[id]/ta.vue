@@ -447,7 +447,14 @@ const goAnalytics = () => {
         aria-label="Back to courses"
         @click="goBack"
       >
-        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
+        <img
+          src="/duke-cs-logo.png"
+          alt="Duke Department of Computer Science"
+          class="app-logo"
+          width="381"
+          height="70"
+          decoding="async"
+        />
       </button>
       <button
         type="button"
@@ -1350,7 +1357,7 @@ const goAnalytics = () => {
 .action-btn.select-paused {
   background: #9ca3af;
   border-color: #596579;
-  color: #ffffff;
+  color: #172033;
 }
 
 .action-btn.other-ta {

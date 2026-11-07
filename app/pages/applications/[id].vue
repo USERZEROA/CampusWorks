@@ -353,8 +353,9 @@ async function reloadApplication() {
               policy permits</label
             >
             <p class="muted">
-              Current allocation policy allows one held appointment per term.
-              This preference does not override that rule.
+              Current allocation policy allows one held appointment per term,
+              including half appointments, and prevents overlapping appointment
+              dates across terms. This preference does not override those rules.
             </p>
             <label
               >Availability and scheduling constraints<textarea

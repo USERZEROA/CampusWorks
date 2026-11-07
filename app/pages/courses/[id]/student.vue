@@ -424,7 +424,14 @@ const goHelp = () => {
         aria-label="Back to courses"
         @click="goBack"
       >
-        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
+        <img
+          src="/duke-cs-logo.png"
+          alt="Duke Department of Computer Science"
+          class="app-logo"
+          width="381"
+          height="70"
+          decoding="async"
+        />
       </button>
       <button
         type="button"
@@ -1317,6 +1324,9 @@ const goHelp = () => {
 .modal {
   width: 420px;
   max-width: calc(100% - 40px);
+  max-height: calc(100vh - 24px);
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
   background: #ffffff;
   border-radius: 14px;
   box-shadow: 0 25px 80px rgba(15, 23, 42, 0.3);

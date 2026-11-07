@@ -47,6 +47,11 @@ const authError = useAuthError();
   white-space: nowrap !important;
   border: 0 !important;
 }
+.app-logo {
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
 button.app-left,
 button.app-center {
   border: 0;

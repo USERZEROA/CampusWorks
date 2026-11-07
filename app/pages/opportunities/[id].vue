@@ -129,6 +129,31 @@ async function apply() {
               </tbody>
             </table>
           </div>
+          <template v-if="opportunity.requiredSlots?.length">
+            <h3>Required weekly schedule (America/New_York campus time)</h3>
+            <ul>
+              <li
+                v-for="(slot, index) in opportunity.requiredSlots"
+                :key="index"
+              >
+                {{
+                  [
+                    "Sunday",
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                  ][slot.day]
+                }}
+                {{ slot.start }}–{{ slot.end }}
+              </li>
+            </ul>
+            <p class="muted">
+              Your application must confirm availability for each required slot.
+            </p>
+          </template>
           <p>
             CV: {{ opportunity.cvRequired ? "Required" : "Optional" }}.
             Submitted qualification material is visible to the authorized

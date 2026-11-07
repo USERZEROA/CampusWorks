@@ -9,8 +9,11 @@ const user = useAuthUser();
       <NuxtLink to="/courses" aria-label="CampusWorks courses"
         ><img
           src="/duke-cs-logo.png"
-          alt="Duke Computer Science"
+          alt="Duke Department of Computer Science"
           class="app-logo"
+          width="381"
+          height="70"
+          decoding="async"
       /></NuxtLink>
       <div class="brand-main">CampusWorks</div>
       <div class="staffing-user">
@@ -235,6 +238,7 @@ const user = useAuthUser();
   background: #fff;
   border: 1px solid #d9e2ef;
   border-radius: 10px;
+  overflow-wrap: anywhere;
 }
 .staffing-root .opportunity-card h2 {
   margin: 9px 0;
