@@ -34,6 +34,33 @@ const canPublish = computed(
     currentCycle.value?.isOpen &&
     opportunity.value?.termId === currentCycle.value.termId,
 );
+const openPositions = computed(() =>
+  Math.max(
+    0,
+    Number(opportunity.value?.positions || 0) -
+      Number(opportunity.value?.committedPositions || 0),
+  ),
+);
+const hasOfferBudget = computed(() => {
+  const current = opportunity.value;
+  return (
+    current &&
+    [current.committedBudget, current.appointmentCost, current.budget].every(
+      (value) => typeof value === "number" && Number.isFinite(value),
+    ) &&
+    current.committedBudget + current.appointmentCost <= current.budget + 0.001
+  );
+});
+const canIssueOffer = computed(
+  () =>
+    canReview.value &&
+    opportunity.value?.approved &&
+    ["published", "applications_closed", "filled"].includes(
+      opportunity.value?.status || opportunity.value?.state,
+    ) &&
+    openPositions.value > 0 &&
+    hasOfferBudget.value,
+);
 const { busy, message, failure, run } = useStaffingMutation(refresh);
 const keys = new Map<string, string>();
 const reason = ref("");
@@ -108,8 +135,14 @@ useIntervalRefresh(refresh);
               }}</span
             >
             · {{ opportunity.type?.toUpperCase() }} ·
-            {{ opportunity.positions }} positions ·
-            {{ opportunity.weeklyHours }} hours/week
+            <span data-testid="opportunity-capacity"
+              >{{ openPositions }} open /
+              {{ opportunity.positions }} positions</span
+            >
+            · {{ opportunity.weeklyHours }} hours/week
+            <span v-if="openPositions > 0 && !hasOfferBudget" class="muted">
+              · Budget unavailable
+            </span>
           </p>
           <p>{{ opportunity.description }}</p>
           <p>
@@ -283,6 +316,7 @@ useIntervalRefresh(refresh);
                       ><button
                         :disabled="
                           busy ||
+                          !canIssueOffer ||
                           ![
                             'submitted',
                             'under_review',
