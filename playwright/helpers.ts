@@ -9,7 +9,8 @@ export const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
  * on server-rendered HTML (noticeable with the slower dev server).
  */
 export async function open(page: Page, url: string) {
-  await page.goto(url);
+  const response = await page.goto(url);
+  expect(response?.status(), `Navigation to ${url}`).toBeLessThan(400);
   await waitForApp(page);
 }
 

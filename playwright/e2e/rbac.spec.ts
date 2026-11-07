@@ -38,10 +38,12 @@ test.describe('role-based access control (API)', () => {
     instructor = await apiAs('instructor', emails.instructor);
 
     expect((await ta.patch(`/api/courses/${code}/state`, { data: { state: 'open' } })).status()).toBe(200);
+    expect((await ta.post(`/api/courses/${code}/ta-duty`, { data: { onDuty: true } })).status()).toBe(200);
   });
 
   test.afterAll(async () => {
     await admin.delete(`/api/courses/${code}`);
+    await Promise.all([admin, student, other, outsider, ta, instructor].map(api => api.dispose()));
   });
 
   test('students cannot use staff or admin endpoints', async () => {
