@@ -1,205 +1,204 @@
 <script setup lang="ts">
-import {
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
+const busyActions = ref(false);
+
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import {
   useRoute,
   useRouter,
   useAsyncData,
   useRequestFetch,
   navigateTo,
-  refreshNuxtData
-} from '#app'
+  refreshNuxtData,
+} from "#app";
 
 type Announcement = {
-  id: string
-  at: string
-  by: string
-  message: string
-}
+  id: string;
+  at: string;
+  by: string;
+  message: string;
+};
 
 type QueueEntry = {
-  id: string
-  email: string
-  name: string
-  location: string
-  question: string
-  paused: boolean
-  ta: string
-  position?: number
-  otherTa?: boolean
-  assignedToMe?: boolean
-}
+  id: string;
+  email: string;
+  name: string;
+  location: string;
+  question: string;
+  paused: boolean;
+  ta: string;
+  position?: number;
+  otherTa?: boolean;
+  assignedToMe?: boolean;
+};
 
 type CourseApiResult = {
-  id: string
-  code: string
-  title: string
-  state: string
-  role?: string | null
-  isStaff: boolean
-  isManager: boolean
-  onDuty: boolean
-  user: { email: string; name?: string }
-  announcements: Announcement[]
-  queue: QueueEntry[]
-  onDutyTAs?: string[]
-}
+  id: string;
+  code: string;
+  title: string;
+  state: string;
+  role?: string | null;
+  isStaff: boolean;
+  isManager: boolean;
+  onDuty: boolean;
+  user: { email: string; name?: string };
+  announcements: Announcement[];
+  queue: QueueEntry[];
+  onDutyTAs?: string[];
+};
 
 /**
  * Load course/queue data for TA-facing view.
  */
-const route = useRoute()
-const router = useRouter()
-const courseId = route.params.id as string
-const requestFetch = useRequestFetch()
+const route = useRoute();
+const router = useRouter();
+const courseId = route.params.id as string;
+const requestFetch = useRequestFetch();
 
 const { data, error } = await useAsyncData<CourseApiResult>(
   `course-ta-${courseId}`,
-  () => requestFetch<CourseApiResult>(`/api/courses/${courseId}`)
-)
+  () => requestFetch<CourseApiResult>(`/api/courses/${courseId}`),
+);
 
 if (error.value) {
-  const status = (error.value as any).statusCode
+  const status = (error.value as any).statusCode;
   if (status === 401) {
-    useAuthUser().value = null
-    await navigateTo('/login')
+    useAuthUser().value = null;
+    await navigateTo("/login");
   } else {
-    await navigateTo('/courses')
+    await navigateTo("/courses");
   }
 }
 
-const course = computed(() => data.value)
-const user = computed(() => course.value?.user || { email: '', name: '' })
+watch(error, (value) => {
+  const status = (value as any)?.statusCode;
+  if (status === 401) {
+    useAuthUser().value = null;
+    navigateTo("/login");
+  } else if (status === 403) navigateTo("/courses");
+});
+const course = computed(() => data.value);
+const user = computed(() => course.value?.user || { email: "", name: "" });
 
 /**
  * Require TA/staff role for this view; non-staff are redirected.
  */
-const isStaff = computed(() => !!course.value?.isStaff)
-const isManager = computed(() => !!course.value?.isManager)
+const isStaff = computed(() => !!course.value?.isStaff);
+const isManager = computed(() => !!course.value?.isManager);
 
 if (course.value && !isStaff.value) {
-  await navigateTo(`/courses/${courseId}/student`, { replace: true })
+  await navigateTo(`/courses/${courseId}/student`, { replace: true });
 }
+watch(isStaff, (value) => {
+  if (course.value && !value)
+    navigateTo(`/courses/${courseId}/student`, { replace: true });
+});
 
 /**
  * Queue state handling.
  */
-const normalizeState = (
-  s?: string
-): 'open' | 'closed' | 'paused' => {
-  const v = (s || 'closed').toLowerCase()
-  if (v === 'open') return 'open'
-  if (v === 'paused') return 'paused'
-  return 'closed'
-}
+const normalizeState = (s?: string): "open" | "closed" | "paused" => {
+  const v = (s || "closed").toLowerCase();
+  if (v === "open") return "open";
+  if (v === "paused") return "paused";
+  return "closed";
+};
 
-const queueStatus = ref<'open' | 'closed' | 'paused'>(
-  normalizeState(course.value?.state)
-)
+const queueStatus = ref<"open" | "closed" | "paused">(
+  normalizeState(course.value?.state),
+);
 
 watch(
   () => course.value?.state,
   (v) => {
-    queueStatus.value = normalizeState(v)
-  }
-)
+    queueStatus.value = normalizeState(v);
+  },
+);
 
-const isOpen = computed(
-  () => queueStatus.value === 'open'
-)
-const isPaused = computed(
-  () => queueStatus.value === 'paused'
-)
-const isClosed = computed(
-  () => queueStatus.value === 'closed'
-)
+const isOpen = computed(() => queueStatus.value === "open");
+const isPaused = computed(() => queueStatus.value === "paused");
+const isClosed = computed(() => queueStatus.value === "closed");
 
 /**
  * TA duty state and queue operation permissions.
  */
-const onDutyTAs = computed(
-  () => course.value?.onDutyTAs || []
-)
+const onDutyTAs = computed(() => course.value?.onDutyTAs || []);
 
-const taOnDuty = computed(() => !!course.value?.onDuty)
+const taOnDuty = computed(() => !!course.value?.onDuty);
 
-const canOperateQueue = computed(
-  () => isStaff.value && taOnDuty.value
-)
+const canOperateQueue = computed(() => isStaff.value && taOnDuty.value);
 
 const toggleOnDuty = async () => {
-  if (!isStaff.value) return
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(`/api/courses/${courseId}/ta-duty`, {
-      method: 'POST',
-      body: { onDuty: !taOnDuty.value }
-    })
-    await refreshNuxtData(`course-ta-${courseId}`)
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Failed to toggle duty'))
+    if (!isStaff.value) return;
+    try {
+      await $fetch(`/api/courses/${courseId}/ta-duty`, {
+        method: "POST",
+        body: { onDuty: !taOnDuty.value },
+      });
+      await refreshNuxtData(`course-ta-${courseId}`);
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Failed to toggle duty"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
-const setQueueStatus = async (
-  status: 'open' | 'closed' | 'paused'
-) => {
-  if (!isStaff.value) return
+const setQueueStatus = async (status: "open" | "closed" | "paused") => {
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(`/api/courses/${courseId}/state`, {
-      method: 'PATCH',
-      body: { state: status }
-    })
-    await refreshNuxtData(`course-ta-${courseId}`)
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Failed to update queue state'))
+    if (!isStaff.value) return;
+    try {
+      await $fetch(`/api/courses/${courseId}/state`, {
+        method: "PATCH",
+        body: { state: status },
+      });
+      await refreshNuxtData(`course-ta-${courseId}`);
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Failed to update queue state"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 const closeQueue = async () => {
   if (
     queueEntries.value.length &&
     !window.confirm(
-      `Close the queue? The ${queueEntries.value.length} remaining entries will be ended and saved to history.`
+      `Close the queue? The ${queueEntries.value.length} remaining entries will be ended and saved to history.`,
     )
   ) {
-    return
+    return;
   }
-  await setQueueStatus('closed')
-}
+  await setQueueStatus("closed");
+};
 
 /**
  * Reactive queue + announcements.
  */
-const queueEntries = ref<QueueEntry[]>(
-  course.value?.queue || []
-)
+const queueEntries = ref<QueueEntry[]>(course.value?.queue || []);
 
 watch(
   () => course.value?.queue,
   (val) => {
-    queueEntries.value = val || []
-  }
-)
+    queueEntries.value = val || [];
+  },
+);
 
-const announcements = ref<Announcement[]>(
-  course.value?.announcements || []
-)
+const announcements = ref<Announcement[]>(course.value?.announcements || []);
 
 watch(
   () => course.value?.announcements,
   (val) => {
-    announcements.value = val || []
-  }
-)
+    announcements.value = val || [];
+  },
+);
 
-const queueLength = computed(
-  () => queueEntries.value.length
-)
+const queueLength = computed(() => queueEntries.value.length);
 
 /**
  * Assign, complete, or reassign a queue entry.
@@ -208,223 +207,252 @@ const queueLength = computed(
  *   claimed (one active entry per TA).
  */
 const assignOrComplete = async (entry: QueueEntry) => {
-  if (!canOperateQueue.value || entry.paused) return
-
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    if (entry.assignedToMe) {
-      // Mark as completed.
-      await $fetch(
-        `/api/courses/${courseId}/queue/remove`,
-        {
-          method: 'POST',
-          body: { entryId: entry.id }
-        }
-      )
-    } else {
-      await $fetch(
-        `/api/courses/${courseId}/queue/assign`,
-        {
-          method: 'POST',
-          body: { entryId: entry.id, assign: true }
-        }
-      )
-    }
+    if (!canOperateQueue.value || entry.paused) return;
 
-    await refreshNuxtData(`course-ta-${courseId}`)
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Failed to update entry'))
+    try {
+      if (entry.assignedToMe) {
+        // Mark as completed.
+        await $fetch(`/api/courses/${courseId}/queue/remove`, {
+          method: "POST",
+          body: { entryId: entry.id },
+        });
+      } else {
+        await $fetch(`/api/courses/${courseId}/queue/assign`, {
+          method: "POST",
+          body: { entryId: entry.id, assign: true },
+        });
+      }
+
+      await refreshNuxtData(`course-ta-${courseId}`);
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Failed to update entry"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Reorder entries (priority adjustments).
  */
-const moveEntry = async (index: number, direction: 'up' | 'down') => {
-  if (!canOperateQueue.value) return
-  const e = queueEntries.value[index]
-  if (!e) return
-  if (direction === 'up' && index <= 0) return
-  if (direction === 'down' && index >= queueEntries.value.length - 1) return
-
+const moveEntry = async (index: number, direction: "up" | "down") => {
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(`/api/courses/${courseId}/queue/move`, {
-      method: 'POST',
-      body: { entryId: e.id, direction }
-    })
-    await refreshNuxtData(`course-ta-${courseId}`)
-  } catch (err: any) {
-    alert(apiErrorMessage(err, 'Failed to move entry'))
-  }
-}
+    if (!canOperateQueue.value) return;
+    const e = queueEntries.value[index];
+    if (!e) return;
+    if (direction === "up" && index <= 0) return;
+    if (direction === "down" && index >= queueEntries.value.length - 1) return;
 
-const moveUp = (index: number) => moveEntry(index, 'up')
-const moveDown = (index: number) => moveEntry(index, 'down')
+    try {
+      await $fetch(`/api/courses/${courseId}/queue/move`, {
+        method: "POST",
+        body: { entryId: e.id, direction },
+      });
+      await refreshNuxtData(`course-ta-${courseId}`);
+    } catch (err: any) {
+      alert(apiErrorMessage(err, "Failed to move entry"));
+    }
+  } finally {
+    busyActions.value = false;
+  }
+};
+
+const moveUp = (index: number) => moveEntry(index, "up");
+const moveDown = (index: number) => moveEntry(index, "down");
 
 /**
  * Pause/resume a specific entry.
  */
 const togglePauseEntry = async (entry: QueueEntry) => {
-  if (!canOperateQueue.value) return
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(
-      `/api/courses/${courseId}/queue/pause`,
-      {
-        method: 'POST',
+    if (!canOperateQueue.value) return;
+    try {
+      await $fetch(`/api/courses/${courseId}/queue/pause`, {
+        method: "POST",
         body: {
           entryId: entry.id,
-          paused: !entry.paused
-        }
-      }
-    )
-    await refreshNuxtData(`course-ta-${courseId}`)
-  } catch (err: any) {
-    alert(apiErrorMessage(err, 'Failed to pause entry'))
+          paused: !entry.paused,
+        },
+      });
+      await refreshNuxtData(`course-ta-${courseId}`);
+    } catch (err: any) {
+      alert(apiErrorMessage(err, "Failed to pause entry"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Remove an entry from the queue.
  */
 const removeEntry = async (entry: QueueEntry) => {
-  if (!canOperateQueue.value) return
-  if (!window.confirm(`Remove ${entry.name || 'this student'} from the queue?`)) return
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(
-      `/api/courses/${courseId}/queue/remove`,
-      {
-        method: 'POST',
-        body: { entryId: entry.id }
-      }
+    if (!canOperateQueue.value) return;
+    if (
+      !window.confirm(`Remove ${entry.name || "this student"} from the queue?`)
     )
-    await refreshNuxtData(`course-ta-${courseId}`)
-  } catch (err: any) {
-    alert(apiErrorMessage(err, 'Failed to remove entry'))
+      return;
+    try {
+      await $fetch(`/api/courses/${courseId}/queue/remove`, {
+        method: "POST",
+        body: { entryId: entry.id },
+      });
+      await refreshNuxtData(`course-ta-${courseId}`);
+    } catch (err: any) {
+      alert(apiErrorMessage(err, "Failed to remove entry"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Mark entry as needing a different TA.
  */
 const handoffEntry = async (entry: QueueEntry) => {
-  if (!canOperateQueue.value) return
-  if (entry.otherTa) return
-  if (!entry.assignedToMe) return
-
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(
-      `/api/courses/${courseId}/queue/assign`,
-      {
-        method: 'POST',
-        body: { entryId: entry.id, assign: 'other' }
-      }
-    )
-    await refreshNuxtData(`course-ta-${courseId}`)
-  } catch (err: any) {
-    alert(apiErrorMessage(err, 'Failed to handoff entry'))
+    if (!canOperateQueue.value) return;
+    if (entry.otherTa) return;
+    if (!entry.assignedToMe) return;
+
+    try {
+      await $fetch(`/api/courses/${courseId}/queue/assign`, {
+        method: "POST",
+        body: { entryId: entry.id, assign: "other" },
+      });
+      await refreshNuxtData(`course-ta-${courseId}`);
+    } catch (err: any) {
+      alert(apiErrorMessage(err, "Failed to handoff entry"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Announcements: create/delete.
  */
-const newAnnouncement = ref('')
+const newAnnouncement = ref("");
 
 const postAnnouncement = async () => {
-  if (!isStaff.value) return
-  const message = newAnnouncement.value.trim()
-  if (!message) return
-
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(
-      `/api/courses/${courseId}/announcements`,
-      {
-        method: 'POST',
-        body: { message }
-      }
-    )
-    newAnnouncement.value = ''
-    await refreshNuxtData(`course-ta-${courseId}`)
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Failed to post announcement'))
+    if (!isStaff.value) return;
+    const message = newAnnouncement.value.trim();
+    if (!message) return;
+
+    try {
+      await $fetch(`/api/courses/${courseId}/announcements`, {
+        method: "POST",
+        body: { message },
+      });
+      newAnnouncement.value = "";
+      await refreshNuxtData(`course-ta-${courseId}`);
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Failed to post announcement"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 const deleteAnnouncement = async (id: string) => {
-  if (!isStaff.value) return
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(
-      `/api/courses/${courseId}/announcements/${encodeURIComponent(id)}`,
-      { method: 'DELETE' }
-    )
-    await refreshNuxtData(`course-ta-${courseId}`)
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Failed to delete announcement'))
+    if (!isStaff.value) return;
+    try {
+      await $fetch(
+        `/api/courses/${courseId}/announcements/${encodeURIComponent(id)}`,
+        { method: "DELETE" },
+      );
+      await refreshNuxtData(`course-ta-${courseId}`);
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Failed to delete announcement"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Timestamp formatting for table display.
  */
 const formatAt = (at: string) => {
-  if (!at) return ''
-  const d = new Date(at)
-  if (Number.isNaN(d.getTime())) return at
-  const pad = (n: number) => n.toString().padStart(2, '0')
+  if (!at) return "";
+  const d = new Date(at);
+  if (Number.isNaN(d.getTime())) return at;
+  const pad = (n: number) => n.toString().padStart(2, "0");
   return `${d.getFullYear()}-${pad(
-    d.getMonth() + 1
-  )}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(
-    d.getMinutes()
-  )}`
-}
+    d.getMonth() + 1,
+  )}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
 
 /**
  * Poll server for live updates.
  */
-let timer: any = null
+let timer: any = null;
 
 onMounted(() => {
   timer = setInterval(() => {
-    if (!document.hidden) refreshNuxtData(`course-ta-${courseId}`)
-  }, 3000)
-})
+    if (!document.hidden) refreshNuxtData(`course-ta-${courseId}`);
+  }, 3000);
+});
 
 onBeforeUnmount(() => {
-  if (timer) clearInterval(timer)
-})
+  if (timer) clearInterval(timer);
+});
 
 /**
  * Navigation / auth.
  */
-const logout = signOut
+const logout = signOut;
 
 const goBack = () => {
-  router.push('/courses')
-}
+  router.push("/courses");
+};
 
 const goHelp = () => {
-  navigateTo('/help')
-}
+  navigateTo("/help");
+};
 
 const goAnalytics = () => {
-  router.push(`/courses/${courseId}/admin`)
-}
+  router.push(`/courses/${courseId}/admin`);
+};
 </script>
 
 <template>
   <div v-if="course" class="page-root">
     <header class="app-navbar">
-      <div class="app-left" @click="goBack">
-        <img
-          src="/duke-cs-logo.png"
-          alt="Duke CS"
-          class="app-logo"
-        />
-      </div>
-      <div class="app-center" @click="goBack">
-        <div class="brand-main">
-          CampusWorks
-        </div>
-      </div>
+      <button
+        type="button"
+        class="app-left"
+        aria-label="Back to courses"
+        @click="goBack"
+      >
+        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
+      </button>
+      <button
+        type="button"
+        class="app-center"
+        aria-label="Back to courses"
+        @click="goBack"
+      >
+        <span class="brand-main"> CampusWorks </span>
+      </button>
       <div class="app-right">
         <button
           v-if="isManager"
@@ -435,11 +463,7 @@ const goAnalytics = () => {
         >
           Course Admin
         </button>
-        <button
-          class="help-link"
-          type="button"
-          @click="goHelp"
-        >
+        <button class="help-link" type="button" @click="goHelp">
           Help &amp; Info
         </button>
         <div class="user-pill">
@@ -456,23 +480,25 @@ const goAnalytics = () => {
         </div>
       </div>
     </header>
+    <StaffingNavigation />
 
-    <main class="content">
-      <button
-        class="back-btn"
-        type="button"
-        @click="goBack"
-      >
+    <main
+      :aria-busy="busyActions"
+      id="main-content"
+      tabindex="-1"
+      class="content"
+    >
+      <button class="back-btn" type="button" @click="goBack">
         ← Back to Courses
       </button>
 
       <section class="course-header">
         <div class="course-title-block">
           <h1 class="course-code">
-            {{ course.code || courseId }}
+            {{ course?.code || courseId }}
           </h1>
           <div class="course-subtitle">
-            {{ course.title || 'CampusWorks Course' }}
+            {{ course?.title || "CampusWorks Course" }}
           </div>
         </div>
         <div class="course-state">
@@ -482,22 +508,14 @@ const goAnalytics = () => {
               class="state-pill"
               :class="{
                 closed: isClosed,
-                paused: isPaused
+                paused: isPaused,
               }"
               data-testid="queue-state"
             >
-              {{
-                isOpen
-                  ? 'Open'
-                  : isPaused
-                  ? 'Paused'
-                  : 'Closed'
-              }}
+              {{ isOpen ? "Open" : isPaused ? "Paused" : "Closed" }}
             </span>
           </div>
-          <div class="meta-label">
-            Length: {{ queueLength }}
-          </div>
+          <div class="meta-label">Length: {{ queueLength }}</div>
         </div>
       </section>
 
@@ -505,32 +523,23 @@ const goAnalytics = () => {
         <!-- Left: TA duty and queue controls -->
         <div class="left-column">
           <section class="panel">
-            <div class="panel-header">
-              TA on Duty
-            </div>
+            <div class="panel-header">TA on Duty</div>
             <div class="panel-body ta-body">
               <template v-if="onDutyTAs.length">
-                <div
-                  v-for="ta in onDutyTAs"
-                  :key="ta"
-                  class="ta-name"
-                >
+                <div v-for="ta in onDutyTAs" :key="ta" class="ta-name">
                   {{ ta }}
                 </div>
               </template>
-              <span v-else>
-                No TA currently marked on duty.
-              </span>
+              <span v-else> No TA currently marked on duty. </span>
             </div>
           </section>
 
           <section class="panel">
-            <div class="panel-header">
-              Queue Controls
-            </div>
+            <div class="panel-header">Queue Controls</div>
             <div class="panel-body controls-body">
               <div class="queue-buttons">
                 <button
+                  :disabled="busyActions"
                   v-if="isClosed"
                   class="primary-btn"
                   @click="setQueueStatus('open')"
@@ -540,14 +549,16 @@ const goAnalytics = () => {
                 </button>
                 <template v-else>
                   <button
+                    :disabled="busyActions"
                     class="primary-btn"
                     :class="{ active: taOnDuty }"
                     @click="toggleOnDuty"
                     data-testid="on-duty-btn"
                   >
-                    {{ taOnDuty ? 'End Duty' : 'On Duty' }}
+                    {{ taOnDuty ? "End Duty" : "On Duty" }}
                   </button>
                   <button
+                    :disabled="busyActions"
                     v-if="isOpen"
                     class="outline-btn"
                     @click="setQueueStatus('paused')"
@@ -556,6 +567,7 @@ const goAnalytics = () => {
                     Pause Queue
                   </button>
                   <button
+                    :disabled="busyActions"
                     v-if="isPaused"
                     class="outline-btn"
                     @click="setQueueStatus('open')"
@@ -564,6 +576,7 @@ const goAnalytics = () => {
                     Resume Queue
                   </button>
                   <button
+                    :disabled="busyActions"
                     class="danger-btn"
                     @click="closeQueue"
                     data-testid="close-queue-btn"
@@ -588,35 +601,19 @@ const goAnalytics = () => {
         <!-- Right: announcements and live queue -->
         <div class="right-column">
           <section class="panel">
-            <div class="panel-header">
-              Announcements
-            </div>
+            <div class="panel-header">Announcements</div>
             <div class="panel-body announcements-body">
-              <table
-                v-if="announcements.length"
-                class="ann-table"
-              >
+              <table v-if="announcements.length" class="ann-table">
                 <thead>
                   <tr>
-                    <th class="ann-col-datetime">
-                      Date / Time
-                    </th>
-                    <th class="ann-col-by">
-                      Posted By
-                    </th>
-                    <th class="ann-col-msg">
-                      Announcement
-                    </th>
-                    <th class="ann-col-actions">
-                      Actions
-                    </th>
+                    <th class="ann-col-datetime">Date / Time</th>
+                    <th class="ann-col-by">Posted By</th>
+                    <th class="ann-col-msg">Announcement</th>
+                    <th class="ann-col-actions">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    v-for="a in announcements"
-                    :key="a.id"
-                  >
+                  <tr v-for="a in announcements" :key="a.id">
                     <td class="ann-datetime">
                       {{ formatAt(a.at) }}
                     </td>
@@ -628,9 +625,11 @@ const goAnalytics = () => {
                     </td>
                     <td class="ann-actions-cell">
                       <button
+                        :disabled="busyActions"
                         class="ann-delete"
                         @click="deleteAnnouncement(a.id)"
                         title="Delete announcement"
+                        aria-label="Delete announcement"
                         data-testid="announcement-delete"
                       >
                         ✕
@@ -639,22 +638,19 @@ const goAnalytics = () => {
                   </tr>
                 </tbody>
               </table>
-              <div
-                v-else
-                class="empty-text"
-              >
-                No announcements yet.
-              </div>
+              <div v-else class="empty-text">No announcements yet.</div>
             </div>
             <div class="announce-input-row">
               <input
                 v-model="newAnnouncement"
+                aria-label="Announcement message"
                 class="announce-input"
                 placeholder="Post a new announcement to students…"
                 data-testid="announce-input"
                 @keyup.enter="postAnnouncement"
               />
               <button
+                :disabled="busyActions"
                 class="announce-btn"
                 @click="postAnnouncement"
                 data-testid="announce-post"
@@ -665,51 +661,32 @@ const goAnalytics = () => {
           </section>
 
           <section class="panel">
-            <div class="panel-header">
-              Live Queue
-            </div>
+            <div class="panel-header">Live Queue</div>
             <div class="panel-body">
               <table class="queue-table">
                 <thead>
                   <tr>
                     <th class="col-num">#</th>
-                    <th class="col-student">
-                      Student
-                    </th>
-                    <th class="col-location">
-                      Location
-                    </th>
-                    <th class="col-question">
-                      Question
-                    </th>
+                    <th class="col-student">Student</th>
+                    <th class="col-location">Location</th>
+                    <th class="col-question">Question</th>
                     <th class="col-ta">TA</th>
-                    <th class="col-actions">
-                      Actions
-                    </th>
+                    <th class="col-actions">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(
-                      entry, idx
-                    ) in queueEntries"
+                    v-for="(entry, idx) in queueEntries"
                     :key="entry.id"
                     :class="[
                       'queue-row',
                       {
-                        'is-paused':
-                          entry.paused,
-                        'is-needs-other':
-                          !entry.paused &&
-                          entry.otherTa,
+                        'is-paused': entry.paused,
+                        'is-needs-other': !entry.paused && entry.otherTa,
                         'is-assigned':
-                          !entry.paused &&
-                          !entry.otherTa &&
-                          !!entry.ta,
-                        'is-assigned-self':
-                          !entry.paused &&
-                          entry.assignedToMe
-                      }
+                          !entry.paused && !entry.otherTa && !!entry.ta,
+                        'is-assigned-self': !entry.paused && entry.assignedToMe,
+                      },
                     ]"
                     :data-testid="`ta-row-${entry.email}`"
                   >
@@ -723,77 +700,55 @@ const goAnalytics = () => {
                       {{ entry.location }}
                     </td>
                     <td class="col-question">
-                      {{
-                        entry.question ||
-                        '—'
-                      }}
+                      {{ entry.question || "—" }}
                     </td>
                     <td class="col-ta">
-                      {{
-                        entry.otherTa
-                          ? 'Needs another TA'
-                          : entry.ta || '—'
-                      }}
+                      {{ entry.otherTa ? "Needs another TA" : entry.ta || "—" }}
                     </td>
                     <td class="col-actions">
                       <div class="actions-wrap">
                         <button
                           class="action-btn"
                           :class="{
-                            'select-paused':
-                              entry.paused,
-                            'select-priority':
-                              entry.otherTa &&
-                              !entry.paused,
-                            'select-self':
-                              !entry.paused &&
-                              entry.assignedToMe,
+                            'select-paused': entry.paused,
+                            'select-priority': entry.otherTa && !entry.paused,
+                            'select-self': !entry.paused && entry.assignedToMe,
                             'select-reselect':
                               !entry.otherTa &&
                               !entry.paused &&
                               !!entry.ta &&
                               !entry.assignedToMe,
                             'select-default':
-                              !entry.otherTa &&
-                              !entry.paused &&
-                              !entry.ta
+                              !entry.otherTa && !entry.paused && !entry.ta,
                           }"
                           :disabled="
-                            !canOperateQueue ||
-                            entry.paused
+                            busyActions || !canOperateQueue || entry.paused
                           "
-                          @click="
-                            assignOrComplete(
-                              entry
-                            )
-                          "
+                          @click="assignOrComplete(entry)"
                           data-testid="ta-select-btn"
                         >
                           {{
                             entry.paused
-                              ? 'Paused'
+                              ? "Paused"
                               : entry.otherTa
-                              ? 'Select'
-                              : entry.assignedToMe
-                              ? 'Complete'
-                              : entry.ta
-                              ? 'Re-select'
-                              : 'Select'
+                                ? "Select"
+                                : entry.assignedToMe
+                                  ? "Complete"
+                                  : entry.ta
+                                    ? "Re-select"
+                                    : "Select"
                           }}
                         </button>
 
                         <button
+                          :disabled="busyActions"
                           v-if="
                             canOperateQueue &&
                             !entry.paused &&
                             entry.assignedToMe
                           "
                           class="action-btn other-ta"
-                          @click="
-                            handoffEntry(
-                              entry
-                            )
-                          "
+                          @click="handoffEntry(entry)"
                           data-testid="ta-other-btn"
                         >
                           Other TA
@@ -801,31 +756,23 @@ const goAnalytics = () => {
 
                         <button
                           class="action-btn pause"
-                          :disabled="!canOperateQueue"
-                          @click="
-                            togglePauseEntry(
-                              entry
-                            )
-                          "
+                          :disabled="busyActions || !canOperateQueue"
+                          @click="togglePauseEntry(entry)"
                           :title="entry.paused ? 'Resume entry' : 'Pause entry'"
+                          :aria-label="
+                            entry.paused ? 'Resume entry' : 'Pause entry'
+                          "
                           data-testid="ta-pause-btn"
                         >
-                          {{
-                            entry.paused
-                              ? '▶'
-                              : '||'
-                          }}
+                          {{ entry.paused ? "▶" : "||" }}
                         </button>
 
                         <button
                           class="action-btn danger"
-                          :disabled="!canOperateQueue"
-                          @click="
-                            removeEntry(
-                              entry
-                            )
-                          "
+                          :disabled="busyActions || !canOperateQueue"
+                          @click="removeEntry(entry)"
                           title="Remove from queue"
+                          aria-label="Remove from queue"
                           data-testid="ta-remove-btn"
                         >
                           ✕
@@ -834,13 +781,11 @@ const goAnalytics = () => {
                         <button
                           class="action-btn move"
                           :disabled="
-                            !canOperateQueue ||
-                            idx === 0
+                            busyActions || !canOperateQueue || idx === 0
                           "
-                          @click="
-                            moveUp(idx)
-                          "
+                          @click="moveUp(idx)"
                           title="Move up"
+                          aria-label="Move up"
                           data-testid="ta-up-btn"
                         >
                           ↑
@@ -849,15 +794,13 @@ const goAnalytics = () => {
                         <button
                           class="action-btn move"
                           :disabled="
+                            busyActions ||
                             !canOperateQueue ||
-                            idx ===
-                              queueEntries.length -
-                                1
+                            idx === queueEntries.length - 1
                           "
-                          @click="
-                            moveDown(idx)
-                          "
+                          @click="moveDown(idx)"
                           title="Move down"
+                          aria-label="Move down"
                           data-testid="ta-down-btn"
                         >
                           ↓
@@ -867,12 +810,8 @@ const goAnalytics = () => {
                   </tr>
 
                   <tr v-if="!queueEntries.length">
-                    <td
-                      colspan="6"
-                      class="empty-text"
-                    >
-                      No one is currently in
-                      the queue.
+                    <td colspan="6" class="empty-text">
+                      No one is currently in the queue.
                     </td>
                   </tr>
                 </tbody>
@@ -890,7 +829,11 @@ const goAnalytics = () => {
   min-height: 100vh;
   background: #f3f5fa;
   color: #111827;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
     sans-serif;
 }
 
@@ -1170,7 +1113,7 @@ const goAnalytics = () => {
 .hint {
   margin-top: 4px;
   font-size: 11px;
-  color: #9ca3af;
+  color: #596579;
 }
 
 .announcements-body {
@@ -1395,7 +1338,7 @@ const goAnalytics = () => {
 
 .action-btn.select-paused {
   background: #9ca3af;
-  border-color: #9ca3af;
+  border-color: #596579;
   color: #ffffff;
 }
 
@@ -1560,4 +1503,3 @@ const goAnalytics = () => {
   }
 }
 </style>
-

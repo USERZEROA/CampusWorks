@@ -1,27 +1,26 @@
 <script setup lang="ts">
-import { useRouter } from '#app'
+import { useRouter } from "#app";
 
-const router = useRouter()
+const router = useRouter();
 
 const goBack = () => {
-  router.push('/courses')
-}
+  router.push("/courses");
+};
 </script>
 
 <template>
   <div class="page-root">
     <header class="app-navbar">
-      <div class="app-left" @click="goBack">
-        <img
-          src="/duke-cs-logo.png"
-          alt="Duke CS"
-          class="app-logo"
-        />
-      </div>
+      <button
+        type="button"
+        class="app-left"
+        aria-label="Back to courses"
+        @click="goBack"
+      >
+        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
+      </button>
       <div class="app-center">
-        <div class="brand-main">
-          CampusWorks – Help &amp; Info
-        </div>
+        <div class="brand-main">CampusWorks – Help &amp; Info</div>
       </div>
       <div class="app-right">
         <button class="back-btn" type="button" @click="goBack">
@@ -29,37 +28,55 @@ const goBack = () => {
         </button>
       </div>
     </header>
+    <StaffingNavigation />
 
-    <main class="content">
+    <main id="main-content" tabindex="-1" class="content">
       <section class="block">
         <h1>How to use CampusWorks</h1>
         <p>
-          This page gives a quick overview of how students, TAs and course admins
-          should use CampusWorks during office hours.
+          This page gives a quick overview of how students, TAs and course
+          admins should use CampusWorks during office hours.
         </p>
       </section>
 
       <section class="block">
         <h2>For Students</h2>
         <ul>
-          <li>From <strong>Courses</strong>, <strong>Enroll</strong> in your course, then click <strong>Go</strong> to open its queue.
-            Only enrolled students can join a course's queue or leave feedback.</li>
-          <li>Use <strong>Enter Queue</strong> to join. Please fill in:
+          <li>
+            From <strong>Courses</strong>, <strong>Enroll</strong> in your
+            course, then click <strong>Go</strong> to open its queue. Only
+            enrolled students can join a course's queue or leave feedback.
+          </li>
+          <li>
+            Use <strong>Enter Queue</strong> to join. Please fill in:
             <ul>
               <li><strong>Location</strong>: Zoom link or room number.</li>
-              <li><strong>Question</strong>: a short description of what you need help with.</li>
-            </ul>
-          </li>
-          <li>While waiting you can:
-            <ul>
-              <li>See your <strong>position</strong> in the queue, and which TA is helping you once you are picked up.</li>
-              <li><strong>Pause</strong> your entry if you step away, then <strong>Resume</strong> when back.</li>
-              <li><strong>Leave Queue</strong> once you no longer need help.</li>
+              <li>
+                <strong>Question</strong>: a short description of what you need
+                help with.
+              </li>
             </ul>
           </li>
           <li>
-            If the queue is <strong>Paused</strong> or <strong>Closed</strong>, TAs are not currently
-            accepting new questions – check announcements or try again later.
+            While waiting you can:
+            <ul>
+              <li>
+                See your <strong>position</strong> in the queue, and which TA is
+                helping you once you are picked up.
+              </li>
+              <li>
+                <strong>Pause</strong> your entry if you step away, then
+                <strong>Resume</strong> when back.
+              </li>
+              <li>
+                <strong>Leave Queue</strong> once you no longer need help.
+              </li>
+            </ul>
+          </li>
+          <li>
+            If the queue is <strong>Paused</strong> or <strong>Closed</strong>,
+            TAs are not currently accepting new questions – check announcements
+            or try again later.
           </li>
         </ul>
       </section>
@@ -67,39 +84,75 @@ const goBack = () => {
       <section class="block">
         <h2>For TAs / Staff</h2>
         <ul>
-          <li>Open the course and go to the <strong>TA view</strong> (CampusWorks chooses this automatically if your role is TA / instructor / admin;
-            instructors can also use <strong>Live Queue</strong> from the Course Admin page).</li>
-          <li><strong>Open Queue</strong>, then click <strong>On Duty</strong> when you start helping; only “on duty” staff can operate the queue.</li>
-          <li>In the live queue:
+          <li>
+            Open the course and go to the <strong>TA view</strong> (CampusWorks
+            chooses this automatically if your role is TA / instructor / admin;
+            instructors can also use <strong>Live Queue</strong> from the Course
+            Admin page).
+          </li>
+          <li>
+            <strong>Open Queue</strong>, then click
+            <strong>On Duty</strong> when you start helping; only “on duty”
+            staff can operate the queue.
+          </li>
+          <li>
+            In the live queue:
             <ul>
-              <li><strong>Select</strong> to take a student (you can work on one student at a time).</li>
-              <li><strong>Complete</strong> when you finish helping (this removes them from the queue and records the session).</li>
-              <li><strong>Other TA</strong> marks the entry as “Needs another TA”.</li>
+              <li>
+                <strong>Select</strong> to take a student (you can work on one
+                student at a time).
+              </li>
+              <li>
+                <strong>Complete</strong> when you finish helping (this removes
+                them from the queue and records the session).
+              </li>
+              <li>
+                <strong>Other TA</strong> marks the entry as “Needs another TA”.
+              </li>
               <li>Use <strong>↑ / ↓</strong> to adjust ordering if needed.</li>
-              <li><strong>Pause</strong> or <strong>Remove</strong> entries if a student is away or done.</li>
+              <li>
+                <strong>Pause</strong> or <strong>Remove</strong> entries if a
+                student is away or done.
+              </li>
             </ul>
           </li>
-          <li><strong>Close Queue</strong> at the end of office hours: on-duty staff are cleared and any remaining entries are saved to the course history.</li>
-          <li>Use <strong>Announcements</strong> to broadcast updates to all students in the course.</li>
+          <li>
+            <strong>Close Queue</strong> at the end of office hours: on-duty
+            staff are cleared and any remaining entries are saved to the course
+            history.
+          </li>
+          <li>
+            Use <strong>Announcements</strong> to broadcast updates to all
+            students in the course.
+          </li>
         </ul>
       </section>
 
       <section class="block">
         <h2>For Course Admins</h2>
         <ul>
-          <li>Use the <strong>Course Admin</strong> view to:
+          <li>
+            Use the <strong>Course Admin</strong> view to:
             <ul>
               <li>See queue analytics (sessions, wait time, TA activity).</li>
               <li>Export a CSV of past help sessions for record-keeping.</li>
-              <li>Manage <strong>enrollments &amp; roles</strong> (add TAs by email, promote/demote, remove users).
-                Only course admins can grant the admin role.</li>
-              <li>Read structured <strong>course feedback</strong> from students.</li>
+              <li>
+                Manage <strong>enrollments &amp; roles</strong> (add TAs by
+                email, promote/demote, remove users). Only course admins can
+                grant the admin role.
+              </li>
+              <li>
+                Read structured <strong>course feedback</strong> from students.
+              </li>
             </ul>
           </li>
-          <li>Site admins create and delete courses from the <strong>Admin Console</strong>.</li>
           <li>
-            The queue <strong>state</strong> (Open / Paused / Closed) can be controlled from either the
-            TA view or the course admin view.
+            Site admins create and delete courses from the
+            <strong>Admin Console</strong>.
+          </li>
+          <li>
+            The queue <strong>state</strong> (Open / Paused / Closed) can be
+            controlled from either the TA view or the course admin view.
           </li>
         </ul>
       </section>
@@ -107,8 +160,8 @@ const goBack = () => {
       <section class="block">
         <h2>Need more help?</h2>
         <p>
-          If you hit a bug or something doesn’t look right, please contact the course staff
-          (or the CampusWorks maintainer) and include:
+          If you hit a bug or something doesn’t look right, please contact the
+          course staff (or the CampusWorks maintainer) and include:
         </p>
         <ul>
           <li>Which page you were on (Student / TA / Admin + course code).</li>
@@ -124,7 +177,12 @@ const goBack = () => {
 .page-root {
   min-height: 100vh;
   background: #f3f5fa;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   color: #111827;
 }
 
@@ -277,4 +335,3 @@ const goBack = () => {
   }
 }
 </style>
-

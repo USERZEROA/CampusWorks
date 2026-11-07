@@ -1,170 +1,184 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+const busyActions = ref(false);
+
+import { computed, ref } from "vue";
 import {
   useAsyncData,
   useRequestFetch,
   useRouter,
   navigateTo,
-  refreshNuxtData
-} from '#app'
+  refreshNuxtData,
+} from "#app";
 
 type CourseRow = {
-  id: string
-  code: string
-  title: string
-  state?: string
-}
+  id: string;
+  code: string;
+  title: string;
+  state?: string;
+};
 
 type CoursesApiResult = {
-  user: AuthUser
-  courses: CourseRow[]
-}
+  user: AuthUser;
+  courses: CourseRow[];
+  pagination?: {
+    offset: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+};
 
-const router = useRouter()
-const requestFetch = useRequestFetch()
+const router = useRouter();
+const requestFetch = useRequestFetch();
+const catalog = useCourseCatalogLoader<CourseRow>();
 
 const { data, error } = await useAsyncData<CoursesApiResult>(
-  'admin-courses',
-  () => requestFetch<CoursesApiResult>('/api/courses')
-)
+  "admin-courses",
+  catalog.load,
+);
 
 if (error.value) {
-  useAuthUser().value = null
-  await navigateTo('/login')
+  useAuthUser().value = null;
+  await navigateTo("/login");
 }
 
-const user = computed(() => data.value?.user || null)
+const user = computed(() => data.value?.user || null);
 
 // Site-wide admin console (mock "admin" role or ADMIN_EMAILS).
-const isAdmin = computed(() => !!user.value?.isGlobalAdmin)
+const isAdmin = computed(() => !!user.value?.isGlobalAdmin);
 
 if (data.value && !isAdmin.value) {
-  await navigateTo('/courses')
+  await navigateTo("/courses");
 }
 
-const courses = computed<CourseRow[]>(() => data.value?.courses || [])
+const courses = computed<CourseRow[]>(() => data.value?.courses || []);
 
-const newCode = ref('')
-const newTitle = ref('')
+const newCode = ref("");
+const newTitle = ref("");
 
 const canCreate = computed(
-  () => !!newCode.value.trim() && !!newTitle.value.trim()
-)
+  () => !!newCode.value.trim() && !!newTitle.value.trim(),
+);
 
 // Create a new course (code+title); refresh listing on success.
 const createCourse = async () => {
-  if (!isAdmin.value || !canCreate.value) return
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch('/api/courses', {
-      method: 'POST',
-      body: {
-        code: newCode.value.trim(),
-        title: newTitle.value.trim()
-      }
-    })
-    newCode.value = ''
-    newTitle.value = ''
-    await refreshNuxtData('admin-courses')
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Create failed'))
+    if (!isAdmin.value || !canCreate.value) return;
+    try {
+      await $fetch("/api/courses", {
+        method: "POST",
+        body: {
+          code: newCode.value.trim(),
+          title: newTitle.value.trim(),
+        },
+      });
+      newCode.value = "";
+      newTitle.value = "";
+      await refreshNuxtData("admin-courses");
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Create failed"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 const goCourse = (c: CourseRow) => {
-  router.push(`/courses/${c.id}/admin`)
-}
+  router.push(`/courses/${c.id}/admin`);
+};
 
 // Hard delete a course and all related data (enrollments, queue, sessions,
 // announcements, feedback).
 const deleteCourse = async (c: CourseRow) => {
-  if (!isAdmin.value) return
-  const ok = window.confirm(
-    `Delete course "${c.code}" and all of its enrollments, queue, sessions and feedback?`
-  )
-  if (!ok) return
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(`/api/courses/${encodeURIComponent(c.id)}`, {
-      method: 'DELETE'
-    })
-    await refreshNuxtData('admin-courses')
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Delete failed'))
+    if (!isAdmin.value) return;
+    const ok = window.confirm(
+      `Delete course "${c.code}" and all of its enrollments, queue, sessions and feedback?`,
+    );
+    if (!ok) return;
+    try {
+      await $fetch(`/api/courses/${encodeURIComponent(c.id)}`, {
+        method: "DELETE",
+      });
+      await refreshNuxtData("admin-courses");
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Delete failed"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
-const logout = signOut
+const logout = signOut;
 
 const goHelp = () => {
-  navigateTo('/help')
-}
+  navigateTo("/help");
+};
 </script>
 
 <template>
   <div class="page-root">
     <header class="app-navbar">
-      <div class="app-left" @click="navigateTo('/courses')">
-        <img
-          src="/duke-cs-logo.png"
-          alt="Duke CS"
-          class="app-logo"
-        />
-      </div>
+      <button
+        type="button"
+        class="app-left"
+        aria-label="Back to courses"
+        @click="navigateTo('/courses')"
+      >
+        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
+      </button>
       <div class="app-center">
-        <div class="brand-main">
-          CampusWorks – Admin Console
+        <div class="brand-main">CampusWorks – Admin Console</div>
+      </div>
+      <div class="app-right">
+        <button class="help-link" type="button" @click="navigateTo('/courses')">
+          My Courses
+        </button>
+        <button class="help-link" type="button" @click="goHelp">
+          Help &amp; Info
+        </button>
+
+        <div v-if="user" class="user-pill">
+          <span class="user-email">
+            {{ user.email }}
+          </span>
+          <button class="logout-mini" @click.prevent="logout">Logout</button>
         </div>
       </div>
-        <div class="app-right">
-          <button
-            class="help-link"
-            type="button"
-            @click="navigateTo('/courses')"
-          >
-            My Courses
-          </button>
-          <button
-            class="help-link"
-            type="button"
-            @click="goHelp"
-          >
-            Help &amp; Info
-          </button>
-
-          <div v-if="user" class="user-pill">
-            <span class="user-email">
-              {{ user.email }}
-            </span>
-            <button
-              class="logout-mini"
-              @click.prevent="logout"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
     </header>
+    <StaffingNavigation />
 
-    <main class="content">
+    <main
+      :aria-busy="busyActions"
+      id="main-content"
+      tabindex="-1"
+      class="content"
+    >
+      <h1 class="sr-only">Course Administration</h1>
       <section class="panel">
-        <div class="panel-header">
-          Create Course
-        </div>
+        <div class="panel-header">Create Course</div>
         <div class="create-row">
           <input
             v-model="newCode"
+            aria-label="Course code"
             class="create-input"
             placeholder="Course code (e.g. cs101)"
             data-testid="admin-new-code"
           />
           <input
             v-model="newTitle"
+            aria-label="Course title"
             class="create-input"
             placeholder="Course title"
             data-testid="admin-new-title"
           />
           <button
             class="btn-create"
-            :disabled="!canCreate"
+            :disabled="busyActions || !canCreate"
             @click="createCourse"
             data-testid="admin-create-btn"
           >
@@ -174,17 +188,13 @@ const goHelp = () => {
       </section>
 
       <section class="panel">
-        <div class="panel-header">
-          All Courses
-        </div>
+        <div class="panel-header">All Courses</div>
         <table class="course-table">
           <thead>
             <tr>
               <th>Code</th>
               <th>Title</th>
-              <th style="width: 220px; text-align: center;">
-                Action
-              </th>
+              <th style="width: 220px; text-align: center">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -205,6 +215,7 @@ const goHelp = () => {
                     Go
                   </button>
                   <button
+                    :disabled="busyActions"
                     class="btn-delete"
                     @click="deleteCourse(c)"
                     :data-testid="`admin-course-delete-${c.id}`"
@@ -215,16 +226,26 @@ const goHelp = () => {
               </td>
             </tr>
             <tr v-if="!courses.length">
-              <td
-                colspan="3"
-                class="empty-text"
-              >
-                No courses yet.
-              </td>
+              <td colspan="3" class="empty-text">No courses yet.</td>
             </tr>
           </tbody>
         </table>
       </section>
+      <p
+        v-if="data?.pagination?.hasMore"
+        class="catalog-pagination"
+        role="status"
+      >
+        Showing {{ courses.length }} of {{ data.pagination.total }} courses.
+        <button
+          type="button"
+          :disabled="catalog.loadingMore.value"
+          @click="catalog.more(() => refreshNuxtData('admin-courses'))"
+          data-testid="catalog-load-more"
+        >
+          Load more courses
+        </button>
+      </p>
     </main>
   </div>
 </template>
@@ -233,7 +254,11 @@ const goHelp = () => {
 .page-root {
   min-height: 100vh;
   background: #f3f5fa;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
     sans-serif;
 }
 

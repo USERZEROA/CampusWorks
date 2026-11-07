@@ -1,84 +1,84 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { navigateTo, useFetch } from '#app'
+import { ref, computed, onMounted } from "vue";
+import { navigateTo, useFetch } from "#app";
 
-type MockRole = 'student' | 'ta' | 'instructor' | 'admin'
+type MockRole = "student" | "ta" | "instructor" | "admin";
 
-type DemoAccount = { email: string; name: string; role: MockRole }
+type DemoAccount = { email: string; name: string; role: MockRole };
 
 type Providers = {
-  mock: boolean
-  gitlab: boolean
-  allowedEmailDomains: string[]
-  demoAccounts: DemoAccount[]
-}
+  mock: boolean;
+  gitlab: boolean;
+  allowedEmailDomains: string[];
+  demoAccounts: DemoAccount[];
+};
 
-const { data: providers } = await useFetch<Providers>('/api/auth/providers')
+const { data: providers } = await useFetch<Providers>("/api/auth/providers");
 
-const mockEnabled = computed(() => !!providers.value?.mock)
-const gitlabEnabled = computed(() => !!providers.value?.gitlab)
-const demoAccounts = computed(() => providers.value?.demoAccounts || [])
+const mockEnabled = computed(() => !!providers.value?.mock);
+const gitlabEnabled = computed(() => !!providers.value?.gitlab);
+const demoAccounts = computed(() => providers.value?.demoAccounts || []);
 
 const roleLabels: Record<MockRole, string> = {
-  student: 'Student',
-  ta: 'TA',
-  instructor: 'Instructor',
-  admin: 'Site admin'
-}
+  student: "Student",
+  ta: "TA",
+  instructor: "Instructor",
+  admin: "Site admin",
+};
 
 // Role or demo-account email currently signing in, or 'gitlab'.
-const loading = ref<string | null>(null)
-const error = ref('')
-const email = ref('')
+const loading = ref<string | null>(null);
+const error = ref("");
+const email = ref("");
 
 // Buttons stay disabled until the page is interactive, so an early click on
 // the server-rendered HTML is never silently lost.
-const ready = ref(false)
+const ready = ref(false);
 onMounted(() => {
-  ready.value = true
-})
+  ready.value = true;
+});
 
-const busy = computed(() => !ready.value || !!loading.value)
+const busy = computed(() => !ready.value || !!loading.value);
 
 const loginAs = async (as: MockRole, accountEmail?: string) => {
   try {
-    error.value = ''
-    loading.value = accountEmail || as
+    error.value = "";
+    loading.value = accountEmail || as;
 
-    const body: { as: MockRole; email?: string } = { as }
+    const body: { as: MockRole; email?: string } = { as };
 
-    const e = (accountEmail || email.value).trim()
+    const e = (accountEmail || email.value).trim();
     if (e) {
-      body.email = e
+      body.email = e;
     }
 
-    const res = await $fetch<{ user: AuthUser }>('/api/auth/mock', {
-      method: 'POST',
-      body
-    })
-    useAuthUser().value = res.user
+    const res = await $fetch<{ user: AuthUser }>("/api/auth/mock", {
+      method: "POST",
+      body,
+    });
+    useAuthUser().value = res.user;
 
-    await navigateTo(res.user.isGlobalAdmin ? '/admin/courses' : '/courses')
+    await navigateTo(res.user.isGlobalAdmin ? "/admin/courses" : "/courses");
   } catch (e: any) {
-    error.value = apiErrorMessage(e, 'Login failed')
+    error.value = apiErrorMessage(e, "Login failed");
   } finally {
-    loading.value = null
+    loading.value = null;
   }
-}
+};
 
 const loginWithGitlab = async () => {
   try {
-    error.value = ''
-    loading.value = 'gitlab'
+    error.value = "";
+    loading.value = "gitlab";
 
-    await navigateTo('/api/auth/gitlab/login', {
-      external: true
-    })
+    await navigateTo("/api/auth/gitlab/login", {
+      external: true,
+    });
   } catch (e: any) {
-    loading.value = null
-    error.value = apiErrorMessage(e, 'GitLab login redirect failed')
+    loading.value = null;
+    error.value = apiErrorMessage(e, "GitLab login redirect failed");
   }
-}
+};
 </script>
 
 <template>
@@ -92,14 +92,12 @@ const loginWithGitlab = async () => {
         />
         <div class="banner-text">
           <div class="banner-title">CampusWorks</div>
-          <div class="banner-subtitle">
-            Office Hours &amp; Help Queue
-          </div>
+          <div class="banner-subtitle">Office Hours &amp; Help Queue</div>
         </div>
       </div>
     </header>
 
-    <main class="content">
+    <main id="main-content" tabindex="-1" class="content">
       <section class="login-card">
         <h1 class="login-title">Sign in to CampusWorks</h1>
 
@@ -116,17 +114,14 @@ const loginWithGitlab = async () => {
             data-testid="login-gitlab-btn"
           >
             {{
-              loading === 'gitlab'
-                ? 'Redirecting to GitLab…'
-                : 'Sign in with GitLab'
+              loading === "gitlab"
+                ? "Redirecting to GitLab…"
+                : "Sign in with GitLab"
             }}
           </button>
-          <p
-            v-if="providers?.allowedEmailDomains?.length"
-            class="field-hint"
-          >
+          <p v-if="providers?.allowedEmailDomains?.length" class="field-hint">
             Allowed accounts:
-            {{ providers.allowedEmailDomains.map((d) => '@' + d).join(', ') }}
+            {{ providers.allowedEmailDomains.map((d) => "@" + d).join(", ") }}
           </p>
         </div>
 
@@ -147,7 +142,7 @@ const loginWithGitlab = async () => {
                 :data-testid="`demo-account-${a.email}`"
               >
                 <span class="demo-name">
-                  {{ loading === a.email ? 'Signing in…' : a.name }}
+                  {{ loading === a.email ? "Signing in…" : a.name }}
                 </span>
                 <span class="demo-meta">
                   {{ roleLabels[a.role] }} · {{ a.email }}
@@ -159,7 +154,9 @@ const loginWithGitlab = async () => {
           <div class="divider">or any email with a role</div>
 
           <div class="field">
-            <label class="field-label" for="mock-email">Demo email (optional)</label>
+            <label class="field-label" for="mock-email"
+              >Demo email (optional)</label
+            >
             <input
               id="mock-email"
               v-model="email"
@@ -180,7 +177,7 @@ const loginWithGitlab = async () => {
               @click="loginAs('student')"
               data-testid="login-student"
             >
-              {{ loading === 'student' ? 'Signing in…' : 'Demo: Student' }}
+              {{ loading === "student" ? "Signing in…" : "Demo: Student" }}
             </button>
 
             <button
@@ -189,7 +186,7 @@ const loginWithGitlab = async () => {
               @click="loginAs('ta')"
               data-testid="login-ta"
             >
-              {{ loading === 'ta' ? 'Signing in…' : 'Demo: TA' }}
+              {{ loading === "ta" ? "Signing in…" : "Demo: TA" }}
             </button>
 
             <button
@@ -198,7 +195,9 @@ const loginWithGitlab = async () => {
               @click="loginAs('instructor')"
               data-testid="login-instructor"
             >
-              {{ loading === 'instructor' ? 'Signing in…' : 'Demo: Instructor' }}
+              {{
+                loading === "instructor" ? "Signing in…" : "Demo: Instructor"
+              }}
             </button>
 
             <button
@@ -207,13 +206,13 @@ const loginWithGitlab = async () => {
               @click="loginAs('admin')"
               data-testid="login-admin"
             >
-              {{ loading === 'admin' ? 'Signing in…' : 'Demo: Site Admin' }}
+              {{ loading === "admin" ? "Signing in…" : "Demo: Site Admin" }}
             </button>
           </div>
 
           <p class="hint">
-            Demo accounts are for local development and demos.
-            Disable them in production with ENABLE_MOCK_LOGIN=false.
+            Demo accounts are for local development and demos. Disable them in
+            production with ENABLE_MOCK_LOGIN=false.
           </p>
         </template>
 
@@ -234,7 +233,11 @@ const loginWithGitlab = async () => {
   display: flex;
   flex-direction: column;
   background: #f3f5fa;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
     sans-serif;
 }
 
@@ -328,7 +331,7 @@ const loginWithGitlab = async () => {
 .field-hint {
   margin: 4px 0 0;
   font-size: 10px;
-  color: #9ca3af;
+  color: #596579;
 }
 
 .btn-row {
@@ -405,7 +408,7 @@ const loginWithGitlab = async () => {
 .divider {
   margin: 14px 0 12px;
   font-size: 11px;
-  color: #9ca3af;
+  color: #596579;
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -477,7 +480,7 @@ const loginWithGitlab = async () => {
 .hint {
   margin: 8px 0 0;
   font-size: 11px;
-  color: #9ca3af;
+  color: #596579;
 }
 
 /* Responsive: tighter banner and card on small screens */

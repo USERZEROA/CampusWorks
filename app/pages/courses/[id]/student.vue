@@ -1,434 +1,437 @@
 <script setup lang="ts">
-import {
-  ref,
-  computed,
-  watch,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
+import { vAccessibleDialog } from "../../../directives/accessibleDialog";
+const busyActions = ref(false);
+
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import {
   useRoute,
   useRouter,
   useAsyncData,
   useRequestFetch,
   navigateTo,
-  refreshNuxtData
-} from '#app'
+  refreshNuxtData,
+} from "#app";
 
 type Announcement = {
-  id: string
-  at: string
-  by: string
-  message: string
-}
+  id: string;
+  at: string;
+  by: string;
+  message: string;
+};
 
 type QueueEntry = {
-  id: string
-  email: string
-  name: string
-  location: string
-  question: string
-  paused: boolean
-  ta: string
-  otherTa?: boolean
-  position?: number
-  isMine?: boolean
-}
+  id: string;
+  email: string;
+  name: string;
+  location: string;
+  question: string;
+  paused: boolean;
+  ta: string;
+  otherTa?: boolean;
+  position?: number;
+  isMine?: boolean;
+};
 
 type CourseApiResult = {
-  id: string
-  code: string
-  title: string
-  state: string
-  role?: string | null
-  enrolled: boolean
-  isStaff: boolean
-  user: { email: string; name?: string }
-  announcements: Announcement[]
-  queue: QueueEntry[]
-  queueLength?: number
-  onDutyTAs?: string[]
-}
+  id: string;
+  code: string;
+  title: string;
+  state: string;
+  role?: string | null;
+  enrolled: boolean;
+  isStaff: boolean;
+  user: { email: string; name?: string };
+  announcements: Announcement[];
+  queue: QueueEntry[];
+  queueLength?: number;
+  onDutyTAs?: string[];
+};
 
 /**
  * Load course + queue state for this student-facing view.
  */
-const route = useRoute()
-const router = useRouter()
-const courseId = route.params.id as string
-const requestFetch = useRequestFetch()
+const route = useRoute();
+const router = useRouter();
+const courseId = route.params.id as string;
+const requestFetch = useRequestFetch();
 
 const { data, error } = await useAsyncData<CourseApiResult>(
   `course-student-${courseId}`,
-  () => requestFetch<CourseApiResult>(`/api/courses/${courseId}`)
-)
+  () => requestFetch<CourseApiResult>(`/api/courses/${courseId}`),
+);
 
 if (error.value) {
-  const status = (error.value as any).statusCode
+  const status = (error.value as any).statusCode;
   if (status === 401) {
-    useAuthUser().value = null
-    await navigateTo('/login')
+    useAuthUser().value = null;
+    await navigateTo("/login");
   } else {
-    await navigateTo('/courses')
+    await navigateTo("/courses");
   }
 }
 
-const course = computed(() => data.value)
-const user = computed(() => course.value?.user || { email: '', name: '' })
+watch(error, (value) => {
+  const status = (value as any)?.statusCode;
+  if (status === 401) {
+    useAuthUser().value = null;
+    navigateTo("/login");
+  } else if (status === 403) navigateTo("/courses");
+});
+const course = computed(() => data.value);
+const user = computed(() => course.value?.user || { email: "", name: "" });
 
 /**
  * Staff use the TA view of the same course.
  */
-const isStaff = computed(() => !!course.value?.isStaff)
-const isEnrolled = computed(() => !!course.value?.enrolled)
+const isStaff = computed(() => !!course.value?.isStaff);
+const isEnrolled = computed(() => !!course.value?.enrolled);
 
 if (isStaff.value) {
-  await navigateTo(`/courses/${courseId}/ta`, { replace: true })
+  await navigateTo(`/courses/${courseId}/ta`, { replace: true });
 }
+watch(isStaff, (value) => {
+  if (value) navigateTo(`/courses/${courseId}/ta`, { replace: true });
+});
 
 /**
  * Queue state normalization and derived flags.
  */
-const normalizeState = (
-  s?: string
-): 'open' | 'closed' | 'paused' => {
-  const v = (s || 'closed').toLowerCase()
-  if (v === 'open') return 'open'
-  if (v === 'paused') return 'paused'
-  return 'closed'
-}
+const normalizeState = (s?: string): "open" | "closed" | "paused" => {
+  const v = (s || "closed").toLowerCase();
+  if (v === "open") return "open";
+  if (v === "paused") return "paused";
+  return "closed";
+};
 
-const queueStatus = ref<'open' | 'closed' | 'paused'>(
-  normalizeState(course.value?.state)
-)
+const queueStatus = ref<"open" | "closed" | "paused">(
+  normalizeState(course.value?.state),
+);
 
 watch(
   () => course.value?.state,
   (v) => {
-    queueStatus.value = normalizeState(v)
-  }
-)
+    queueStatus.value = normalizeState(v);
+  },
+);
 
-const isOpen = computed(
-  () => queueStatus.value === 'open'
-)
-const isPaused = computed(
-  () => queueStatus.value === 'paused'
-)
-const isClosed = computed(
-  () => queueStatus.value === 'closed'
-)
+const isOpen = computed(() => queueStatus.value === "open");
+const isPaused = computed(() => queueStatus.value === "paused");
+const isClosed = computed(() => queueStatus.value === "closed");
 
-const onDutyTAs = computed(
-  () => course.value?.onDutyTAs || []
-)
+const onDutyTAs = computed(() => course.value?.onDutyTAs || []);
 
 /**
  * Reactive queue and announcements.
  */
-const queueEntries = ref<QueueEntry[]>(
-  course.value?.queue || []
-)
+const queueEntries = ref<QueueEntry[]>(course.value?.queue || []);
 watch(
   () => course.value?.queue,
   (val) => {
-    queueEntries.value = val || []
-  }
-)
+    queueEntries.value = val || [];
+  },
+);
 
-const announcements = ref<Announcement[]>(
-  course.value?.announcements || []
-)
+const announcements = ref<Announcement[]>(course.value?.announcements || []);
 watch(
   () => course.value?.announcements,
   (val) => {
-    announcements.value = val || []
-  }
-)
+    announcements.value = val || [];
+  },
+);
 
 const queueLength = computed(
-  () => course.value?.queueLength ?? queueEntries.value.length
-)
+  () => course.value?.queueLength ?? queueEntries.value.length,
+);
 
 const myEntry = computed<QueueEntry | null>(
-  () => queueEntries.value.find((e) => e.isMine) || null
-)
+  () => queueEntries.value.find((e) => e.isMine) || null,
+);
 
 const myPosition = computed(() => {
-  if (!myEntry.value) return null
-  const idx = queueEntries.value.findIndex(
-    (e) => e.id === myEntry.value!.id
-  )
-  return idx >= 0 ? idx + 1 : null
-})
+  if (!myEntry.value) return null;
+  const idx = queueEntries.value.findIndex((e) => e.id === myEntry.value!.id);
+  return idx >= 0 ? idx + 1 : null;
+});
 
 /** TA currently helping the student, if any. */
 const myHelper = computed(() =>
   myEntry.value && !myEntry.value.otherTa && !myEntry.value.paused
     ? myEntry.value.ta
-    : ''
-)
+    : "",
+);
 
-const canStudentJoin = computed(
-  () => isOpen.value && isEnrolled.value
-)
+const canStudentJoin = computed(() => isOpen.value && isEnrolled.value);
 
 /**
  * Enroll from the course page (joining the queue requires an enrollment).
  */
-const enrolling = ref(false)
+const enrolling = ref(false);
 
 const enroll = async () => {
-  enrolling.value = true
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch('/api/courses/enroll', {
-      method: 'POST',
-      body: { courseId, enroll: true }
-    })
-    await refreshNuxtData(`course-student-${courseId}`)
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Enroll failed'))
+    enrolling.value = true;
+    try {
+      await $fetch("/api/courses/enroll", {
+        method: "POST",
+        body: { courseId, enroll: true },
+      });
+      await refreshNuxtData(`course-student-${courseId}`);
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Enroll failed"));
+    } finally {
+      enrolling.value = false;
+    }
   } finally {
-    enrolling.value = false
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Join/edit queue modal state.
  */
-const showJoinModal = ref(false)
-const joinLocation = ref('')
-const joinQuestion = ref('')
+const showJoinModal = ref(false);
+const joinLocation = ref("");
+const joinQuestion = ref("");
 
 /**
  * Feedback modal state.
  */
-const showFeedbackModal = ref(false)
+const showFeedbackModal = ref(false);
 
-type FeedbackCategory = 'queue' | 'ta' | 'wait' | 'other'
+type FeedbackCategory = "queue" | "ta" | "wait" | "other";
 
-const fbCategory = ref<FeedbackCategory>('queue')
-const fbRating = ref(5)
-const fbPositive = ref('')
-const fbNegative = ref('')
-const fbAllowContact = ref(true)
-const fbSubmitting = ref(false)
+const fbCategory = ref<FeedbackCategory>("queue");
+const fbRating = ref(5);
+const fbPositive = ref("");
+const fbNegative = ref("");
+const fbAllowContact = ref(true);
+const fbSubmitting = ref(false);
 
 const openFeedbackModal = () => {
-  showFeedbackModal.value = true
-}
+  showFeedbackModal.value = true;
+};
 
 const resetFeedback = () => {
-  fbCategory.value = 'queue'
-  fbRating.value = 5
-  fbPositive.value = ''
-  fbNegative.value = ''
-  fbAllowContact.value = true
-}
+  fbCategory.value = "queue";
+  fbRating.value = 5;
+  fbPositive.value = "";
+  fbNegative.value = "";
+  fbAllowContact.value = true;
+};
 
 /**
  * Submit structured course feedback.
  */
 const submitFeedback = async () => {
-  if (!fbPositive.value.trim() || !fbNegative.value.trim()) {
-    alert(
-      'Please fill in both "What worked well" and "What can be improved".'
-    )
-    return
-  }
-
-  fbSubmitting.value = true
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(
-      `/api/courses/${courseId}/feedback`,
-      {
-        method: 'POST',
+    if (!fbPositive.value.trim() || !fbNegative.value.trim()) {
+      alert(
+        'Please fill in both "What worked well" and "What can be improved".',
+      );
+      return;
+    }
+
+    fbSubmitting.value = true;
+    try {
+      await $fetch(`/api/courses/${courseId}/feedback`, {
+        method: "POST",
         body: {
           category: fbCategory.value,
           rating: fbRating.value,
           positive: fbPositive.value.trim(),
           negative: fbNegative.value.trim(),
-          allowContact: fbAllowContact.value
-        }
-      }
-    )
+          allowContact: fbAllowContact.value,
+        },
+      });
 
-    alert('Thank you for your feedback!')
-    showFeedbackModal.value = false
-    resetFeedback()
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Failed to submit feedback'))
+      alert("Thank you for your feedback!");
+      showFeedbackModal.value = false;
+      resetFeedback();
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Failed to submit feedback"));
+    } finally {
+      fbSubmitting.value = false;
+    }
   } finally {
-    fbSubmitting.value = false
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Format announcement timestamp.
  */
 const formatAt = (at: string) => {
-  if (!at) return ''
-  const d = new Date(at)
-  if (Number.isNaN(d.getTime())) return at
-  const pad = (n: number) => n.toString().padStart(2, '0')
+  if (!at) return "";
+  const d = new Date(at);
+  if (Number.isNaN(d.getTime())) return at;
+  const pad = (n: number) => n.toString().padStart(2, "0");
   return `${d.getFullYear()}-${pad(
-    d.getMonth() + 1
-  )}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(
-    d.getMinutes()
-  )}`
-}
+    d.getMonth() + 1,
+  )}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+};
 
 /**
  * Open join/edit modal with state validation.
  */
 const openJoinModal = () => {
   if (myEntry.value) {
-    joinLocation.value = myEntry.value.location || ''
-    joinQuestion.value = myEntry.value.question || ''
-    showJoinModal.value = true
-    return
+    joinLocation.value = myEntry.value.location || "";
+    joinQuestion.value = myEntry.value.question || "";
+    showJoinModal.value = true;
+    return;
   }
 
   if (!isEnrolled.value) {
-    alert('Please enroll in this course before joining the queue.')
-    return
+    alert("Please enroll in this course before joining the queue.");
+    return;
   }
 
   if (isClosed.value) {
-    alert(
-      'The queue is currently CLOSED. Please check back later.'
-    )
-    return
+    alert("The queue is currently CLOSED. Please check back later.");
+    return;
   }
 
   if (isPaused.value) {
     alert(
-      'The queue is currently PAUSED. TAs are temporarily not accepting new questions.'
-    )
-    return
+      "The queue is currently PAUSED. TAs are temporarily not accepting new questions.",
+    );
+    return;
   }
 
-  joinLocation.value = ''
-  joinQuestion.value = ''
-  showJoinModal.value = true
-}
+  joinLocation.value = "";
+  joinQuestion.value = "";
+  showJoinModal.value = true;
+};
 
 /**
  * Create or update the student's queue entry.
  */
 const submitJoin = async () => {
-  const location = joinLocation.value.trim()
-  const question = (joinQuestion.value || '').trim()
-  if (!location) {
-    alert('Please enter your location.')
-    return
-  }
-
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(
-      `/api/courses/${courseId}/queue/join`,
-      {
-        method: 'POST',
-        body: { location, question }
-      }
-    )
-    showJoinModal.value = false
-    await refreshNuxtData(`course-student-${courseId}`)
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Failed to join queue'))
+    const location = joinLocation.value.trim();
+    const question = (joinQuestion.value || "").trim();
+    if (!location) {
+      alert("Please enter your location.");
+      return;
+    }
+
+    try {
+      await $fetch(`/api/courses/${courseId}/queue/join`, {
+        method: "POST",
+        body: { location, question },
+      });
+      showJoinModal.value = false;
+      await refreshNuxtData(`course-student-${courseId}`);
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Failed to join queue"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Remove current user from queue.
  */
 const leaveQueue = async () => {
-  if (!myEntry.value) return
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(
-      `/api/courses/${courseId}/queue/leave`,
-      {
-        method: 'POST'
-      }
-    )
-    await refreshNuxtData(`course-student-${courseId}`)
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Failed to leave queue'))
+    if (!myEntry.value) return;
+    try {
+      await $fetch(`/api/courses/${courseId}/queue/leave`, {
+        method: "POST",
+      });
+      await refreshNuxtData(`course-student-${courseId}`);
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Failed to leave queue"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Pause/resume this student's own queue entry.
  */
 const togglePauseSelf = async () => {
-  if (!myEntry.value) return
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch(
-      `/api/courses/${courseId}/queue/pause`,
-      {
-        method: 'POST',
+    if (!myEntry.value) return;
+    try {
+      await $fetch(`/api/courses/${courseId}/queue/pause`, {
+        method: "POST",
         body: {
           entryId: myEntry.value.id,
-          paused: !myEntry.value.paused
-        }
-      }
-    )
-    await refreshNuxtData(`course-student-${courseId}`)
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Failed to update status'))
+          paused: !myEntry.value.paused,
+        },
+      });
+      await refreshNuxtData(`course-student-${courseId}`);
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Failed to update status"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 /**
  * Lightweight polling to keep queue state fresh (skipped in background tabs).
  */
-let timer: any = null
+let timer: any = null;
 
 onMounted(() => {
   timer = setInterval(() => {
-    if (!document.hidden) refreshNuxtData(`course-student-${courseId}`)
-  }, 2000)
-})
+    if (!document.hidden) refreshNuxtData(`course-student-${courseId}`);
+  }, 2000);
+});
 
 onBeforeUnmount(() => {
-  if (timer) clearInterval(timer)
-})
+  if (timer) clearInterval(timer);
+});
 
 /**
  * Navigation + auth actions.
  */
-const logout = signOut
+const logout = signOut;
 
 const goBack = () => {
-  router.push('/courses')
-}
+  router.push("/courses");
+};
 
 const goHelp = () => {
-  navigateTo('/help')
-}
+  navigateTo("/help");
+};
 </script>
 
 <template>
   <div v-if="course" class="page-root">
     <header class="app-navbar">
-      <div class="app-left" @click="goBack">
-        <img
-          src="/duke-cs-logo.png"
-          alt="Duke CS"
-          class="app-logo"
-        />
-      </div>
-      <div class="app-center" @click="goBack">
-        <div class="brand-main">
-          CampusWorks
-        </div>
-      </div>
+      <button
+        type="button"
+        class="app-left"
+        aria-label="Back to courses"
+        @click="goBack"
+      >
+        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
+      </button>
+      <button
+        type="button"
+        class="app-center"
+        aria-label="Back to courses"
+        @click="goBack"
+      >
+        <span class="brand-main"> CampusWorks </span>
+      </button>
       <div class="app-right">
-        <button
-          class="help-link"
-          type="button"
-          @click="goHelp"
-        >
+        <button class="help-link" type="button" @click="goHelp">
           Help &amp; Info
         </button>
         <div class="user-pill">
@@ -445,23 +448,25 @@ const goHelp = () => {
         </div>
       </div>
     </header>
+    <StaffingNavigation />
 
-    <main class="content">
-      <button
-        class="back-btn"
-        type="button"
-        @click="goBack"
-      >
+    <main
+      :aria-busy="busyActions"
+      id="main-content"
+      tabindex="-1"
+      class="content"
+    >
+      <button class="back-btn" type="button" @click="goBack">
         ← Back to Courses
       </button>
 
       <section class="course-header">
         <div class="course-title-block">
           <h1 class="course-code">
-            {{ course.code || courseId }}
+            {{ course?.code || courseId }}
           </h1>
           <div class="course-subtitle">
-            {{ course.title || 'CampusWorks Course' }}
+            {{ course?.title || "CampusWorks Course" }}
           </div>
         </div>
         <div class="course-state">
@@ -471,51 +476,32 @@ const goHelp = () => {
               class="state-pill"
               :class="{
                 closed: isClosed,
-                paused: isPaused
+                paused: isPaused,
               }"
               data-testid="queue-state"
             >
-              {{
-                isOpen
-                  ? 'Open'
-                  : isPaused
-                  ? 'Paused'
-                  : 'Closed'
-              }}
+              {{ isOpen ? "Open" : isPaused ? "Paused" : "Closed" }}
             </span>
           </div>
-          <div class="meta-label">
-            Length: {{ queueLength }}
-          </div>
+          <div class="meta-label">Length: {{ queueLength }}</div>
         </div>
       </section>
 
       <section class="layout">
         <div class="left-column">
           <section class="panel">
-            <div class="panel-header">
-              TA on Duty
-            </div>
+            <div class="panel-header">TA on Duty</div>
             <div class="panel-body ta-body">
               <template v-if="onDutyTAs.length">
-                <div
-                  v-for="ta in onDutyTAs"
-                  :key="ta"
-                  class="ta-name"
-                >
+                <div v-for="ta in onDutyTAs" :key="ta" class="ta-name">
                   {{ ta }}
                 </div>
               </template>
-              <span v-else>
-                No TA currently marked on duty.
-              </span>
+              <span v-else> No TA currently marked on duty. </span>
             </div>
           </section>
 
-          <section
-            v-if="myPosition"
-            class="panel queue-position-panel"
-          >
+          <section v-if="myPosition" class="panel queue-position-panel">
             <div
               class="panel-body queue-position-card"
               data-testid="queue-position"
@@ -534,22 +520,20 @@ const goHelp = () => {
           </section>
 
           <section class="panel">
-            <div class="panel-header">
-              Queue Controls
-            </div>
+            <div class="panel-header">Queue Controls</div>
             <div class="panel-body controls-body">
               <template v-if="!isEnrolled">
                 <p class="enroll-hint">
-                  You are not enrolled in this course yet. Enroll to join
-                  the queue and leave feedback.
+                  You are not enrolled in this course yet. Enroll to join the
+                  queue and leave feedback.
                 </p>
                 <button
                   class="primary-btn"
-                  :disabled="enrolling"
+                  :disabled="busyActions || enrolling"
                   @click="enroll"
                   data-testid="course-enroll-btn"
                 >
-                  {{ enrolling ? 'Enrolling…' : 'Enroll in this course' }}
+                  {{ enrolling ? "Enrolling…" : "Enroll in this course" }}
                 </button>
               </template>
 
@@ -562,10 +546,10 @@ const goHelp = () => {
                 >
                   {{
                     isOpen
-                      ? 'Enter Queue'
+                      ? "Enter Queue"
                       : isPaused
-                      ? 'Queue Paused'
-                      : 'Queue Closed'
+                        ? "Queue Paused"
+                        : "Queue Closed"
                   }}
                 </button>
               </template>
@@ -579,17 +563,15 @@ const goHelp = () => {
                   Edit Entry
                 </button>
                 <button
+                  :disabled="busyActions"
                   class="outline-btn"
                   @click="togglePauseSelf"
                   data-testid="pause-self-btn"
                 >
-                  {{
-                    myEntry.paused
-                      ? 'Resume'
-                      : 'Pause'
-                  }}
+                  {{ myEntry.paused ? "Resume" : "Pause" }}
                 </button>
                 <button
+                  :disabled="busyActions"
                   class="danger-btn"
                   @click="leaveQueue"
                   data-testid="leave-queue-btn"
@@ -618,32 +600,18 @@ const goHelp = () => {
 
         <div class="right-column">
           <section class="panel">
-            <div class="panel-header">
-              Announcements
-            </div>
+            <div class="panel-header">Announcements</div>
             <div class="panel-body announcements-body">
-              <table
-                v-if="announcements.length"
-                class="ann-table"
-              >
+              <table v-if="announcements.length" class="ann-table">
                 <thead>
                   <tr>
-                    <th class="ann-col-datetime">
-                      Date / Time
-                    </th>
-                    <th class="ann-col-by">
-                      Posted By
-                    </th>
-                    <th class="ann-col-msg">
-                      Announcement
-                    </th>
+                    <th class="ann-col-datetime">Date / Time</th>
+                    <th class="ann-col-by">Posted By</th>
+                    <th class="ann-col-msg">Announcement</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    v-for="a in announcements"
-                    :key="a.id"
-                  >
+                  <tr v-for="a in announcements" :key="a.id">
                     <td class="ann-datetime">
                       {{ formatAt(a.at) }}
                     </td>
@@ -656,53 +624,35 @@ const goHelp = () => {
                   </tr>
                 </tbody>
               </table>
-              <div
-                v-else
-                class="empty-text"
-              >
-                No announcements yet.
-              </div>
+              <div v-else class="empty-text">No announcements yet.</div>
             </div>
           </section>
 
           <section class="panel">
-            <div class="panel-header">
-              Live Queue
-            </div>
+            <div class="panel-header">Live Queue</div>
             <div class="panel-body queue-panel">
               <table class="queue-table">
                 <thead>
                   <tr>
                     <th class="col-num">#</th>
-                    <th class="col-student">
-                      Student
-                    </th>
-                    <th class="col-location">
-                      Location
-                    </th>
-                    <th class="col-question">
-                      Question
-                    </th>
+                    <th class="col-student">Student</th>
+                    <th class="col-location">Location</th>
+                    <th class="col-question">Question</th>
                     <th class="col-ta">TA</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(
-                      entry, idx
-                    ) in queueEntries"
+                    v-for="(entry, idx) in queueEntries"
                     :key="entry.id"
                     :class="[
                       'queue-row',
                       {
                         'is-self': entry.isMine,
-                        'is-paused':
-                          entry.paused,
+                        'is-paused': entry.paused,
                         'is-assigned-self':
-                          !entry.paused &&
-                          !!entry.ta &&
-                          !entry.otherTa
-                      }
+                          !entry.paused && !!entry.ta && !entry.otherTa,
+                      },
                     ]"
                     :data-testid="entry.isMine ? 'queue-row-mine' : 'queue-row'"
                   >
@@ -716,29 +666,19 @@ const goHelp = () => {
                       {{ entry.location }}
                     </td>
                     <td class="col-question">
-                      {{
-                        entry.question ||
-                        '—'
-                      }}
+                      {{ entry.question || "—" }}
                     </td>
                     <td class="col-ta">
-                      {{
-                        entry.otherTa
-                          ? 'Needs another TA'
-                          : entry.ta || '—'
-                      }}
+                      {{ entry.otherTa ? "Needs another TA" : entry.ta || "—" }}
                     </td>
                   </tr>
 
                   <tr v-if="!queueEntries.length">
-                    <td
-                      colspan="5"
-                      class="empty-text"
-                    >
+                    <td colspan="5" class="empty-text">
                       {{
                         isEnrolled
-                          ? 'No one is currently in the queue.'
-                          : 'Enroll in this course to see the live queue.'
+                          ? "No one is currently in the queue."
+                          : "Enroll in this course to see the live queue."
                       }}
                     </td>
                   </tr>
@@ -750,33 +690,32 @@ const goHelp = () => {
       </section>
 
       <!-- Join / edit queue modal -->
-      <div
-        v-if="showJoinModal"
-        class="modal-backdrop"
-      >
-        <div class="modal">
+      <div v-if="showJoinModal" class="modal-backdrop">
+        <div
+          class="modal"
+          v-accessible-dialog="{
+            label: myEntry ? 'Edit Queue Entry' : 'Join Queue',
+            close: () => {
+              if (!busyActions) showJoinModal = false;
+            },
+          }"
+        >
           <div class="modal-header">
             <div class="modal-title">
-              {{
-                myEntry
-                  ? 'Edit Queue Entry'
-                  : 'Join Queue'
-              }}
+              {{ myEntry ? "Edit Queue Entry" : "Join Queue" }}
             </div>
           </div>
           <div class="modal-body">
             <div class="field">
               <label>Name</label>
               <div class="readonly-input">
-                {{
-                  user.name ||
-                  user.email
-                }}
+                {{ user.name || user.email }}
               </div>
             </div>
             <div class="field">
-              <label>Location</label>
+              <label for="join-location">Location</label>
               <input
+                id="join-location"
                 v-model="joinLocation"
                 class="text-input"
                 placeholder="e.g. Zoom link / Room number"
@@ -784,8 +723,9 @@ const goHelp = () => {
               />
             </div>
             <div class="field">
-              <label>Question</label>
+              <label for="join-question">Question</label>
               <textarea
+                id="join-question"
                 v-model="joinQuestion"
                 class="text-area"
                 rows="3"
@@ -795,104 +735,89 @@ const goHelp = () => {
             </div>
           </div>
           <div class="modal-footer">
-            <button
-              class="outline-btn"
-              @click="showJoinModal = false"
-            >
+            <button class="outline-btn" @click="showJoinModal = false">
               Cancel
             </button>
             <button
+              :disabled="busyActions"
               class="primary-btn"
               @click="submitJoin"
               data-testid="join-confirm"
             >
-              {{
-                myEntry
-                  ? 'Save'
-                  : 'Join Queue'
-              }}
+              {{ myEntry ? "Save" : "Join Queue" }}
             </button>
           </div>
         </div>
       </div>
 
       <!-- Course feedback modal -->
-      <div
-        v-if="showFeedbackModal"
-        class="modal-backdrop"
-      >
-        <div class="modal">
+      <div v-if="showFeedbackModal" class="modal-backdrop">
+        <div
+          class="modal"
+          v-accessible-dialog="{
+            label: 'Course Feedback',
+            close: () => {
+              if (!busyActions) {
+                showFeedbackModal = false;
+                resetFeedback();
+              }
+            },
+          }"
+        >
           <div class="modal-header">
-            <div class="modal-title">
-              Course Feedback
-            </div>
+            <div class="modal-title">Course Feedback</div>
           </div>
 
           <div class="modal-body">
+            <p class="feedback-privacy">
+              Course instructors and administrators can see your name and
+              feedback. Declining follow-up contact does not make this feedback
+              anonymous.
+            </p>
             <div class="field">
               <label>Course</label>
               <div class="readonly-input">
-                {{ course.code || courseId }}
+                {{ course?.code || courseId }}
                 –
-                {{
-                  course.title ||
-                  'CampusWorks Course'
-                }}
+                {{ course?.title || "CampusWorks Course" }}
               </div>
             </div>
 
             <div class="field">
-              <label>Topic</label>
+              <label for="feedback-category">Topic</label>
               <select
+                id="feedback-category"
                 v-model="fbCategory"
                 class="text-input"
                 data-testid="fb-category"
               >
-                <option value="queue">
-                  Queue / system
-                </option>
-                <option value="ta">
-                  TA support
-                </option>
-                <option value="wait">
-                  Wait time
-                </option>
-                <option value="other">
-                  Other
-                </option>
+                <option value="queue">Queue / system</option>
+                <option value="ta">TA support</option>
+                <option value="wait">Wait time</option>
+                <option value="other">Other</option>
               </select>
             </div>
 
             <div class="field">
-              <label>Overall rating (1–5)</label>
+              <label for="feedback-rating">Overall rating (1–5)</label>
               <select
+                id="feedback-rating"
                 v-model.number="fbRating"
                 class="text-input"
                 data-testid="fb-rating"
               >
-                <option :value="5">
-                  5 - Excellent
-                </option>
-                <option :value="4">
-                  4 - Good
-                </option>
-                <option :value="3">
-                  3 - Okay / Neutral
-                </option>
-                <option :value="2">
-                  2 - Needs improvement
-                </option>
-                <option :value="1">
-                  1 - Poor
-                </option>
+                <option :value="5">5 - Excellent</option>
+                <option :value="4">4 - Good</option>
+                <option :value="3">3 - Okay / Neutral</option>
+                <option :value="2">2 - Needs improvement</option>
+                <option :value="1">1 - Poor</option>
               </select>
             </div>
 
             <div class="field">
-              <label>
-                What worked well?
-              </label>
+              <label for="feedback-positive"> What worked well? </label>
               <textarea
+                id="feedback-positive"
                 v-model="fbPositive"
                 class="text-area"
                 rows="3"
@@ -901,10 +826,9 @@ const goHelp = () => {
             </div>
 
             <div class="field">
-              <label>
-                What can be improved?
-              </label>
+              <label for="feedback-negative"> What can be improved? </label>
               <textarea
+                id="feedback-negative"
                 v-model="fbNegative"
                 class="text-area"
                 rows="3"
@@ -914,13 +838,8 @@ const goHelp = () => {
 
             <div class="field">
               <label class="checkbox-label">
-                <input
-                  type="checkbox"
-                  v-model="fbAllowContact"
-                />
-                Allow course staff to
-                contact me by email
-                if needed.
+                <input type="checkbox" v-model="fbAllowContact" />
+                Allow course staff to contact me by email if needed.
               </label>
             </div>
           </div>
@@ -940,7 +859,7 @@ const goHelp = () => {
             <button
               class="primary-btn"
               type="button"
-              :disabled="fbSubmitting"
+              :disabled="busyActions || fbSubmitting"
               @click="submitFeedback"
               data-testid="fb-submit"
             >
@@ -958,7 +877,12 @@ const goHelp = () => {
   min-height: 100vh;
   background: #f3f5fa;
   color: #111827;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 .app-navbar {
@@ -1563,4 +1487,3 @@ const goHelp = () => {
   }
 }
 </style>
-

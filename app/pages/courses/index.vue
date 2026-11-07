@@ -1,174 +1,174 @@
 <script setup lang="ts">
-import {
-  computed,
-  ref,
-  watch,
-  onMounted,
-  onBeforeUnmount
-} from 'vue'
+const busyActions = ref(false);
+
+import { computed, ref, watch, onMounted, onBeforeUnmount } from "vue";
 import {
   useAsyncData,
   useRequestFetch,
   useRouter,
   navigateTo,
-  refreshNuxtData
-} from '#app'
+  refreshNuxtData,
+} from "#app";
 
 type CourseRow = {
-  id: string
-  code: string
-  title: string
-  state?: 'open' | 'paused' | 'closed'
-  enrolled: boolean
-  primaryRole?: string | null
-}
+  id: string;
+  code: string;
+  title: string;
+  state?: "open" | "paused" | "closed";
+  enrolled: boolean;
+  primaryRole?: string | null;
+};
 
 type CoursesApiResult = {
-  user: AuthUser
-  courses: CourseRow[]
-}
+  user: AuthUser;
+  courses: CourseRow[];
+  pagination?: {
+    offset: number;
+    limit: number;
+    total: number;
+    hasMore: boolean;
+  };
+};
 
-const router = useRouter()
-const requestFetch = useRequestFetch()
+const router = useRouter();
+const requestFetch = useRequestFetch();
+const catalog = useCourseCatalogLoader<CourseRow>();
 
 const { data, error } = await useAsyncData<CoursesApiResult>(
-  'courses',
-  () => requestFetch<CoursesApiResult>('/api/courses')
-)
+  "courses",
+  catalog.load,
+);
 
 if (error.value) {
-  const status = (error.value as any).statusCode
+  const status = (error.value as any).statusCode;
   if (status === 401) {
-    useAuthUser().value = null
-    await navigateTo('/login')
+    useAuthUser().value = null;
+    await navigateTo("/login");
   }
 }
 
-const user = computed(() => data.value?.user || null)
+const user = computed(() => data.value?.user || null);
 
 const stateLabel = (c: CourseRow) =>
-  c.state === 'open' ? 'Open' : c.state === 'paused' ? 'Paused' : 'Closed'
+  c.state === "open" ? "Open" : c.state === "paused" ? "Paused" : "Closed";
 
 /**
  * Local mutable copy to support responsive UI updates
  * while the underlying async data is refreshed.
  */
-const coursesState = ref<CourseRow[]>(data.value?.courses || [])
+const coursesState = ref<CourseRow[]>(data.value?.courses || []);
 
 watch(
   () => data.value?.courses,
   (val) => {
     if (val) {
-      coursesState.value = val.map((c) => ({ ...c }))
+      coursesState.value = val.map((c) => ({ ...c }));
     }
-  }
-)
+  },
+);
 
-const courses = computed(() => coursesState.value)
+const courses = computed(() => coursesState.value);
 
 const isInstructorOrAdmin = (c: CourseRow) =>
-  c.primaryRole === 'admin' || c.primaryRole === 'instructor'
+  c.primaryRole === "admin" || c.primaryRole === "instructor";
 
-const isTA = (c: CourseRow) => c.primaryRole === 'ta'
+const isTA = (c: CourseRow) => c.primaryRole === "ta";
 
 const isStudentEnrolled = (c: CourseRow) =>
-  c.primaryRole === 'student' ||
-  (!!c.enrolled && !isInstructorOrAdmin(c) && !isTA(c))
+  c.primaryRole === "student" ||
+  (!!c.enrolled && !isInstructorOrAdmin(c) && !isTA(c));
 
 const roleLabel = (c: CourseRow) => {
-  if (isInstructorOrAdmin(c)) return 'Instructor/Admin'
-  if (isTA(c)) return 'TA'
-  if (isStudentEnrolled(c)) return 'Student'
-  if (c.enrolled) return 'Enrolled'
-  return 'Not enrolled'
-}
+  if (isInstructorOrAdmin(c)) return "Instructor/Admin";
+  if (isTA(c)) return "TA";
+  if (isStudentEnrolled(c)) return "Student";
+  if (c.enrolled) return "Enrolled";
+  return "Not enrolled";
+};
 
 const myCourses = computed(() =>
   courses.value.filter(
-    (c) =>
-      isInstructorOrAdmin(c) || isTA(c) || isStudentEnrolled(c)
-  )
-)
+    (c) => isInstructorOrAdmin(c) || isTA(c) || isStudentEnrolled(c),
+  ),
+);
 
-const allCourses = computed(() => courses.value)
+const allCourses = computed(() => courses.value);
 
 /** Only pure student membership is user-toggleable here. */
 const isStudentToggleable = (c: CourseRow) =>
-  !isInstructorOrAdmin(c) && !isTA(c)
+  !isInstructorOrAdmin(c) && !isTA(c);
 
 const toggleEnroll = async (course: CourseRow) => {
-  const idx = coursesState.value.findIndex(
-    (c) => c.id === course.id
-  )
-  if (idx === -1) return
-
-  const current = coursesState.value[idx]
-  if (!current || !isStudentToggleable(current)) return
-
-  const willEnroll = !current.enrolled
-
+  if (busyActions.value) return;
+  busyActions.value = true;
   try {
-    await $fetch('/api/courses/enroll', {
-      method: 'POST',
-      body: {
-        courseId: current.id,
-        enroll: willEnroll
-      }
-    })
-    await refreshNuxtData('courses')
-  } catch (e: any) {
-    alert(apiErrorMessage(e, 'Enroll failed'))
+    const idx = coursesState.value.findIndex((c) => c.id === course.id);
+    if (idx === -1) return;
+
+    const current = coursesState.value[idx];
+    if (!current || !isStudentToggleable(current)) return;
+
+    const willEnroll = !current.enrolled;
+
+    try {
+      await $fetch("/api/courses/enroll", {
+        method: "POST",
+        body: {
+          courseId: current.id,
+          enroll: willEnroll,
+        },
+      });
+      await refreshNuxtData("courses");
+    } catch (e: any) {
+      alert(apiErrorMessage(e, "Enroll failed"));
+    }
+  } finally {
+    busyActions.value = false;
   }
-}
+};
 
 const goToCourse = (course: CourseRow) => {
   if (isInstructorOrAdmin(course)) {
-    router.push(`/courses/${course.id}/admin`)
+    router.push(`/courses/${course.id}/admin`);
   } else if (isTA(course)) {
-    router.push(`/courses/${course.id}/ta`)
+    router.push(`/courses/${course.id}/ta`);
   } else {
-    router.push(`/courses/${course.id}/student`)
+    router.push(`/courses/${course.id}/student`);
   }
-}
+};
 
 /** Periodically refresh course + enrollment data. */
-let timer: any = null
+let timer: any = null;
 
 onMounted(() => {
   timer = setInterval(() => {
-    refreshNuxtData('courses')
-  }, 5000)
-})
+    if (!document.hidden) refreshNuxtData("courses");
+  }, 5000);
+});
 
 onBeforeUnmount(() => {
-  if (timer) clearInterval(timer)
-})
+  if (timer) clearInterval(timer);
+});
 
-const logout = signOut
+const logout = signOut;
 
 const goHelp = () => {
-  navigateTo('/help')
-}
+  navigateTo("/help");
+};
 
 const goAdminConsole = () => {
-  navigateTo('/admin/courses')
-}
+  navigateTo("/admin/courses");
+};
 </script>
 
 <template>
   <div class="page-root">
     <header class="app-navbar">
       <div class="app-left">
-        <img
-          src="/duke-cs-logo.png"
-          alt="Duke CS"
-          class="app-logo"
-        />
+        <img src="/duke-cs-logo.png" alt="Duke CS" class="app-logo" />
       </div>
       <div class="app-center">
-        <div class="brand-main">
-          CampusWorks
-        </div>
+        <div class="brand-main">CampusWorks</div>
       </div>
       <div class="app-right">
         <button
@@ -180,17 +180,10 @@ const goAdminConsole = () => {
         >
           Admin Console
         </button>
-        <button
-          class="help-link"
-          type="button"
-          @click="goHelp"
-        >
+        <button class="help-link" type="button" @click="goHelp">
           Help &amp; Info
         </button>
-        <div
-          v-if="user"
-          class="user-pill"
-        >
+        <div v-if="user" class="user-pill">
           <span class="user-email" data-testid="current-user-email">
             {{ user.email }}
           </span>
@@ -204,15 +197,17 @@ const goAdminConsole = () => {
         </div>
       </div>
     </header>
+    <StaffingNavigation />
 
-    <main class="content">
-      <section
-        v-if="myCourses.length"
-        class="panel"
-      >
-        <div class="panel-header">
-          My Courses
-        </div>
+    <main
+      :aria-busy="busyActions"
+      id="main-content"
+      tabindex="-1"
+      class="content"
+    >
+      <h1 class="sr-only">Courses</h1>
+      <section v-if="myCourses.length" class="panel">
+        <div class="panel-header">My Courses</div>
         <table class="course-table">
           <thead>
             <tr>
@@ -242,10 +237,7 @@ const goAdminConsole = () => {
               </td>
               <td class="col-queue">
                 <div class="action-row">
-                  <span
-                    class="state-tag"
-                    :class="c.state || 'closed'"
-                  >
+                  <span class="state-tag" :class="c.state || 'closed'">
                     {{ stateLabel(c) }}
                   </span>
                   <button
@@ -263,12 +255,8 @@ const goAdminConsole = () => {
       </section>
 
       <section class="panel">
-        <div class="panel-header">
-          All Available Courses
-        </div>
-        <div class="panel-subtitle">
-          Enroll / leave your courses here.
-        </div>
+        <div class="panel-header">All Available Courses</div>
+        <div class="panel-subtitle">Enroll / leave your courses here.</div>
         <table class="course-table">
           <thead>
             <tr>
@@ -295,7 +283,7 @@ const goAdminConsole = () => {
                 <span
                   class="role-pill"
                   :class="{
-                    muted: !c.enrolled && !c.primaryRole
+                    muted: !c.enrolled && !c.primaryRole,
                   }"
                 >
                   {{ roleLabel(c) }}
@@ -311,36 +299,42 @@ const goAdminConsole = () => {
                     Go
                   </button>
                   <button
+                    :disabled="busyActions"
                     v-if="isStudentToggleable(c)"
                     class="btn-enroll"
                     :class="{
-                      'btn-leave': c.enrolled
+                      'btn-leave': c.enrolled,
                     }"
                     @click="toggleEnroll(c)"
                     :data-testid="`course-enroll-${c.id}`"
                   >
-                    {{ c.enrolled ? 'Leave' : 'Enroll' }}
+                    {{ c.enrolled ? "Leave" : "Enroll" }}
                   </button>
-                  <span
-                    v-else
-                    class="no-action"
-                  >
-                    Managed via role
-                  </span>
+                  <span v-else class="no-action"> Managed via role </span>
                 </div>
               </td>
             </tr>
             <tr v-if="!allCourses.length">
-              <td
-                colspan="3"
-                class="empty-text"
-              >
-                No courses configured yet.
-              </td>
+              <td colspan="3" class="empty-text">No courses configured yet.</td>
             </tr>
           </tbody>
         </table>
       </section>
+      <p
+        v-if="data?.pagination?.hasMore"
+        class="catalog-pagination"
+        role="status"
+      >
+        Showing {{ courses.length }} of {{ data.pagination.total }} courses.
+        <button
+          type="button"
+          :disabled="catalog.loadingMore.value"
+          @click="catalog.more(() => refreshNuxtData('courses'))"
+          data-testid="catalog-load-more"
+        >
+          Load more courses
+        </button>
+      </p>
     </main>
   </div>
 </template>
@@ -350,8 +344,12 @@ const goAdminConsole = () => {
   min-height: 100vh;
   background: #f3f5fa;
   color: #111827;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 }
 
 .app-navbar {
@@ -567,7 +565,7 @@ const goAdminConsole = () => {
 
 .no-action {
   font-size: 11px;
-  color: #9ca3af;
+  color: #596579;
 }
 
 .empty-text {
@@ -678,4 +676,3 @@ const goAdminConsole = () => {
   }
 }
 </style>
-
