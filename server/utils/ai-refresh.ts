@@ -81,7 +81,7 @@ async function register(db: Db, user: StaffingActor, snapshot: any) {
   const { withTransaction } = await import('./db')
   await withTransaction(async (database, session) => {
     await scopes(database).updateOne({ id }, { $set: { requesterId: actorId(user), requesterEmail: user.email, opportunityId: snapshot.targetId, kind: 'candidate_fit', page: snapshot.page, pageSize: snapshot.pageSize, active: true, status: 'active', approvedAt: new Date() }, $inc: { approvalVersion: 1 }, $setOnInsert: { id, createdAt: new Date() } }, { session, upsert: true })
-    await jobs(database).updateOne({ _id: id }, { $setOnInsert: { subscriptionId: id, opportunityId: snapshot.targetId, status: 'idle', generation: 0, createdAt: new Date(), nextAttemptAt: new Date() } }, { session, upsert: true })
+    await jobs(database).updateOne({ _id: id }, { $inc: { fence: 1 }, $setOnInsert: { subscriptionId: id, opportunityId: snapshot.targetId, status: 'idle', generation: 0, createdAt: new Date(), nextAttemptAt: new Date() } }, { session, upsert: true })
   })
   return id
 }
@@ -254,6 +254,27 @@ async function stopEndedCandidateRefresh(db: Db) {
   })
 }
 
+async function nextRefreshJob(db: Db) {
+  const { withTransaction } = await import('./db')
+  for (let inspected = 0; inspected < 10; inspected++) {
+    const job = await jobs(db).findOne({ $or: [{ status: 'queued', nextAttemptAt: { $lte: new Date() } }, { status: 'running', leaseUntil: { $lte: new Date() } }, { status: 'blocked', nextAttemptAt: { $lte: new Date() } }, { status: 'unconfigured' }] }, { sort: { updatedAt: 1, _id: 1 } })
+    if (!job) return null
+    const subscription = await scopes(db).findOne({ id: job.subscriptionId, active: true })
+    if (subscription) return { job, subscription }
+    await withTransaction(async (database, session) => {
+      // Use the same subscription-before-job fence order as approval/revocation.
+      // A concurrent approval or execution must survive orphan cleanup.
+      const currentScope = await scopes(database).findOneAndUpdate({ id: job.subscriptionId }, { $inc: { fence: 1 } }, { session, returnDocument: 'after' })
+      if (currentScope?.active) return
+      const current = await jobs(database).findOneAndUpdate({ _id: job._id, status: job.status, generation: job.generation, fence: job.fence ?? { $exists: false } }, { $inc: { fence: 1 } }, { session, returnDocument: 'after' })
+      if (!current) return
+      await jobs(database).updateOne({ _id: current._id, fence: current.fence }, { $set: { status: 'revoked', dirty: false, reason: 'The approved comparison scope is no longer active.', updatedAt: new Date() }, $unset: { leaseToken: '', leaseUntil: '' } }, { session })
+      await database.collection('staffingAiTasks').updateMany({ refreshSubscriptionId: job.subscriptionId, status: { $in: ['completed', 'pending'] } }, { $set: { status: 'stale', result: null, message: 'The approved comparison scope is no longer active.' } }, { session })
+    })
+  }
+  return null
+}
+
 export async function runAiRefreshCycle(db: Db, signal?: AbortSignal) {
   if (!configured() || signal?.aborted) return
   await initializeAiRefresh(db)
@@ -265,10 +286,9 @@ export async function runAiRefreshCycle(db: Db, signal?: AbortSignal) {
   const concurrency = await db.collection<any>('staffingAiBudgets').findOne({ _id: 'concurrency' })
   const cap = Number(process.env.AI_MAX_CONCURRENT) || 2
   if ((concurrency?.leases || []).filter((lease: any) => lease.expiresAt > new Date()).length >= cap) return
-  const job = await jobs(db).findOne({ $or: [{ status: 'queued', nextAttemptAt: { $lte: new Date() } }, { status: 'running', leaseUntil: { $lte: new Date() } }, { status: 'blocked', nextAttemptAt: { $lte: new Date() } }, { status: 'unconfigured' }] }, { sort: { updatedAt: 1, _id: 1 } })
-  if (!job) return
-  const subscription = await scopes(db).findOne({ id: job.subscriptionId, active: true })
-  if (!subscription) return
+  const pending = await nextRefreshJob(db)
+  if (!pending) return
+  const { job, subscription } = pending
   const actor = await refreshActor(db, subscription)
   if (!actor) {
     const { withTransaction } = await import('./db')

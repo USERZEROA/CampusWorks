@@ -2,7 +2,10 @@ import type { ClientSession, Db, Document } from 'mongodb'
 import { isGlobalAdmin } from './auth'
 import { lockStaffingResource } from './staffing-catalog'
 import { assertRecruitmentGate, getRecruitmentCycle } from './staffing-cycle'
+import { invalidateCandidateRefresh } from './ai-refresh'
 import { actorId, applicationAccess, applicationDto, appointmentDto, assertVersion, eligibility, event, fail, findOpportunity, flag, number, object, options, publicRecord, slots, staffingCapabilities, text, uid, type StaffingActor } from './staffing'
+
+const candidateStatuses = ['submitted', 'under_review', 'shortlisted']
 
 export function applicantInput(raw: unknown) {
   const body = object(raw, 'Application')
@@ -76,6 +79,7 @@ export async function updateApplication(db: Db, session: ClientSession, user: St
   if (Object.keys(input.answers).some(id => !validQuestions.has(id))) fail(400, 'An answer refers to an unknown question')
   const revision = { version: access.application.version, profile: access.application.profile, answers: access.application.answers, qualificationText: access.application.qualificationText, cvDocumentId: access.application.cvDocumentId, status: access.application.status, updatedAt: access.application.updatedAt }
   await db.collection('staffingApplications').updateOne({ id: applicationId }, { $set: { ...qualification, status: 'draft', opportunityVersion: access.opportunity.requirementsVersion || 1, updatedAt: new Date() }, $inc: { version: 1 }, $push: { revisions: revision } as any }, { session })
+  if (candidateStatuses.includes(access.application.status)) await invalidateCandidateRefresh(db, session, { opportunityId: access.opportunity.id })
   await event(db, session, user, 'ApplicationRevised', applicationId)
   return { application: applicationDto((await db.collection('staffingApplications').findOne({ id: applicationId }, { session }))!, true) }
 }
@@ -96,8 +100,12 @@ export async function submitApplication(db: Db, session: ClientSession, user: St
   if (opportunity.cvRequired && !application.cvDocumentId) fail(400, 'Upload the required CV before submitting')
   const available = eligibility(application, opportunity)
   if (!available.eligible) fail(400, available.reasons.join('; '))
+  // A submitted snapshot stays immutable until a save or CV upload makes a draft.
+  // Repeating submission must preserve review status and candidate-page order.
+  if (candidateStatuses.includes(application.status) && application.submittedSnapshot) return { application: applicationDto(application, true) }
   const snapshot = { profile: application.profile, answers: application.answers, qualificationText: application.qualificationText, cvDocumentId: application.cvDocumentId, opportunityVersion: opportunity.requirementsVersion || 1, submittedAt: new Date() }
   await db.collection('staffingApplications').updateOne({ id: applicationId }, { $set: { status: 'submitted', submittedAt: new Date(), updatedAt: new Date(), submittedSnapshot: snapshot }, $inc: { version: 1 } }, { session })
+  await invalidateCandidateRefresh(db, session, { opportunityId: opportunity.id })
   await event(db, session, user, 'ApplicationSubmitted', applicationId, { opportunityId: opportunity.id })
   return { application: applicationDto((await db.collection('staffingApplications').findOne({ id: applicationId }, { session }))!, true) }
 }
@@ -123,6 +131,7 @@ export async function uploadCv(db: Db, session: ClientSession, user: StaffingAct
   const document = { id: uid(), applicationId, applicantId: actorId(user), opportunityId: opportunity.id, filename, contentType: pdf ? 'application/pdf' : 'text/plain; charset=utf-8', size: file.data.length, bytes: file.data, createdAt: new Date(), validation: 'signature-and-size-checked; attachment-only' }
   await db.collection('staffingDocuments').insertOne(document, { session })
   await db.collection('staffingApplications').updateOne({ id: applicationId }, { $set: { cvDocumentId: document.id, status: 'draft', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
+  if (candidateStatuses.includes(application.status)) await invalidateCandidateRefresh(db, session, { opportunityId: opportunity.id })
   await event(db, session, user, 'CvUploaded', applicationId, { documentId: document.id })
   return { document: publicRecord(document), application: applicationDto((await db.collection('staffingApplications').findOne({ id: applicationId }, { session }))!, true) }
 }
@@ -149,6 +158,7 @@ export async function reviewApplication(db: Db, session: ClientSession, user: St
   const status = reject ? 'not_selected' : flag(body.shortlisted, 'Shortlisted', true) ? 'shortlisted' : 'under_review'
   const reason = text(body.reason, 'Review reason', 2000, reject)
   await db.collection('staffingApplications').updateOne({ id: applicationId }, { $set: { status, reviewReason: reason, reviewedBy: user.email, updatedAt: new Date() }, $inc: { version: 1 } }, { session })
+  if (candidateStatuses.includes(application.status) !== candidateStatuses.includes(status)) await invalidateCandidateRefresh(db, session, { opportunityId: opportunity.id })
   await event(db, session, user, 'ApplicationReviewed', applicationId, { status })
   return { application: applicationDto((await db.collection('staffingApplications').findOne({ id: applicationId }, { session }))!, isGlobalAdmin(user)) }
 }

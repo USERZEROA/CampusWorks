@@ -73,6 +73,35 @@ async function harness(space: StaffingSpace, handle: (input: any, response: Serv
 const analysis = (api: APIRequestContext, opportunityId: string) => json(api.post('/api/ai/tasks', { data: { kind: 'candidate_fit', targetId: opportunityId } }));
 const history = (api: APIRequestContext, opportunityId: string) => json(api.get('/api/ai/tasks', { params: { kind: 'candidate_fit', targetId: opportunityId, page: 1, pageSize: 50 } }));
 
+const refreshMutationKinds = ['ApplicationSubmitted', 'ApplicationRevised', 'ApplicationWithdrawn', 'ApplicationReviewed', 'CvUploaded', 'OfferIssued', 'OfferAccepted', 'OfferDeclined', 'OfferRescinded', 'AppointmentExpired', 'AppointmentEnded', 'AppointmentActivated', 'AppointmentClearance', 'AppointmentSuspend', 'AppointmentResume', 'OpportunityUpdated', 'RecruitmentCycleConfigured'];
+
+test.afterEach(async ({ space }, testInfo) => {
+  if (testInfo.status === testInfo.expectedStatus) return;
+  const { client, db } = await database();
+  try {
+    const opportunities = await db.collection('staffingOpportunities').find({ courseId: space.code }, { projection: { _id: 0, id: 1, status: 1, termId: 1 } }).toArray();
+    const ids = opportunities.map(row => row.id);
+    const pending = { kind: { $in: refreshMutationKinds }, aiRefreshProcessedAt: { $exists: false } };
+    const state = {
+      synthetic: true, recordedAt: new Date().toISOString(),
+      pendingEventCount: await db.collection('staffingEvents').countDocuments(pending),
+      oldestPendingEvents: await db.collection('staffingEvents').find(pending, { projection: { _id: 0, id: 1, kind: 1, targetId: 1, createdAt: 1 } }).sort({ createdAt: 1, id: 1 }).limit(12).toArray(),
+      opportunities,
+      subscriptions: await db.collection('staffingAiSubscriptions').find({ opportunityId: { $in: ids } }, { projection: { _id: 0, id: 1, opportunityId: 1, active: 1, status: 1, approvalVersion: 1 } }).toArray(),
+      jobs: await db.collection('staffingAiRefreshJobs').find({ opportunityId: { $in: ids } }, { projection: { _id: 1, subscriptionId: 1, opportunityId: 1, status: 1, generation: 1, runningGeneration: 1, fence: 1, dirty: 1, lastInputHash: 1, lastAttemptedInputHash: 1, nextAttemptAt: 1, updatedAt: 1, leaseUntil: 1, taskId: 1, lastTaskId: 1 } }).toArray(),
+      taskStates: await db.collection('staffingAiTasks').find({ opportunityId: { $in: ids } }, { projection: { _id: 0, id: 1, status: 1, failureCode: 1, inputHash: 1, createdAt: 1, completedAt: 1 } }).sort({ createdAt: -1 }).limit(12).toArray(),
+      concurrency: await db.collection<any>('staffingAiBudgets').findOne({ _id: 'concurrency' }, { projection: { leases: 1 } }),
+    };
+    await testInfo.attach('legacy-refresh-state.json', { body: Buffer.from(JSON.stringify(state, null, 2)), contentType: 'application/json' });
+  } finally { await client.close(); }
+});
+
+async function insertRefreshBacklog(db: Awaited<ReturnType<typeof database>>['db'], suffix: string) {
+  const ids = Array.from({ length: 250 }, (_, index) => `synthetic-refresh-backlog-${suffix}-${index}`);
+  await db.collection('staffingEvents').insertMany(ids.map((id, index) => ({ id, kind: 'ApplicationSubmitted', targetId: `missing-${id}`, createdAt: new Date(Date.now() - 3600000 + index), details: { synthetic: true }, delivery: 'pending' })));
+  return ids;
+}
+
 test('exact candidate-page refresh metadata remains reachable beyond one hundred approved scopes', async ({ space }) => {
   const posting = await space.opportunity();
   const peer = await space.actor('metadata-peer', 'instructor');
@@ -343,7 +372,7 @@ test('provider-disabled instances retain pending changes without making an autom
   const posting = await space.opportunity({ positions: 2, budget: 2400 }); await space.application(posting);
   const service = await harness(space);
   try {
-    await analysis(service.apis[0]!, posting.id);
+    expect((await analysis(service.apis[0]!, posting.id)).task.status).toBe('completed');
     await service.stopApps();
     await space.application(posting, await space.actor('provider-disabled-new'));
     const pending = await history(space.instructor.api, posting.id);
@@ -363,7 +392,7 @@ test('an automatic refresh respects durable per-user quota without a provider re
   const budgets = db.collection<any>('staffingAiBudgets');
   const saved: Array<{ id: string; previous: any }> = [];
   try {
-    await analysis(service.apis[0]!, posting.id);
+    expect((await analysis(service.apis[0]!, posting.id)).task.status).toBe('completed');
     const status = await json(service.apis[0]!.get('/api/ai/status'));
     for (const time of [Date.now(), Date.now() + 86400000]) {
       const day = new Date(time).toISOString().slice(0, 10); const id = `user:${day}:${space.instructor.user.id}`;
@@ -382,6 +411,80 @@ test('an automatic refresh respects durable per-user quota without a provider re
     expect(((await budgets.findOne({ _id: 'concurrency' }))?.leases || []).some((lease: any) => lease.taskId === task!.id)).toBe(false);
   } finally {
     await service.close();
+    for (const row of saved) { if (row.previous) await budgets.replaceOne({ _id: row.id }, row.previous); else await budgets.deleteOne({ _id: row.id }); }
+    await client.close();
+  }
+});
+
+test('a provider-disabled submission queues before historical events drain and resumes past an orphan job', async ({ space }) => {
+  const posting = await space.opportunity({ positions: 2, budget: 2400 });
+  await space.application(posting);
+  const service = await harness(space);
+  const { client, db } = await database();
+  let backlog: string[] = [];
+  try {
+    const first = (await analysis(service.apis[0]!, posting.id)).task;
+    expect(first.status).toBe('completed');
+    await service.stopApps();
+    backlog = await insertRefreshBacklog(db, space.suffix);
+    await space.application(posting, await space.actor('durable-submission'));
+    const queued = await db.collection<any>('staffingAiRefreshJobs').findOne({ _id: first.refreshSubscriptionId });
+    expect(queued).toMatchObject({ status: 'queued', dirty: true });
+    expect(queued!.generation).toBeGreaterThan(first.refreshGeneration);
+    expect(await db.collection('staffingEvents').countDocuments({ id: { $in: backlog }, aiRefreshProcessedAt: { $exists: false } })).toBe(250);
+    expect((await db.collection('staffingAiTasks').findOne({ id: first.id }))?.status).toBe('stale');
+    const orphanId = `synthetic-orphan-${space.suffix}`;
+    await db.collection<any>('staffingAiRefreshJobs').insertOne({ _id: orphanId, subscriptionId: orphanId, opportunityId: posting.id, status: 'queued', generation: 1, fence: 0, updatedAt: new Date(0), nextAttemptAt: new Date(0) });
+    await service.startApps(1);
+    await expect.poll(() => service.seen.length, { timeout: 20000 }).toBe(2);
+    await expect.poll(async () => (await db.collection('staffingAiRefreshJobs').findOne({ _id: first.refreshSubscriptionId }))?.status, { timeout: 20000 }).toBe('idle');
+    expect((await db.collection<any>('staffingAiRefreshJobs').findOne({ _id: orphanId }))?.status).toBe('revoked');
+    for (let index = 0; index < 4; index++) await history(service.apis[0]!, posting.id);
+    await new Promise(resolve => setTimeout(resolve, 1100));
+    expect(service.seen).toHaveLength(2);
+  } finally {
+    await service.close();
+    if (backlog.length) await db.collection('staffingEvents').deleteMany({ id: { $in: backlog } });
+    await client.close();
+  }
+});
+
+test('a queued submission reaches exhausted reviewer capacity behind historical events without repeated attempts', async ({ space }) => {
+  const posting = await space.opportunity({ positions: 2, budget: 2400 });
+  await space.application(posting);
+  const service = await harness(space);
+  const { client, db } = await database();
+  const budgets = db.collection<any>('staffingAiBudgets');
+  const saved: Array<{ id: string; previous: any }> = [];
+  let backlog: string[] = [];
+  try {
+    const first = (await analysis(service.apis[0]!, posting.id)).task;
+    expect(first.status).toBe('completed');
+    const status = await json(service.apis[0]!.get('/api/ai/status'));
+    await service.stopApps();
+    for (const timestamp of [Date.now(), Date.now() + 86400000]) {
+      const day = new Date(timestamp).toISOString().slice(0, 10);
+      const id = `user:${day}:${space.instructor.user.id}`;
+      if (saved.some(row => row.id === id)) continue;
+      saved.push({ id, previous: await budgets.findOne({ _id: id }) });
+      await budgets.replaceOne({ _id: id }, { _id: id, day, requests: status.limits.dailyRequestsPerUser, reservedTokens: 0 }, { upsert: true });
+    }
+    backlog = await insertRefreshBacklog(db, space.suffix);
+    await space.application(posting, await space.actor('durable-capacity'));
+    expect(await db.collection('staffingAiRefreshJobs').findOne({ _id: first.refreshSubscriptionId })).toMatchObject({ status: 'queued', dirty: true });
+    expect(await db.collection('staffingEvents').countDocuments({ id: { $in: backlog }, aiRefreshProcessedAt: { $exists: false } })).toBe(250);
+    await service.startApps(1);
+    await expect.poll(async () => (await db.collection('staffingAiRefreshJobs').findOne({ _id: first.refreshSubscriptionId }))?.status, { timeout: 20000 }).toBe('blocked');
+    const failed = await db.collection('staffingAiTasks').find({ refreshSubscriptionId: first.refreshSubscriptionId, failureCode: 'quota_daily' }).toArray();
+    expect(failed).toHaveLength(1);
+    for (let index = 0; index < 4; index++) await history(service.apis[0]!, posting.id);
+    await new Promise(resolve => setTimeout(resolve, 1600));
+    expect(await db.collection('staffingAiTasks').countDocuments({ refreshSubscriptionId: first.refreshSubscriptionId, failureCode: 'quota_daily' })).toBe(1);
+    expect(service.seen).toHaveLength(1);
+    expect(((await budgets.findOne({ _id: 'concurrency' }))?.leases || []).some((lease: any) => lease.taskId === failed[0].id)).toBe(false);
+  } finally {
+    await service.close();
+    if (backlog.length) await db.collection('staffingEvents').deleteMany({ id: { $in: backlog } });
     for (const row of saved) { if (row.previous) await budgets.replaceOne({ _id: row.id }, row.previous); else await budgets.deleteOne({ _id: row.id }); }
     await client.close();
   }
