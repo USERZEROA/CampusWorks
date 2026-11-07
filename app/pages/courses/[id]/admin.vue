@@ -1128,7 +1128,12 @@ onBeforeUnmount(() => {
                   Export CSV
                 </button>
               </div>
-              <div class="sessions-table-wrap">
+              <div
+                class="sessions-table-wrap"
+                tabindex="0"
+                role="region"
+                aria-label="Session history table"
+              >
                 <table class="sessions-table">
                   <thead>
                     <tr>
@@ -1519,7 +1524,11 @@ onBeforeUnmount(() => {
         <div class="panel-header">Course Feedback</div>
         <div class="panel-body">
           <div v-if="feedback.length">
-            <table class="feedback-table">
+            <table
+              class="feedback-table"
+              tabindex="0"
+              aria-label="Course feedback"
+            >
               <thead>
                 <tr>
                   <th>Time</th>
@@ -1599,7 +1608,11 @@ onBeforeUnmount(() => {
               Add / Update TA
             </button>
           </div>
-          <table class="enroll-table">
+          <table
+            class="enroll-table"
+            tabindex="0"
+            aria-label="Course enrollments"
+          >
             <thead>
               <tr>
                 <th>Email</th>
@@ -1826,7 +1839,7 @@ details > summary {
 
 .course-subtitle {
   font-size: 18px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .queue-header-block {
@@ -1858,16 +1871,16 @@ details > summary {
 
 .qc-btn.open {
   background: #10b981;
-  color: #ffffff;
+  color: #022c16;
 }
 
 .qc-btn.pause {
   background: #fbbf24;
-  color: #111827;
+  color: #422006;
 }
 
 .qc-btn.close {
-  background: #ef4444;
+  background: #dc2626;
   color: #ffffff;
 }
 
@@ -1893,14 +1906,18 @@ details > summary {
 
 .pill-open {
   background: #10b981;
+
+  color: #022c16;
 }
 
 .pill-paused {
   background: #f59e0b;
+
+  color: #422006;
 }
 
 .pill-closed {
-  background: #ef4444;
+  background: #dc2626;
 }
 
 .active-label {
@@ -1945,7 +1962,7 @@ details > summary {
   flex-direction: column;
   gap: 4px;
   font-size: 12px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .field input,
@@ -2033,7 +2050,7 @@ details > summary {
 
 .summary-label {
   font-size: 10px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .summary-value {
@@ -2090,7 +2107,7 @@ details > summary {
 
 .y-label {
   font-size: 9px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .stacked-cols {
@@ -2128,7 +2145,7 @@ details > summary {
   left: 50%;
   transform: translateX(-50%);
   font-size: 9px;
-  color: #6b7280;
+  color: #536174;
   text-align: center;
 }
 
@@ -2138,7 +2155,7 @@ details > summary {
   left: 50%;
   transform: translateX(-50%);
   font-size: 9px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .legend {
@@ -2221,7 +2238,7 @@ details > summary {
   left: 50%;
   transform: translateX(-50%);
   font-size: 9px;
-  color: #6b7280;
+  color: #536174;
   white-space: nowrap;
   max-width: 56px;
   text-overflow: ellipsis;
@@ -2301,8 +2318,8 @@ details > summary {
 .btn-danger {
   padding: 4px 10px;
   border-radius: 6px;
-  border: 1px solid #ef4444;
-  color: #ef4444;
+  border: 1px solid #dc2626;
+  color: #b91c1c;
   background: #ffffff;
   font-size: 12px;
   cursor: pointer;

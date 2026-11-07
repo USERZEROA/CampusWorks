@@ -605,7 +605,12 @@ const goHelp = () => {
         <div class="right-column">
           <section class="panel">
             <div class="panel-header">Announcements</div>
-            <div class="panel-body announcements-body">
+            <div
+              class="panel-body announcements-body"
+              tabindex="0"
+              role="region"
+              aria-label="Course announcements"
+            >
               <table v-if="announcements.length" class="ann-table">
                 <thead>
                   <tr>
@@ -634,7 +639,12 @@ const goHelp = () => {
 
           <section class="panel">
             <div class="panel-header">Live Queue</div>
-            <div class="panel-body queue-panel">
+            <div
+              class="panel-body queue-panel"
+              tabindex="0"
+              role="region"
+              aria-label="Live help queue table"
+            >
               <table class="queue-table">
                 <thead>
                   <tr>
@@ -1026,15 +1036,18 @@ const goHelp = () => {
   font-size: 12px;
   font-weight: 600;
   background: #10b981;
-  color: #ffffff;
+  color: #022c16;
 }
 
 .state-pill.closed {
-  background: #ef4444;
+  background: #dc2626;
+  color: #ffffff;
 }
 
 .state-pill.paused {
   background: #f59e0b;
+
+  color: #422006;
 }
 
 .queue-position-panel {
@@ -1103,7 +1116,7 @@ const goHelp = () => {
 
 .ta-body {
   font-size: 14px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .ta-name {
@@ -1165,7 +1178,7 @@ const goHelp = () => {
 
 .logged-as {
   font-size: 12px;
-  color: #6b7280;
+  color: #536174;
   margin-top: 6px;
 }
 
@@ -1287,7 +1300,7 @@ const goHelp = () => {
 .empty-text {
   padding: 10px 14px;
   font-size: 13px;
-  color: #6b7280;
+  color: #536174;
   text-align: left;
 }
 
@@ -1331,7 +1344,7 @@ const goHelp = () => {
 .field label {
   display: block;
   font-size: 12px;
-  color: #6b7280;
+  color: #536174;
   margin-bottom: 4px;
 }
 

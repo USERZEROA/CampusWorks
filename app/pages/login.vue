@@ -311,7 +311,7 @@ const loginWithGitlab = async () => {
 .login-desc {
   margin: 0 0 18px;
   font-size: 13px;
-  color: #6b7280;
+  color: #536174;
   line-height: 1.6;
 }
 
@@ -321,7 +321,7 @@ const loginWithGitlab = async () => {
 
 .field-label {
   font-size: 11px;
-  color: #6b7280;
+  color: #536174;
   margin-bottom: 4px;
   display: block;
 }
@@ -355,7 +355,7 @@ const loginWithGitlab = async () => {
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.16s ease;
+  transition: transform 0.16s ease;
 }
 
 .role-btn.gitlab {
@@ -439,7 +439,7 @@ const loginWithGitlab = async () => {
   background: #ffffff;
   text-align: left;
   cursor: pointer;
-  transition: all 0.16s ease;
+  transition: transform 0.16s ease;
 }
 
 .demo-btn:hover:not(:disabled) {
@@ -480,7 +480,7 @@ const loginWithGitlab = async () => {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 11px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .hint {

@@ -212,7 +212,7 @@ const goAdminConsole = () => {
       <h1 class="sr-only">Courses</h1>
       <section v-if="myCourses.length" class="panel">
         <div class="panel-header">My Courses</div>
-        <table class="course-table">
+        <table class="course-table" tabindex="0" aria-label="My courses">
           <thead>
             <tr>
               <th class="col-course">Course</th>
@@ -261,7 +261,7 @@ const goAdminConsole = () => {
       <section class="panel">
         <div class="panel-header">All Available Courses</div>
         <div class="panel-subtitle">Enroll / leave your courses here.</div>
-        <table class="course-table">
+        <table class="course-table" tabindex="0" aria-label="Available courses">
           <thead>
             <tr>
               <th class="col-course">Course</th>
@@ -451,7 +451,7 @@ const goAdminConsole = () => {
 .panel-subtitle {
   padding: 6px 20px 10px;
   font-size: 12px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .course-table {
@@ -487,7 +487,7 @@ const goAdminConsole = () => {
 
 .course-title {
   font-size: 12px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .role-pill {
@@ -512,15 +512,19 @@ const goAdminConsole = () => {
   font-size: 11px;
   font-weight: 600;
   color: #ffffff;
-  background: #ef4444;
+  background: #dc2626;
 }
 
 .state-tag.open {
   background: #10b981;
+
+  color: #022c16;
 }
 
 .state-tag.paused {
   background: #f59e0b;
+
+  color: #422006;
 }
 
 .btn-go,
@@ -575,7 +579,7 @@ const goAdminConsole = () => {
 .empty-text {
   padding: 14px 20px;
   font-size: 13px;
-  color: #6b7280;
+  color: #536174;
   text-align: left;
 }
 

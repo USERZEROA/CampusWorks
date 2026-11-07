@@ -193,7 +193,7 @@ const goHelp = () => {
 
       <section class="panel">
         <div class="panel-header">All Courses</div>
-        <table class="course-table">
+        <table class="course-table" tabindex="0" aria-label="Managed courses">
           <thead>
             <tr>
               <th>Code</th>
@@ -373,7 +373,7 @@ const goHelp = () => {
   border-radius: 6px;
   border: none;
   background: #16a34a;
-  color: #ffffff;
+  color: #022c16;
   font-size: 13px;
   cursor: pointer;
 }
@@ -430,7 +430,7 @@ const goHelp = () => {
 
 .empty-text {
   padding: 12px 20px;
-  color: #6b7280;
+  color: #536174;
   font-size: 13px;
 }
 

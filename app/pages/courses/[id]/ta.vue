@@ -667,7 +667,11 @@ const goAnalytics = () => {
           <section class="panel">
             <div class="panel-header">Live Queue</div>
             <div class="panel-body">
-              <table class="queue-table">
+              <table
+                class="queue-table"
+                tabindex="0"
+                aria-label="Live help queue"
+              >
                 <thead>
                   <tr>
                     <th class="col-num">#</th>
@@ -988,15 +992,18 @@ const goAnalytics = () => {
   font-size: 12px;
   font-weight: 600;
   background: #10b981;
-  color: #ffffff;
+  color: #022c16;
 }
 
 .state-pill.closed {
-  background: #ef4444;
+  background: #dc2626;
+  color: #ffffff;
 }
 
 .state-pill.paused {
   background: #f59e0b;
+
+  color: #422006;
 }
 
 .layout {
@@ -1034,7 +1041,7 @@ const goAnalytics = () => {
 
 .ta-body {
   font-size: 14px;
-  color: #6b7280;
+  color: #536174;
 }
 
 .ta-name {
@@ -1105,7 +1112,7 @@ const goAnalytics = () => {
 
 .logged-as {
   font-size: 12px;
-  color: #6b7280;
+  color: #536174;
   margin-top: 6px;
 }
 
@@ -1325,17 +1332,17 @@ const goAnalytics = () => {
 .action-btn.select-self {
   background: #16a34a;
   border-color: #16a34a;
-  color: #ffffff;
+  color: #022c16;
 }
 
 .action-btn.select-priority {
   background: #fee2e2;
-  border-color: #ef4444;
+  border-color: #dc2626;
   color: #b91c1c;
 }
 
 .action-btn.select-reselect {
-  border-color: #ef4444;
+  border-color: #dc2626;
   color: #b91c1c;
   background: #ffffff;
 }
@@ -1348,7 +1355,7 @@ const goAnalytics = () => {
 
 .action-btn.other-ta {
   border-color: #22c55e;
-  color: #16a34a;
+  color: #166534;
   background: #f0fdf4;
 }
 
@@ -1376,7 +1383,7 @@ const goAnalytics = () => {
 .empty-text {
   padding: 10px 14px;
   font-size: 13px;
-  color: #6b7280;
+  color: #536174;
   text-align: left;
 }
 
