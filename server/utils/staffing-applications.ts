@@ -80,10 +80,13 @@ export async function updateApplication(db: Db, session: ClientSession, user: St
   return { application: applicationDto((await db.collection('staffingApplications').findOne({ id: applicationId }, { session }))!, true) }
 }
 
-export async function submitApplication(db: Db, session: ClientSession, user: StaffingActor, applicationId: string) {
+export async function submitApplication(db: Db, session: ClientSession, user: StaffingActor, applicationId: string, raw: unknown) {
   const { application, opportunity, owner } = await applicationAccess(db, applicationId, user, session)
   await lockStaffingResource(db, opportunity, session)
   if (!owner) fail(403, 'Only the applicant may submit')
+  const body = object(raw, 'Application submission')
+  if (body.expectedVersion === undefined) fail(400, 'The current application version is required')
+  assertVersion(application, body.expectedVersion)
   await assertApplicationEditable(db, application, opportunity, session)
   if (application.opportunityVersion !== (opportunity.requirementsVersion || 1)) fail(409, 'Requirements changed. Review and save the updated form before submitting.')
   const p = application.profile || {}

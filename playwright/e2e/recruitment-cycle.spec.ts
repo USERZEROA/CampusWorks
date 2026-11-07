@@ -69,7 +69,7 @@ test('closing recruitment blocks publishing and submission while existing applic
     await configure(space, { opensAt: new Date(Date.now() - 2 * 86400000).toISOString(), closesAt: new Date(Date.now() - 1000).toISOString(), enabled: true });
     const third = await space.actor('late-applicant');
     expect((await third.api.post(`/api/staffing/opportunities/${posting.id}/applications`, { data: {} })).status()).toBe(409);
-    expect((await second.api.post(`/api/staffing/applications/${draft.id}/submit`, { data: {} })).status()).toBe(409);
+    expect((await second.api.post(`/api/staffing/applications/${draft.id}/submit`, { data: { expectedVersion: draft.version } })).status()).toBe(409);
     expect((await space.instructor.api.post(`/api/staffing/opportunities/${pending.id}/publish`, { data: { expectedVersion: pending.version } })).status()).toBe(409);
     const chosen = await space.select(application);
     await ok(space.student.api.post(`/api/staffing/offers/${chosen.offer.id}/accept`, { data: {} }));
@@ -145,7 +145,7 @@ test('a cross-instance semester switch orders new drafts and resubmission withou
   try {
     const [switched, resubmitted, created] = await Promise.all([
       space.admin.api.put('/api/staffing/cycle', { data: { expectedVersion: before.version, termId: next.id, opensAt: before.opensAt, closesAt: before.closesAt, enabled: true } }),
-      studentReplica.post(`/api/staffing/applications/${draft.id}/submit`, { data: {} }),
+      studentReplica.post(`/api/staffing/applications/${draft.id}/submit`, { data: { expectedVersion: draft.version } }),
       facultyReplica.post('/api/staffing/opportunities', { data: draftBody(space) }),
     ]);
     expect(switched.status()).toBe(200);
@@ -154,7 +154,8 @@ test('a cross-instance semester switch orders new drafts and resubmission withou
     const record = (await created.json()).opportunity;
     createdId = record.id;
     expect([before.termId, next.id]).toContain(record.termId);
-    expect((await studentReplica.post(`/api/staffing/applications/${draft.id}/submit`, { data: {} })).status()).toBe(409);
+    const currentApplication = (await json(studentReplica.get(`/api/staffing/applications/${draft.id}`))).application;
+    expect((await studentReplica.post(`/api/staffing/applications/${draft.id}/submit`, { data: { expectedVersion: currentApplication.version } })).status()).toBe(409);
     expect((await space.instructor.api.post('/api/staffing/opportunities', { data: draftBody(space, { termId: before.termId }) })).status()).toBe(409);
     const publish = await facultyReplica.post(`/api/staffing/opportunities/${record.id}/publish`, { data: { expectedVersion: record.version } });
     expect(publish.status()).toBe(record.termId === next.id ? 200 : 409);

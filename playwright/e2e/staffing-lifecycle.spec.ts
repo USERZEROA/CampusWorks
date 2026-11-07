@@ -127,7 +127,7 @@ test('private drafts, current CVs and administrative fields cannot be read by un
 test('invalid CVs, stale versions, malformed question IDs and absent required answers fail explicitly', async ({ space }) => {
   const posting = await space.opportunity();
   const draft = (await json(space.student.api.post(`/api/staffing/opportunities/${posting.id}/applications`, { data: {} }))).application;
-  expect((await space.student.api.post(`/api/staffing/applications/${draft.id}/submit`, { data: {} })).status()).toBe(400);
+  expect((await space.student.api.post(`/api/staffing/applications/${draft.id}/submit`, { data: { expectedVersion: draft.version } })).status()).toBe(400);
   expect((await space.student.api.post(`/api/staffing/applications/${draft.id}/cv`, { multipart: { expectedVersion: String(draft.version), file: { name: 'script.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.7\n/JavaScript (untrusted)') } } })).status()).toBe(400);
   expect((await space.student.api.post(`/api/staffing/applications/${draft.id}/cv`, { multipart: { expectedVersion: String(draft.version), file: { name: 'binary.exe', mimeType: 'application/octet-stream', buffer: Buffer.from([0, 1]) } } })).status()).toBe(400);
   expect((await space.student.api.patch(`/api/staffing/applications/${draft.id}`, { data: { expectedVersion: -1, profile: {} } })).status()).toBe(409);

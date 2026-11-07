@@ -83,7 +83,7 @@ export async function prepareStaffingDemo(baseURL, course = 'cs101') {
         answers: { experience: 'Synthetic application for local exploration. No real student background is represented.' }, qualificationText: 'Synthetic programming coursework, collaboration and explanation practice.',
       } }))).application;
       application = (await call(student.post(`/api/staffing/applications/${application.id}/cv`, { multipart: { expectedVersion: String(application.version), file: { name: 'synthetic-demo-cv.txt', mimeType: 'text/plain', buffer: Buffer.from('Synthetic demonstration CV\nProgramming coursework and collaboration.\nNo real applicant data.\n') } } }))).application;
-      await call(student.post(`/api/staffing/applications/${application.id}/submit`, { data: {} }));
+      await call(student.post(`/api/staffing/applications/${application.id}/submit`, { data: { expectedVersion: application.version } }));
     }
     return { course, termId: term.id, opportunityIds: opportunities.map(item => item.id) };
   } finally { await Promise.allSettled(contexts.map(api => api.dispose())); }

@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
   if (resource === 'opportunities' && id && method === 'POST' && action === 'applications') return withTransaction((database, session) => createApplication(database, session, user, id))
   if (resource === 'applications' && id && method === 'PATCH' && !action) return withTransaction((database, session) => updateApplication(database, session, user, id, body))
   if (resource === 'applications' && id && method === 'POST') {
-    if (action === 'submit') return withTransaction((database, session) => submitApplication(database, session, user, id))
+    if (action === 'submit') return withTransaction((database, session) => submitApplication(database, session, user, id, body))
     if (action === 'withdraw') return withTransaction((database, session) => withdrawApplication(database, session, user, id))
     if (action === 'shortlist') return withTransaction((database, session) => reviewApplication(database, session, user, id, body))
     if (action === 'reject') return withTransaction((database, session) => reviewApplication(database, session, user, id, body, true))

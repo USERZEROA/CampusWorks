@@ -69,7 +69,7 @@ export const test = base.extend<{ space: StaffingSpace }>({
           appointmentStart: new Date(Date.now() - 3600000).toISOString(), appointmentEnd: new Date(Date.now() + 14 * 86400000).toISOString(),
           requiresAttendance: true, hasLab: true, hasDiscussion: true, requiresGrading: true, holdsOfficeHours: true,
           duties: [{ kind: 'office_hours', sessionsPerWeek: 2, minutesPerSession: 60 }, { kind: 'grading', sessionsPerWeek: 1, minutesPerSession: 120 }],
-          requiredSkills: 'Algorithms and clear explanations', preferredSkills: 'Teaching experience', questions: [{ id: 'motivation', prompt: 'Why this course?', required: true }],
+          requiredSkills: 'Algorithms and clear explanations', preferredSkills: 'Teaching experience', questions: [{ id: 'motivation', prompt: 'Why this course?', required: true, purpose: 'qualification' }],
           cvRequired: true, approvalRequired: false, hourlyRate: 20, budget: 1200, ...overrides,
         };
         const result = (await json(owner.api.post('/api/staffing/opportunities', { data: input }))).opportunity;
@@ -84,7 +84,7 @@ export const test = base.extend<{ space: StaffingSpace }>({
           answers: { motivation: 'I enjoy explaining algorithms clearly.' }, qualificationText: 'Relevant algorithms coursework and peer tutoring.', ...overrides,
         } }))).application;
         application = (await json(candidate.api.post(`/api/staffing/applications/${application.id}/cv`, { multipart: { expectedVersion: String(application.version), file: { name: 'synthetic-cv.txt', mimeType: 'text/plain', buffer: Buffer.from('Synthetic CV\nAlgorithms coursework\nPeer tutoring\n') } } }))).application;
-        return (await json(candidate.api.post(`/api/staffing/applications/${application.id}/submit`, { data: {} }))).application;
+        return (await json(candidate.api.post(`/api/staffing/applications/${application.id}/submit`, { data: { expectedVersion: application.version } }))).application;
       };
       const select = (application: any, reviewer = instructor, key = `select-${uniqueId()}`) => json(reviewer.api.post(`/api/staffing/applications/${application.id}/select`, { data: { expectedVersion: application.version, idempotencyKey: key } }));
       const secondary = async (actor: Actor) => {
@@ -106,6 +106,7 @@ export const test = base.extend<{ space: StaffingSpace }>({
           for (const collection of ['staffingApplications', 'staffingDocuments', 'staffingOffers', 'staffingAppointments', 'staffingAllocations', 'staffingAiTasks', 'staffingAiSubscriptions', 'staffingAiRefreshJobs', 'staffingAiResultCache']) await db.collection(collection).deleteMany({ opportunityId: { $in: opportunityIds } });
           await db.collection('staffingOpportunities').deleteMany({ id: { $in: opportunityIds } });
           await db.collection('staffingCommands').deleteMany({ applicationId: { $in: applicationIds } });
+          await db.collection('staffingAdministrativeAudits').deleteMany({ applicationId: { $in: applicationIds } });
         } finally { await client.close(); }
       }
       for (const course of courseIds) await admin.api.delete(`/api/courses/${course}`).catch(() => {});

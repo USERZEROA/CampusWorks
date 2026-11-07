@@ -118,7 +118,7 @@ async function proof() {
       profile: { firstName: 'Synthetic', lastName: 'Applicant', preferredEmail: candidate.email, undergraduateMajors: 'Computer Science', department: 'Computer Science', positionPreference: 'half', priorTaExperience: false, priorCourses: '', multipleCourses: false, graduationTerm: term.name, availability: 'Weekday afternoons', availableHours: 10, skills: 'Algorithms and communication', experience, slots: [] },
       answers: { experience }, qualificationText: `Synthetic qualification evidence: ${experience} No real individual is represented.`,
     } }))).application
-    return (await call(candidate.api.post(`/api/staffing/applications/${application.id}/submit`, { data: {} }))).application
+    return (await call(candidate.api.post(`/api/staffing/applications/${application.id}/submit`, { data: { expectedVersion: application.version } }))).application
   }
   const first = await apply(candidateA, 'Algorithms coursework and peer tutoring practice.')
   await apply(candidateB, 'Algorithms coursework and collaborative problem-solving practice.')
