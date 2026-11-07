@@ -7,6 +7,7 @@ import { randomBytes } from 'node:crypto';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 process.chdir(root);
+process.env.NUXT_TELEMETRY_DISABLED = '1';
 mkdirSync('.cache', { recursive: true });
 const label = `campusworks-local-${Date.now()}-${randomBytes(3).toString('hex')}`;
 const database = 'campusworks_local_tests';

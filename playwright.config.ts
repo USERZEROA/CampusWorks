@@ -16,6 +16,8 @@ export default defineConfig({
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
   ],
   use: {
+    actionTimeout: 10000,
+    navigationTimeout: 20000,
     baseURL: process.env.BASE_URL || 'http://localhost:3000',
     trace: 'retain-on-failure',
     video: 'retain-on-failure',
@@ -25,6 +27,11 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      testMatch: /(?:auth|queue-flow|extended-flow|staffing-browser)\.spec\.ts$/,
+      use: { ...devices['Desktop Firefox'] },
     },
   ],
 });

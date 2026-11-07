@@ -30,7 +30,8 @@ async function courseView(api: APIRequestContext, code: string) {
 }
 
 async function openPage(page: Page, path: string) {
-  await page.goto(path);
+  const response = await page.goto(path);
+  expect(response?.status(), `Navigation to ${path}`).toBe(200);
   await page.waitForFunction(() => !!(document.querySelector('#__nuxt') as any)?.__vue_app__);
 }
 
@@ -165,6 +166,7 @@ test('course identifiers and current roles bound announcements and staff authori
   for (const path of [firstPath, otherPath]) {
     await successful(admin.patch(`${path}/state`, { data: { state: 'open' } }));
   }
+  await successful(ta.api.post(`${firstPath}/ta-duty`, { data: { onDuty: true } }));
   await successful(student.api.post(`${firstPath}/queue/join`, { data: { location: 'A' } }));
   await successful(otherStudent.api.post(`${otherPath}/queue/join`, { data: { location: 'B' } }));
   const otherEntry = (await courseView(admin, otherCode)).queue[0];
@@ -307,7 +309,7 @@ test('synthetic analytics render an empty range, nearest-rank P90 and a full sin
   // Only this page's polling response is supplied with labeled synthetic data.
   // No fabricated analytics or historic timestamps are written to the database.
   const synthetic = { ...baseline, helpSessions: [] as any[] };
-  await page.route(`**/api/courses/${space.code}/admin`, (route) => route.fulfill({ json: synthetic }));
+  await page.route(`**/api/courses/${space.code}/admin*`, (route) => route.fulfill({ json: synthetic }));
   await successful(page.request.post('/api/auth/mock', { data: { as: 'admin', email: space.adminEmail } }));
   await openPage(page, `/courses/${space.code}/admin`);
   const metric = (label: string) => page.locator('.summary-card').filter({ hasText: label }).locator('.summary-value');
@@ -324,6 +326,8 @@ test('synthetic analytics render an empty range, nearest-rank P90 and a full sin
       joinedAt: new Date(helpStart - wait * 60_000).toISOString(),
       helpStartAt: new Date(helpStart).toISOString(),
       helpEndAt: new Date(now).toISOString(),
+      helpMinutes: 3, waitMinutes: wait,
+      helpSegments: [{ taEmail: 'synthetic-ta@example.com', taName: 'Synthetic TA', startAt: new Date(helpStart).toISOString(), endAt: new Date(now).toISOString(), durationMs: 180000 }],
       leftQueueAt: new Date(now).toISOString(),
       wasHelped: true, endReason: 'completed',
     };
