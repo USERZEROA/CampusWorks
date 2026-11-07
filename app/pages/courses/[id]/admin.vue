@@ -9,8 +9,6 @@ import {
   computed,
   ref,
   watch,
-  onMounted,
-  onBeforeUnmount,
   reactive,
 } from "vue";
 import {
@@ -79,6 +77,7 @@ type AdminApiResult = {
   pagination?: {
     offset: number;
     limit: number;
+    snapshot: string;
     totals: { feedback: number; enrollments: number; helpSessions: number };
     hasMore: { feedback: boolean; enrollments: boolean; helpSessions: boolean };
   };
@@ -90,6 +89,7 @@ type AdminApiResult = {
     isGlobalAdmin: boolean;
   };
   enrollments: Enrollment[];
+  restrictions: Array<{ userEmail: string; restrictedAt?: string; restrictedBy?: string }>;
   queueEntries: any[];
   helpSessions: HelpSession[];
   feedback: Feedback[];
@@ -127,49 +127,53 @@ const route = useRoute();
 const router = useRouter();
 const courseId = route.params.id as string;
 const requestFetch = useRequestFetch();
-const pageCount = ref(1);
-const loadingMore = ref(false);
-const loadAdminData = async (): Promise<AdminApiResult> => {
-  let result: AdminApiResult | undefined;
-  for (let page = 0; page < pageCount.value; page++) {
-    const current = await requestFetch<AdminApiResult>(
-      `/api/courses/${courseId}/admin`,
-      { query: { offset: page * 500, limit: 500 } },
-    );
-    if (!result) result = current;
-    else {
-      result.feedback.push(...current.feedback);
-      result.enrollments.push(...current.enrollments);
-      result.helpSessions.push(...current.helpSessions);
-      result.pagination = current.pagination;
+const refreshNotice = ref("");
+let lastComplete: AdminApiResult | undefined;
+const loadAdminData = async (_app: unknown, { signal }: { signal: AbortSignal }): Promise<AdminApiResult> => {
+  for (let attempt = 0; ; attempt++) {
+    let result: AdminApiResult | undefined;
+    try {
+      for (let page = 0; ; page++) {
+        const current = await requestFetch<AdminApiResult>(
+          `/api/courses/${courseId}/admin`,
+          { signal, query: { offset: page * 500, limit: 500, snapshot: result?.pagination?.snapshot } },
+        );
+        if (!result) result = current;
+        else {
+          result.feedback.push(...current.feedback);
+          result.enrollments.push(...current.enrollments);
+          result.helpSessions.push(...current.helpSessions);
+          result.pagination = current.pagination;
+        }
+        if (!Object.values(current.pagination?.hasMore || {}).some(Boolean)) break;
+      }
+      lastComplete = result!;
+      refreshNotice.value = "";
+      return result!;
+    } catch (error: any) {
+      const status = error?.statusCode || error?.response?.status;
+      if (status === 409 && attempt < 2 && !signal.aborted) continue;
+      if (lastComplete && ![401, 403, 404].includes(status) && !signal.aborted) {
+        refreshNotice.value = "Refresh failed. Showing previous results.";
+        return lastComplete;
+      }
+      throw error;
     }
   }
-  return result!;
 };
 
 const { data, error } = await useAsyncData<AdminApiResult>(
   `course-admin-${courseId}`,
   loadAdminData,
+  { dedupe: "defer" },
 );
-const hasMoreData = computed(() =>
-  Object.values(data.value?.pagination?.hasMore || {}).some(Boolean),
-);
-const loadMoreData = async () => {
-  if (loadingMore.value) return;
-  loadingMore.value = true;
-  pageCount.value++;
-  try {
-    await refreshNuxtData(`course-admin-${courseId}`);
-  } finally {
-    loadingMore.value = false;
-  }
-};
+lastComplete = data.value || lastComplete;
 watch(error, (value) => {
   const status = (value as any)?.statusCode;
   if (status === 401) {
     capturedUser.value = null;
     navigateWithContext("/login");
-  } else if (status === 403) navigateWithContext("/courses");
+  } else if (status === 403 || status === 404) navigateWithContext("/courses");
 });
 
 if (error.value) {
@@ -824,11 +828,10 @@ const exportCsv = () => {
   ];
   const lines = [header.join(",")];
 
-  // Quote every cell, and neutralize leading =,+,-,@ so spreadsheet apps
-  // do not evaluate student-provided text as a formula.
+  // Quote every cell and neutralize formula markers and leading control characters.
   const cell = (value: unknown) => {
     let text = value === undefined || value === null ? "" : String(value);
-    if (/^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+    if (/^[=+\-@\t\r\n????]/.test(text)) text = `'${text}`;
     return `"${text.replace(/"/g, '""')}"`;
   };
 
@@ -903,11 +906,11 @@ const updateRole = async (
   }
 };
 
-const kickUser = async (email: string) => {
+const kickUser = async (email: string, role: Enrollment["role"]) => {
   if (busyActions.value) return;
   busyActions.value = true;
   try {
-    const ok = window.confirm(`Remove ${email} from this course and queue?`);
+    const ok = window.confirm(role === "student" ? `Remove ${email} and restrict rejoining until restored?` : `Remove ${email} from this course and queue?`);
     if (!ok) return;
     try {
       await $fetch(`/api/courses/${courseId}/enrollments/kick`, {
@@ -918,6 +921,19 @@ const kickUser = async (email: string) => {
     } catch (e: any) {
       alert(apiErrorMessage(e, "Failed to remove user"));
     }
+  } finally {
+    busyActions.value = false;
+  }
+};
+
+const restoreStudent = async (email: string) => {
+  if (busyActions.value) return;
+  busyActions.value = true;
+  try {
+    await $fetch(`/api/courses/${courseId}/enrollments/restore`, { method: "POST", body: { email } });
+    await refreshNuxtData(`course-admin-${courseId}`);
+  } catch (error: any) {
+    alert(apiErrorMessage(error, "Failed to restore course access"));
   } finally {
     busyActions.value = false;
   }
@@ -947,17 +963,7 @@ const goHelp = () => {
   navigateWithContext("/help");
 };
 
-let timer: any = null;
-
-onMounted(() => {
-  timer = setInterval(() => {
-    if (!document.hidden) refreshNuxtData(`course-admin-${courseId}`);
-  }, 3000);
-});
-
-onBeforeUnmount(() => {
-  if (timer) clearInterval(timer);
-});
+useIntervalRefresh(() => refreshNuxtData(`course-admin-${courseId}`), 15000);
 </script>
 
 <template>
@@ -1073,18 +1079,7 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
-      <p v-if="hasMoreData" class="pagination-note" role="status">
-        Showing {{ rawHelpSessions.length }} of
-        {{ data?.pagination?.totals.helpSessions }} history rows.
-        <button
-          type="button"
-          :disabled="loadingMore"
-          @click="loadMoreData"
-          data-testid="admin-load-more"
-        >
-          {{ loadingMore ? "Loading…" : "Load more records" }}
-        </button>
-      </p>
+      <p v-if="refreshNotice" class="pagination-note" role="status">{{ refreshNotice }}</p>
 
       <!-- Analytics -->
       <section class="panel">
@@ -1120,11 +1115,12 @@ onBeforeUnmount(() => {
                 <div>
                   Sessions in range:
                   <strong data-testid="sessions-in-range">{{
-                    sessionsInRange
+                    filteredSessions.length
                   }}</strong>
                 </div>
                 <button
                   class="btn-export"
+                  :disabled="!data"
                   @click="exportCsv"
                   data-testid="export-csv-btn"
                 >
@@ -1686,7 +1682,7 @@ onBeforeUnmount(() => {
                     <button
                       :disabled="busyActions"
                       class="btn-danger"
-                      @click="kickUser(enr.userEmail)"
+                      @click="kickUser(enr.userEmail, enr.role)"
                     >
                       Remove
                     </button>
@@ -1699,6 +1695,18 @@ onBeforeUnmount(() => {
               </tr>
             </tbody>
           </table>
+          <template v-if="data?.restrictions?.length">
+            <h3>Restricted students</h3>
+            <table class="enroll-table" aria-label="Restricted students">
+              <thead><tr><th>Email</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr v-for="restriction in data.restrictions" :key="restriction.userEmail" :data-testid="`restriction-row-${restriction.userEmail}`">
+                  <td>{{ restriction.userEmail }}</td>
+                  <td><button type="button" class="btn-outline" :disabled="busyActions" @click="restoreStudent(restriction.userEmail)">Restore access</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </template>
         </div>
       </section>
     </main>
