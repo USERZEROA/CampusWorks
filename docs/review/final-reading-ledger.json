@@ -1,12 +1,12 @@
 {
-  "recordedAt": "2026-11-07T08:54:41.467Z",
+  "recordedAt": "2026-11-07T14:26:09.762Z",
   "coverage": "Full maintained source and test reading, semantic domain review and final integration review. This ledger records the reviewed delivered bytes; it is not an automated proof of semantic correctness.",
   "files": [
     {
       "path": "app/app.vue",
-      "bytes": 1326,
-      "sha256": "46a12872bfe317b71c24b5aca95dd3cbde1014fb882ab813e9a084c3e6cdc9f1",
-      "physicalLines": 67,
+      "bytes": 1397,
+      "sha256": "281d12363ae7b75e79c06599ed1062f32e017e6af2c131f6a509bbd218231c46",
+      "physicalLines": 72,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -16,9 +16,9 @@
     },
     {
       "path": "app/components/AiAssistance.vue",
-      "bytes": 3838,
-      "sha256": "b04adb73aa4dd48ee48f6ff73c01fbd3fe37099b3efa658812ee59e2ec69f6ca",
-      "physicalLines": 121,
+      "bytes": 13785,
+      "sha256": "c8e0c73df866e77a2e9a99785374b971414ab909dde0f4484fcdaad740addd0c",
+      "physicalLines": 374,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -64,9 +64,9 @@
     },
     {
       "path": "app/components/StaffingShell.vue",
-      "bytes": 6139,
-      "sha256": "b4aa7ad9b25b17b1ad3657a87849a89ee4f66f72977cbd52793d8473ada46ff9",
-      "physicalLines": 314,
+      "bytes": 6251,
+      "sha256": "d89d25d31172d733e26669fa0f3fe3dee1ff7bfc091c91c2ffc543ded1840eb7",
+      "physicalLines": 318,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -124,9 +124,9 @@
     },
     {
       "path": "app/composables/useStaffing.ts",
-      "bytes": 4390,
-      "sha256": "be38f64fffcecbbefb70cdb340c865c39e57154d887046f4978b7e795fe83962",
-      "physicalLines": 139,
+      "bytes": 5587,
+      "sha256": "70c28eae940d25cd5a2d5e2e3c05063c24ce50b6ffc38dbd89d2f2d37153985b",
+      "physicalLines": 180,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -160,9 +160,9 @@
     },
     {
       "path": "app/pages/admin/courses.vue",
-      "bytes": 10466,
-      "sha256": "968ca13f6c887b79896dc24611dc138adc4682f5c11c2fa93eb4ec9490cc9963",
-      "physicalLines": 518,
+      "bytes": 10603,
+      "sha256": "0d373c11178f80aa54ec00e624cf0bb7e9c680f4be32177e22c9bf15a66f769f",
+      "physicalLines": 525,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -184,9 +184,9 @@
     },
     {
       "path": "app/pages/applications/[id].vue",
-      "bytes": 20874,
-      "sha256": "4d2fe1ffd68c2cbbd1931f0896b2754063348937385612a291ffac13f9f3ddf0",
-      "physicalLines": 589,
+      "bytes": 20976,
+      "sha256": "2ec01e49fde81d4c76bc2fa681fa969c9349d638ab0adfc4cb0ee4fd868a3ad0",
+      "physicalLines": 590,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -220,9 +220,9 @@
     },
     {
       "path": "app/pages/courses/[id]/admin.vue",
-      "bytes": 62350,
-      "sha256": "546384561c947cf75c02c6862bf9811d4d2f266fa245b1eb71e6ce01836cb3a1",
-      "physicalLines": 2517,
+      "bytes": 63577,
+      "sha256": "92b823ef01be9d8347e4029f9bfbfdd5bb2413d4df86c2f3fac157e9b424be14",
+      "physicalLines": 2549,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -232,9 +232,9 @@
     },
     {
       "path": "app/pages/courses/[id]/review.vue",
-      "bytes": 4988,
-      "sha256": "5f9d1f19f177e2037472dc081f97752a82856a7e9695cf8be687d3fa71809260",
-      "physicalLines": 142,
+      "bytes": 5981,
+      "sha256": "0d2d1af5c883ad872acb0cad5f6648314b438eb01e2ea241bd16bd0ab858041c",
+      "physicalLines": 170,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -244,20 +244,8 @@
     },
     {
       "path": "app/pages/courses/[id]/student.vue",
-      "bytes": 33967,
-      "sha256": "b8c68c7cda0e779cd6f1d32d6f966590651fbd6c5e850d1e05af6594f8a5446c",
-      "physicalLines": 1506,
-      "category": "maintained source and verification code",
-      "reviewers": [
-        "interface reviewer",
-        "primary integration reviewer"
-      ],
-      "review": "Full text read and semantic review; runtime evidence is recorded separately."
-    },
-    {
-      "path": "app/pages/courses/[id]/ta.vue",
-      "bytes": 34681,
-      "sha256": "b0c0748312091662981485aab7d24a7eee7cc408f0a02c3782bd998ee5ecc3de",
+      "bytes": 34193,
+      "sha256": "d8241ad90654a45419e4771f49d6838c41e5230d0b88a62e2ba36574e805373d",
       "physicalLines": 1516,
       "category": "maintained source and verification code",
       "reviewers": [
@@ -267,10 +255,22 @@
       "review": "Full text read and semantic review; runtime evidence is recorded separately."
     },
     {
+      "path": "app/pages/courses/[id]/ta.vue",
+      "bytes": 34818,
+      "sha256": "9e15d98f5eba8b06dd466720d975d840ce998087ace819966a7f15251092d4f9",
+      "physicalLines": 1523,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "interface reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
       "path": "app/pages/courses/index.vue",
-      "bytes": 14260,
-      "sha256": "9305e98d2ba3f6099695b3fd697797a7a18dd42d21397d20d561d49d57433558",
-      "physicalLines": 686,
+      "bytes": 14454,
+      "sha256": "b556f7558c1ce13107f55c4ecfef9a07b579c46e6873663a8d5de86efae5cf40",
+      "physicalLines": 693,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -280,9 +280,9 @@
     },
     {
       "path": "app/pages/help.vue",
-      "bytes": 7998,
-      "sha256": "9047e58a0128e96c58bc2e8474d39e0c8b5b4d792dee8470b6053bfd9bc9bcaa",
-      "physicalLines": 337,
+      "bytes": 8527,
+      "sha256": "c7d924ae436cfe4e97893f654df41f2f1f76675cb66bd269009bd4cc3d8f3c72",
+      "physicalLines": 351,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -304,9 +304,9 @@
     },
     {
       "path": "app/pages/login.vue",
-      "bytes": 11781,
-      "sha256": "3c0b82a538905b42151e77104a85fb42b82caf67ee416028273b8ed705f0791d",
-      "physicalLines": 555,
+      "bytes": 11852,
+      "sha256": "96f7fedb4c3b7afb042fdff3afb3428f3f1d112f82bc5e0e90700df9ec4f53cb",
+      "physicalLines": 558,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -316,9 +316,9 @@
     },
     {
       "path": "app/pages/opportunities/[id].vue",
-      "bytes": 5567,
-      "sha256": "157459be7627668aa5562f5067a64e39a226846258345c621753ab97eb9b38f4",
-      "physicalLines": 164,
+      "bytes": 6397,
+      "sha256": "9f2727623b4b0f739af55a11f8438bed77e058f7c34f23933978f0c17a6bf2ad",
+      "physicalLines": 189,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -328,9 +328,9 @@
     },
     {
       "path": "app/pages/opportunities/index.vue",
-      "bytes": 3127,
-      "sha256": "45a209d62c0c53ac96941be04f2ae3445d48d2134479eca124381ec147453b51",
-      "physicalLines": 96,
+      "bytes": 3217,
+      "sha256": "7fe18738620e07d3c4fe4df1b46312b4c87797970bfbf5de392de2272cf1a127",
+      "physicalLines": 97,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -364,9 +364,9 @@
     },
     {
       "path": "app/pages/staffing/[id].vue",
-      "bytes": 12944,
-      "sha256": "d17fae1ae04f880b632a77a78953d7af07ad2f7c742c3a8cde8128b1e2607d10",
-      "physicalLines": 351,
+      "bytes": 13560,
+      "sha256": "59a589129978ebbdd43b34432d6b6b3833dc4bef37e0293d3ff4747c048e3b82",
+      "physicalLines": 369,
       "category": "maintained source and verification code",
       "reviewers": [
         "interface reviewer",
@@ -433,10 +433,43 @@
       "review": "Full text read and semantic review; runtime evidence is recorded separately."
     },
     {
+      "path": "playwright/e2e/ai-refresh.spec.ts",
+      "bytes": 16758,
+      "sha256": "e25a449b6531ad71f970a7224829d895801a4b2e0703959c9929bd1fd1aeb3c2",
+      "physicalLines": 255,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/appointment-overlap.spec.ts",
+      "bytes": 12336,
+      "sha256": "17bf6ebb2370ba90abad4d464bed2ea56a596e3b99297d0e6892434688e3de21",
+      "physicalLines": 180,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
       "path": "playwright/e2e/auth.spec.ts",
       "bytes": 4231,
       "sha256": "4a52abca79e21702f86028e0f28bdcca405834855f584863b246f961c3b5d4ae",
       "physicalLines": 97,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "playwright/e2e/demo-workspaces.spec.ts",
+      "bytes": 2338,
+      "sha256": "c79967fd4a9c7b86822591b03605bcca44b778ae8e3caa1b3bff9204261b275a",
+      "physicalLines": 32,
       "category": "maintained source and verification code",
       "reviewers": [
         "primary verification reviewer"
@@ -456,9 +489,9 @@
     },
     {
       "path": "playwright/e2e/institutional-identity.spec.ts",
-      "bytes": 4633,
-      "sha256": "6cf05acb47f43c8a681ac5d851701e12d0a9bc261ea368d8d2a27c5231f2e113",
-      "physicalLines": 76,
+      "bytes": 5474,
+      "sha256": "8f422a2bd713e9f2dc7c573b167339cd0f1e5989472ab6f2a4779ed0bd62edde",
+      "physicalLines": 90,
       "category": "maintained source and verification code",
       "reviewers": [
         "primary verification reviewer"
@@ -500,9 +533,9 @@
     },
     {
       "path": "playwright/e2e/staffing-boundaries.spec.ts",
-      "bytes": 9801,
-      "sha256": "10e9b316086db1d57183bb6f87c89a5084548bd091150fb15dff48532a406422",
-      "physicalLines": 118,
+      "bytes": 11563,
+      "sha256": "df2af74af8606a7b111f28199d30e98e41c9c739b04784b12a3e43e26c52b8e5",
+      "physicalLines": 141,
       "category": "maintained source and verification code",
       "reviewers": [
         "primary verification reviewer"
@@ -511,9 +544,9 @@
     },
     {
       "path": "playwright/e2e/staffing-browser.spec.ts",
-      "bytes": 16861,
-      "sha256": "042daa2d84f940ade7489212e0260dd1833c2fb9318c01649311996a4dbd2690",
-      "physicalLines": 237,
+      "bytes": 22146,
+      "sha256": "1d8db444323de38c6eead72cb40f7bc746bb21c922a036020dcb46f09a8f2da7",
+      "physicalLines": 305,
       "category": "maintained source and verification code",
       "reviewers": [
         "primary verification reviewer"
@@ -544,8 +577,8 @@
     },
     {
       "path": "playwright/staffing-fixtures.ts",
-      "bytes": 8319,
-      "sha256": "d3f5263f6af6244e5160bc58491bd7583fbcd07481fc3f8344a03369d327507f",
+      "bytes": 8396,
+      "sha256": "40f35470047ac12f8bfb4122c39784b09974f3210f52a3183d345e04c145019a",
       "physicalLines": 114,
       "category": "maintained source and verification code",
       "reviewers": [
@@ -565,10 +598,21 @@
       "review": "Full text read and semantic review; runtime evidence is recorded separately."
     },
     {
+      "path": "scripts/demo-staffing.mjs",
+      "bytes": 7712,
+      "sha256": "e3c609667008c30337cfa6b46e9b65eddc097117e4f58e54f16e2ce7376456ec",
+      "physicalLines": 87,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "primary verification reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
       "path": "scripts/demo-windows.mjs",
-      "bytes": 4236,
-      "sha256": "cbb4611d7dcf6d8841ed8a44e1cb4f0294aad38718f321cba3c94f8a237d2fca",
-      "physicalLines": 109,
+      "bytes": 5450,
+      "sha256": "125b45c9915d16d0b437ef382dfce2fa3efc5e9b708e21399425a016def5a682",
+      "physicalLines": 127,
       "category": "maintained source and verification code",
       "reviewers": [
         "primary verification reviewer"
@@ -600,9 +644,9 @@
     },
     {
       "path": "server/api/ai/[...path].ts",
-      "bytes": 907,
-      "sha256": "83d0f6e4d17716f4535af2ca4724c6770fc7647b8f15c4e29e8bed7f2200b2cf",
-      "physicalLines": 17,
+      "bytes": 1595,
+      "sha256": "22d61aca5a5ded5ab4f820aa9541205831eda8517e7a5c036f40f6f0e0436673",
+      "physicalLines": 27,
       "category": "maintained source and verification code",
       "reviewers": [
         "core security or staffing domain reviewer",
@@ -924,8 +968,8 @@
     },
     {
       "path": "server/api/staffing/[...path].ts",
-      "bytes": 14256,
-      "sha256": "5c704bd6b14bae557258ed5873981497361910fdcdda134025c7ccb23bc8448b",
+      "bytes": 14314,
+      "sha256": "6d287a2842cfc5eb3c0b926c7693650834280b4ce70d04b2f51fbc326e7a73ea",
       "physicalLines": 146,
       "category": "maintained source and verification code",
       "reviewers": [
@@ -959,10 +1003,34 @@
       "review": "Full text read and semantic review; runtime evidence is recorded separately."
     },
     {
+      "path": "server/plugins/ai-refresh.ts",
+      "bytes": 864,
+      "sha256": "c34c071ebb24ed8fad238bfb6bfa7d1ccc0e516dc4ffcb7655747ab8bb219c2b",
+      "physicalLines": 19,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
+      "path": "server/utils/ai-refresh.ts",
+      "bytes": 21500,
+      "sha256": "2893b70f91980cfbeeb9a3d81c72c34d930d0b10ca2da578a7e5fcd0de0e8671",
+      "physicalLines": 265,
+      "category": "maintained source and verification code",
+      "reviewers": [
+        "core security or staffing domain reviewer",
+        "primary integration reviewer"
+      ],
+      "review": "Full text read and semantic review; runtime evidence is recorded separately."
+    },
+    {
       "path": "server/utils/ai.ts",
-      "bytes": 22171,
-      "sha256": "7e6b603a7179c72fe35a2692412e495c064f5719fb6abd7a1e12dd6a157e966e",
-      "physicalLines": 251,
+      "bytes": 25491,
+      "sha256": "f033f1d04f80d702b407b0e2d0746fc10bb238a0a8973a16be6bee9bbbd91266",
+      "physicalLines": 284,
       "category": "maintained source and verification code",
       "reviewers": [
         "core security or staffing domain reviewer",
@@ -1056,9 +1124,9 @@
     },
     {
       "path": "server/utils/staffing-appointments.ts",
-      "bytes": 22807,
-      "sha256": "c3e936b1c66870971df08630213de3bff4b200f191b9e6168fde9b3d17bfbfb8",
-      "physicalLines": 209,
+      "bytes": 24939,
+      "sha256": "742c2e2652c45e90de25f7e825313c960c2a299ba64aae0c25bb659eb98b2691",
+      "physicalLines": 227,
       "category": "maintained source and verification code",
       "reviewers": [
         "core security or staffing domain reviewer",
@@ -1068,8 +1136,8 @@
     },
     {
       "path": "server/utils/staffing-catalog.ts",
-      "bytes": 12882,
-      "sha256": "e382934c344f167d2ad24d4d0f96d15211590e5afaa26cb0afad050fb3a25e00",
+      "bytes": 12954,
+      "sha256": "b0b5e820c845d009a0c672d44ceb4ef4d7efda29de47b34eec0c3fb1416c3fa7",
       "physicalLines": 142,
       "category": "maintained source and verification code",
       "reviewers": [
@@ -1104,9 +1172,9 @@
     },
     {
       "path": "server/utils/staffing.ts",
-      "bytes": 11478,
-      "sha256": "3ee10d0814bcc9826c85e685f895b7b10978a654bd20622ff0876c90e16c93e1",
-      "physicalLines": 164,
+      "bytes": 12437,
+      "sha256": "89f841c2c70dbe99025675da32464a057eb9f6ca1f78667bf59183c61eb73d04",
+      "physicalLines": 179,
       "category": "maintained source and verification code",
       "reviewers": [
         "core security or staffing domain reviewer",
