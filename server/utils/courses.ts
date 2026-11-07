@@ -35,10 +35,17 @@ export async function getManualCourseRole(db: Db, key: string, email: string, se
   return isCourseRole(row?.role) ? row.role : null
 }
 export async function getCourseRole(db: Db, key: string, email: string, session?: ClientSession): Promise<CourseRole | null> {
+  const account = await db.collection('users').findOne({ email }, { session, projection: { disabledAt: 1 } })
+  if (account?.disabledAt) return null
   const manual = await getManualCourseRole(db, key, email, session)
   const { getAppointmentCourseRole } = await import('./staffing')
   const appointment = await getAppointmentCourseRole(db, key, email, session)
   return roleRank(appointment) > roleRank(manual) ? appointment : manual
+}
+export async function assertCourseUnrestricted(db: Db, courseId: string, userEmail: string, session?: ClientSession) {
+  if (await db.collection('courseRestrictions').findOne({ courseId, userEmail }, { session, projection: { _id: 1 } })) {
+    throw createError({ statusCode: 403, statusMessage: 'Course access is restricted; contact an instructor or administrator' })
+  }
 }
 export type CourseAccess = {
   db: Db; course: WithId<Document>; courseKey: string; user: SessionUser; role: CourseRole | null
@@ -78,10 +85,12 @@ async function cleanExpiredStaff(access: CourseAccess, session: ClientSession) {
   const emails = [...new Set([...duty.map(d => d.email), ...assigned].filter(e => typeof e === 'string' && e))]
   const retained: Array<{email: string; name: string}> = []
   for (const email of emails) {
+    const account = await db.collection('users').findOne({ email, disabledAt: null }, { session, projection: { id: 1, identityKind: 1 } })
     const role = await getCourseRole(db, courseKey, email, session)
-    const configuredAdmin = getServerConfig().adminEmails.includes(email)
+    const configuredAdmin = !!account && getServerConfig().adminEmails.includes(email)
     // Global demo administrators may be on duty without a course enrollment.
-    const isDemoAdmin = getServerConfig().mockLoginEnabled && await db.collection<any>('authSessions').findOne({ 'user.email': email, 'user.provider': 'mock', 'user.primaryRole': 'admin', expiresAt: { $gt: new Date() }, revokedAt: null }, { session, projection: { _id: 1 } })
+    const boundIdentity = account && await db.collection('providerIdentities').findOne({ $or: [{ userId: account.id }, { email }] }, { session, projection: { _id: 1 } })
+    const isDemoAdmin = account && account.identityKind !== 'gitlab' && !boundIdentity && getServerConfig().mockLoginEnabled && await db.collection<any>('authSessions').findOne({ 'user.id': account.id, 'user.email': email, 'user.provider': 'mock', 'user.primaryRole': 'admin', expiresAt: { $gt: new Date() }, revokedAt: null }, { session, projection: { _id: 1 } })
     if ((role && STAFF_ROLES.includes(role)) || configuredAdmin || isDemoAdmin) {
       const item = duty.find(d => d.email === email)
       if (item) retained.push(item)

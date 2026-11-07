@@ -51,11 +51,11 @@ export async function event(db: Db, session: ClientSession, user: StaffingActor,
   await db.collection('staffingEvents').insertOne({ id: uid(), actorId: actorId(user), actorEmail: user.email, kind, targetId, details, createdAt: now(), delivery: 'pending' }, { session })
 }
 
-export async function initializeStaffingIndexes(db: Db) {
-  const specs: Array<[string, IndexDescription[]]> = [
+export const staffingIndexes: Array<[string, IndexDescription[]]> = [
     ['staffingTerms', [{ key: { id: 1 }, unique: true }, { key: { startDate: -1 } }]],
     ['staffingOpportunities', [{ key: { id: 1 }, unique: true }, { key: { termId: 1, status: 1 } }, { key: { courseId: 1 } }, { key: { ownerId: 1, termId: 1 } }]],
     ['staffingApplications', [{ key: { id: 1 }, unique: true }, { key: { opportunityId: 1, applicantId: 1 }, unique: true }, { key: { applicantId: 1, updatedAt: -1 } }, { key: { opportunityId: 1, status: 1, submittedAt: 1, id: 1 } }]],
+    ['staffingAdministrativeAudits', [{ key: { id: 1 }, unique: true }, { key: { applicationId: 1, createdAt: -1 } }]],
     ['staffingDocuments', [{ key: { id: 1 }, unique: true }, { key: { applicationId: 1 } }]],
     ['staffingAllocations', [{ key: { termId: 1, applicantId: 1 }, unique: true }]],
     ['staffingOffers', [{ key: { id: 1 }, unique: true }, { key: { applicationId: 1, createdAt: -1 } }]],
@@ -67,19 +67,33 @@ export async function initializeStaffingIndexes(db: Db) {
     ['staffingAiBudgets', [{ key: { day: 1 } }]],
     ['staffingNotifications', [{ key: { id: 1 }, unique: true }, { key: { eventId: 1, recipientId: 1 }, unique: true }, { key: { recipientId: 1, createdAt: -1 } }]]
   ]
-  for (const [collection, indexes] of specs) await db.collection(collection).createIndexes(indexes)
+export async function initializeStaffingIndexes(db: Db) {
+  for (const [collection, indexes] of staffingIndexes) await db.collection(collection).createIndexes(indexes)
   const { initializeRecruitmentCycle } = await import('./staffing-cycle')
   await initializeRecruitmentCycle(db)
 }
 
 /** Date and clearance checks remain authoritative even before reconciliation runs. */
 export async function getAppointmentCourseRole(db: Db, courseId: string, email: string, session?: ClientSession): Promise<'ta' | null> {
-  const appointment = await db.collection('staffingAppointments').findOne({ courseId, applicantEmail: email, type: 'ta', status: { $in: ['active', 'pending_start'] }, clearance: 'cleared', acceptedAt: { $ne: null }, startDate: { $lte: now() }, endDate: { $gt: now() } }, options(session))
+  if (!await db.collection('users').findOne({ email, disabledAt: null }, { ...options(session), projection: { _id: 1 } })) return null
+  const aliases = await staffingCourseAliases(db, courseId, session)
+  if (await db.collection('courseRestrictions').findOne({ courseId: { $in: aliases }, userEmail: email }, options(session))) return null
+  const appointment = await db.collection('staffingAppointments').findOne({ courseId: { $in: aliases }, applicantEmail: email, type: 'ta', status: { $in: ['active', 'pending_start'] }, clearance: 'cleared', acceptedAt: { $ne: null }, startDate: { $lte: now() }, endDate: { $gt: now() } }, options(session))
   return appointment ? 'ta' : null
 }
 
+export async function staffingCourseAliases(db: Db, courseId: string, session?: ClientSession) {
+  const course = await db.collection('courses').findOne({ $or: [{ id: courseId }, { code: courseId }, { code: courseId.toLowerCase() }] }, options(session))
+  return [...new Set([course?.id, course?.code, courseId].filter(Boolean))].map((value: string) => new RegExp(`^${value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i'))
+}
+
 export async function findOpportunity(db: Db, id: string, session?: ClientSession) {
-  return await db.collection('staffingOpportunities').findOne({ id }, options(session)) || fail(404, 'Opportunity not found')
+  const opportunity = await db.collection('staffingOpportunities').findOne({ id }, options(session)) || fail(404, 'Opportunity not found')
+  if (opportunity.courseId) {
+    const course = await db.collection('courses').findOne({ $or: [{ id: opportunity.courseId }, { code: opportunity.courseId }, { code: opportunity.courseId.toLowerCase() }] }, options(session))
+    if (course) opportunity.courseId = course.id
+  }
+  return opportunity
 }
 export async function manualCourseManager(db: Db, courseId: string, user: StaffingActor, session?: ClientSession) {
   if (isGlobalAdmin(user)) return true

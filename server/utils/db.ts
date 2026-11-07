@@ -76,6 +76,7 @@ export async function withTransaction<T>(work: (db: Db, session: ClientSession) 
 const mandatoryIndexes: Record<string, IndexDescription[]> = {
     courses: [{ key: { id: 1 }, unique: true }],
     enrollments: [{ key: { courseId: 1, userEmail: 1 }, unique: true }, { key: { userEmail: 1 } }],
+    courseRestrictions: [{ key: { courseId: 1, userEmail: 1 }, unique: true }],
     queueEntries: [
       { key: { courseId: 1, studentEmail: 1 }, unique: true }, { key: { courseId: 1, position: 1 } },
       { key: { courseId: 1, taEmail: 1 }, unique: true, partialFilterExpression: { taEmail: { $type: 'string' } } }
@@ -100,7 +101,8 @@ async function ensureIndexes(db: Db) {
 export async function verifyDatabaseReadiness(db: Db) {
   const topology = await db.admin().command({ hello: 1 })
   if (!topology.setName && topology.msg !== 'isdbgrid') throw new Error('Transaction-capable topology is unavailable')
-  const required: Record<string, IndexDescription[]> = { ...mandatoryIndexes, staffingAllocations: [{ key: { termId: 1, applicantId: 1 }, unique: true }] }
+  const { staffingIndexes } = await import('./staffing')
+  const required: Record<string, IndexDescription[]> = { ...mandatoryIndexes, ...Object.fromEntries(staffingIndexes) }
   for (const [name, specs] of Object.entries(required)) {
     const actual = await db.collection(name).listIndexes().toArray()
     for (const spec of specs) {

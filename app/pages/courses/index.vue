@@ -5,7 +5,7 @@ const navigateWithContext = (target: string, options?: any) =>
   navigationApp.runWithContext(() => navigateTo(target, options));
 const busyActions = ref(false);
 
-import { computed, ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { computed, ref, watch } from "vue";
 import {
   useAsyncData,
   useRequestFetch,
@@ -20,6 +20,7 @@ type CourseRow = {
   title: string;
   state?: "open" | "paused" | "closed";
   enrolled: boolean;
+  restricted?: boolean;
   primaryRole?: string | null;
 };
 
@@ -55,6 +56,7 @@ const catalog = useCourseCatalogLoader<CourseRow>();
 const { data, error } = await useAsyncData<CoursesApiResult>(
   "courses",
   catalog.load,
+  { dedupe: "defer" },
 );
 
 if (error.value) {
@@ -101,7 +103,7 @@ const roleLabel = (c: CourseRow) => {
   if (isTA(c)) return "TA";
   if (isStudentEnrolled(c)) return "Student";
   if (c.enrolled) return "Enrolled";
-  return "Not enrolled";
+  return c.restricted ? "Restricted" : "Not enrolled";
 };
 
 const myCourses = computed(() =>
@@ -114,7 +116,7 @@ const allCourses = computed(() => courses.value);
 
 /** Only pure student membership is user-toggleable here. */
 const isStudentToggleable = (c: CourseRow) =>
-  !isInstructorOrAdmin(c) && !isTA(c);
+  !c.restricted && !isInstructorOrAdmin(c) && !isTA(c);
 
 const toggleEnroll = async (course: CourseRow) => {
   if (busyActions.value) return;
@@ -156,20 +158,9 @@ const goToCourse = (course: CourseRow) => {
 };
 
 /** Periodically refresh course + enrollment data. */
-let timer: any = null;
-
-onMounted(() => {
-  timer = setInterval(() => {
-    if (!document.hidden) {
-      refreshNuxtData("courses");
-      refreshStaffingAccess();
-    }
-  }, 5000);
-});
-
-onBeforeUnmount(() => {
-  if (timer) clearInterval(timer);
-});
+useIntervalRefresh(async () => {
+  await Promise.all([refreshNuxtData("courses"), refreshStaffingAccess()]);
+}, 5000);
 
 const logout = signOut;
 
@@ -338,7 +329,7 @@ const goAdminConsole = () => {
                   >
                     {{ c.enrolled ? "Leave" : "Enroll" }}
                   </button>
-                  <span v-else class="no-action"> Managed via role </span>
+                  <span v-else-if="!c.restricted" class="no-action"> Managed via role </span>
                 </div>
               </td>
             </tr>

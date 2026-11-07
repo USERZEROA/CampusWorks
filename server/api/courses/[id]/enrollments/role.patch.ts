@@ -1,6 +1,6 @@
 import { defineEventHandler, readBody, createError } from 'h3'
 import { normalizeEmail, validEmail } from '../../../../utils/auth'
-import { assertManager, withCourseTransaction, getCourseRole, getManualCourseRole, isCourseRole, STAFF_ROLES, recordCourseAudit, onDutyList } from '../../../../utils/courses'
+import { assertManager, assertCourseUnrestricted, withCourseTransaction, getCourseRole, getManualCourseRole, isCourseRole, STAFF_ROLES, recordCourseAudit, onDutyList } from '../../../../utils/courses'
 import { releaseStaffClaims } from '../../../../utils/queue'
 export default defineEventHandler(event => withCourseTransaction(event, async (access, session) => {
   assertManager(access)
@@ -9,6 +9,7 @@ export default defineEventHandler(event => withCourseTransaction(event, async (a
   const role = body.role
   if (!validEmail(email) || !isCourseRole(role)) throw createError({ statusCode: 400, statusMessage: 'Valid email and role required' })
   if (email === access.user.email) throw createError({ statusCode: 400, statusMessage: 'You cannot change your own role' })
+  await assertCourseUnrestricted(access.db, access.courseKey, email, session)
   const current = await getManualCourseRole(access.db, access.courseKey, email, session)
   if ((role === 'admin' || current === 'admin') && !(access.globalAdmin || access.role === 'admin')) throw createError({ statusCode: 403, statusMessage: 'Only course admins can grant or change the admin role' })
   await access.db.collection('enrollments').updateOne({ courseId: access.courseKey, userEmail: email }, { $set: { courseId: access.courseKey, userEmail: email, role } }, { session, upsert: true })

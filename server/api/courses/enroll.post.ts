@@ -1,5 +1,5 @@
 import { defineEventHandler, readBody, createError } from 'h3'
-import { withCourseTransaction, getCourseRole, STAFF_ROLES, cleanText } from '../../utils/courses'
+import { withCourseTransaction, getCourseRole, STAFF_ROLES, cleanText, assertCourseUnrestricted } from '../../utils/courses'
 import { requireUser } from '../../utils/auth'
 import { archiveEntry } from '../../utils/queue'
 export default defineEventHandler(async event => {
@@ -12,6 +12,7 @@ export default defineEventHandler(async event => {
     const role = await getCourseRole(db, courseKey, user.email, session)
     if (role && STAFF_ROLES.includes(role)) return { ok: true, role }
     if (body.enroll) {
+      await assertCourseUnrestricted(db, courseKey, user.email, session)
       await db.collection('enrollments').updateOne({ courseId: courseKey, userEmail: user.email }, { $set: { courseId: courseKey, userEmail: user.email, role: 'student' } }, { session, upsert: true })
       return { ok: true, role: 'student' }
     }

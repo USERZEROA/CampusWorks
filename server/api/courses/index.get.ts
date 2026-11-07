@@ -11,7 +11,8 @@ export default defineEventHandler(async event => {
   const result = await Promise.all(courses.map(async course => {
     const id = courseKeyOf(course)
     const role = await getCourseRole(db, id, user.email)
-    return { id, code: course.code, title: course.title, state: course.state || 'closed', enrolled: !!role, primaryRole: role }
+    const restricted = !!await db.collection('courseRestrictions').findOne({ courseId: id, userEmail: user.email }, { projection: { _id: 1 } })
+    return { id, code: course.code, title: course.title, state: course.state || 'closed', enrolled: !!role, restricted, primaryRole: role }
   }))
   return { user: publicUser(user), courses: result, pagination: { offset, limit, total, hasMore: offset + courses.length < total } }
 })
