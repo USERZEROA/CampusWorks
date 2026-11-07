@@ -1,38 +1,56 @@
-# Local demo stack: MongoDB + CampusWorks with demo accounts and demo data.
-#   docker compose up --build   →   http://localhost:3000
-#
-# Values below are development defaults. Optional overrides (e.g. GITLAB_*)
-# can be put in a `.env` file next to this one; see .env.example.
+# Loopback demonstration with authenticated, transaction-capable MongoDB.
 services:
+  mongo-key:
+    image: mongo:7
+    user: "0"
+    entrypoint: ["bash", "-ec"]
+    command: ["if [ ! -s /keys/replica.key ]; then openssl rand -base64 756 > /keys/replica.key; fi; chown 999:999 /keys/replica.key; chmod 400 /keys/replica.key"]
+    volumes: ["mongo-key:/keys"]
+
   mongo:
     image: mongo:7
-    container_name: campusworks-mongo
     restart: unless-stopped
+    command: ["--replSet", "rs0", "--keyFile", "/keys/replica.key", "--bind_ip_all"]
     environment:
       MONGO_INITDB_ROOT_USERNAME: campusworks
-      MONGO_INITDB_ROOT_PASSWORD: campusworks-dev
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD:-campusworks-dev}"
     ports:
       # Exposed on localhost only, for tools like MongoDB Compass.
       - "127.0.0.1:27017:27017"
     volumes:
       - mongo-data:/data/db
+      - mongo-key:/keys:ro
+    depends_on:
+      mongo-key: { condition: service_completed_successfully }
     healthcheck:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
       interval: 5s
       timeout: 5s
       retries: 20
 
+  mongo-init:
+    image: mongo:7
+    entrypoint: ["mongosh", "--quiet", "--file", "/bootstrap/init-mongo-replica.js"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: campusworks
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD:-campusworks-dev}"
+      MONGO_REPLICA_HOST: "mongo:27017"
+    volumes: ["./ops/init-mongo-replica.js:/bootstrap/init-mongo-replica.js:ro"]
+    depends_on:
+      mongo: { condition: service_healthy }
+
   campusworks:
     build: .
     image: campusworks:latest
-    container_name: campusworks-app
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     environment:
-      MONGODB_URI: "mongodb://campusworks:campusworks-dev@mongo:27017/?authSource=admin"
+      MONGODB_URI: "mongodb://campusworks:${MONGO_PASSWORD:-campusworks-dev}@mongo:27017/?authSource=admin&replicaSet=rs0"
       MONGODB_DB: "campusworks"
       SESSION_SECRET: "${SESSION_SECRET:-campusworks-compose-demo-secret-change-me-0123456789}"
+      PUBLIC_ORIGIN: "http://localhost:3000"
+      TRUST_PROXY: "false"
       ENABLE_MOCK_LOGIN: "${ENABLE_MOCK_LOGIN:-true}"
       SEED_DEMO_DATA: "${SEED_DEMO_DATA:-true}"
       ADMIN_EMAILS: "${ADMIN_EMAILS:-}"
@@ -40,9 +58,13 @@ services:
       GITLAB_BASE_URL: "${GITLAB_BASE_URL:-}"
       GITLAB_CLIENT_ID: "${GITLAB_CLIENT_ID:-}"
       GITLAB_CLIENT_SECRET: "${GITLAB_CLIENT_SECRET:-}"
+      AI_BASE_URL: "${AI_BASE_URL:-}"
+      AI_API_KEY: "${AI_API_KEY:-}"
+      AI_MODEL: "${AI_MODEL:-}"
     depends_on:
-      mongo:
-        condition: service_healthy
+      mongo-init:
+        condition: service_completed_successfully
 
 volumes:
   mongo-data:
+  mongo-key:
