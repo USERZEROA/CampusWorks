@@ -1,5 +1,7 @@
 # CampusWorks work plan
 
+Initial delivery plan retained as a scope record. Current implementation requirements and completed verification are documented in [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md), [STAFFING_OPERATIONS.md](STAFFING_OPERATIONS.md) and [VERIFICATION.md](VERIFICATION.md).
+
 ## Current delivery
 
 - Read and account for every application source, asset, configuration, deployment, and existing test file before establishing the application baseline.

@@ -1,5 +1,7 @@
 # Configuration, operations, and test review
 
+Historical inspection snapshot. Findings and versions below describe the initial inspected state. Current resolutions and executed acceptance evidence are in [VERIFICATION.md](../VERIFICATION.md); this snapshot is retained as the review trail.
+
 Review date: 2026-11-07. The accompanying `operations-reading-ledger.json` records complete text reading of 22 files and a complete structural JSON inspection of the dependency lockfile. These are static findings; current test results belong in the final verification record.
 
 The delivered project additionally includes fixed-version type-check tools, a dedicated test type configuration, and an aligned Vue Router 5.4.0 dependency. The inspected baseline dependency snapshot below remains a reading record; final versions, passing checks, dependency advisories, and remaining boundaries are in [VERIFICATION.md](../VERIFICATION.md).

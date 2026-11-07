@@ -1,5 +1,7 @@
 # CampusWorks interface review
 
+Historical inspection snapshot. Findings below describe the initial inspected state. Current resolutions and executed acceptance evidence are in [VERIFICATION.md](../VERIFICATION.md); this snapshot is retained as the review trail.
+
 Reviewed on 2026-11-07. Every line in the 12 application Vue/TypeScript files was read, including scripts, templates, comments, and scoped CSS (7,640 lines). Both public text assets were read. The Duke CS PNG was visually inspected. The favicon was inventoried as a binary asset; its appearance was not rendered. Per-file SHA256 values and coverage states are recorded in `ui-reading-ledger.json`.
 
 This is a static reading record. It establishes screen and interaction contracts, but does not establish working browser behavior, authentication-provider behavior, or production readiness. Browser checks below need their own results.

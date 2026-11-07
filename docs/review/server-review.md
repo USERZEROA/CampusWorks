@@ -1,5 +1,7 @@
 # Server behavior review
 
+Historical inspection snapshot. Findings below describe the initial inspected state. Current resolutions and executed acceptance evidence are in [VERIFICATION.md](../VERIFICATION.md); this snapshot is retained as the review trail.
+
 Review date: November 7, 2026. All 34 files under `server/` were read completely. The accompanying JSON ledger identifies the reviewed bytes, physical line counts, and semantic coverage. This document describes static code evidence; it does not claim database, browser, external identity-provider, production, or concurrency verification.
 
 ## Identity and roles
