@@ -1,7 +1,7 @@
 import type { ClientSession, Db, Document } from 'mongodb'
 import { isGlobalAdmin } from './auth'
 import { lockStaffingResource } from './staffing-catalog'
-import { assertRecruitmentGate } from './staffing-cycle'
+import { assertRecruitmentGate, getRecruitmentCycle } from './staffing-cycle'
 import { actorId, applicationAccess, applicationDto, appointmentDto, assertVersion, eligibility, event, fail, findOpportunity, flag, number, object, options, publicRecord, slots, staffingCapabilities, text, uid, type StaffingActor } from './staffing'
 
 export function applicantInput(raw: unknown) {
@@ -130,10 +130,11 @@ export async function uploadCv(db: Db, session: ClientSession, user: StaffingAct
 export async function applicationDetail(db: Db, user: StaffingActor, id: string) {
   const access = await applicationAccess(db, id, user)
   const [offer, appointment] = await Promise.all([
-    db.collection('staffingOffers').find({ applicationId: id }).sort({ createdAt: -1 }).limit(1).next(),
-    db.collection('staffingAppointments').find({ applicationId: id }).sort({ createdAt: -1 }).limit(1).next()
+    db.collection('staffingOffers').find({ applicationId: id }).sort({ createdAt: -1, _id: -1 }).limit(1).next(),
+    db.collection('staffingAppointments').find({ applicationId: id }).sort({ createdAt: -1, _id: -1 }).limit(1).next()
   ])
-  return { application: applicationDto(access.application, access.owner || isGlobalAdmin(user)), opportunity: publicRecord(access.opportunity), offer: publicRecord(offer), appointment: appointmentDto(appointment, user), canManage: access.canManage, owner: access.owner }
+  const administrativeCorrections = isGlobalAdmin(user) ? await db.collection('staffingAdministrativeAudits').find({ applicationId: id }).sort({ createdAt: -1, id: 1 }).limit(100).toArray() : []
+  return { application: applicationDto(access.application, access.owner || isGlobalAdmin(user)), opportunity: publicRecord(access.opportunity), offer: publicRecord(offer), appointment: appointmentDto(appointment, user), currentCycle: await getRecruitmentCycle(db), canManage: access.canManage, owner: access.owner, ...(isGlobalAdmin(user) ? { administrativeCorrections: administrativeCorrections.map(publicRecord) } : {}) }
 }
 
 export async function reviewApplication(db: Db, session: ClientSession, user: StaffingActor, applicationId: string, raw: unknown, reject = false) {
@@ -155,14 +156,19 @@ export async function updateAdministrative(db: Db, session: ClientSession, user:
   const { application, opportunity, owner } = await applicationAccess(db, applicationId, user, session)
   await lockStaffingResource(db, opportunity, session)
   if (!owner && !isGlobalAdmin(user)) fail(403, 'Administrative details are restricted to the applicant and site administrators')
-  const appointment = await db.collection('staffingAppointments').findOne({ applicationId, status: { $in: ['offered', 'pending_clearance', 'pending_start', 'active', 'suspended'] } }, { session })
+  const appointment = await db.collection('staffingAppointments').findOne({ applicationId }, { session, sort: { createdAt: -1, _id: -1 } })
   if (!appointment) fail(409, 'Administrative details are collected after an offer is issued')
-  if (appointment.clearance === 'cleared' || ['active', 'suspended'].includes(appointment.status)) fail(409, 'Cleared appointment details require an administrator-led amendment')
   const body = object(raw, 'Administrative details')
+  const amendment = appointment.clearance === 'cleared' || ['active', 'suspended'].includes(appointment.status)
+  if (amendment && !isGlobalAdmin(user)) fail(403, 'Only site administrators may amend cleared appointment details')
+  if (!amendment && !['offered', 'pending_clearance', 'pending_start'].includes(appointment.status)) fail(409, 'Administrative details are closed for this appointment')
+  const reason = text(body.reason, 'Correction reason', 2000, amendment)
   const expected = number(body.expectedAdministrativeVersion, 'Administrative version', 0, 1000000)
   if (expected !== (application.administrativeVersion || 0)) fail(409, 'Administrative details changed. Refresh before saving.')
   const input = applicantInput({ profile: {}, administrative: body.administrative }).administrative
   await db.collection('staffingApplications').updateOne({ id: applicationId }, { $set: { administrative: input, administrativeUpdatedAt: new Date() }, $inc: { administrativeVersion: 1 } }, { session })
-  await event(db, session, user, 'AdministrativeDetailsUpdated', applicationId)
+  const auditId = uid()
+  await db.collection('staffingAdministrativeAudits').insertOne({ id: auditId, applicationId, appointmentId: appointment.id, actorId: actorId(user), actorEmail: user.email, reason, before: application.administrative || {}, after: input, administrativeVersion: expected + 1, createdAt: new Date() }, { session })
+  await event(db, session, user, amendment ? 'AdministrativeDetailsCorrected' : 'AdministrativeDetailsUpdated', applicationId, { auditId })
   return { application: applicationDto((await db.collection('staffingApplications').findOne({ id: applicationId }, { session }))!, true) }
 }

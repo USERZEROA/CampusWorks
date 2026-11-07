@@ -38,6 +38,9 @@ const profile = reactive({
 const answers = reactive<Record<string, string>>(Object.create(null));
 const formElement = ref<HTMLFormElement | null>(null);
 const qualificationText = ref("");
+const formVersion = ref(0);
+const administrativeVersion = ref(0);
+const correctionReason = ref("");
 const administrative = reactive({
   dukeUniqueId: "",
   payrollBefore: false,
@@ -47,11 +50,40 @@ const administrative = reactive({
 });
 const selectedCv = ref<File | null>(null);
 const { busy, message, failure, run } = useStaffingMutation(refresh);
+const currentCycle = computed(
+  () => data.value?.currentCycle || staffingAccess.value?.currentCycle,
+);
+const canWithdraw = computed(
+  () =>
+    data.value?.owner &&
+    application.value?.status !== "withdrawn" &&
+    !(
+      appointment.value?.acceptedAt &&
+      !["ended", "cancelled", "not_cleared", "expired"].includes(
+        appointment.value.status,
+      )
+    ),
+);
+const clearedDetails = computed(
+  () =>
+    appointment.value?.clearance === "cleared" ||
+    ["active", "suspended"].includes(appointment.value?.status),
+);
+const canEditAdministrative = computed(
+  () =>
+    !!appointment.value &&
+    (clearedDetails.value
+      ? signedInUser.value?.isGlobalAdmin
+      : ["offered", "pending_clearance", "pending_start"].includes(
+          appointment.value.status,
+        )),
+);
 const editable = computed(
   () =>
     !!application.value &&
-    !!staffingAccess.value?.currentCycle?.isOpen &&
-    opportunity.value?.termId === staffingAccess.value.currentCycle.termId &&
+    !!currentCycle.value?.isOpen &&
+    opportunity.value?.termId === currentCycle.value.termId &&
+    opportunity.value?.status === "published" &&
     [
       "draft",
       "submitted",
@@ -64,6 +96,8 @@ const editable = computed(
     !["issued", "accepted"].includes(offer.value?.status),
 );
 function loadDraft() {
+  formVersion.value = application.value?.version || 0;
+  administrativeVersion.value = application.value?.administrativeVersion || 0;
   for (const key of Object.keys(answers)) delete answers[key];
   Object.assign(profile, application.value?.profile || {});
   Object.assign(answers, application.value?.answers || {});
@@ -72,12 +106,12 @@ function loadDraft() {
 }
 loadDraft();
 async function save() {
-  return run(
+  const result = await run(
     () =>
       staffingRequest(`/api/staffing/applications/${id}`, {
         method: "PATCH",
         body: {
-          expectedVersion: application.value.version,
+          expectedVersion: formVersion.value,
           profile: { ...profile },
           answers: { ...answers },
           qualificationText: qualificationText.value,
@@ -85,25 +119,29 @@ async function save() {
       }),
     "Application saved.",
   );
+  if (result) formVersion.value = result.application.version;
+  return result;
 }
 async function submit() {
   if (formElement.value && !formElement.value.reportValidity()) return;
-  if (!(await save())) return;
-  await run(
+  const saved = await save();
+  if (!saved) return;
+  const submitted = await run(
     () =>
       staffingRequest(`/api/staffing/applications/${id}/submit`, {
         method: "POST",
-        body: { expectedVersion: application.value.version },
+        body: { expectedVersion: saved.application.version },
       }),
     "Application submitted.",
   );
+  if (submitted) formVersion.value = submitted.application.version;
 }
 async function upload() {
   if (!selectedCv.value) return;
   const form = new FormData();
   form.append("file", selectedCv.value);
-  form.append("expectedVersion", String(application.value.version));
-  await run(
+  form.append("expectedVersion", String(formVersion.value));
+  const result = await run(
     () =>
       staffingRequest(`/api/staffing/applications/${id}/cv`, {
         method: "POST",
@@ -111,27 +149,36 @@ async function upload() {
       }),
     "CV uploaded privately.",
   );
+  if (result) formVersion.value = result.application.version;
 }
 async function action(path: string, success: string) {
-  await run(() => staffingRequest(path, { method: "POST" }), success);
+  const result = await run(
+    () => staffingRequest(path, { method: "POST" }),
+    success,
+  );
+  if (result?.application) formVersion.value = result.application.version;
   await refreshNuxtData("courses");
 }
 function fileChanged(event: Event) {
   selectedCv.value = (event.target as HTMLInputElement).files?.[0] || null;
 }
 async function saveAdministrative() {
-  await run(
+  const result = await run(
     () =>
       staffingRequest(`/api/staffing/applications/${id}/administrative`, {
         method: "POST",
         body: {
           administrative: { ...administrative },
-          expectedAdministrativeVersion:
-            application.value.administrativeVersion || 0,
+          expectedAdministrativeVersion: administrativeVersion.value,
+          reason: correctionReason.value,
         },
       }),
     "Appointment details saved.",
   );
+  if (result) {
+    administrativeVersion.value = result.application.administrativeVersion || 0;
+    correctionReason.value = "";
+  }
 }
 async function reloadApplication() {
   const result = await run(
@@ -242,7 +289,11 @@ async function reloadApplication() {
             Access begins after clearance and the appointment start date.
           </p>
           <NuxtLink
-            v-if="appointment.status === 'active' && appointment.courseId"
+            v-if="
+              appointment.type === 'ta' &&
+              appointment.status === 'active' &&
+              appointment.courseId
+            "
             class="button"
             :to="`/courses/${appointment.courseId}/ta`"
             data-testid="appointment-workspace"
@@ -469,9 +520,11 @@ async function reloadApplication() {
               @click="submit"
               data-testid="application-submit"
             >
-              Submit application</button
-            ><button
-              v-if="application.status !== 'draft'"
+              Submit application
+            </button>
+          </div>
+          <div v-if="canWithdraw" class="actions">
+            <button
               type="button"
               class="danger"
               :disabled="busy"
@@ -499,14 +552,7 @@ async function reloadApplication() {
           <p class="notice">
             Only you and site administrators can view these details.
           </p>
-          <fieldset
-            :disabled="
-              busy ||
-              appointment?.status === 'active' ||
-              (appointment?.clearance || appointment?.clearanceStatus) ===
-                'cleared'
-            "
-          >
+          <fieldset :disabled="busy || !canEditAdministrative">
             <legend>Administrative details</legend>
             <div class="grid">
               <label
@@ -536,11 +582,57 @@ async function reloadApplication() {
             ><label class="check"
               ><input v-model="administrative.hasSsn" type="checkbox" />I have
               an SSN (status only; do not enter the number)</label
-            ><button :disabled="busy" data-testid="administrative-save">
+            >
+            <label v-if="clearedDetails && signedInUser?.isGlobalAdmin"
+              >Correction reason<input
+                v-model="correctionReason"
+                required
+                maxlength="2000"
+                data-testid="administrative-correction-reason"
+            /></label>
+            <button
+              v-if="canEditAdministrative"
+              :disabled="busy || (clearedDetails && !correctionReason.trim())"
+              data-testid="administrative-save"
+            >
               Save administrative details
             </button>
           </fieldset>
         </form>
+        <details
+          v-if="
+            signedInUser?.isGlobalAdmin &&
+            data.administrativeCorrections?.length
+          "
+          class="panel-body"
+        >
+          <summary>Recent administrative history</summary>
+          <article
+            v-for="entry in data.administrativeCorrections"
+            :key="entry.id"
+          >
+            <p>
+              {{ staffingDate(entry.createdAt) }} · {{ entry.actorEmail }} ·
+              {{ entry.reason || "Details supplied" }}
+            </p>
+            <dl
+              v-for="key in [
+                'dukeUniqueId',
+                'payrollBefore',
+                'hasSsn',
+                'citizenship',
+                'authorizationExpiry',
+              ]"
+              :key="key"
+            >
+              <dt>{{ key }}</dt>
+              <dd>
+                {{ entry.before?.[key] ?? "Not supplied" }} →
+                {{ entry.after?.[key] ?? "Not supplied" }}
+              </dd>
+            </dl>
+          </article>
+        </details>
       </section>
       <WorkloadRecorder
         v-if="
@@ -554,6 +646,14 @@ async function reloadApplication() {
         v-if="data.canManage"
         kind="cv_summary"
         :target-id="id"
+        :can-analyze="
+          !!currentCycle?.canReview &&
+          opportunity?.termId === currentCycle.termId &&
+          new Date(opportunity.appointmentEnd).getTime() > Date.now() &&
+          ['published', 'applications_closed', 'filled'].includes(
+            opportunity.status,
+          )
+        "
         title="Qualification Summary Assistance"
       />
     </template>
