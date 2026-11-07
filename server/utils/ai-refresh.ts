@@ -58,6 +58,7 @@ async function affectedOpportunities(db: Db, change: { opportunityId?: string; a
 export async function invalidateCandidateRefresh(db: Db, session: ClientSession, change: { opportunityId?: string; applicantId?: string }) {
   const targetIds = await affectedOpportunities(db, change, session)
   if (!targetIds.length) return
+  await db.collection('staffingAiAutomationJobs').updateMany({ kind: 'candidate_fit', targetId: { $in: targetIds } }, { $set: { nextObserveAt: new Date(0) }, $inc: { observationVersion: 1 } }, { session })
   const subscriptions = await scopes(db).find({ opportunityId: { $in: targetIds }, active: true }, { session }).sort({ id: 1 }).toArray()
   for (const subscription of subscriptions) {
     const opportunity = await db.collection('staffingOpportunities').findOne({ id: subscription.opportunityId }, { session })

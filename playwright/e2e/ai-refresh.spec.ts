@@ -52,6 +52,7 @@ async function harness(space: StaffingSpace, handle: (input: any, response: Serv
         AI_BASE_URL: `http://127.0.0.1:${(provider.address() as any).port}/v1`, AI_API_KEY: 'synthetic-refresh-key', AI_MODEL: 'synthetic-refresh-model',
         AI_DAILY_REQUEST_LIMIT: '100', AI_DAILY_TOKEN_BUDGET: '1000000',
         AI_AUTO_REFRESH_ENABLED: options.automaticRefresh === false ? 'false' : 'true',
+        AI_AUTO_DISCOVERY_ENABLED: 'false',
       } });
       closeSync(log); children.push(child);
       let ready = false;

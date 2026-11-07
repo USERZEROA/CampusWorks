@@ -2,6 +2,7 @@ import { createError } from 'h3'
 import { randomUUID } from 'node:crypto'
 import type { ClientSession, Db, Document, IndexDescription } from 'mongodb'
 import { isGlobalAdmin, type SessionUser } from './auth'
+import { aiAutomationIndexes } from './ai-automation-indexes'
 
 export type StaffingActor = SessionUser & { id?: string }
 export const now = () => new Date()
@@ -40,7 +41,7 @@ export function object(value: unknown, label: string): Record<string, any> {
 }
 export function assertVersion(record: Document, expected: unknown) {
   if (expected === undefined) return
-  if (typeof expected !== 'number' || record.version !== expected) fail(409, 'This record changed. Refresh before saving.')
+  if (typeof expected !== 'number' || record.version !== expected) fail(409, 'This record changed. Your edits are kept; review the current values before saving.')
 }
 export function publicRecord(record: Document | null | undefined) {
   if (!record) return null
@@ -52,6 +53,7 @@ export async function event(db: Db, session: ClientSession, user: StaffingActor,
 }
 
 export const staffingIndexes: Array<[string, IndexDescription[]]> = [
+    ...aiAutomationIndexes,
     ['staffingTerms', [{ key: { id: 1 }, unique: true }, { key: { startDate: -1 } }]],
     ['staffingOpportunities', [{ key: { id: 1 }, unique: true }, { key: { termId: 1, status: 1 } }, { key: { courseId: 1 } }, { key: { ownerId: 1, termId: 1 } }]],
     ['staffingApplications', [{ key: { id: 1 }, unique: true }, { key: { opportunityId: 1, applicantId: 1 }, unique: true }, { key: { applicantId: 1, updatedAt: -1 } }, { key: { opportunityId: 1, status: 1, submittedAt: 1, id: 1 } }]],

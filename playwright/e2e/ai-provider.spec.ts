@@ -30,6 +30,7 @@ async function providerApp(space: StaffingSpace, responder: (input: any, respons
     SESSION_SECRET: randomBytes(32).toString('hex'), ENABLE_MOCK_LOGIN: 'true', SEED_DEMO_DATA: 'false',
     API_RATE_LIMIT: '10000', LOGIN_RATE_LIMIT: '1000', AI_BASE_URL: `http://127.0.0.1:${providerPort}/v1`, AI_API_KEY: 'synthetic-provider-test-key', AI_MODEL: 'synthetic-evidence-model',
     AI_AUTO_REFRESH_ENABLED: 'false',
+    AI_AUTO_DISCOVERY_ENABLED: 'false',
   } });
   closeSync(log);
   let api: APIRequestContext | undefined;
@@ -85,7 +86,7 @@ test('configured AI uses a local provider, qualification evidence and validated 
 });
 
 for (const kind of ['term_review', 'opportunity_draft'] as const) {
-  test(`${kind} browser assistance keeps its default analysis control enabled and returns local-provider evidence`, async ({ space, browser }) => {
+  test(`${kind} browser assistance displays completed evidence without an analysis control`, async ({ space, browser }) => {
     const posting = await space.opportunity();
     const provider = await providerApp(space, (input, response) => answer(input, response));
     const context = await browser.newContext({ baseURL: provider.origin, storageState: await provider.api.storageState() });
@@ -94,17 +95,12 @@ for (const kind of ['term_review', 'opportunity_draft'] as const) {
       const errors: string[] = [];
       page.on('pageerror', error => errors.push(error.message));
       const courseReview = kind === 'term_review';
+      const submitted = await json(provider.api.post('/api/ai/tasks', { data: { kind, targetId: courseReview ? space.code : posting.id, ...(courseReview ? { termId: space.term.id } : {}) } }));
+      expect(submitted.task).toMatchObject({ kind, status: 'completed', result: expect.any(Object) });
       await page.goto(courseReview ? `/courses/${space.code}/review` : `/staffing/${posting.id}`);
       const title = courseReview ? 'Course Suggestions' : 'Requirement Draft Assistance';
       const panel = page.locator('section.panel').filter({ has: page.getByRole('heading', { name: title, exact: true }) });
-      const button = panel.getByTestId('ai-request');
-      await expect(button).toBeVisible();
-      await expect(button).toBeEnabled();
-      const response = page.waitForResponse(response => new URL(response.url()).pathname === '/api/ai/tasks' && response.request().method() === 'POST');
-      await button.click();
-      const submitted = await response;
-      expect(submitted.status()).toBe(200);
-      expect((await submitted.json()).task).toMatchObject({ kind, status: 'completed', result: expect.any(Object) });
+      await expect(panel.getByTestId('ai-request')).toHaveCount(0);
       await expect(panel.getByTestId('ai-result')).toBeVisible();
       await expect(panel.getByTestId('ai-result')).toContainText('Synthetic evidence-linked background comparison.');
       expect(provider.seen).toHaveLength(1);

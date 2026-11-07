@@ -62,6 +62,38 @@ async function confirmAiLease(db: Db, taskId: string) {
 export const candidateAnalysisEnded = (opportunity: Document) => new Date(opportunity.appointmentEnd).getTime() <= Date.now()
 
 type Evidence = { reference: string; value: unknown }
+function preparedAiInput<T extends { evidence: Evidence[]; coverage: object }>(input: T, automatic: boolean): T {
+  if (!automatic || Buffer.byteLength(JSON.stringify(input), 'utf8') <= 48000) return input
+  const sourceEvidenceHash = createHash('sha256').update(JSON.stringify(input.evidence)).digest('hex')
+  let prepared = input
+  for (const maximum of [4000, 2000, 1000, 512, 256, 128, 64, 32]) {
+    let excerptedEvidenceCount = 0
+    const evidence = input.evidence.map(entry => {
+      if (entry.reference.startsWith('coverage:')) return entry
+      let changed = false
+      const excerpt = (value: unknown): unknown => {
+        if (typeof value === 'string') {
+          const characters = Array.from(value)
+          if (characters.length <= maximum) return value
+          changed = true
+          return characters.slice(0, maximum).join('') + ' [excerpt]'
+        }
+        if (Array.isArray(value)) return value.map(excerpt)
+        if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, excerpt(item)]))
+        return value
+      }
+      const value = excerpt(entry.value)
+      if (changed) excerptedEvidenceCount++
+      return { reference: entry.reference, value }
+    })
+    const coverage = { ...input.coverage, evidenceExcerpt: true, excerptedEvidenceCount, sourceEvidenceHash, excerptNote: 'Long text is excerpted. Every candidate and evidence reference remains included; review the complete application before deciding.' }
+    prepared = { ...input, coverage, evidence: evidence.map(entry => entry.reference === 'coverage:candidates' ? { ...entry, value: coverage } : entry) }
+    if (Buffer.byteLength(JSON.stringify(prepared), 'utf8') <= 48000) return prepared
+  }
+  // Structural evidence is never dropped to fit a request. The caller blocks
+  // an oversized input before reserving capacity or contacting the provider.
+  return prepared
+}
 const redactText = (value: unknown, application: Document) => {
   if (typeof value !== 'string') return value
   let result = value.split(/\r?\n/).filter(line => !administrativeQuestion(line)).join('\n')
@@ -91,20 +123,23 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
     if (!access.owner && !access.canManage) fail(403, 'Application access required')
     if (candidateAnalysisEnded(access.opportunity)) fail(409, 'Candidate analysis has ended for this appointment')
     const source = access.owner && access.application.status === 'draft' ? { ...access.application, submittedSnapshot: undefined } : access.application
-    return { targetType: 'application' as const, opportunityId: access.opportunity.id, termId: access.opportunity.termId, analysisExpiresAt: access.opportunity.appointmentEnd, version: access.application.version, evidence: qualificationEvidence(source, access.opportunity), targetIds: [access.application.id], coverage: { source: 'Applicant qualification text and answers; no automatic PDF extraction', omittedQuestions: (access.opportunity.questions || []).filter((question: Document) => !aiQualificationQuestion(question)).length } }
+    return { targetType: 'application' as const, opportunityId: access.opportunity.id, termId: access.opportunity.termId, analysisExpiresAt: access.opportunity.appointmentEnd, version: 1, evidence: qualificationEvidence(source, access.opportunity), targetIds: [access.application.id], coverage: { source: 'Applicant qualification text and answers; no automatic PDF extraction', omittedQuestions: (access.opportunity.questions || []).filter((question: Document) => !aiQualificationQuestion(question)).length } }
   }
   if (kind === 'term_review') {
     const course = await db.collection('courses').findOne({ id: targetId })
     if (course) {
       const { courseReview } = await import('./staffing-reports')
-      const report = await courseReview(db, user, targetId, reportTermId)
+      const reviewTermId = reportTermId || (await (await import('./staffing-cycle')).getRecruitmentCycle(db)).termId
+      const term = await db.collection('staffingTerms').findOne({ id: reviewTermId })
+      const phase = term?.endDate <= new Date() ? 'final' : 'preview'
+      const report = await courseReview(db, user, targetId, reviewTermId || '')
       return {
         targetType: 'course' as const, opportunityId: null, courseId: targetId, termId: report.termId,
         // Serializer writes may occur on ordinary course reads. Hash the actual
         // aggregates and scope below rather than treating a lock counter as data.
         version: 1,
         evidence: [
-          { reference: 'course:context', value: { code: course.code, title: course.title, termId: report.termId, scope: report.termId ? 'Selected term' : 'All recorded course terms' } },
+          { reference: 'course:context', value: { code: course.code, title: course.title, termId: report.termId, phase, scope: report.termId ? 'Selected term' : 'All recorded course terms' } },
           { reference: 'metrics:recorded_sessions', value: report.metrics },
           { reference: 'metrics:recorded_workload', value: { hours: report.workload.totalHours, count: report.workload.count, byKind: report.workload.byKind, source: report.workload.source } },
           { reference: 'metrics:budget', value: { requestedBudget: report.budget.requestedBudget, approvedBudget: report.budget.approvedBudget, committedBudget: report.budget.committedBudget, settledBudget: report.budget.settledBudget } },
@@ -119,7 +154,7 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
   await assertOpportunityManager(db, opportunity, user)
   if (kind === 'term_review' && reportTermId && reportTermId !== opportunity.termId) fail(400, 'The review term does not match this opportunity')
   const requirements: Evidence[] = [
-    { reference: 'opportunity:requirements', value: { type: opportunity.type, description: opportunity.description, requiredSkills: opportunity.requiredSkills, preferredSkills: opportunity.preferredSkills, weeklyHours: opportunity.weeklyHours, duties: opportunity.duties, requiredSlots: opportunity.requiredSlots, questions: (opportunity.questions || []).filter(aiQualificationQuestion).map((question: Document) => ({ prompt: question.prompt, required: question.required })) } }
+    { reference: 'opportunity:requirements', value: { type: opportunity.type, description: opportunity.description, requiredSkills: opportunity.requiredSkills, preferredSkills: opportunity.preferredSkills, weeklyHours: opportunity.weeklyHours, requiresAttendance: !!opportunity.requiresAttendance, hasLab: !!opportunity.hasLab, hasDiscussion: !!opportunity.hasDiscussion, requiresGrading: !!opportunity.requiresGrading, holdsOfficeHours: !!opportunity.holdsOfficeHours, duties: opportunity.duties, requiredSlots: opportunity.requiredSlots, questions: (opportunity.questions || []).filter(aiQualificationQuestion).map((question: Document) => ({ prompt: question.prompt, required: question.required })) } }
   ]
   if (kind === 'candidate_fit') {
     const { getRecruitmentCycle } = await import('./staffing-cycle')
@@ -144,7 +179,7 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
       }
     } finally { await cursor.close() }
     const coverage = { page: candidatePage, pageSize: candidatePageSize, totalSubmitted, inspected, compared: available.length, hasMore: inspected < totalSubmitted, omittedQuestions: (opportunity.questions || []).filter((question: Document) => !aiQualificationQuestion(question)).length, message: inspected < totalSubmitted ? 'This task compares one page of eligible applicants; it does not establish the best candidate across all pages.' : 'All current submitted applications were inspected for eligibility.' }
-    return { targetType: 'opportunity' as const, opportunityId: targetId, termId: opportunity.termId, version: opportunity.version, analysisExpiresAt: opportunity.appointmentEnd, evidence: [...requirements, { reference: 'coverage:candidates', value: coverage }, ...available.flatMap(a => qualificationEvidence(a, opportunity))], targetIds: available.map(a => a.id), coverage }
+    return { targetType: 'opportunity' as const, opportunityId: targetId, termId: opportunity.termId, version: opportunity.requirementsVersion || 1, analysisExpiresAt: opportunity.appointmentEnd, evidence: [...requirements, { reference: 'coverage:candidates', value: coverage }, ...available.flatMap(a => qualificationEvidence(a, opportunity))], targetIds: available.map(a => a.id), coverage }
   }
   if (kind === 'term_review') {
     const sessions = opportunity.type === 'ta' ? await db.collection('helpSessions').aggregate([{ $match: { courseId: opportunity.courseId, joinedAt: { $gte: opportunity.appointmentStart, $lt: opportunity.appointmentEnd } } }, { $group: { _id: null, sessions: { $sum: 1 }, helped: { $sum: { $cond: ['$wasHelped', 1, 0] } }, recordedHelpMinutes: { $sum: { $ifNull: ['$helpMinutes', 0] } } } }]).next() : null
@@ -158,7 +193,7 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
       { reference: 'metrics:limitations', value: 'Recorded queue and self-reported workload do not establish total demand, paid hours, causal effects, or safe staffing cuts. No automatic budget reduction is allowed.' }
     ], targetIds: [targetId], coverage: { source: 'All matching recorded aggregates; no row-count truncation' } }
   }
-  return { targetType: 'opportunity' as const, opportunityId: targetId, termId: opportunity.termId, version: opportunity.version, evidence: requirements, targetIds: [targetId], coverage: { source: 'Published opportunity requirements' } }
+  return { targetType: 'opportunity' as const, opportunityId: targetId, termId: opportunity.termId, version: opportunity.requirementsVersion || 1, evidence: requirements, targetIds: [targetId], coverage: { source: 'Saved opportunity requirements' } }
 }
 
 function validatedResult(raw: unknown, evidence: Evidence[], targetIds: string[], kind: AiKind) {
@@ -185,7 +220,20 @@ function validatedResult(raw: unknown, evidence: Evidence[], targetIds: string[]
   return { summary, summaryEvidenceRefs, items, cautions: result.cautions.map((v: unknown) => text(v, 'AI caution', 1000, true)) }
 }
 
-export type AiExecution = { taskId?: string; subscriptionId?: string; generation?: number; leaseToken?: string; signal?: AbortSignal }
+export type AiExecution = { taskId?: string; subscriptionId?: string; automationScopeId?: string; generation?: number; leaseToken?: string; signal?: AbortSignal }
+export async function aiTaskFingerprint(db: Db, user: StaffingActor, raw: unknown, options: { automatic?: boolean } = {}) {
+  const body = object(raw, 'AI task')
+  const kind = text(body.kind, 'AI task kind', 40, true) as AiKind
+  if (!aiKinds.includes(kind)) fail(400, 'Unknown AI task kind')
+  const targetId = text(body.targetId, 'AI target', 64, true)
+  const termId = text(body.termId, 'Review term', 64)
+  if (termId && kind !== 'term_review') fail(400, 'A review term applies only to course term-review tasks')
+  const page = body.page === undefined ? 1 : Number(body.page)
+  const pageSize = body.pageSize === undefined ? 50 : Number(body.pageSize)
+  if (!Number.isInteger(page) || page < 1 || page > 10000 || !Number.isInteger(pageSize) || pageSize < 1 || pageSize > 50) fail(400, 'AI comparison page or size is invalid')
+  const input = preparedAiInput(await taskInput(db, user, kind, targetId, page, pageSize, termId), !!options.automatic)
+  return { kind, targetId, termId, page, pageSize, input, inputHash: createHash('sha256').update(JSON.stringify(input)).digest('hex') }
+}
 export async function candidateRefreshFingerprint(db: Db, user: StaffingActor, raw: unknown) {
   const body = object(raw, 'Candidate comparison')
   const targetId = text(body.targetId, 'AI target', 64, true)
@@ -209,9 +257,9 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
   const candidatePageSize = body.pageSize === undefined ? 50 : Number(body.pageSize)
   if (!Number.isInteger(candidatePage) || candidatePage < 1 || candidatePage > 10000) fail(400, 'AI comparison page is invalid')
   if (!Number.isInteger(candidatePageSize) || candidatePageSize < 1 || candidatePageSize > 50) fail(400, 'AI comparison size must be between one and fifty')
-  const input = await taskInput(db, user, kind, targetId, candidatePage, candidatePageSize, reportTermId)
+  const input = preparedAiInput(await taskInput(db, user, kind, targetId, candidatePage, candidatePageSize, reportTermId), !!execution.automationScopeId)
   const configured = aiStatus().configured
-  const task: Document = { id: execution.taskId || uid(), kind, targetId, targetType: input.targetType, requestedTermId: reportTermId, opportunityId: input.opportunityId, termId: input.termId, candidatePage, candidatePageSize, coverage: input.coverage, requestedBy: actorId(user), requestedByEmail: user.email, status: configured ? 'pending' : 'unconfigured', targetVersion: input.version, inputHash: createHash('sha256').update(JSON.stringify(input)).digest('hex'), evidenceReferences: input.evidence.map(e => e.reference), ...(execution.subscriptionId ? { refreshSubscriptionId: execution.subscriptionId, refreshGeneration: execution.generation } : {}), createdAt: new Date(), message: configured ? 'Awaiting provider response' : aiStatus().message }
+  const task: Document = { id: execution.taskId || uid(), kind, targetId, targetType: input.targetType, requestedTermId: reportTermId, opportunityId: input.opportunityId, termId: input.termId, candidatePage, candidatePageSize, coverage: input.coverage, requestedBy: actorId(user), requestedByEmail: user.email, status: configured ? 'pending' : 'unconfigured', targetVersion: input.version, inputHash: createHash('sha256').update(JSON.stringify(input)).digest('hex'), evidenceReferences: input.evidence.map(e => e.reference), ...(execution.subscriptionId ? { refreshSubscriptionId: execution.subscriptionId, refreshGeneration: execution.generation } : {}), ...(execution.automationScopeId ? { automatic: true, automationScopeId: execution.automationScopeId, automationGeneration: execution.generation } : {}), createdAt: new Date(), message: configured ? 'Awaiting provider response' : aiStatus().message }
   if (execution.taskId) await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: task }, { upsert: true })
   else await db.collection('staffingAiTasks').insertOne(task)
   if (!configured) return { task: publicRecord(task) }
@@ -226,15 +274,19 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
     if (base.protocol !== 'https:' && !(base.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(base.hostname))) throw new Error('AI provider must use HTTPS; loopback HTTP is permitted for local testing')
     if (base.username || base.password || base.search || base.hash) throw new Error('AI base URL cannot contain credentials, a query, or a fragment')
     const inputBytes = Buffer.byteLength(JSON.stringify(input), 'utf8')
-    if (inputBytes > 50000) throw new Error('AI input exceeds the approved byte budget')
+    if (inputBytes > 50000) throw Object.assign(new Error('AI input exceeds the approved byte budget'), { aiFailureCode: 'input_budget' })
     // Reserve UTF-8 bytes plus the output cap conservatively, independent of a
     // provider's reported usage. Actual billing remains a provider-account control.
     budgetLease = await reserveAiBudget(user, task.id, inputBytes + 2500)
-    const authorized = await taskInput(db, user, kind, targetId, candidatePage, candidatePageSize, reportTermId)
+    const authorized = preparedAiInput(await taskInput(db, user, kind, targetId, candidatePage, candidatePageSize, reportTermId), !!execution.automationScopeId)
     if (createHash('sha256').update(JSON.stringify(authorized)).digest('hex') !== task.inputHash) fail(409, 'AI evidence changed before analysis')
     if (execution.subscriptionId) {
       const job = await db.collection<any>('staffingAiRefreshJobs').findOne({ _id: execution.subscriptionId, status: 'running', leaseToken: execution.leaseToken, runningGeneration: execution.generation, generation: execution.generation, dirty: false, leaseUntil: { $gt: new Date(Date.now() + 15000) } })
       if (!job) fail(409, 'Automatic analysis approval changed before analysis')
+    }
+    if (execution.automationScopeId) {
+      const { assertAutomaticExecution } = await import('./ai-automation')
+      await assertAutomaticExecution(db, user, execution, task.inputHash, 15000)
     }
     await confirmAiLease(db, task.id)
     const controller = new AbortController()
@@ -272,14 +324,19 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
     if (typeof content !== 'string' || content.length > 50000) throw new Error('AI provider response has no bounded JSON content')
     const result = validatedResult(JSON.parse(content), input.evidence, input.targetIds, kind)
     if ('omittedQuestions' in input.coverage && input.coverage.omittedQuestions) result.cautions.push('Unclassified or administrative screening questions were omitted from this analysis.')
+    if ('evidenceExcerpt' in input.coverage && input.coverage.evidenceExcerpt) result.cautions.push('Long qualification text was excerpted; review the complete application before deciding. All candidates remain included.')
     // Recheck both authorization and input versions after the external call.
-    const current = await taskInput(db, user, kind, targetId, candidatePage, candidatePageSize, reportTermId)
+    const current = preparedAiInput(await taskInput(db, user, kind, targetId, candidatePage, candidatePageSize, reportTermId), !!execution.automationScopeId)
+    if (execution.automationScopeId) {
+      const { assertAutomaticExecution } = await import('./ai-automation')
+      await assertAutomaticExecution(db, user, execution, task.inputHash)
+    }
     const changed = createHash('sha256').update(JSON.stringify(current)).digest('hex') !== task.inputHash
-    await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: changed ? 'stale' : 'completed', result: changed ? null : result, completedAt: new Date(), message: changed ? 'Inputs changed during analysis; request a new review.' : 'Review these evidence-linked suggestions before deciding.' } })
+    await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: changed ? 'stale' : 'completed', result: changed ? null : result, completedAt: new Date(), message: changed ? 'Evidence changed; automatic guidance is updating.' : 'Review these evidence-linked suggestions before deciding.' } })
   } catch (error) {
     // Provider messages are deliberately excluded: they may echo credentials or private text.
-    const message = (error as any)?.statusCode === 429 ? 'The AI request, concurrency, or token budget has been reached. Retry later.' : error instanceof Error && ['AbortError', 'TimeoutError'].includes(error.name) ? 'AI provider timed out. Retry when available.' : 'AI analysis could not be validated. Review the evidence manually or retry.'
-    await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: 'failed', message, failureCode: (error as any)?.quotaCode ? `quota_${(error as any).quotaCode}` : 'provider_or_validation', completedAt: new Date() } })
+    const message = (error as any)?.aiFailureCode === 'input_budget' ? 'Evidence exceeds the automatic input budget; processing resumes when the evidence changes.' : (error as any)?.statusCode === 429 ? 'AI is waiting for request, concurrency, or token budget capacity.' : error instanceof Error && ['AbortError', 'TimeoutError'].includes(error.name) ? 'AI is waiting to retry after a provider timeout.' : 'AI guidance is temporarily unavailable; automatic processing will retry.'
+    await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: 'failed', message, failureCode: (error as any)?.aiFailureCode || ((error as any)?.quotaCode ? `quota_${(error as any).quotaCode}` : 'provider_or_validation'), completedAt: new Date() } })
   } finally {
     if (budgetLease) await db.collection<any>('staffingAiBudgets').updateOne({ _id: budgetLease }, { $pull: { leases: { taskId: task.id } } } as any)
   }
@@ -303,9 +360,11 @@ export async function listAiTasks(db: Db, user: StaffingActor, targetId?: string
     else if (opportunity) await assertOpportunityManager(db, opportunity, user)
     else await applicationAccess(db, targetId, user)
   }
-  const tasks = await db.collection('staffingAiTasks').find({ ...(targetId ? { targetId } : {}), ...(kind ? { kind } : {}), ...(kind === 'term_review' ? { requestedTermId: termId || '' } : {}), ...(kind === 'candidate_fit' && page !== undefined ? { candidatePage: page } : {}), ...(kind === 'candidate_fit' && pageSize !== undefined ? { candidatePageSize: pageSize } : {}), requestedBy: actorId(user) }).sort({ createdAt: -1, id: 1 }).limit(50).toArray()
+  const { automaticReadFilter } = await import('./ai-automation')
+  const tasks = db.collection('staffingAiTasks').find({ ...(targetId ? { targetId } : {}), ...(kind ? { kind } : {}), ...(kind === 'term_review' ? { requestedTermId: termId || '' } : {}), ...(kind === 'candidate_fit' && page !== undefined ? { candidatePage: page } : {}), ...(kind === 'candidate_fit' && pageSize !== undefined ? { candidatePageSize: pageSize } : {}), $or: [{ requestedBy: actorId(user) }, { automatic: true, automationScopeId: { $type: 'string' }, ...(targetId ? {} : await automaticReadFilter(db, user)) }] }).sort({ createdAt: -1, id: 1 }).batchSize(50)
   const authorized: Document[] = []
-  for (const task of tasks) {
+  try { for await (const task of tasks) {
+    if (authorized.length >= 50) break
     try {
       if (task.kind === 'cv_summary') await applicationAccess(db, task.targetId, user)
       else if (task.kind === 'term_review' && task.targetType === 'course') {
@@ -313,18 +372,23 @@ export async function listAiTasks(db: Db, user: StaffingActor, targetId?: string
       }
       else await assertOpportunityManager(db, await findOpportunity(db, task.targetId), user)
       const historical = ['candidate_fit', 'cv_summary'].includes(task.kind) && candidateAnalysisEnded(await findOpportunity(db, task.opportunityId || task.targetId))
+      if (task.automatic && task.kind === 'candidate_fit' && !historical && task.candidatePageSize !== (await import('./ai-automation')).automaticCandidatePageSize()) continue
       if (historical) {
         task.historical = true; task.message = 'Historical comparison; candidate analysis has ended.'
         if (task.kind === 'candidate_fit' && task.status === 'stale' && task.completedAt && task.refreshSubscriptionId) {
           const cached = await db.collection<any>('staffingAiResultCache').findOne({ _id: `${task.refreshSubscriptionId}:${task.inputHash}`, requesterId: actorId(user), opportunityId: task.opportunityId })
           if (cached?.result) { task.result = cached.result; task.status = 'completed' }
         }
+        if (task.automatic && task.status === 'stale' && task.completedAt && task.automationScopeId) {
+          const cached = await db.collection<any>('staffingAiAutomationCache').findOne({ _id: `${task.automationScopeId}:${task.inputHash}` })
+          if (cached?.result && cached.sourceTaskId === task.id) { task.result = cached.result; task.status = 'completed' }
+        }
         await authorizeHistoricalSources(db, user, task)
       }
       if (task.status === 'completed' && !historical) {
-        const current = await taskInput(db, user, task.kind, task.targetId, task.candidatePage || 1, task.candidatePageSize || 50, task.requestedTermId || '')
+        const current = preparedAiInput(await taskInput(db, user, task.kind, task.targetId, task.candidatePage || 1, task.candidatePageSize || 50, task.requestedTermId || ''), !!task.automatic)
         if (createHash('sha256').update(JSON.stringify(current)).digest('hex') !== task.inputHash) {
-          task.status = 'stale'; task.result = null; task.message = 'Inputs or availability changed. Request a fresh analysis.'
+          task.status = 'stale'; task.result = null; task.message = 'Evidence or availability changed; automatic guidance is updating.'
           await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: task.status, result: null, message: task.message } })
         }
       }
@@ -333,6 +397,10 @@ export async function listAiTasks(db: Db, user: StaffingActor, targetId?: string
         if (!job || job.status !== 'idle' || job.lastTaskId !== task.id || job.generation !== task.refreshGeneration) {
           task.status = job?.status === 'running' ? 'pending' : 'stale'; task.result = null
         }
+      }
+      if (task.automationScopeId && task.status === 'completed' && !historical) {
+        const job = await db.collection<any>('staffingAiAutomationJobs').findOne({ _id: task.automationScopeId })
+        if (!job || job.status !== 'idle' || job.lastTaskId !== task.id || job.generation !== task.automationGeneration) { task.status = job?.status === 'running' ? 'pending' : 'stale'; task.result = null }
       }
       authorized.push(task)
     } catch (error: any) {
@@ -350,9 +418,10 @@ export async function listAiTasks(db: Db, user: StaffingActor, targetId?: string
       }
       if (![403, 404].includes(error?.statusCode)) throw error
     }
-  }
+  } } finally { await tasks.close() }
   const { refreshMetadata } = await import('./ai-refresh')
-  const refresh = !kind || kind === 'candidate_fit' ? await refreshMetadata(db, user, { targetId, kind, page, pageSize }) : { subscriptions: [], jobs: [] }
+  const { automaticDiscoveryEnabled, automaticMetadata } = await import('./ai-automation')
+  const refresh = automaticDiscoveryEnabled() ? await automaticMetadata(db, user, { targetId, kind, termId, page, pageSize }) : !kind || kind === 'candidate_fit' ? await refreshMetadata(db, user, { targetId, kind, page, pageSize }) : { subscriptions: [], jobs: [] }
   let canAnalyze = true
   if (targetId && ['candidate_fit', 'cv_summary'].includes(kind || '')) {
     const opportunity = kind === 'cv_summary' ? (await applicationAccess(db, targetId, user)).opportunity : await findOpportunity(db, targetId)

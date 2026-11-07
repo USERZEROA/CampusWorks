@@ -162,13 +162,13 @@ test('API rate limits are shared across application instances', async ({ space }
   }
 });
 
-test('readiness rejects missing allocation, command, notification and restriction constraints on every instance', async ({ space }) => {
+test('readiness rejects missing domain and automatic AI constraints on every instance', async ({ space }) => {
   const replica = await space.secondary(space.admin);
   const { client, db } = await database();
   try {
-    for (const name of ['staffingAllocations', 'staffingCommands', 'staffingNotifications', 'courseRestrictions']) {
+    for (const name of ['staffingAllocations', 'staffingCommands', 'staffingNotifications', 'courseRestrictions', 'staffingAiAutomationJobs', 'staffingAiAutomationCache']) {
       const collection = db.collection(name);
-      const index = (await collection.listIndexes().toArray()).find(item => item.unique && Object.keys(item.key).length === 2)!;
+      const index = (await collection.listIndexes().toArray()).find(item => item.unique && Object.keys(item.key).length > 1)!;
       expect(index?.name, name).toBeTruthy();
       try {
         await collection.dropIndex(index.name!);
