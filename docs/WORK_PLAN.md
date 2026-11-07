@@ -29,4 +29,4 @@
 
 ## Verification and delivery
 
-Use local isolated synthetic databases, multiple application instances, adversarial API cases, Chromium and Firefox, keyboard/accessibility checks, responsive widths and production builds. Do not rely on GitHub Actions. Preserve credentials outside Git and image inputs; do not make additional real-provider calls, push, deploy or reopen demonstration windows in this delivery. Record executed checks and remaining limits in VERIFICATION.md.
+Use local isolated synthetic databases, multiple application instances, adversarial API cases, Chromium and Firefox, keyboard/accessibility checks, responsive widths and production builds. Do not rely on GitHub Actions. Include capped real-provider browser verification with synthetic records when authorized. Preserve credentials outside Git, logs and image inputs. Keep remote push, deployment and demonstration windows outside this verification run. Record executed checks and remaining limits in VERIFICATION.md.

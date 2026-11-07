@@ -110,6 +110,8 @@ AI receives authorized evidence with references, excludes private administrative
 
 Requests have bounded input, output, response size and timeout. Failed calls consume their reservation. See [staffing operations](docs/STAFFING_OPERATIONS.md) for evidence and review constraints.
 
+[AI workflows](docs/AI_WORKFLOWS.md) identifies each page, trigger and advisory output. Current real-provider browser verification covers all four AI tasks and automatic updates for two teachers after selection. The capped harness is `node scripts/ai-provider-browser-check.mjs`; it requires the saved Windows Key, a production build and a dedicated loopback replica set specified by `AI_PROOF_MONGODB_URI`.
+
 Only explicitly classified qualification questions can enter AI evidence; older unclassified questions are omitted. Candidate comparisons must cover each supplied candidate exactly once. At a position's appointment end, new candidate comparisons and summaries stop, while authorized historical results, settlement and course reviews remain available.
 
 ## Consistency and operations

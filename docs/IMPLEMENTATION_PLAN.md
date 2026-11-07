@@ -4,7 +4,7 @@
 
 1. Resolve the findings in the application review: queue concurrency, durable history, role/duty authority, revocable sessions, strict validation, pagination, data boundaries, accessibility, timing, and dependency advisories.
 2. Build TA applications with a shared TA/RA foundation, instructor opportunity requirements, private CVs and answers, candidate review, collision-safe offers, consent/clearance, dated appointments, and automatic scoped access to the existing queue.
-3. Provide optional AI assistance with explicit configuration-required states and validated, qualification-only evidence. Existing synthetic provider verification is historical; this delivery uses loopback test providers without new real API calls.
+3. Provide optional AI assistance with explicit configuration-required states and validated, qualification-only evidence. Verify current browser workflows through capped real OpenAI requests using synthetic records, and use loopback providers for controlled failures and races.
 4. Preserve the four roles and Duke blue visual system; improve keyboard access, dialogs, labels, feedback, and mobile usability.
 5. Commit each coherent feature with a single English sentence. Work locally without GitHub Actions, remote pushes, or publication.
 6. Review the final application line by line; fix confirmed defects and report policy choices separately for the owner.

@@ -1,6 +1,6 @@
 {
-  "recordedAt": "2026-11-07T17:39:23.489521+00:00",
-  "coverage": "Current domain/integration review for changed code plus matching byte receipts from the previous full-source review for unchanged code. No claim of exhaustive security proof.",
+  "recordedAt": "2026-11-07T17:59:20.012127+00:00",
+  "coverage": "Current verification-harness review plus unchanged-byte receipts from the preceding domain/integration review. No claim of exhaustive security proof.",
   "files": [
     {
       "path": "app/app.vue",
@@ -549,6 +549,16 @@
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "primary verification reviewer"
+      ]
+    },
+    {
+      "path": "scripts/ai-provider-browser-check.mjs",
+      "bytes": 17500,
+      "sha256": "fe3c985b9aaa291fa25991691ad60c7ece2d81a40ff7615a10a518c7e5f74d42",
+      "physicalLines": 238,
+      "review": "Current verification harness read in full and exercised against the real provider with synthetic browser and worker workflows.",
+      "reviewers": [
+        "AI and integration reviewer"
       ]
     },
     {

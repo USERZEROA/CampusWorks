@@ -31,7 +31,9 @@ These scans are automated checks of the exercised states, not proof of universal
 
 ## Provider, dependency and review boundaries
 
-No saved API Key was read and **no real provider call was made in this delivery**. Synthetic loopback providers exercised the current adapter and worker. The retained [five-request OpenAI receipt](verification/ai-provider-proof.json) predates these source changes; it establishes only the historical synthetic integration check, not current hiring quality or a fresh provider validation. The masked DPAPI launcher remains covered by synthetic-credential tests.
+The latest production build also passed **seven real OpenAI requests** through headless browser workflows: qualification summary, requirements suggestions, course review, two teachers' initial comparisons and both automatic updates after selection. The [sanitized browser receipt](verification/ai-browser-proof.json) records the source digest, configured model and outcomes. The saved Key was decrypted only by the local Windows loader and passed through the application child environment; it was not printed, saved to logs or exposed to the browser. Synthetic records alone were sent to OpenAI. All responses passed schema/evidence checks, the competing selection was refused, expiry preserved history without another call, and cleanup completed.
+
+The retained [five-request OpenAI receipt](verification/ai-provider-proof.json) is historical. Loopback providers still exercise controlled failure, quota and race cases. The masked DPAPI launcher remains covered by synthetic-credential tests. Real API success does not establish real hiring accuracy or fairness. See [AI workflows](AI_WORKFLOWS.md) for the exact insertion points and manual/automatic behavior.
 
 MongoDB remains pinned to **7.8.0**. The current npm audit snapshot reports **zero vulnerabilities**. Mandatory declared indexes and transaction-capable topology are readiness requirements. Unit/source checks, dependency audit and finite acceptance tests are complementary evidence; none is an exhaustive security proof.
 

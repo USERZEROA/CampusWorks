@@ -1,6 +1,6 @@
 {
-  "recordedAt": "2026-11-07T17:39:23.489521+00:00",
-  "count": 172,
+  "recordedAt": "2026-11-07T17:59:20.012127+00:00",
+  "count": 175,
   "coverage": "Delivered local working-tree bytes excluding self-referential inventory/result/review receipts. Git may normalize line endings on checkout; inventory alone is not semantic review.",
   "files": [
     {
@@ -41,9 +41,9 @@
     },
     {
       "path": "README.md",
-      "bytes": 13711,
-      "sha256": "d7f2f2b1240984af0df804b7ed1395e43c5c53108af62785f780d9685e5cf556",
-      "physicalLines": 135
+      "bytes": 14122,
+      "sha256": "6cd55afdd7493c6fd627a537247450d543ea30ec237f3e69298eed9eb129f441",
+      "physicalLines": 137
     },
     {
       "path": "app/app.vue",
@@ -250,15 +250,21 @@
       "physicalLines": 75
     },
     {
+      "path": "docs/AI_WORKFLOWS.md",
+      "bytes": 5839,
+      "sha256": "378883fa2763a89527b8a71af3566630751af631801bee2f5287aa0412eb20cf",
+      "physicalLines": 42
+    },
+    {
       "path": "docs/BUSINESS_REVIEW.md",
-      "bytes": 7351,
-      "sha256": "6559322b3834a6599127c90291f312d3ab27396dd191219080b02cdf35759835",
+      "bytes": 7603,
+      "sha256": "4926c0d55949b45eb87e62fff108b8b0a617c12449a889b3feb68a4f3118b762",
       "physicalLines": 51
     },
     {
       "path": "docs/IMPLEMENTATION_PLAN.md",
-      "bytes": 4018,
-      "sha256": "185846630a3b5fa72599e054bb5dd43652137f0ecc49f11f8955884c36b0e2d7",
+      "bytes": 4047,
+      "sha256": "f5642cd4413c0c846ed670c1c0fba781a1e3f77bc5b8fb2831262161b36bc362",
       "physicalLines": 34
     },
     {
@@ -275,20 +281,20 @@
     },
     {
       "path": "docs/STAFFING_OPERATIONS.md",
-      "bytes": 25071,
-      "sha256": "98f3fdcd02592194e83cf683d11005708b60c05a661d3188666ff79980f14f17",
+      "bytes": 25230,
+      "sha256": "9c430a1a8b2ef00bfb87592921587b8d74ccc9ab832ce09faf38debcafc8ee5d",
       "physicalLines": 171
     },
     {
       "path": "docs/VERIFICATION.md",
-      "bytes": 7353,
-      "sha256": "073cbe33969c24bbf1f3d545d987d8425f7cd62950dfb0c3c49eb7e9c7b3080c",
-      "physicalLines": 44
+      "bytes": 8055,
+      "sha256": "f7c4ab3e0461063a888be703df4379e9106d42eadab8c05c9132b04e1c2b97ec",
+      "physicalLines": 46
     },
     {
       "path": "docs/WORK_PLAN.md",
-      "bytes": 3264,
-      "sha256": "bf2af170ede216cb698c52a2ce37a64d9df980a6fe58dabcb98a51a1829afedf",
+      "bytes": 3339,
+      "sha256": "3c04812d1d7c9c9fbb6af40f8edbe19d2fe3b67d10ce69585ca27e8ffb4d0af6",
       "physicalLines": 32
     },
     {
@@ -326,6 +332,12 @@
       "bytes": 15556,
       "sha256": "a64365c0d6265af469c2cda861cd6b550e18fdae6f30ab2e3337caea8bb32c02",
       "physicalLines": 128
+    },
+    {
+      "path": "docs/verification/ai-browser-proof.json",
+      "bytes": 2249,
+      "sha256": "f80baa5faa9bb6448be6d8e678dfe67d78dbb9c0e318123dbd5da2090cf15532",
+      "physicalLines": 91
     },
     {
       "path": "docs/verification/ai-provider-proof.json",
@@ -650,6 +662,12 @@
       "bytes": 24,
       "sha256": "e1f21c9aa28d50ca112ed357f34b67c550597effd4d42fd55b4e27300dd8f9c1",
       "physicalLines": 2
+    },
+    {
+      "path": "scripts/ai-provider-browser-check.mjs",
+      "bytes": 17500,
+      "sha256": "fe3c985b9aaa291fa25991691ad60c7ece2d81a40ff7615a10a518c7e5f74d42",
+      "physicalLines": 238
     },
     {
       "path": "scripts/ai-provider-check.mjs",

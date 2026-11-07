@@ -1,0 +1,91 @@
+{
+  "status": "passed",
+  "startedAt": "2026-11-07T17:52:50.975Z",
+  "synthetic": true,
+  "headless": true,
+  "maxProviderCalls": 7,
+  "providerCallsReserved": 7,
+  "checks": [
+    {
+      "kind": "cv_summary",
+      "trigger": "browser_click",
+      "reviewer": "faculty_a",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "opportunity_draft",
+      "trigger": "browser_click",
+      "reviewer": "faculty_a",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "term_review",
+      "trigger": "browser_click",
+      "reviewer": "faculty_a",
+      "status": "completed",
+      "validated": true,
+      "compared": null
+    },
+    {
+      "kind": "candidate_fit",
+      "trigger": "browser_click",
+      "reviewer": "faculty_a",
+      "status": "completed",
+      "validated": true,
+      "compared": 2
+    },
+    {
+      "kind": "candidate_fit",
+      "trigger": "browser_click",
+      "reviewer": "faculty_b",
+      "status": "completed",
+      "validated": true,
+      "compared": 2
+    },
+    {
+      "kind": "candidate_fit",
+      "trigger": "automatic_after_selection",
+      "reviewer": "faculty_a",
+      "status": "completed",
+      "validated": true,
+      "compared": 1
+    },
+    {
+      "kind": "candidate_fit",
+      "trigger": "automatic_after_selection",
+      "reviewer": "faculty_b",
+      "status": "completed",
+      "validated": true,
+      "compared": 1
+    }
+  ],
+  "stage": "expiry_and_budget_checks",
+  "provider": {
+    "endpoint": "https://api.openai.com/v1",
+    "model": "gpt-5.4-mini"
+  },
+  "source": {
+    "commit": "0281e97fbdba05940e41250ed83679ede7acd338",
+    "applicationSha256": "5d138758dfee49155066881c0e86f5de09ae0f42aebd986e25d88c84fed33dd8",
+    "buildEntrySha256": "444c92c4a9bd18740e5ba3138935d1266fcf7fd93ae9c2641c9eeab0130cdbc2"
+  },
+  "competingSelectionStatus": 409,
+  "browserAnalysisPosts": [
+    4,
+    1
+  ],
+  "pageErrors": 0,
+  "endedAnalysisStatus": {
+    "candidate_fit": 409,
+    "cv_summary": 409,
+    "historicalResultAvailable": true
+  },
+  "remainingLeases": 0,
+  "offerRequiresAcceptanceAndClearance": true,
+  "cleanup": "complete",
+  "completedAt": "2026-11-07T17:53:23.801Z"
+}
