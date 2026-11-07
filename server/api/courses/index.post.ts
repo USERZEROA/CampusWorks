@@ -13,6 +13,7 @@ export default defineEventHandler(async event => {
     if (await db.collection('courses').findOne({ $or: [{ id: code }, { code }] }, { session })) throw createError({ statusCode: 409, statusMessage: 'Course already exists' })
     await db.collection('courses').insertOne({ id: code, code, title, state: 'closed', onDutyTAs: [], queueSequence: 0, mutationVersion: 0, createdAt: new Date(), createdBy: user.email }, { session })
     await db.collection('enrollments').insertOne({ courseId: code, userEmail: user.email, role: 'admin' }, { session })
+    await db.collection('auditEvents').insertOne({ courseId: code, actorId: user.id, action: 'CourseCreated', target: code, createdAt: new Date() }, { session })
     return { ok: true, id: code }
   })
 })

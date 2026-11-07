@@ -58,8 +58,7 @@ export async function withTransaction<T>(work: (db: Db, session: ClientSession) 
   } finally { await session.endSession() }
 }
 
-async function ensureIndexes(db: Db) {
-  const indexes: Record<string, IndexDescription[]> = {
+const mandatoryIndexes: Record<string, IndexDescription[]> = {
     courses: [{ key: { id: 1 }, unique: true }],
     enrollments: [{ key: { courseId: 1, userEmail: 1 }, unique: true }, { key: { userEmail: 1 } }],
     queueEntries: [
@@ -77,5 +76,21 @@ async function ensureIndexes(db: Db) {
     requestLimits: [{ key: { expiresAt: 1 }, expireAfterSeconds: 0 }],
     auditEvents: [{ key: { courseId: 1, createdAt: -1 } }]
   }
-  for (const [name, specs] of Object.entries(indexes)) await db.collection(name).createIndexes(specs)
+async function ensureIndexes(db: Db) {
+  for (const [name, specs] of Object.entries(mandatoryIndexes)) await db.collection(name).createIndexes(specs)
 }
+
+/** Readiness checks verify the live constraints rather than reporting only a ping. */
+export async function verifyDatabaseReadiness(db: Db) {
+  const topology = await db.admin().command({ hello: 1 })
+  if (!topology.setName && topology.msg !== 'isdbgrid') throw new Error('Transaction-capable topology is unavailable')
+  const required: Record<string, IndexDescription[]> = { ...mandatoryIndexes, staffingAllocations: [{ key: { termId: 1, applicantId: 1 }, unique: true }] }
+  for (const [name, specs] of Object.entries(required)) {
+    const actual = await db.collection(name).listIndexes().toArray()
+    for (const spec of specs) {
+      const index = actual.find(index => JSON.stringify(index.key) === JSON.stringify(spec.key))
+      if (!index || (!!spec.unique && !index.unique) || JSON.stringify(spec.partialFilterExpression || null) !== JSON.stringify(index.partialFilterExpression || null) || (spec.expireAfterSeconds !== undefined && spec.expireAfterSeconds !== index.expireAfterSeconds)) throw new Error('A required database index is unavailable')
+    }
+  }
+}
+

@@ -66,7 +66,9 @@ export async function withCourseTransaction<T>(event: H3Event, work: (access: Co
     await reconcileStaffing(db, session, { courseId: courseKeyOf(course) })
     const access = await accessFor(db, course, user, session)
     await cleanExpiredStaff(access, session)
-    return work(access, session)
+    const result = await work(access, session)
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(event.method)) await recordCourseAudit(access, 'CourseMutation', event.method + ' ' + event.path.split('?')[0], session)
+    return result
   })
 }
 async function cleanExpiredStaff(access: CourseAccess, session: ClientSession) {

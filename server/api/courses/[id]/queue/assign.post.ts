@@ -11,6 +11,7 @@ export default defineEventHandler(event => withCourseTransaction(event, async (a
   const entry = await coll.findOne({ _id, courseId: courseKey }, { session })
   if (!entry) throw createError({ statusCode: 404, statusMessage: 'Entry not found' })
   if (body.assign === true) {
+    if (entry.studentEmail === user.email) throw createError({ statusCode: 400, statusMessage: 'A staff member cannot claim their own help request' })
     if (entry.paused) throw createError({ statusCode: 409, statusMessage: 'Entry is paused' })
     if (entry.taEmail === user.email && !entry.otherTa) return { ok: true }
     await releaseStaffClaims(db, courseKey, user.email, session)

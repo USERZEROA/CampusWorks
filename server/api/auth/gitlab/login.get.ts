@@ -3,8 +3,6 @@ import { randomBytes } from 'node:crypto'
 import {
   defineEventHandler,
   createError,
-  getRequestProtocol,
-  getRequestURL,
   sendRedirect,
   setCookie
 } from 'h3'
