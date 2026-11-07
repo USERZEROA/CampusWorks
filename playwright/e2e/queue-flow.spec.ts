@@ -170,7 +170,9 @@ test.describe.serial('office-hours queue: full loop with four identities', () =>
     await expect(sessions).toHaveCount(2);
     await expect(sessions.filter({ hasText: studentEmail })).toContainText('Helped');
     await expect(sessions.filter({ hasText: student2Email })).toContainText('Left queue');
-    await expect(instructor.getByTestId('sessions-in-range')).toHaveText('1');
+    await expect(instructor.getByTestId('sessions-in-range')).toHaveText('2');
+    const helpedMetric = instructor.locator('.summary-card').filter({ has: instructor.locator('.summary-label', { hasText: /^Sessions$/ }) }).locator('.summary-value');
+    await expect(helpedMetric).toHaveText('1');
 
     await expect(instructor.getByTestId('feedback-row')).toContainText(
       'The TA explained base cases clearly.'
