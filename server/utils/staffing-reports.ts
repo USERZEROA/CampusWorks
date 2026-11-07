@@ -99,6 +99,8 @@ export async function addProjectUpdate(db: Db, session: ClientSession, user: Sta
   const workspace = await projectWorkspace(db, user, projectId, 1, session)
   const body = object(raw, 'Project update')
   const message = text(body.text, 'Project update', 5000, true)
-  await event(db, session, user, 'ResearchUpdate', projectId, { projectId, text: message })
+  const entryKind = text(body.kind, 'Entry type', 30) || 'update'
+  if (!['update', 'task', 'note'].includes(entryKind)) fail(400, 'Unknown project entry type')
+  await event(db, session, user, 'ResearchUpdate', projectId, { projectId, text: message, entryKind })
   return { ok: true, project: workspace.project }
 }

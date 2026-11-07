@@ -7,6 +7,27 @@ const { data, error, refresh } = await useStaffingPagedRecord(
   `/api/staffing/projects/${id}/workspace`,
 );
 const { busy, message, failure, run } = useStaffingMutation(refresh);
+const ownActiveAppointments = computed(() => {
+  const user = signedInUser.value;
+  if (!user || !data.value?.canWork) return [];
+  return (data.value.appointments || []).filter(
+    (item: any) =>
+      item.status === "active" &&
+      ((!!user.id && item.applicantId === user.id) ||
+        item.applicantEmail === user.email),
+  );
+});
+function projectEntryLabel(item: any) {
+  if (item.kind !== "ResearchUpdate") return staffingState(item.kind);
+  switch (item.details?.entryKind) {
+    case "task":
+      return "Task";
+    case "note":
+      return "Research note";
+    default:
+      return "Project update";
+  }
+}
 const entry = reactive({ kind: "update", text: "" });
 async function post() {
   const result = await run(
@@ -73,11 +94,7 @@ useIntervalRefresh(refresh);
             class="opportunity-card"
           >
             <h3>
-              {{
-                item.kind === "ResearchUpdate"
-                  ? "Project update"
-                  : staffingState(item.kind)
-              }}
+              {{ projectEntryLabel(item) }}
               ·
               {{ item.byName || item.actorEmail || item.by || item.userEmail }}
             </h3>
@@ -90,11 +107,7 @@ useIntervalRefresh(refresh);
         </div>
       </section>
       <WorkloadRecorder
-        v-for="item in (data.appointments || []).filter(
-          (item: any) =>
-            item.status === 'active' &&
-            item.applicantEmail === signedInUser?.email,
-        )"
+        v-for="item in ownActiveAppointments"
         :key="item.id"
         :appointment-id="item.id"
       />
