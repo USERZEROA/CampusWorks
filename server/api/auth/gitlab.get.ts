@@ -1,15 +1,15 @@
 // server/api/auth/gitlab.get.ts
+import { timingSafeEqual } from 'node:crypto'
 import {
   defineEventHandler,
   createError,
   deleteCookie,
   getCookie,
   getQuery,
-  getRequestURL,
   sendRedirect
 } from 'h3'
 import { getServerConfig, isEmailDomainAllowed, isGitlabConfigured, requestOrigin } from '../../utils/config'
-import { normalizeEmail, OAUTH_STATE_COOKIE, setSessionUser } from '../../utils/auth'
+import { normalizeEmail, OAUTH_STATE_COOKIE, setSessionUser, validEmail } from '../../utils/auth'
 
 type GitlabUser = {
   id: number
@@ -39,12 +39,12 @@ export default defineEventHandler(async (event) => {
   deleteCookie(event, OAUTH_STATE_COOKIE, { path: '/api/auth' })
 
   if (query.error) {
-    throw createError({ statusCode: 401, statusMessage: `GitLab error: ${String(query.error)}` })
+    throw createError({ statusCode: 401, statusMessage: 'The identity provider declined sign-in' })
   }
   if (!code) {
     throw createError({ statusCode: 400, statusMessage: 'Missing code from GitLab' })
   }
-  if (!state || !expectedState || state !== expectedState) {
+  if (!/^[a-f0-9]{32}$/.test(state) || !expectedState || !/^[a-f0-9]{32}$/.test(expectedState) || !timingSafeEqual(Buffer.from(state), Buffer.from(expectedState))) {
     throw createError({ statusCode: 400, statusMessage: 'Invalid OAuth state, please sign in again' })
   }
 
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 502, statusMessage: 'GitLab token request failed' })
   }
 
-  if (!accessToken) {
+  if (typeof accessToken !== 'string' || !accessToken) {
     throw createError({ statusCode: 401, statusMessage: 'GitLab token exchange failed' })
   }
 
@@ -85,8 +85,9 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 502, statusMessage: 'Failed to fetch GitLab user profile' })
   }
 
-  const email = normalizeEmail(gitlabUser.email || '')
-  if (!email) {
+  if (!gitlabUser || typeof gitlabUser.email !== 'string' || !Number.isSafeInteger(gitlabUser.id)) throw createError({ statusCode: 502, statusMessage: 'Invalid identity-provider profile' })
+  const email = normalizeEmail(gitlabUser.email)
+  if (!validEmail(email)) {
     throw createError({ statusCode: 403, statusMessage: 'Your GitLab account has no email address' })
   }
 

@@ -22,6 +22,7 @@ export function completedSegments(entry: Document, now: Date): HelpSegment[] {
   return segments
 }
 export async function releaseEntry(db: Db, entry: WithId<Document>, session: ClientSession, otherTa = false, now = new Date()) {
+  if (!session?.inTransaction()) throw new Error('Queue changes require an active transaction')
   await db.collection('queueEntries').updateOne({ _id: entry._id }, {
     $set: { helpSegments: completedSegments(entry, now), otherTa },
     $unset: { ta: '', taEmail: '', activeHelpStartAt: '' }
@@ -41,6 +42,7 @@ export function resumedPauseFields(entry: Document, now = new Date()) {
 
 /** History insertion and active-entry removal always share the caller's course transaction. */
 export async function archiveEntry(db: Db, filter: Document, opts: { reason: QueueEndReason; endedBy: string; fallbackTa?: { email: string; name: string } }, session: ClientSession): Promise<WithId<Document> | null> {
+  if (!session?.inTransaction()) throw new Error('Queue archival requires an active transaction')
   const entry = await db.collection('queueEntries').findOne(filter, { session })
   if (!entry) return null
   const now = new Date()

@@ -25,6 +25,7 @@ export function findCourse(db: Db, idOrCode: string, session?: ClientSession) {
 
 /** This write is the common serialization point for every course-scoped transition. */
 export async function lockCourse(db: Db, idOrCode: string, session: ClientSession) {
+  if (!session?.inTransaction()) throw new Error('Course locking requires an active transaction')
   const course = await db.collection('courses').findOneAndUpdate(courseFilter(idOrCode), { $inc: { mutationVersion: 1 } }, { session, returnDocument: 'after' })
   if (!course) throw createError({ statusCode: 404, statusMessage: 'Course not found' })
   return course
@@ -78,7 +79,7 @@ async function cleanExpiredStaff(access: CourseAccess, session: ClientSession) {
     const role = await getCourseRole(db, courseKey, email, session)
     const configuredAdmin = getServerConfig().adminEmails.includes(email)
     // Global demo administrators may be on duty without a course enrollment.
-    const isDemoAdmin = getServerConfig().mockLoginEnabled && await db.collection<any>('authSessions').findOne({ 'user.email': email, 'user.provider': 'mock', 'user.primaryRole': 'admin', expiresAt: { $gt: new Date() } }, { session, projection: { _id: 1 } })
+    const isDemoAdmin = getServerConfig().mockLoginEnabled && await db.collection<any>('authSessions').findOne({ 'user.email': email, 'user.provider': 'mock', 'user.primaryRole': 'admin', expiresAt: { $gt: new Date() }, revokedAt: null }, { session, projection: { _id: 1 } })
     if ((role && STAFF_ROLES.includes(role)) || configuredAdmin || isDemoAdmin) {
       const item = duty.find(d => d.email === email)
       if (item) retained.push(item)

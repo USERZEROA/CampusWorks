@@ -38,7 +38,7 @@ export async function getSessionUser(event: H3Event): Promise<SessionUser | null
   let user: SessionUser | null = null
   if (token) {
     const db = await getDb()
-    const record = await db.collection<any>('authSessions').findOne({ _id: tokenHash(token), expiresAt: { $gt: new Date() } })
+    const record = await db.collection<any>('authSessions').findOne({ _id: tokenHash(token), expiresAt: { $gt: new Date() }, revokedAt: null })
     const raw = record?.user
     if (raw && typeof raw.id === 'string' && validEmail(raw.email) && PRIMARY_ROLES.includes(raw.primaryRole)) user = raw
   }

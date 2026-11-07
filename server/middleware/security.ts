@@ -1,7 +1,8 @@
 import { createHash } from 'node:crypto'
-import { defineEventHandler, createError, getHeader, readRawBody, setHeader } from 'h3'
+import { defineEventHandler, createError, getHeader, getRequestIP, readRawBody, setHeader } from 'h3'
 import { getServerConfig, requestOrigin } from '../utils/config'
 import { getDb } from '../utils/db'
+import { getSessionUser } from '../utils/auth'
 
 /** Browser-origin checks and shared rate counters apply to direct API calls as well as pages. */
 export default defineEventHandler(async event => {
@@ -33,8 +34,10 @@ export default defineEventHandler(async event => {
   }
   const minute = Math.floor(Date.now() / 60_000)
   const login = path === '/api/auth/mock' || path === '/api/auth/gitlab/login'
-  const remote = event.node.req.socket.remoteAddress || 'internal'
-  const key = createHash('sha256').update((login ? 'login:' : 'api:') + remote + ':' + minute).digest('hex')
+  const remote = getRequestIP(event, { xForwardedFor: config.trustProxy }) || 'internal'
+  const user = login ? null : await getSessionUser(event)
+  const identity = user ? 'user:' + user.id : 'ip:' + remote
+  const key = createHash('sha256').update((login ? 'login:' : 'api:') + identity + ':' + minute).digest('hex')
   const counters = (await getDb()).collection<any>('requestLimits')
   let count: any
   try {
