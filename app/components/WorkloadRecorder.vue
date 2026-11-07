@@ -49,7 +49,7 @@ async function save() {
       </p>
       <div class="grid">
         <label
-          >Work category<select v-model="observation.kind">
+          >Work category<select v-model="observation.kind" aria-label="Work category">
             <option value="attendance">Attendance</option>
             <option value="lab">Lab</option>
             <option value="discussion">Discussion</option>

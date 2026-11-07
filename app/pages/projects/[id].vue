@@ -68,7 +68,7 @@ useIntervalRefresh(refresh);
         <div class="panel-heading"><h2>Record Project Work</h2></div>
         <form @submit.prevent="post" class="panel-body">
           <label
-            >Entry type<select v-model="entry.kind">
+          >Entry type<select v-model="entry.kind" aria-label="Entry type">
               <option value="update">Progress update</option>
               <option value="task">Task</option>
               <option value="note">Research note</option>
