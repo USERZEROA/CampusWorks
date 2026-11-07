@@ -309,8 +309,9 @@ function addQuestion() {
               >Weekly hours<input
                 v-model.number="form.weeklyHours"
                 type="number"
-                min="1"
+                min="0.25"
                 max="40"
+                step="any"
                 required
                 data-testid="opportunity-hours"
             /></label>

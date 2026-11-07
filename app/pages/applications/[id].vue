@@ -487,8 +487,9 @@ useIntervalRefresh((options) =>
                 >Available hours per week<input
                   v-model.number="profile.availableHours"
                   type="number"
-                  min="1"
+                  min="0"
                   max="40"
+                  step="any"
                   required
                   data-testid="app-available-hours"
               /></label>
