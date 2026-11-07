@@ -1,26 +1,13 @@
-// server/api/courses/[id].delete.ts
 import { defineEventHandler, createError } from 'h3'
-import { getCourseAccess } from '../../utils/courses'
-
-/**
- * DELETE /api/courses/[id]
- * Hard-deletes a course and everything that belongs to it
- * (enrollments, queue, help sessions, announcements, feedback).
- * Global admins only.
- */
-export default defineEventHandler(async (event) => {
-  const { db, course, courseKey, globalAdmin } = await getCourseAccess(event)
-
-  if (!globalAdmin) {
-    throw createError({ statusCode: 403, statusMessage: 'Only admins can delete courses' })
-  }
-
-  await db.collection('courses').deleteOne({ _id: course._id })
-  await Promise.all(
-    ['enrollments', 'queueEntries', 'helpSessions', 'announcements', 'feedback'].map((name) =>
-      db.collection(name).deleteMany({ courseId: courseKey })
-    )
-  )
-
+import { withCourseTransaction, recordCourseAudit } from '../../utils/courses'
+export default defineEventHandler(event => withCourseTransaction(event, async (access, session) => {
+  const { db, course, courseKey, globalAdmin } = access
+  if (!globalAdmin) throw createError({ statusCode: 403, statusMessage: 'Only admins can delete courses' })
+  const opportunity = await db.collection('staffingOpportunities').findOne({ courseId: courseKey, status: { $nin: ['archived', 'cancelled'] } }, { session, projection: { _id: 1 } })
+  const appointment = await db.collection('staffingAppointments').findOne({ courseId: courseKey, status: { $nin: ['ended', 'cancelled', 'not_cleared', 'expired'] } }, { session, projection: { _id: 1 } })
+  if (opportunity || appointment) throw createError({ statusCode: 409, statusMessage: 'Resolve linked staffing opportunities and appointments before deleting this course' })
+  for (const name of ['enrollments', 'queueEntries', 'helpSessions', 'announcements', 'feedback']) await db.collection(name).deleteMany({ courseId: courseKey }, { session })
+  await recordCourseAudit(access, 'CourseDeleted', courseKey, session)
+  await db.collection('courses').deleteOne({ _id: course._id }, { session })
   return { ok: true }
-})
+}))
