@@ -62,10 +62,16 @@ Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell), gen
 | `npm run test:e2e:headed` | Visible browser tests |
 | `npm run test:e2e:ui` | Playwright test interface |
 | `npm run demo:windows` | Six isolated visible queue demonstration windows; set `DEMO_LAYOUT=staffing` for four roles plus application/recruitment windows |
+| `npm run demo:prepare` | Prepare the complete labelled showcase without browser windows or model calls |
+| `npm run demo:showcase` | Open six prepared role windows; use the encrypted AI configuration when available |
 
 Install browsers once with `npx playwright install chromium firefox`. The complete suite requires Docker. Its runner creates a uniquely named, loopback-only disposable database, enables database fault injection only in that test container, starts two production app processes and cleans up its own resources. It uses local synthetic identity and AI providers. No real provider key or institutional login is required. Reports and traces stay in ignored directories. The runner rejects skipped, flaky and failed tests. Set `E2E_HEADED=1` to display browsers.
 
 Use `npm run verify:local` for the full suite: concurrency and fault tests require its isolated database and second instance. Individual browser specifications can target a dedicated demo app using `BASE_URL`.
+
+The [demonstration guide](docs/DEMO_GUIDE.md) provides a repeatable ten-course scenario, 21 positions, 68 applications, real appointment transitions, populated queues and an eight-minute presentation path. Preparation uses a dedicated versioned database, retains existing data and never fabricates AI output. [Product readiness](docs/PRODUCT_READINESS.md) identifies the semester, offer, institutional identity and operational decisions required for a real pilot.
+
+Open the [offline screenshot gallery](docs/demo/index.html) for desktop/mobile views captured from actual local browsers. Every person and workflow record in the gallery is synthetic.
 
 ## Configuration
 

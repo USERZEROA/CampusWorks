@@ -19,7 +19,11 @@ Discovery uses a persistent round-robin cursor across task types and subsequent 
 
 Automatic candidate pages contain up to ten eligible candidates by default. Every supplied candidate must receive exactly one valid explanation. Coverage identifies the page, inspected/submitted/compared counts and remaining pages. A page does not establish the best applicant across the entire pool. Large automatic inputs may use explicitly marked text excerpts, retaining every candidate, reference and complete-source hash; the result then warns that reviewers must inspect the full application. Inputs that still exceed the limit stop without a provider purchase until evidence changes.
 
+Candidate responses request short explanations and one or two exact references per person, including that person's own application evidence. Existing coverage and citation checks remain mandatory. A provider `finish_reason` of `length` is rejected as an output-limit failure. Stored failure categories distinguish JSON, references, coverage and response bounds without keeping provider error text. The completion signal is documented in the [official OpenAI API reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create).
+
 Course previews coalesce changing observations with a fifteen-minute default cooldown. Semester end changes the review phase to final and bypasses that preview cooldown. Both previews and final advice use checked, dated aggregates. A missing provider disables AI without blocking deterministic staffing work.
+
+Automatic output caps are 900 tokens for qualification summaries, 1,200 for requirement suggestions, 1,800 for course advice and 2,500 for a candidate page. Reservations use the actual task cap plus the conservative input-byte allowance. The per-account and global daily limits are unchanged; a populated demonstration can queue less prominent work for later capacity. Ordinary manual API requests retain the 2,500-token maximum.
 
 ## Decisions and appointment authority
 
