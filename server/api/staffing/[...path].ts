@@ -2,11 +2,12 @@ import { defineEventHandler, getQuery, getRouterParam, readBody, readMultipartFo
 import { isGlobalAdmin, requireUser } from '../../utils/auth'
 import { getDb, withTransaction } from '../../utils/db'
 import { aiStatus } from '../../utils/ai'
-import { actorId, allocationUnavailable, applicationAccess, applicationDto, assertOpportunityManager, assertVersion, canManageOpportunity, eligibility, event as recordEvent, fail, findOpportunity, object, options, publicRecord, text } from '../../utils/staffing'
+import { actorId, allocationUnavailable, applicationAccess, applicationDto, appointmentDto, assertOpportunityManager, assertVersion, canManageOpportunity, eligibility, event as recordEvent, fail, findOpportunity, object, options, publicRecord, text } from '../../utils/staffing'
 import { createOpportunity, createProject, createTerm, lockStaffingResource, opportunityInput, overview } from '../../utils/staffing-catalog'
 import { applicationDetail, createApplication, reviewApplication, submitApplication, updateApplication, updateAdministrative, uploadCv } from '../../utils/staffing-applications'
 import { appointmentAction, offerAction, reconcileDueStaffing, selectApplication, withdrawApplication } from '../../utils/staffing-appointments'
 import { addProjectUpdate, courseReview, projectWorkspace, recordWorkload } from '../../utils/staffing-reports'
+import { processStaffingOutbox } from '../../utils/staffing-outbox'
 
 export default defineEventHandler(async (event) => {
   const user = await requireUser(event)
@@ -15,12 +16,18 @@ export default defineEventHandler(async (event) => {
   const [resource, id, action] = parts
   if (parts.length > 3) fail(404, 'Staffing endpoint not found')
   const method = event.method
+  const pageValue = getQuery(event).page
+  const page = pageValue === undefined ? 1 : Number(pageValue)
+  if (!Number.isInteger(page) || page < 1 || page > 100000) fail(400, 'Page must be a positive integer')
+  const offset = (page - 1) * 100
   // Maintenance applies only due canonical transitions and never depends on AI.
   await reconcileDueStaffing(db)
+  await processStaffingOutbox(db)
   if (method === 'GET' && resource === 'overview' && !id) {
-    const result = await overview(db, user)
-    const adminAppointments = isGlobalAdmin(user) ? await db.collection('staffingAppointments').find({}).sort({ createdAt: -1 }).limit(100).toArray() : []
-    return { ...result, ai: aiStatus(), adminAppointments: adminAppointments.map(publicRecord), admin: isGlobalAdmin(user) ? { pendingOpportunities: result.managedOpportunities.filter(o => o?.status === 'pending_approval'), appointments: adminAppointments.map(publicRecord) } : null }
+    const result = await overview(db, user, page)
+    const notificationFilter = { recipientId: actorId(user) }
+    const [notifications, notificationCount] = await Promise.all([db.collection('staffingNotifications').find(notificationFilter).sort({ createdAt: -1, id: 1 }).skip(offset).limit(100).toArray(), db.collection('staffingNotifications').countDocuments(notificationFilter)])
+    return { ...result, ai: aiStatus(), notifications: notifications.map(publicRecord), pagination: { ...result.pagination, totals: { ...result.pagination.totals, notifications: notificationCount }, hasMore: result.pagination.hasMore || notificationCount > offset + 100 } }
   }
   if (method === 'GET' && resource === 'opportunities' && id && !action) {
     const opportunity = await findOpportunity(db, id)
@@ -28,13 +35,18 @@ export default defineEventHandler(async (event) => {
     if (!canManage && !['published', 'applications_closed', 'filled'].includes(opportunity.status)) fail(404, 'Opportunity not found')
     const application = await db.collection('staffingApplications').findOne({ opportunityId: id, applicantId: actorId(user) })
     const [applications, appointments, offers] = canManage ? await Promise.all([
-      db.collection('staffingApplications').find({ opportunityId: id, submittedAt: { $exists: true }, status: { $ne: 'draft' } }).sort({ submittedAt: 1 }).limit(100).toArray(),
-      db.collection('staffingAppointments').find({ opportunityId: id }).sort({ createdAt: -1 }).limit(100).toArray(),
-      db.collection('staffingOffers').find({ opportunityId: id }).sort({ createdAt: -1 }).limit(100).toArray()
+      db.collection('staffingApplications').find({ opportunityId: id, submittedAt: { $exists: true }, status: { $ne: 'draft' } }).sort({ submittedAt: 1, id: 1 }).skip(offset).limit(100).toArray(),
+      db.collection('staffingAppointments').find({ opportunityId: id }).sort({ createdAt: -1, id: 1 }).skip(offset).limit(100).toArray(),
+      db.collection('staffingOffers').find({ opportunityId: id }).sort({ createdAt: -1, id: 1 }).skip(offset).limit(100).toArray()
     ]) : [[], [], []]
+    const totals = canManage ? {
+      applications: await db.collection('staffingApplications').countDocuments({ opportunityId: id, submittedAt: { $exists: true }, status: { $ne: 'draft' } }),
+      appointments: await db.collection('staffingAppointments').countDocuments({ opportunityId: id }),
+      offers: await db.collection('staffingOffers').countDocuments({ opportunityId: id })
+    } : { applications: 0, appointments: 0, offers: 0 }
     const reviewed = []
     for (const app of applications) reviewed.push({ ...applicationDto(app, isGlobalAdmin(user)), availability: { unavailable: await allocationUnavailable(db, app.applicantId, opportunity.termId), ...eligibility(app, opportunity) } })
-    return { opportunity: publicRecord(opportunity), application: application ? applicationDto(application, true) : null, applications: reviewed, appointments: appointments.map(publicRecord), offers: offers.map(publicRecord), canManage, ai: aiStatus() }
+    return { opportunity: publicRecord(opportunity), application: application ? applicationDto(application, true) : null, applications: reviewed, appointments: appointments.map(a => appointmentDto(a, user)), offers: offers.map(publicRecord), canManage, ai: aiStatus(), pagination: { page, limit: 100, totals, hasMore: Object.values(totals).some(total => total > offset + 100) } }
   }
   if (method === 'GET' && resource === 'applications' && id && !action) return applicationDetail(db, user, id)
   if (method === 'GET' && resource === 'documents' && id && !action) {
@@ -50,17 +62,25 @@ export default defineEventHandler(async (event) => {
     return Buffer.from(document.bytes.buffer || document.bytes)
   }
   if (method === 'GET' && resource === 'projects' && id && action === 'workspace') return projectWorkspace(db, user, id)
-  if (method === 'GET' && resource === 'reviews' && id && !action) return courseReview(db, user, id, text(getQuery(event).termId, 'Term', 64))
+  if (method === 'GET' && resource === 'reviews' && id && !action) return courseReview(db, user, id, text(getQuery(event).termId, 'Term', 64), page)
   if (method === 'POST' && resource === 'applications' && id && action === 'cv') {
     const form = await readMultipartFormData(event)
     const files = form?.filter(part => part.name === 'file') || []
-    if (files.length !== 1 || form!.length !== 1) fail(400, 'Upload exactly one CV file')
-    return withTransaction((database, session) => uploadCv(database, session, user, id, files[0]!))
+    const versions = form?.filter(part => part.name === 'expectedVersion') || []
+    if (files.length !== 1 || versions.length !== 1 || form!.length !== 2) fail(400, 'Upload one CV file with the current application version')
+    const expectedVersion = Number(versions[0]!.data.toString('utf8'))
+    if (!Number.isInteger(expectedVersion) || expectedVersion < 1) fail(400, 'The current application version is required')
+    return withTransaction((database, session) => uploadCv(database, session, user, id, files[0]!, expectedVersion))
   }
   const body = method === 'GET' ? {} : await readBody(event) || {}
   if (method === 'POST' && resource === 'reconcile' && !id) {
     if (!isGlobalAdmin(user)) fail(403, 'Only administrators may request maintenance details')
-    return reconcileDueStaffing(db)
+    return { ...await reconcileDueStaffing(db), outbox: await processStaffingOutbox(db) }
+  }
+  if (method === 'POST' && resource === 'notifications' && id && action === 'read') {
+    const updated = await db.collection('staffingNotifications').updateOne({ id, recipientId: actorId(user) }, { $set: { read: true, readAt: new Date() } })
+    if (!updated.matchedCount) fail(404, 'Notification not found')
+    return { ok: true }
   }
   if (method === 'POST' && resource === 'terms' && !id) return withTransaction((database, session) => createTerm(database, session, user, body))
   if (method === 'POST' && resource === 'projects' && !id) return withTransaction((database, session) => createProject(database, session, user, body))
@@ -93,7 +113,8 @@ export default defineEventHandler(async (event) => {
         if (updated.courseId !== opportunity.courseId || updated.projectId !== opportunity.projectId || updated.termId !== opportunity.termId || updated.type !== opportunity.type) fail(400, 'Opportunity scope and term cannot be changed')
         const term = await database.collection('staffingTerms').findOne({ id: updated.termId }, { session }) || fail(404, 'Term not found')
         if (updated.appointmentStart < term.startDate || updated.appointmentEnd > term.endDate) fail(400, 'Appointment dates must be within the term')
-        await database.collection('staffingOpportunities').updateOne({ id }, { $set: { ...updated, approved: isGlobalAdmin(user) || !updated.approvalRequired, updatedAt: new Date() }, $inc: { version: 1, requirementsVersion: 1 } }, { session })
+        const approvalRequired = term.requiresApproval !== false || updated.approvalRequired
+        await database.collection('staffingOpportunities').updateOne({ id }, { $set: { ...updated, approvalRequired, approved: isGlobalAdmin(user) || !approvalRequired, updatedAt: new Date() }, $inc: { version: 1, requirementsVersion: 1 } }, { session })
       } else {
         let status = opportunity.status
         if (action === 'publish') {

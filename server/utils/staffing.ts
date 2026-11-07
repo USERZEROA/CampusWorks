@@ -57,7 +57,7 @@ export async function initializeStaffingIndexes(db: Db) {
     ['staffingTerms', [{ key: { id: 1 }, unique: true }, { key: { startDate: -1 } }]],
     ['researchProjects', [{ key: { id: 1 }, unique: true }, { key: { ownerEmail: 1 } }]],
     ['staffingOpportunities', [{ key: { id: 1 }, unique: true }, { key: { termId: 1, status: 1 } }, { key: { courseId: 1 } }, { key: { projectId: 1 } }]],
-    ['staffingApplications', [{ key: { id: 1 }, unique: true }, { key: { opportunityId: 1, applicantId: 1 }, unique: true }, { key: { applicantId: 1, updatedAt: -1 } }]],
+    ['staffingApplications', [{ key: { id: 1 }, unique: true }, { key: { opportunityId: 1, applicantId: 1 }, unique: true }, { key: { applicantId: 1, updatedAt: -1 } }, { key: { opportunityId: 1, status: 1, submittedAt: 1, id: 1 } }]],
     ['staffingDocuments', [{ key: { id: 1 }, unique: true }, { key: { applicationId: 1 } }]],
     ['staffingAllocations', [{ key: { termId: 1, applicantId: 1 }, unique: true }]],
     ['staffingOffers', [{ key: { id: 1 }, unique: true }, { key: { applicationId: 1, createdAt: -1 } }]],
@@ -65,7 +65,9 @@ export async function initializeStaffingIndexes(db: Db) {
     ['staffingEvents', [{ key: { id: 1 }, unique: true }, { key: { targetId: 1, createdAt: -1 } }, { key: { delivery: 1, createdAt: 1 } }]],
     ['staffingCommands', [{ key: { actorId: 1, key: 1 }, unique: true }]],
     ['staffingWorkload', [{ key: { id: 1 }, unique: true }, { key: { appointmentId: 1, date: -1 } }, { key: { appointmentId: 1, idempotencyKey: 1 }, unique: true, partialFilterExpression: { idempotencyKey: { $type: 'string' } } }]],
-    ['staffingAiTasks', [{ key: { id: 1 }, unique: true }, { key: { requestedBy: 1, createdAt: -1 } }, { key: { targetId: 1, status: 1 } }]]
+    ['staffingAiTasks', [{ key: { id: 1 }, unique: true }, { key: { requestedBy: 1, createdAt: -1 } }, { key: { targetId: 1, status: 1 } }, { key: { termId: 1, kind: 1, status: 1 } }]],
+    ['staffingAiBudgets', [{ key: { day: 1 } }]],
+    ['staffingNotifications', [{ key: { id: 1 }, unique: true }, { key: { eventId: 1, recipientId: 1 }, unique: true }, { key: { recipientId: 1, createdAt: -1 } }]]
   ]
   for (const [collection, indexes] of specs) await db.collection(collection).createIndexes(indexes)
 }
@@ -106,6 +108,17 @@ export function applicationDto(application: Document, sensitive: boolean) {
   if (sensitive) return { ...dto, administrative: administrative || {}, revisions: revisions || [] }
   const snapshot = application.submittedSnapshot || {}
   return { ...dto, profile: snapshot.profile || application.profile, answers: snapshot.answers || application.answers, qualificationText: snapshot.qualificationText ?? application.qualificationText, cvDocumentId: snapshot.cvDocumentId ?? application.cvDocumentId }
+}
+export function appointmentDto(appointment: Document | null | undefined, user: StaffingActor) {
+  if (!appointment) return null
+  const dto = publicRecord(appointment)!
+  if (!isGlobalAdmin(user) && appointment.applicantId !== actorId(user)) {
+    delete dto.clearanceReason
+    delete dto.clearedBy
+    delete dto.administrative
+    delete dto.clearanceNotes
+  }
+  return dto
 }
 
 export type Slot = { day: number; start: string; end: string }

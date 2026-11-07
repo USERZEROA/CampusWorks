@@ -3,7 +3,7 @@ import type { ClientSession, Db, Document } from 'mongodb'
 import { isGlobalAdmin } from './auth'
 import { releaseStaffClaims } from './queue'
 import { lockStaffingResource } from './staffing-catalog'
-import { actorId, allocationUnavailable, applicationAccess, applicationDto, assertOpportunityManager, assertVersion, eligibility, event, fail, findOpportunity, getAppointmentCourseRole, liveAllocationStates, number, object, publicRecord, text, uid, type StaffingActor } from './staffing'
+import { actorId, allocationUnavailable, applicationAccess, applicationDto, appointmentDto, assertOpportunityManager, assertVersion, eligibility, event, fail, findOpportunity, getAppointmentCourseRole, liveAllocationStates, number, object, publicRecord, text, uid, type StaffingActor } from './staffing'
 
 const terminalAppointments = ['ended', 'cancelled', 'not_cleared', 'expired']
 const safeAllocationId = (applicantId: string, termId: string) => createHash('sha256').update(`${termId}\0${applicantId}`).digest('hex')
@@ -21,7 +21,7 @@ async function releaseCommitments(db: Db, session: ClientSession, appointment: D
   await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: 'released', releasedAt: new Date() }, $inc: { version: 1 } }, { session })
   await db.collection('staffingOffers').updateOne({ id: appointment.offerId, status: { $in: ['issued', 'accepted'] } }, { $set: { status: status === 'expired' ? 'expired' : 'rescinded', resolvedAt: new Date() } }, { session })
   if (!appointment.acceptedAt) await db.collection('staffingApplications').updateOne({ id: appointment.applicationId, status: 'selected' }, { $set: { status: 'under_review', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
-  await db.collection('staffingAiTasks').updateMany({ opportunityId: opportunity.id, status: 'completed' }, { $set: { status: 'stale' } }, { session })
+  await db.collection('staffingAiTasks').updateMany({ termId: opportunity.termId, kind: 'candidate_fit', status: 'completed' }, { $set: { status: 'stale', result: null, message: 'Candidate availability changed. Request a fresh comparison.' } }, { session })
   if (appointment.type === 'ta') {
     const manual = await db.collection('enrollments').findOne({ courseId: appointment.courseId, userEmail: appointment.applicantEmail, role: { $in: ['ta', 'instructor', 'admin'] } }, { session })
     const another = await getAppointmentCourseRole(db, appointment.courseId, appointment.applicantEmail, session)
@@ -42,11 +42,14 @@ export async function reconcileStaffing(db: Db, session: ClientSession, resource
     const offer = await db.collection('staffingOffers').findOne({ id: appointment.offerId }, { session })
     if (appointment.status === 'offered' && offer?.status === 'issued' && offer.expiresAt <= new Date()) {
       await releaseCommitments(db, session, appointment, 'expired', 'Offer response deadline passed')
+      await db.collection('staffingEvents').insertOne({ id: uid(), actorId: 'system', actorEmail: '', kind: 'AppointmentExpired', targetId: appointment.id, details: {}, createdAt: new Date(), delivery: 'pending' }, { session })
     } else if (appointment.endDate <= new Date()) {
       await releaseCommitments(db, session, appointment, 'ended', 'Appointment end date reached')
+      await db.collection('staffingEvents').insertOne({ id: uid(), actorId: 'system', actorEmail: '', kind: 'AppointmentEnded', targetId: appointment.id, details: {}, createdAt: new Date(), delivery: 'pending' }, { session })
     } else if (appointment.status === 'pending_start' && appointment.startDate <= new Date() && appointment.clearance === 'cleared' && appointment.acceptedAt) {
       await db.collection('staffingAppointments').updateOne({ id: appointment.id, status: 'pending_start' }, { $set: { status: 'active', activatedAt: new Date() }, $inc: { version: 1 } }, { session })
       await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: 'active' }, $inc: { version: 1 } }, { session })
+      await db.collection('staffingEvents').insertOne({ id: uid(), actorId: 'system', actorEmail: '', kind: 'AppointmentActivated', targetId: appointment.id, details: {}, createdAt: new Date(), delivery: 'pending' }, { session })
     }
   }
 }
@@ -81,7 +84,7 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
     if (prior.applicationId !== applicationId || prior.kind !== 'select') fail(409, 'Idempotency key was already used for another command')
     const offer = await db.collection('staffingOffers').findOne({ id: prior.offerId }, { session })
     const appointment = await db.collection('staffingAppointments').findOne({ id: prior.appointmentId }, { session })
-    return { offer: publicRecord(offer), appointment: publicRecord(appointment), replayed: true }
+    return { offer: publicRecord(offer), appointment: appointmentDto(appointment, user), replayed: true }
   }
   const application = await db.collection('staffingApplications').findOne({ id: applicationId }, { session }) || fail(404, 'Application not found')
   const opportunity = await findOpportunity(db, application.opportunityId, session)
@@ -111,9 +114,9 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
   await db.collection('staffingOpportunities').updateOne({ id: opportunity.id }, { $inc: { committedPositions: 1, committedBudget: opportunity.appointmentCost, version: 1 }, $set: { status: opportunity.committedPositions + 1 === opportunity.positions ? 'filled' : opportunity.status, updatedAt: new Date() } }, { session })
   await db.collection('staffingApplications').updateOne({ id: applicationId }, { $set: { status: 'selected', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
   await db.collection('staffingCommands').insertOne({ actorId: actorId(user), key, kind: 'select', applicationId, offerId, appointmentId, createdAt: new Date() }, { session })
-  await db.collection('staffingAiTasks').updateMany({ opportunityId: opportunity.id, status: 'completed' }, { $set: { status: 'stale' } }, { session })
+  await db.collection('staffingAiTasks').updateMany({ termId: opportunity.termId, kind: 'candidate_fit', status: 'completed' }, { $set: { status: 'stale', result: null, message: 'Candidate availability changed. Request a fresh comparison.' } }, { session })
   await event(db, session, user, 'OfferIssued', offerId, { opportunityId: opportunity.id, applicationId, appointmentId })
-  return { offer: publicRecord(offer), appointment: publicRecord(appointment), replayed: false }
+  return { offer: publicRecord(offer), appointment: appointmentDto(appointment, user), replayed: false }
 }
 
 export async function offerAction(db: Db, session: ClientSession, user: StaffingActor, offerId: string, action: 'accept' | 'decline' | 'rescind', raw: unknown) {
@@ -124,9 +127,9 @@ export async function offerAction(db: Db, session: ClientSession, user: Staffing
   const owner = offer.applicantId === actorId(user)
   if (action === 'rescind') await assertOpportunityManager(db, opportunity, user, session)
   else if (!owner) fail(403, 'Only the candidate may answer this offer')
-  if (action === 'accept' && offer.status === 'accepted') return { offer: publicRecord(offer), appointment: publicRecord(appointment) }
-  if (action === 'decline' && offer.status === 'declined') return { offer: publicRecord(offer), appointment: publicRecord(appointment) }
-  if (action === 'rescind' && offer.status === 'rescinded') return { offer: publicRecord(offer), appointment: publicRecord(appointment) }
+  if (action === 'accept' && offer.status === 'accepted') return { offer: publicRecord(offer), appointment: appointmentDto(appointment, user) }
+  if (action === 'decline' && offer.status === 'declined') return { offer: publicRecord(offer), appointment: appointmentDto(appointment, user) }
+  if (action === 'rescind' && offer.status === 'rescinded') return { offer: publicRecord(offer), appointment: appointmentDto(appointment, user) }
   if (offer.status !== 'issued' || offer.expiresAt <= new Date()) fail(409, 'This offer is no longer open')
   const allocation = await db.collection('staffingAllocations').findOne({ applicantId: offer.applicantId, termId: offer.termId, offerId, status: 'offered' }, { session })
   if (!allocation) fail(409, 'The candidate allocation changed')
@@ -140,8 +143,9 @@ export async function offerAction(db: Db, session: ClientSession, user: Staffing
     await db.collection('staffingOffers').updateOne({ id: offerId }, { $set: { status: action === 'decline' ? 'declined' : 'rescinded', resolvedAt: new Date() }, $inc: { version: 1 } }, { session })
     await db.collection('staffingApplications').updateOne({ id: offer.applicationId }, { $set: { status: 'under_review', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
   }
+  await db.collection('staffingAiTasks').updateMany({ termId: offer.termId, kind: 'candidate_fit', status: 'completed' }, { $set: { status: 'stale', result: null, message: 'Candidate availability changed. Request a fresh comparison.' } }, { session })
   await event(db, session, user, `Offer${action === 'accept' ? 'Accepted' : action === 'decline' ? 'Declined' : 'Rescinded'}`, offerId)
-  return { offer: publicRecord(await db.collection('staffingOffers').findOne({ id: offerId }, { session })), appointment: publicRecord(await db.collection('staffingAppointments').findOne({ id: appointment.id }, { session })) }
+  return { offer: publicRecord(await db.collection('staffingOffers').findOne({ id: offerId }, { session })), appointment: appointmentDto(await db.collection('staffingAppointments').findOne({ id: appointment.id }, { session }), user) }
 }
 
 export async function appointmentAction(db: Db, session: ClientSession, user: StaffingActor, id: string, action: string, raw: unknown) {
@@ -188,7 +192,7 @@ export async function appointmentAction(db: Db, session: ClientSession, user: St
     await db.collection('staffingAppointments').updateOne({ id }, { $set: { budgetStatus: 'settled', incurredCost, releasedBudget: unused, settledBy: user.email }, $inc: { version: 1 } }, { session })
   } else fail(404, 'Unknown appointment action')
   await event(db, session, user, `Appointment${action[0]!.toUpperCase() + action.slice(1)}`, id)
-  return { appointment: publicRecord(await db.collection('staffingAppointments').findOne({ id }, { session })) }
+  return { appointment: appointmentDto(await db.collection('staffingAppointments').findOne({ id }, { session }), user) }
 }
 
 export async function withdrawApplication(db: Db, session: ClientSession, user: StaffingActor, id: string) {
