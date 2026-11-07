@@ -72,6 +72,7 @@ const mandatoryIndexes: Record<string, IndexDescription[]> = {
     announcements: [{ key: { courseId: 1, createdAt: -1 } }],
     feedback: [{ key: { courseId: 1, createdAt: -1 } }],
     users: [{ key: { id: 1 }, unique: true }, { key: { email: 1 }, unique: true }],
+    providerIdentities: [{ key: { id: 1 }, unique: true }, { key: { provider: 1, issuer: 1, subject: 1 }, unique: true }, { key: { userId: 1 }, unique: true }, { key: { email: 1 }, unique: true }],
     authSessions: [{ key: { expiresAt: 1 }, expireAfterSeconds: 0 }, { key: { userId: 1 } }],
     requestLimits: [{ key: { expiresAt: 1 }, expireAfterSeconds: 0 }],
     auditEvents: [{ key: { courseId: 1, createdAt: -1 } }]

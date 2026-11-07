@@ -85,7 +85,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 502, statusMessage: 'Failed to fetch GitLab user profile' })
   }
 
-  if (!gitlabUser || typeof gitlabUser.email !== 'string' || !Number.isSafeInteger(gitlabUser.id)) throw createError({ statusCode: 502, statusMessage: 'Invalid identity-provider profile' })
+  if (!gitlabUser || typeof gitlabUser.email !== 'string' || (!Number.isSafeInteger(gitlabUser.id) || gitlabUser.id <= 0)) throw createError({ statusCode: 502, statusMessage: 'Invalid identity-provider profile' })
+  if ((gitlabUser.name !== undefined && (typeof gitlabUser.name !== 'string' || gitlabUser.name.length > 80)) || (gitlabUser.username !== undefined && (typeof gitlabUser.username !== 'string' || gitlabUser.username.length > 80))) throw createError({ statusCode: 502, statusMessage: 'Invalid identity-provider display name' })
   const email = normalizeEmail(gitlabUser.email)
   if (!validEmail(email)) {
     throw createError({ statusCode: 403, statusMessage: 'Your GitLab account has no email address' })
@@ -102,7 +103,9 @@ export default defineEventHandler(async (event) => {
   // 4) Course roles come from enrollments; ADMIN_EMAILS grants global admin.
   await setSessionUser(event, {
     email,
-    name: gitlabUser.name || gitlabUser.username || email,
+    name: (gitlabUser.name || gitlabUser.username || email).slice(0, 80),
+    issuer: new URL(config.gitlab.baseUrl).toString().replace(/\/$/, ''),
+    subject: String(gitlabUser.id),
     primaryRole: config.adminEmails.includes(email) ? 'admin' : 'student',
     provider: 'gitlab'
   })

@@ -35,7 +35,7 @@ export function getServerConfig(): ServerConfig {
   }
   if (gitlab.baseUrl) {
     const url = new URL(gitlab.baseUrl)
-    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || (production && url.protocol !== 'https:')) throw new Error('GITLAB_BASE_URL must use a trusted HTTPS provider in production')
+    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || (production && url.protocol !== 'https:' && !['localhost', '127.0.0.1', '[::1]'].includes(url.hostname))) throw new Error('GITLAB_BASE_URL must use a trusted HTTPS provider in production')
   }
   if (production && gitlab.clientId && gitlab.clientSecret && !publicOrigin) throw new Error('PUBLIC_ORIGIN is required for production OAuth')
   cached = {
