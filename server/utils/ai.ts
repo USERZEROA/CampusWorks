@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import type { Db, Document } from 'mongodb'
 import { isGlobalAdmin } from './auth'
-import { actorId, allocationUnavailable, applicationAccess, assertOpportunityManager, eligibility, fail, findOpportunity, manualCourseManager, object, publicRecord, text, uid, type StaffingActor } from './staffing'
+import { actorId, commitmentUnavailable, applicationAccess, assertOpportunityManager, eligibility, fail, findOpportunity, manualCourseManager, object, publicRecord, text, uid, type StaffingActor } from './staffing'
 
 export const aiKinds = ['candidate_fit', 'cv_summary', 'opportunity_draft', 'term_review'] as const
 export type AiKind = typeof aiKinds[number]
@@ -102,7 +102,7 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
     try {
       for await (const application of cursor) {
         inspected++
-        if (!await allocationUnavailable(db, application.applicantId, opportunity.termId) && eligibility(application, opportunity).eligible) {
+        if (!await commitmentUnavailable(db, application.applicantId, opportunity.termId, opportunity.appointmentStart, opportunity.appointmentEnd) && eligibility(application, opportunity).eligible) {
           eligibleCount++
           if (eligibleCount > (candidatePage - 1) * candidatePageSize) available.push(application)
           if (available.length >= candidatePageSize) break

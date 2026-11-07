@@ -2,7 +2,7 @@ import { defineEventHandler, getQuery, getRouterParam, readBody, readMultipartFo
 import { isGlobalAdmin, requireUser } from '../../utils/auth'
 import { getDb, withTransaction } from '../../utils/db'
 import { aiStatus } from '../../utils/ai'
-import { actorId, allocationUnavailable, applicationAccess, applicationDto, appointmentDto, assertOpportunityManager, assertVersion, canManageOpportunity, eligibility, event as recordEvent, fail, findOpportunity, object, options, publicRecord, text } from '../../utils/staffing'
+import { actorId, commitmentUnavailable, applicationAccess, applicationDto, appointmentDto, assertOpportunityManager, assertVersion, canManageOpportunity, eligibility, event as recordEvent, fail, findOpportunity, object, options, publicRecord, text } from '../../utils/staffing'
 import { createOpportunity, createProject, createTerm, lockStaffingResource, opportunityInput, overview } from '../../utils/staffing-catalog'
 import { applicationDetail, createApplication, reviewApplication, submitApplication, updateApplication, updateAdministrative, uploadCv } from '../../utils/staffing-applications'
 import { appointmentAction, offerAction, reconcileDueStaffing, selectApplication, withdrawApplication } from '../../utils/staffing-appointments'
@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
       offers: await db.collection('staffingOffers').countDocuments({ opportunityId: id })
     } : { applications: 0, appointments: 0, offers: 0 }
     const reviewed = []
-    for (const app of applications) reviewed.push({ ...applicationDto(app, isGlobalAdmin(user)), availability: { unavailable: await allocationUnavailable(db, app.applicantId, opportunity.termId), ...eligibility(app, opportunity) } })
+    for (const app of applications) reviewed.push({ ...applicationDto(app, isGlobalAdmin(user)), availability: { unavailable: await commitmentUnavailable(db, app.applicantId, opportunity.termId, opportunity.appointmentStart, opportunity.appointmentEnd), ...eligibility(app, opportunity) } })
     return { opportunity: publicRecord(opportunity), application: application ? applicationDto(application, true) : null, applications: reviewed, appointments: appointments.map(a => appointmentDto(a, user)), offers: offers.map(publicRecord), canManage, ai: aiStatus(), pagination: { page, limit: 100, totals, hasMore: Object.values(totals).some(total => total > offset + 100) } }
   }
   if (method === 'GET' && resource === 'applications' && id && !action) return applicationDetail(db, user, id)

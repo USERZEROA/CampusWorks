@@ -10,7 +10,6 @@ export function fail(statusCode: number, statusMessage: string): never { throw c
 export const options = (session?: ClientSession) => session ? { session } : {}
 export const actorId = (user: StaffingActor) => user.id || user.email
 export const pageLimit = 100
-export const liveAllocationStates = ['offered', 'accepted_pending_clearance', 'active', 'suspended']
 
 export function text(value: unknown, label: string, max = 2000, required = false) {
   if (value === undefined || value === null) { if (required) fail(400, `${label} is required`); return '' }
@@ -61,7 +60,7 @@ export async function initializeStaffingIndexes(db: Db) {
     ['staffingDocuments', [{ key: { id: 1 }, unique: true }, { key: { applicationId: 1 } }]],
     ['staffingAllocations', [{ key: { termId: 1, applicantId: 1 }, unique: true }]],
     ['staffingOffers', [{ key: { id: 1 }, unique: true }, { key: { applicationId: 1, createdAt: -1 } }]],
-    ['staffingAppointments', [{ key: { id: 1 }, unique: true }, { key: { courseId: 1, applicantEmail: 1, status: 1 } }, { key: { projectId: 1, applicantId: 1 } }, { key: { applicantId: 1, endDate: 1 } }]],
+    ['staffingAppointments', [{ key: { id: 1 }, unique: true }, { key: { courseId: 1, applicantEmail: 1, status: 1 } }, { key: { projectId: 1, applicantId: 1 } }, { key: { applicantId: 1, endDate: 1 } }, { key: { applicantId: 1, status: 1, startDate: 1, endDate: 1 } }]],
     ['staffingEvents', [{ key: { id: 1 }, unique: true }, { key: { targetId: 1, createdAt: -1 } }, { key: { delivery: 1, createdAt: 1 } }]],
     ['staffingCommands', [{ key: { actorId: 1, key: 1 }, unique: true }]],
     ['staffingWorkload', [{ key: { id: 1 }, unique: true }, { key: { appointmentId: 1, date: -1 } }, { key: { appointmentId: 1, idempotencyKey: 1 }, unique: true, partialFilterExpression: { idempotencyKey: { $type: 'string' } } }]],
@@ -155,10 +154,25 @@ export function eligibility(application: Document, opportunity: Document) {
   return { eligible: reasons.length === 0, reasons }
 }
 
-export async function allocationUnavailable(db: Db, applicantId: string, termId: string, session?: ClientSession, ignoreOfferId?: string) {
-  const allocation = await db.collection('staffingAllocations').findOne({ applicantId, termId }, options(session))
-  if (!allocation || allocation.offerId === ignoreOfferId || !liveAllocationStates.includes(allocation.status)) return false
-  if (allocation.status === 'offered' && new Date(allocation.expiresAt).getTime() <= Date.now()) return false
-  if (['active', 'accepted_pending_clearance'].includes(allocation.status) && new Date(allocation.endDate).getTime() <= Date.now()) return false
-  return true
+/** Lock the stable applicant after the course or project, before checking commitments. */
+export async function lockApplicantCommitments(db: Db, applicantId: string, session: ClientSession, allowDisabled = false) {
+  const result = await db.collection('users').updateOne({ id: applicantId, ...(!allowDisabled ? { disabledAt: null } : {}) }, { $inc: { staffingCommitmentVersion: 1 } }, { session })
+  if (!result.matchedCount) fail(409, 'The candidate account is unavailable')
+}
+
+/** Offered, accepted and suspended appointments reserve one position, regardless of hours. */
+export async function commitmentUnavailable(db: Db, applicantId: string, termId: string, startDate: Date, endDate: Date, session?: ClientSession, ignoreAppointmentId?: string) {
+  if (!await db.collection('users').findOne({ id: applicantId, disabledAt: null }, { ...options(session), projection: { _id: 1 } })) return true
+  const timestamp = now()
+  const filter: Document = {
+    applicantId,
+    endDate: { $gt: timestamp },
+    $and: [
+      { $or: [{ status: 'offered', offerExpiresAt: { $gt: timestamp } }, { status: { $in: ['pending_clearance', 'pending_start', 'active', 'suspended'] } }] },
+      // Adjacent appointments may meet at the same instant: [start, end).
+      { $or: [{ termId }, { startDate: { $lt: endDate }, endDate: { $gt: startDate } }] }
+    ]
+  }
+  if (ignoreAppointmentId) filter.id = { $ne: ignoreAppointmentId }
+  return !!await db.collection('staffingAppointments').findOne(filter, { ...options(session), projection: { _id: 1 } })
 }

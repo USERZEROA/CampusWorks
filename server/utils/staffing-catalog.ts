@@ -136,7 +136,7 @@ export async function overview(db: Db, user: StaffingActor, page = 1) {
     myAppointments: values.myAppointments!.map(a => appointmentDto(a, user)), managedOpportunities: values.managedOpportunities!.map(publicRecord),
     adminAppointments: values.adminAppointments!.map(a => appointmentDto(a, user)),
     admin: global ? { pendingOpportunities: values.pendingOpportunities!.map(publicRecord), appointments: values.adminAppointments!.map(a => appointmentDto(a, user)) } : null,
-    policy: { exclusivePerTerm: true, manualDecision: true, clearanceRequired: true },
+    policy: { exclusivePerTerm: true, exclusiveAcrossOverlappingDates: true, multipleHalfAppointments: false, manualDecision: true, clearanceRequired: true },
     pagination: { page, limit: pageLimit, totals, hasMore: Object.values(totals).some(total => total > offset + pageLimit) }
   }
 }
