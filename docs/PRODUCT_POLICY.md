@@ -15,6 +15,7 @@ Confirmed by the owner on November 7, 2026.
 - Keep the existing four roles and course/site administration scopes. Do not add department administration or an independent second-approver workflow.
 - Do not add retention/purge policies, PDF extraction, antivirus services or HR/payroll integrations in this scope.
 - Existing private attachment controls, quotas and restricted post-offer information remain in place. These controls do not imply external HR or antivirus validation.
+- After clearance, only site administrators may correct administrative details. Every correction requires a reason and an audit record containing the previous and replacement values; it does not automatically change clearance or appointment state.
 
 ## AI assistance
 
@@ -23,6 +24,7 @@ Confirmed by the owner on November 7, 2026.
 - Duplicate changes and overlapping worker executions must not produce duplicate calls for the same current evidence.
 - Missing provider configuration means no model call. The owner supplied an OpenAI Key through a masked local form; provider verification is recorded separately.
 - Automatic comparison does not select, reject, approve clearance, change roles or alter budgets.
+- When a position's appointment end is reached, new candidate comparisons, candidate summaries and automatic recommendations stop. Authorized historical records, financial settlement and course reviews remain available.
 
 ## Presentation and verification
 
@@ -34,6 +36,7 @@ Preserve the Duke blue visual system, the Duke Computer Science PNG and the esta
 - Hide unavailable controls and redirect unauthorized management routes home; enforce the same authority on the server.
 - Only current instructors and administrators manage positions and hiring. TA/student identities may manage their own applications and offers.
 - Administrators choose one current semester and application window. Ordinary users cannot override the semester or deadline.
-- Closing applications preserves faculty review and already-issued offers. Disabling recruitment stops review/selection; changing semesters blocks new actions in the former cycle without cancelling existing appointments.
+- Closing applications preserves faculty review while the semester and position remain reviewable, and preserves already-issued offers. Disabling recruitment stops review/selection. Changing semesters blocks new applications, qualification submissions and candidate review/selection in the former cycle; existing offer and appointment lifecycle actions remain available.
 - TA and RA share application, offer and appointment controls. No research project workspace is included.
 - Keep optional explanatory copy out of the application interface.
+- Removing a student blocks their re-enrollment and queue access in that course until an authorized instructor or administrator removes the restriction. Removing the restriction does not enroll the student automatically or disable their account elsewhere.

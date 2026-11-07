@@ -39,7 +39,7 @@ Each opportunity includes:
 - Attendance, lab, discussion, grading and office-hour flags.
 - Duty rows with category, occurrences per week and minutes per occurrence, plus required weekly availability windows.
 - Required and preferred qualifications, structured screening questions and optional/required CV.
-- Appointment preferences, hourly cost basis, planned weeks, approved budget and approval status.
+- Appointment preferences, hourly cost basis, planned weeks, position budget and publication approval status.
 
 Stated duty hours cannot exceed the weekly limit; the budget must cover the advertised positions under the stated cost basis. Missing availability is not invented for an applicant. Adjacent declared availability windows can jointly satisfy a required continuous window.
 
@@ -97,6 +97,8 @@ A replica-set-capable MongoDB deployment is required; standalone mode is rejecte
 
 The queue uses the same transactional resource boundary for joins, closing, assignment, pause/release, ordering, duty, membership cleanup and history. Active-entry removal and historical insertion commit together. Help segments preserve each helper's actual active intervals across pauses and handoffs.
 
+Queue commands identify intent and request identity; completion also fences the helper and request revision. Course-scoped student restrictions persist until an explicit manager restoration, including future appointment activation. Disabled accounts lose live claims without erasing grants or financial obligations. Manager exports use a consistent complete multi-page dataset; slow polls do not cancel unfinished reads.
+
 Domain transitions record durable events. The in-app outbox claims an event and writes uniquely keyed notifications before marking delivery complete in the same transaction. Repeated or concurrent processing cannot duplicate notification rows. Model calls and external side effects are not placed inside a retried database transaction.
 
 Reconciliation handles due offer expiry, date activation and appointment end in bounded, resource-locked batches. Course transactions and staffing/task endpoints invoke the applicable maintenance. The administrator maintenance endpoint can drain additional work. Configured AI workers also process due transitions for their active comparison service so timed candidate availability changes trigger reanalysis without an open browser. Provider-disabled instances perform no background AI work; date-based authorization remains authoritative.
@@ -113,6 +115,8 @@ Candidate comparison scans past unavailable/ineligible records rather than slici
 
 Each response must conform to the bounded JSON contract and cite supplied evidence references. Candidate explanations cannot cite another applicant's evidence. Authorization and data hashes are checked again after a call and when results are read. Changed evidence/availability makes a result stale; failed, invalid or over-budget calls do not invent results.
 
+Candidate outputs cover every supplied candidate exactly once. Only explicitly classified qualification questions enter evidence; unclassified questions are omitted with a caution. A live distributed lease is confirmed after budget commit and before the provider call. Position end stops new candidate comparisons, summaries and automatic refresh while preserving currently authorized historical results and course review.
+
 AI requests have user/global daily request and conservative token reservations, distributed concurrency leases, bounded input/output and a body-inclusive timeout. Provider-account spending limits and private-data approval are still required. The software controls requests; it does not certify provider billing, fairness or actual hiring quality.
 
 AI cannot issue offers, reject candidates, approve administrative eligibility, activate privileges or cut staffing. Ordinary product workflows remain available without AI. NIST's AI RMF is a reference for explainability, privacy, fairness and human oversight; following those principles does not itself establish validation or legal compliance. [NIST AI RMF characteristics](https://airc.nist.gov/airmf-resources/airmf/3-sec-characteristics/)
@@ -126,6 +130,8 @@ TA course review combines complete matching queue/feedback aggregates, workload 
 Recorded queue use does not establish total teaching demand. Lecture attendance, labs, discussions, grading, preparation, peak deadlines, observation coverage and approved compensation still require appropriate evidence. Low observed queue use alone cannot justify fewer TAs. Scenarios do not automatically alter a budget or publish a new request.
 
 Ending work before activation releases unused commitments. Once work has started, the commitment remains pending an administrator's approved incurred-cost settlement. Only the unused remainder is released; the application does not claim to run payroll.
+
+Browser controls expose settlement and resolved-position archive/cancellation. A private administrative audit allows reasoned site-admin corrections after clearance without changing appointment state. Course review calculations share one database snapshot and separate requested plans, approved position plans, outstanding commitments and settled costs.
 
 ## 9. Confirmed product policy
 

@@ -74,6 +74,12 @@ The applicant can withdraw before acceptance, including resolving an outstanding
 
 Profile edits require `expectedVersion`; CV upload includes the current application version. Restricted administrative updates use `expectedAdministrativeVersion`. Stale edits receive a conflict. Selection commands replay their recorded outcome for the same key and application. Workload command replay returns the existing observation only when date, category, hours, notes and author match; reusing the key for different content receives a conflict.
 
+Submission also requires the reviewed application's `expectedVersion`; it cannot freeze an unseen newer draft. The administrator's recruitment-window form keeps the version from which editing began, even when background polling sees another update. An application detail refresh includes current cycle capabilities, and pre-acceptance withdrawal remains available after applications close.
+
+Removing a student stores a course-scoped restriction and removes membership/queue participation atomically. Enrollment, queue entry and later TA activation respect that restriction. An authorized instructor or administrator can restore access from the course people controls; restoration does not re-enroll the student. Disabled accounts cannot retain live duty or claims, while independent role records and financial obligations remain recorded.
+
+Queue writes require explicit intent. `join` creates a request; `edit` and leave require its `entryId`. `complete` additionally requires its `expectedRevision` and the acting helper's current, unpaused claim. Explicit removal is separately recorded. Admin pagination supplies a dataset fingerprint; changed pages return a conflict and the interface restarts the complete read. Counts and CSV keep the previous complete snapshot until every replacement page succeeds. Polls do not supersede unfinished reads.
+
 ## CV and administrative privacy
 
 CV files are private database records. Supported attachments are a PDF with the expected signature or valid UTF-8 plain text. A file is limited to 2 MiB, an application to ten stored CV versions and a user to 50 MiB of retained CV bytes. Quota accounting is transactional across courses.
@@ -84,7 +90,9 @@ PDF extraction, OCR, malware scanning and raw-document transmission to an AI pro
 
 Institutional ID, prior payroll status, whether the applicant has an SSN, citizenship category and work-authorization expiry are collected separately after an offer when needed. Actual SSN numbers and identity documents are not accepted as administrative fields. The normal qualification-save endpoint cannot collect or erase these details.
 
-Only the applicant and site administrators can update those administrative details, and cleared/active details require an administrator-led amendment process rather than an ordinary edit. Ordinary faculty reviewers do not receive the administrative object, historical unsent revisions, or restricted clearance reasons. AI projections omit those fields and exclude screening questions that request sensitive administrative or demographic information. Free-text filtering is a precaution, not a guarantee of complete anonymization.
+Only the applicant and site administrators can update those administrative details before clearance. After clearance, site administrators alone can correct them with a required reason and administrative version check. A separate private audit preserves the actor, reason, previous values and replacement values. Correction alone changes no appointment or clearance state. Ordinary faculty reviewers do not receive the administrative object, administrative audit, historical unsent revisions, or restricted clearance reasons. These values do not enter ordinary events, notifications or AI evidence.
+
+New screening questions are explicitly qualification-classified and known administrative question prompts are rejected. AI accepts only that classification and rechecks the prompt; older unclassified questions are omitted with an evidence caution. Contextual filtering retains legitimate questions about race conditions or software health checks. Free-text filtering is a precaution, not a guarantee of complete anonymization.
 
 ## AI configuration and actual behavior
 
@@ -118,7 +126,9 @@ Candidate comparisons scan past unavailable/ineligible submissions, then compare
 
 Provider JSON must contain `summary`, `summaryEvidenceRefs`, bounded `items` with `targetId`, `explanation`, `evidenceRefs`, and bounded `cautions`. References must exist in the supplied input; candidate items cannot cite another candidate's evidence. Uploaded text is untrusted content, not permission to alter criteria or execute commands. Structural validation does not establish semantic correctness or fair hiring outcomes.
 
-The service rechecks authorization and input hashes after the call and when reading completed tasks. Changed availability, qualifications or report evidence produces `stale`; invalid/failed/timeout/quota-limited calls expose safe messages. Established candidate comparisons automatically update when their candidate list, qualification evidence or cross-term availability changes. Durable work is scoped to the original reviewer, opportunity and comparison page; current permissions and configured budgets remain authoritative. Ordinary page polling does not purchase repeated calls for unchanged evidence. Missing configuration never calls a provider.
+A candidate comparison must include every supplied candidate exactly once; omitted, repeated or invented targets are invalid. The provider is contacted only while its distributed lease is still valid after budget reservation commits. At appointment end, new comparisons and candidate summaries stop and automatic refresh scopes deactivate. Authorized completed results remain explicitly historical, with their original generation time; they do not imply current availability. Course reviews and financial closeout remain available.
+
+The service rechecks authorization and input hashes after the call and when reading current completed analyses. Changed availability, qualifications or report evidence produces `stale`; invalid/failed/timeout/quota-limited calls expose safe messages. Ended-position history preserves the original result and generation time rather than comparing it against current recruiting evidence; current management and source-access permissions are still checked. Established candidate comparisons automatically update when their candidate list, qualification evidence or cross-term availability changes. Durable work is scoped to the original reviewer, opportunity and comparison page; current permissions and configured budgets remain authoritative. Ordinary page polling does not purchase repeated calls for unchanged evidence. Missing configuration never calls a provider.
 
 ## Maintenance and in-app delivery
 
@@ -140,11 +150,13 @@ TA appointees and authorized managers may record bounded, categorized workload w
 
 The course review uses the shared current semester by default, with an optional authorized historical API scope, and applies its dates to queue/feedback records and its ID to staffing/workload records. Metrics aggregate all matching TA course records; RA metadata does not contribute TA staffing budgets or workload. Detailed workload rows and opportunity scenarios are paged separately, so the report does not silently truncate totals at a row limit.
 
-Recorded outputs include queue/help counts, mean/nearest-rank P90 wait, recorded help duration, feedback count/mean, workload totals by category, approved/committed budget and cost arithmetic for alternative position counts. Scenarios explicitly lack validated coverage and cannot authorize staffing reductions.
+Every aggregate, detail page and P90 query within one course-review response uses the same database snapshot. Recorded outputs include queue/help counts, mean/nearest-rank P90 wait, recorded help duration, feedback count/mean and workload totals by category. Requested position plans are separate from approved published position plans, outstanding commitments and settled incurred costs. An approved position plan does not establish external fiscal approval. Scenarios explicitly lack validated coverage and cannot authorize staffing reductions.
 
 Queue interactions do not measure all lecture attendance, labs, grading, discussions, preparation, peak demand or paid hours. The report lists missing evidence. AI can draft observations from those checked aggregates, but it cannot infer causal effects, rank staff performance or change staffing/budget itself.
 
 Before work starts, a cancelled/expired/not-cleared offer releases its financial commitment. Once an appointment has begun, ending it retains the commitment as `awaiting_settlement`. A site administrator supplies an approved `incurredCost` between zero and the committed cost through the settlement action; only the unused remainder is released. There is no payroll system or automatic proof of incurred expense.
+
+The staffing and administration interfaces expose authorized settlement, cancellation and archive actions with the same server checks. An opportunity cannot be cancelled or archived while live offers or appointments remain. Archive does not release an unsettled commitment; settlement remains available to site administrators, and course deletion still waits for financial resolution.
 
 ## Identity changes
 
@@ -156,4 +168,4 @@ Demo sign-in cannot impersonate an institutional binding. Sessions reference rev
 
 The owner has prohibited overlapping appointments, including two half appointments; retained existing manager-controlled departure and course/site administration; declined additional retention/document/HR features; and authorized automatic candidate comparison updates after list changes. These decisions are recorded in [PRODUCT_POLICY.md](PRODUCT_POLICY.md).
 
-The owner supplied an OpenAI Key through the local masked form. A capped real-provider check used only synthetic records; no real institutional identity, payroll, email or document-scanning service is established by that check. In-app notifications and the current private attachment controls remain available. Descriptive workload and budget scenarios still require a human staffing decision; the software cannot validate unrecorded work or external expense evidence.
+The owner supplied an OpenAI Key through the local masked form. A capped real-provider check used only synthetic records and predates this review. This delivery makes no new real-provider calls. No real institutional identity, payroll, email or document-scanning service is established by that historical check. In-app notifications and the current private attachment controls remain available. Descriptive workload and budget scenarios still require a human staffing decision; the software cannot validate unrecorded work or external expense evidence.

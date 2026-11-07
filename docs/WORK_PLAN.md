@@ -1,39 +1,32 @@
-# CampusWorks work plan
+# CampusWorks delivery requirements
 
-Initial delivery plan retained as a scope record. Current implementation requirements and completed verification are documented in [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md), [STAFFING_OPERATIONS.md](STAFFING_OPERATIONS.md) and [VERIFICATION.md](VERIFICATION.md).
+## Product
 
-## Current delivery
+- Retain the student, TA, instructor and administrator identities, their course/site scopes, Duke blue, the Computer Science PNG and the established queue interface.
+- Connect TA/RA applications, manual faculty selection, candidate acceptance, clearance, dated TA authority, operational work, financial closeout and course reports.
+- Keep recruitment entry points on the course-list home page, use one administrator-selected semester/window and hide controls outside current authority.
+- RA provides recruitment and appointment records without a project workspace or course TA privileges.
+- Keep optional interface explanations short. Use small functional commits with single-sentence English subjects.
 
-- Read and account for every application source, asset, configuration, deployment, and existing test file before establishing the application baseline.
-- Preserve the four user identities: student, teaching assistant, instructor, and administrator; preserve course-scoped permissions and site administrator privileges.
-- Preserve Duke blue, page layouts, navigation, forms, live queue behavior, analytics, and feedback workflows.
-- Deliver the application in small functional commits, each with a single-sentence subject describing its capability.
-- Use CampusWorks product identity throughout application text, configuration, documentation, and commit subjects; retain required copyright and license notices.
-- Keep credentials, personal records, database contents, generated dependencies, and local tool history out of version control.
-- Check the production build, four-role authorization, queue lifecycle, analytics, feedback, responsive screens, and source coverage; state any verification limits explicitly.
-- Work locally. Do not push, publish, contact external identity services, or submit real applications.
+## Confirmed operating rules
 
-## Design after baseline verification
+- Removing a student blocks subsequent course enrollment and queue access until an instructor or administrator restores access. Restoration does not enroll the student or change their other courses.
+- Site administrators may correct post-clearance administrative details with a mandatory reason and an append-only private before/after audit. Corrections do not automatically change appointment or clearance state.
+- After a position's appointment end, candidate analysis and automatic recommendations stop. History, settlement and course summaries remain available to authorized users.
+- A candidate cannot hold overlapping TA/RA commitments or multiple live allocations in one semester. Human decisions and transactional allocation remain authoritative.
+- Administrative information stays outside qualification review and AI input. AI is advisory and cannot select candidates, grant permissions or change budgets.
 
-Design the following capabilities without implementing them in this delivery:
+## Reliability requirements
 
-1. Instructor TA/RA opportunities with shared current semester and optional TA course, positions, weekly workload, attendance, lab/discussion, grading, office hours, required skills, screening questions, deadlines, and budget.
-2. Student applications with academic background, position preference, course preferences, prior experience, availability, answers, CV, and application status.
-3. Instructor review, explicit selection, candidate availability updates, and collision-safe allocation so competing instructors cannot allocate an unavailable candidate.
-4. Accepted appointments connected to course-scoped TA permissions, with start/end dates, suspension and ending; later semesters require new appointments.
-5. A shared TA/RA application foundation with course operations for TA and appointment records for RA; RA appointments must not grant course privileges by default.
-6. AI-assisted candidate summaries grounded in submitted qualifications and stated opportunity requirements, with instructor decisions and auditable explanations.
-7. End-of-term course observations for instructors and administrators, using queue demand, assistance workload, student feedback, and explicit staffing costs; recommendations must state data gaps.
-8. Additional useful AI assistance, a complete business lifecycle, failure handling, permissions, and a phased implementation proposal.
+- Persist canonical resource IDs and protect deletion against unresolved references.
+- Bind queue completion, editing and departure to the expected request identity/state; retain atomic archive and helper attribution.
+- Bind submitted application snapshots and dirty administrator forms to their reviewed versions.
+- Preserve complete report/export data across pagination and consistent report reads; keep planned, approved-position, committed and settled costs distinct.
+- Prevent overlapping polling from discarding every slow response; synchronize recruitment controls after cycle changes and keep legitimate withdrawal available.
+- Remove disabled helpers from operational duty/claims while retaining independent employment/financial obligations.
+- Expose authorized settlement and opportunity closeout controls, and keep RA/TA controls aligned with appointment type.
+- Validate qualification projections and exact candidate-result coverage; use current authority, position dates, durable budgets and concurrency reservations.
 
-## Supplied form evidence
+## Verification and delivery
 
-The four supplied screenshots cover the personal-information section of a Fall 2026 CS master's TA application, ending at a Next button. Other sections are not visible and must not be invented as existing form fields.
-
-Visible fields: first name, last name, preferred email, Duke unique ID, undergraduate majors, full/half/either/other appointment preference, prior TA experience, conditional course/department details, willingness to serve multiple courses, prior Duke payroll status, whether the applicant has an SSN, department affiliation, citizenship category, graduation in the application term, and conditional work-authorization expiry.
-
-The product proposal should separate selection qualifications from restricted appointment administration. Store neither SSN numbers nor immigration documents in ordinary application answers; assess any HR integration separately. Do not use citizenship or payroll metadata in AI fit scoring.
-
-## Completion rule
-
-Finish the application baseline and its checks, write the TA/RA and AI design, and stop before implementing the new application features.
+Use local isolated synthetic databases, multiple application instances, adversarial API cases, Chromium and Firefox, keyboard/accessibility checks, responsive widths and production builds. Do not rely on GitHub Actions. Preserve credentials outside Git and image inputs; do not make additional real-provider calls, push, deploy or reopen demonstration windows in this delivery. Record executed checks and remaining limits in VERIFICATION.md.

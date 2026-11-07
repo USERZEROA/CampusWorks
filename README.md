@@ -15,6 +15,8 @@ The application uses Nuxt 4, Vue 3, Nitro, MongoDB transactions and Playwright. 
 
 RA is an application and appointment type within these four identities. It has no separate project workspace or course queue privileges. Course-admin and site-admin describe scopes of the administrator identity.
 
+Removing a student restricts re-enrollment and queue use in that course until an instructor or administrator restores access. Restoration leaves enrollment explicit. After clearance, only site administrators can correct administrative details, with a required reason and private before/after history; correction does not change appointment status.
+
 Recruitment links appear on the course-list home page. Only authorized instructors and administrators see hiring controls. Administrators select one shared current semester and application window; faculty postings inherit that semester and deadline. Faculty specify weekly hours and work frequency, attendance, lab/discussion duties, grading, office hours, schedules, skills, questions, vacancies and budget. Publication follows the term's approval policy. Submission freezes the reviewed answers and CV revision. Private administrative information is collected separately after an offer and excluded from ordinary faculty review and AI input.
 
 Selection reserves a candidate and vacancy atomically. TA and RA commitments cannot overlap in dates, even across different recruitment terms, and two half appointments cannot coexist. The one-live-allocation-per-term rule also remains. Acceptance, clearance and the appointment start date are required for access. Expiration, suspension or ending removes appointment-derived access and releases queue claims while preserving independently granted roles. See [product policy](docs/PRODUCT_POLICY.md) and [staffing operations](docs/STAFFING_OPERATIONS.md).
@@ -54,7 +56,7 @@ Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell), gen
 | `npm run dev` | Development server |
 | `npm run build` / `npm start` | Build and run production output |
 | `npm run typecheck` | Application, server and test type checks |
-| `npm run test:unit` | Dependency security regressions |
+| `npm run test:unit` | Security, AI evidence and provider-launcher regressions |
 | `npm run verify:local` | Isolated database, unit/type/build checks, two app instances and complete local acceptance suite |
 | `npm run test:e2e` | Playwright against an existing dedicated test app |
 | `npm run test:e2e:headed` | Visible browser tests |
@@ -108,6 +110,8 @@ AI receives authorized evidence with references, excludes private administrative
 
 Requests have bounded input, output, response size and timeout. Failed calls consume their reservation. See [staffing operations](docs/STAFFING_OPERATIONS.md) for evidence and review constraints.
 
+Only explicitly classified qualification questions can enter AI evidence; older unclassified questions are omitted. Candidate comparisons must cover each supplied candidate exactly once. At a position's appointment end, new candidate comparisons and summaries stop, while authorized historical results, settlement and course reviews remain available.
+
 ## Consistency and operations
 
 Every queue mutation locks its course inside a MongoDB transaction. Membership, queue state, duty, claims, ordering and history are checked and changed together. Closing cannot leave a simultaneous new arrival stranded. History insertion and active-entry removal share a transaction and a unique entry identifier. Actual help segments preserve attribution across pauses, handoffs and revoked appointments.
@@ -116,13 +120,15 @@ The MongoDB driver is pinned to 7.8.0, which includes the vendor's pool-isolatio
 
 Feedback remains identified to managers; declining contact does not make it anonymous. Queue help minutes are measured activity, while workload records are submitted work. Reports expose missing evidence and separate budget scenarios from measured cost. Neither establishes payroll or an automatic staffing reduction.
 
+Queue edits and leave commands identify the original request. Completion also checks its current revision and helper, so an old tab cannot complete a reassigned request. Manager statistics and CSV publish only a complete, consistent multi-page read. Course reviews use one database snapshot and distinguish requested plans, approved position plans, outstanding commitments and settled costs. Site administrators can settle ended appointments in the interface; authorized managers can then archive resolved positions.
+
 Credentials, database data, browser sessions and raw artifacts are ignored and excluded from image builds. Private CVs use authorized downloads, attachment headers, quotas and basic format checks. Additional retention, document-processing and HR integrations are outside the confirmed product scope.
 
 ## Deployment and evidence
 
 Build with `docker build -t campusworks:latest .`. The runtime contains Nitro output, runs as `node` and checks `/api/health`. Supply private runtime settings and a reachable transaction-capable database. [`k8s/README.md`](k8s/README.md) requires out-of-band Secrets and disables demonstration login and seeding. The Kubernetes manifests have not been exercised on a real cluster.
 
-[VERIFICATION.md](docs/VERIFICATION.md) records tested paths, reading coverage, dependency results and boundaries. [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) records requirements. Local results do not establish live institutional SSO, real model quality, payroll correctness, physical-device accessibility or hosted production behavior.
+[VERIFICATION.md](docs/VERIFICATION.md) records tested paths, reading coverage, dependency results and boundaries. [BUSINESS_REVIEW.md](docs/BUSINESS_REVIEW.md) maps findings and confirmed owner decisions to controls and regressions. [IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) records requirements. Local results do not establish live institutional SSO, real model quality, payroll correctness, physical-device accessibility or hosted production behavior.
 
 ## License
 

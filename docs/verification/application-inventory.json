@@ -1,7 +1,7 @@
 {
-  "recordedAt": "2026-11-07T15:24:47.176807+00:00",
-  "count": 165,
-  "coverage": "Delivered files excluding self-referential inventory/result/review receipts; inventory alone is not semantic review.",
+  "recordedAt": "2026-11-07T17:39:23.489521+00:00",
+  "count": 172,
+  "coverage": "Delivered local working-tree bytes excluding self-referential inventory/result/review receipts. Git may normalize line endings on checkout; inventory alone is not semantic review.",
   "files": [
     {
       "path": ".dockerignore",
@@ -41,9 +41,9 @@
     },
     {
       "path": "README.md",
-      "bytes": 12343,
-      "sha256": "f1436c76ce92253e752e606083f7272006dde5cb82f4529172017d3d79337461",
-      "physicalLines": 129
+      "bytes": 13711,
+      "sha256": "d7f2f2b1240984af0df804b7ed1395e43c5c53108af62785f780d9685e5cf556",
+      "physicalLines": 135
     },
     {
       "path": "app/app.vue",
@@ -53,15 +53,15 @@
     },
     {
       "path": "app/components/AiAssistance.vue",
-      "bytes": 12317,
-      "sha256": "15f1014eb2d175ac50970c63769248284aa10ea6614dfac1252ac91b373bc1a0",
-      "physicalLines": 352
+      "bytes": 13056,
+      "sha256": "e233d9e9d329784472709dab8c10e9048ad05251492f3b52af44cace395150a1",
+      "physicalLines": 359
     },
     {
       "path": "app/components/OpportunityEditor.vue",
-      "bytes": 14925,
-      "sha256": "18fbcc573a82991652a7e1ee25d4046f8a562a624e93560623a245337688f40b",
-      "physicalLines": 465
+      "bytes": 15102,
+      "sha256": "e633bdd3f5fd392491a5be3ddae890e43c40de7eb1e09e9b5649207a6e806cac",
+      "physicalLines": 467
     },
     {
       "path": "app/components/StaffingNavigation.vue",
@@ -76,6 +76,12 @@
       "physicalLines": 52
     },
     {
+      "path": "app/components/StaffingSettlement.vue",
+      "bytes": 1208,
+      "sha256": "9182bb43343202b600a8910b2ab5cab01bf9b44107bf02d0f79ecadbfe31bbeb",
+      "physicalLines": 44
+    },
+    {
       "path": "app/components/StaffingShell.vue",
       "bytes": 6530,
       "sha256": "163b0581001cea0b17471f054b9c2e49586986e84dad5d3dec16ec22fff91a23",
@@ -83,9 +89,9 @@
     },
     {
       "path": "app/components/WorkloadRecorder.vue",
-      "bytes": 2450,
-      "sha256": "8e2b5b96f91791015182296b9760a78ac148f82cc262ff695782556a86230695",
-      "physicalLines": 84
+      "bytes": 2395,
+      "sha256": "c385129b297476fb3e369bb47e3ed45b745a0fea2b1260fb9a9e98eb813fd4e9",
+      "physicalLines": 83
     },
     {
       "path": "app/composables/useAuth.ts",
@@ -131,21 +137,21 @@
     },
     {
       "path": "app/pages/admin/staffing.vue",
-      "bytes": 9656,
-      "sha256": "79c9db516169c5c72cc2e0b926d6ae0c545e04e79a76bc20b96a0e0dd33d93f7",
-      "physicalLines": 300
+      "bytes": 10362,
+      "sha256": "b334a23df2ec492006f953abd888f889397a603d963d08e4985aac8b7e28ccb6",
+      "physicalLines": 323
     },
     {
       "path": "app/pages/applications/[id].vue",
-      "bytes": 18814,
-      "sha256": "bf5f589fe6356d9d2eb2af7ccfd1211c4251a55313d36d46aea686f0ecc17088",
-      "physicalLines": 561
+      "bytes": 22126,
+      "sha256": "e918c6ef2788ffc6acf0838eb23fc801d0f336a3be8ad539d553a49fb9f8db0e",
+      "physicalLines": 661
     },
     {
       "path": "app/pages/applications/index.vue",
-      "bytes": 4667,
-      "sha256": "492f895c14da03a2b0495bdf04cba05c57eccf03b347825d6c5b6eafe6236ddc",
-      "physicalLines": 148
+      "bytes": 4733,
+      "sha256": "6c8c1e8fbf1097e0c197252c2a38ff3ddb248a9ac97e29b299022d163ab2fe2a",
+      "physicalLines": 151
     },
     {
       "path": "app/pages/courses/[id].vue",
@@ -155,33 +161,33 @@
     },
     {
       "path": "app/pages/courses/[id]/admin.vue",
-      "bytes": 62747,
-      "sha256": "6c2b170d3a84fb176381283bf667bf8f971da1d91656c3dd16a020c6b6466efc",
-      "physicalLines": 2537
+      "bytes": 66630,
+      "sha256": "b24055b016af221a2e47718ec380d2726a7683c65cf91d8e4d4c8379194aab33",
+      "physicalLines": 2545
     },
     {
       "path": "app/pages/courses/[id]/review.vue",
-      "bytes": 4071,
-      "sha256": "f7873e20b819bac80525a9c4ac7bc750c7f63b94cf2ea15b72a17fe22f06d81c",
-      "physicalLines": 122
+      "bytes": 4325,
+      "sha256": "2fb3fb59a4a7d4cc0779375cec5fda8dbec1f86c4a75a8f66c78519d9fe1fb3b",
+      "physicalLines": 126
     },
     {
       "path": "app/pages/courses/[id]/student.vue",
-      "bytes": 34166,
-      "sha256": "f7d25efe671bfde79483be829f1231226eab830bede450a59689c8969fb51b7a",
-      "physicalLines": 1515
+      "bytes": 35913,
+      "sha256": "724eb40c6470f5cf05b278c19401128b91dca16bc3ae61c2f851185fdf1a8ee8",
+      "physicalLines": 1511
     },
     {
       "path": "app/pages/courses/[id]/ta.vue",
-      "bytes": 34791,
-      "sha256": "11a860c9e25f74ab847fe05f5a2b1b443e4e50a7a42fc42f0e39556199ac4417",
-      "physicalLines": 1522
+      "bytes": 36206,
+      "sha256": "40025635bd9f2eb3eb2f482e2e8a0245eb62bdc79a81b9d6d1d83f23d11005a7",
+      "physicalLines": 1501
     },
     {
       "path": "app/pages/courses/index.vue",
-      "bytes": 14943,
-      "sha256": "946855d2c19a3afaa8272658d1ebcf3d2ee5237f84ebcc39e26db20aa0c0b3fd",
-      "physicalLines": 710
+      "bytes": 15597,
+      "sha256": "344d639d2a2c59d6b0cdfb010336727f0c6fdce116232eb783804b1085554354",
+      "physicalLines": 701
     },
     {
       "path": "app/pages/help.vue",
@@ -215,9 +221,9 @@
     },
     {
       "path": "app/pages/staffing/[id].vue",
-      "bytes": 13997,
-      "sha256": "a885d639d468e4e591311b4a951f0d9009cf819e6a23f4bfe63182d7e17e51a5",
-      "physicalLines": 395
+      "bytes": 15400,
+      "sha256": "7b1d228b202f8620a1674e27f37bf955a1f6d9b3620a0a20381a1cd618da7cb2",
+      "physicalLines": 437
     },
     {
       "path": "app/pages/staffing/edit.vue",
@@ -244,40 +250,46 @@
       "physicalLines": 75
     },
     {
+      "path": "docs/BUSINESS_REVIEW.md",
+      "bytes": 7351,
+      "sha256": "6559322b3834a6599127c90291f312d3ab27396dd191219080b02cdf35759835",
+      "physicalLines": 51
+    },
+    {
       "path": "docs/IMPLEMENTATION_PLAN.md",
-      "bytes": 3427,
-      "sha256": "81c156076ca8da2481ae274ff2b4287937d48d897bfb4c8dd9ec4287f5b836c6",
-      "physicalLines": 31
+      "bytes": 4018,
+      "sha256": "185846630a3b5fa72599e054bb5dd43652137f0ecc49f11f8955884c36b0e2d7",
+      "physicalLines": 34
     },
     {
       "path": "docs/PRODUCT_POLICY.md",
-      "bytes": 3491,
-      "sha256": "0adb41bb07f26c2601d0216b80ff5c33f8e0511ebbda4f178e941d9ddc591550",
-      "physicalLines": 39
-    },
-    {
-      "path": "docs/STAFFING_DESIGN.md",
-      "bytes": 16659,
-      "sha256": "a0c94ab034cf5fb4f8cbffefab8321383797ff346b284249966a2e8f72cca099",
-      "physicalLines": 140
-    },
-    {
-      "path": "docs/STAFFING_OPERATIONS.md",
-      "bytes": 21762,
-      "sha256": "58e911683c749c52053d6d2b4f8d10952fde692527844dd708ca625a80f5f936",
-      "physicalLines": 159
-    },
-    {
-      "path": "docs/VERIFICATION.md",
-      "bytes": 7132,
-      "sha256": "a91f87a0ddb791f2b95503c648b0c2159fa90ef106667c85cdb0a60186a839c6",
+      "bytes": 4368,
+      "sha256": "4bbaa9fdcdcc13823bf9f0cf61aa60d2d13c53014b9885f501f00ec471997ef4",
       "physicalLines": 42
     },
     {
+      "path": "docs/STAFFING_DESIGN.md",
+      "bytes": 17878,
+      "sha256": "ae81faa56f5bda163531f827beacc61d44c4191404102a2d1a0c2a6649bb95e2",
+      "physicalLines": 146
+    },
+    {
+      "path": "docs/STAFFING_OPERATIONS.md",
+      "bytes": 25071,
+      "sha256": "98f3fdcd02592194e83cf683d11005708b60c05a661d3188666ff79980f14f17",
+      "physicalLines": 171
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "bytes": 7353,
+      "sha256": "073cbe33969c24bbf1f3d545d987d8425f7cd62950dfb0c3c49eb7e9c7b3080c",
+      "physicalLines": 44
+    },
+    {
       "path": "docs/WORK_PLAN.md",
-      "bytes": 4089,
-      "sha256": "e925dabfbbc18f5b584395675df0791fc5f19beb69300a1dce700df68a777ba4",
-      "physicalLines": 39
+      "bytes": 3264,
+      "sha256": "bf2af170ede216cb698c52a2ce37a64d9df980a6fe58dabcb98a51a1829afedf",
+      "physicalLines": 32
     },
     {
       "path": "docs/review/operations-reading-ledger.json",
@@ -323,38 +335,38 @@
     },
     {
       "path": "docs/verification/screenshots/active-ra-appointment.png",
-      "bytes": 125240,
-      "sha256": "5e5466f92f75b6155823eb45ec09b6d4bb21623afc4d27a817b61e3015c5632d",
+      "bytes": 124155,
+      "sha256": "179e71e75520a512b34cc7dfa6606739bce66d8fddfb0f6ea708cd907a4c2af9",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/active-ta-application.png",
-      "bytes": 148607,
-      "sha256": "e3dfdb5073a9ac87704f652b3310a20296eb22f310ef3dedafae7cbbb2ce7df4",
+      "bytes": 146657,
+      "sha256": "531fbba1f257039d6d64a14747ee32a3dfc7d588cbc4a36e921fcb5ed7909e28",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/appointed-ta-queue.png",
-      "bytes": 67425,
-      "sha256": "846d903320c9a1f3e5414dc2857807bdb4d5c7d25762e1df47b4653691354061",
+      "bytes": 66883,
+      "sha256": "de1af471877629a4a6a97459178f536bb036fd7535b8cd6e1e2f1398ab5ca5f5",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/automatic-candidate-refresh.png",
-      "bytes": 141219,
-      "sha256": "de84afb06bb56ee7e12358304543fe5fa9896c817cefe9fc95bbeefd2b25cda1",
+      "bytes": 142904,
+      "sha256": "31a65693a30186e218e897ed1ef2ead8012021e4d5a1147d393469f4f1f8ce34",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/desktop-admin.png",
-      "bytes": 42946,
-      "sha256": "8297aa5eab055b8e93978de1494e7db229956345f8d60f985ed92272e63eb0c7",
+      "bytes": 42327,
+      "sha256": "cc8f8bf5451e3c04908094521cf6ce7ab5f9a4ba67dc20a9d0d72e23d046e2c0",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/desktop-directory.png",
-      "bytes": 62604,
-      "sha256": "1431997fbafa03c9d10016e68d11db544ea0fcaa328eba1d38bdf2a6cfcb55e7",
+      "bytes": 61722,
+      "sha256": "c6ab7f865de324e2ef7de8e546c095cf6351a8ad37b7524d8450635c775f5e4b",
       "physicalLines": null
     },
     {
@@ -365,8 +377,8 @@
     },
     {
       "path": "docs/verification/screenshots/desktop-instructor.png",
-      "bytes": 116547,
-      "sha256": "f009941e4581d754340ae6ab453f1b8121781e93b6c83bfbc8ac8c961e50e39d",
+      "bytes": 115311,
+      "sha256": "2ab43a216679572581ef7e24aac0742bf40db6165ab4c611b0bb6997060b4b34",
       "physicalLines": null
     },
     {
@@ -377,62 +389,62 @@
     },
     {
       "path": "docs/verification/screenshots/desktop-student.png",
-      "bytes": 71612,
-      "sha256": "d848fc1cc31b3bb77aa38bd3bc39b7819d84c4ea5701c95311d8475041c2bcbe",
+      "bytes": 70236,
+      "sha256": "2730f5f049a97f557a3152461c6f988afec7b74bcecb427e94dbbb8160435c73",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/desktop-ta.png",
-      "bytes": 74397,
-      "sha256": "3e7cd8fd79574ae761cfc0ac8c4ad3edc6990802bbaa2a065290d526de88b2d8",
+      "bytes": 72930,
+      "sha256": "4ddf58b47408c4c7a2ae06a1ea136c511f1faed778345763b0f4fce90f3022f0",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/mobile-admin.png",
-      "bytes": 32423,
-      "sha256": "7b621e7a4c619674beada6ff7857db085e3d21ed5d65261337978c51682a909f",
+      "bytes": 32272,
+      "sha256": "e0fa7d37d295ae99f726ca0784bfb5c3404c42581394236eafe189bd5d6f7daa",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/mobile-application.png",
-      "bytes": 71984,
-      "sha256": "d5f280983a92166a9cb89373ffa20a6cff696e92f7c314cb7c8d7349803cb6ce",
+      "bytes": 74225,
+      "sha256": "09575ed34cd031acc6c9973f28ee6082f3cc1121b6047dfd9de7bc07f2b58c50",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/mobile-instructor.png",
-      "bytes": 91924,
-      "sha256": "8d8dbd979c94709b7fe7f903a8ad65bcc060e9d2793ff6de5c94dcce7f1c337a",
+      "bytes": 91519,
+      "sha256": "57827039d6f9e7a79b6099892f334ff80b80b7c1e183c4d80b5792fd0d8255ac",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/mobile-reviewer.png",
-      "bytes": 80370,
-      "sha256": "74075021e32867fde1d45e18a8544499dc5742ded1e78f62272827b53d69bf66",
+      "bytes": 82629,
+      "sha256": "109fa0839289cb2606c0640784ec595f6a073dc74ce4a7579b9b42353d38ebff",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/mobile-staffing-admin.png",
-      "bytes": 101762,
-      "sha256": "4917529312757366c9527c5a55b2d9ed97018b4f7088661c6b73a23ada729ddd",
+      "bytes": 97969,
+      "sha256": "52fe97ec3d9b530b888dffe950faecaa0282df88e993f77b73615b365b2d8ebf",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/mobile-student.png",
-      "bytes": 57816,
-      "sha256": "fd762102a593bf5303a33c95b8b38cf57bf0c8acf421b57129a22167d33b8d0e",
+      "bytes": 57886,
+      "sha256": "6fc0b4b812b7499a46c41f8e2f6d12cfcb968cfb1357240a6a5a94f658994407",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/mobile-ta.png",
-      "bytes": 57799,
-      "sha256": "c19140947eb35f948ded05b9ca9c96fc704280ff4a1966d4f392591a21fa80af",
+      "bytes": 57931,
+      "sha256": "691077138348bfa58af1c8a398e6c2e79b64b8a9361d92f2af3b2bca6f72557e",
       "physicalLines": null
     },
     {
       "path": "docs/verification/screenshots/synthetic-single-ta-analytics.png",
-      "bytes": 104997,
-      "sha256": "ac9cb955b62676b3b25fef641c2a9af69b4eb466dd325fefb52062b2b4e4feda",
+      "bytes": 106351,
+      "sha256": "c69e4db85e7a3fedb669d252910238cde8a3e675e60b3bd0f4783cee67405b64",
       "physicalLines": null
     },
     {
@@ -497,15 +509,15 @@
     },
     {
       "path": "playwright/e2e/ai-provider.spec.ts",
-      "bytes": 10443,
-      "sha256": "ba9726e171bd5f4d02b270f3f66aebc9c5826f8a7d2856194c17bd2c7cb50184",
-      "physicalLines": 182
+      "bytes": 16312,
+      "sha256": "c7548c0553642409560d628d56edccf658f08da41f505588ad5c06752c0c9b3e",
+      "physicalLines": 263
     },
     {
       "path": "playwright/e2e/ai-refresh.spec.ts",
-      "bytes": 21908,
-      "sha256": "4b64ec64acc0bc5e8c8df281cef73e82e32f2ea644cc88177efd9786bc7385ea",
-      "physicalLines": 318
+      "bytes": 28234,
+      "sha256": "e0c86d1f6693e96843b83686a22d55f3d6ba81c0e7ad81835e25a6ab811fff27",
+      "physicalLines": 387
     },
     {
       "path": "playwright/e2e/appointment-overlap.spec.ts",
@@ -527,9 +539,9 @@
     },
     {
       "path": "playwright/e2e/extended-flow.spec.ts",
-      "bytes": 23333,
-      "sha256": "2fdb3a4e93743f3da1d8155a22fea58d6f27d530e1cd837fc4a5c37c0c989585",
-      "physicalLines": 400
+      "bytes": 24341,
+      "sha256": "103d4093b1401935037cdae2e5ec0756c3415f7c3d80d8c5cc093584d1dd4777",
+      "physicalLines": 403
     },
     {
       "path": "playwright/e2e/institutional-identity.spec.ts",
@@ -538,45 +550,57 @@
       "physicalLines": 90
     },
     {
+      "path": "playwright/e2e/queue-business.spec.ts",
+      "bytes": 17596,
+      "sha256": "86a3dce622073b481e3d50b9894c140505982016954f4ffec208472ef90a7676",
+      "physicalLines": 249
+    },
+    {
       "path": "playwright/e2e/queue-concurrency.spec.ts",
-      "bytes": 11486,
-      "sha256": "804ca416c10c3ae74c77cadb92368fb45e86590c2cf31e7028327c9356802e7c",
-      "physicalLines": 181
+      "bytes": 12384,
+      "sha256": "82997594c0b00433fda219ee5541d68635b74c0ee716682b4127bbbe3bfb63a7",
+      "physicalLines": 189
     },
     {
       "path": "playwright/e2e/queue-flow.spec.ts",
-      "bytes": 9808,
-      "sha256": "fb58a4bbe11c8ac423c3147ea5b1ac3928807781979516641e2423eb5ee2b0f4",
-      "physicalLines": 219
+      "bytes": 10025,
+      "sha256": "3238b8d619e48e4cd4ccc06b4821aaa8e112de619050d370f33177ae020891f8",
+      "physicalLines": 221
     },
     {
       "path": "playwright/e2e/rbac.spec.ts",
-      "bytes": 7678,
-      "sha256": "9823ca1428c99c545b48a95de0d6352912776d6f05ec222ba068ac7bf067f71b",
+      "bytes": 7896,
+      "sha256": "e05cd026b753141e30e3dd844df6398634c35d5a01edf32417a6dba1c009d1a4",
       "physicalLines": 154
     },
     {
       "path": "playwright/e2e/recruitment-cycle.spec.ts",
-      "bytes": 18247,
-      "sha256": "416f213b40327106557a7c0f5fe4ce70c68c73303007a7ebd8a38dca09189f56",
-      "physicalLines": 224
+      "bytes": 18475,
+      "sha256": "f43d8ec4b78d7b191deeb3e1c061861855aec511aae8c7bf77c800201157635f",
+      "physicalLines": 225
+    },
+    {
+      "path": "playwright/e2e/staffing-audit-regressions.spec.ts",
+      "bytes": 13295,
+      "sha256": "55b9524992b4caabe1ad3b71f8ece233ceae86c66de3adc4dd20ff9578b3c892",
+      "physicalLines": 149
     },
     {
       "path": "playwright/e2e/staffing-boundaries.spec.ts",
-      "bytes": 11603,
-      "sha256": "b65361217e3686f0f450479b79fbf71fa2db9dd8480fde8704d8f34583fc60d9",
+      "bytes": 11761,
+      "sha256": "a2aea20124ec41b7dc69572077477bc14cc8afd3175f01eda79e789769d67108",
       "physicalLines": 142
     },
     {
       "path": "playwright/e2e/staffing-browser.spec.ts",
-      "bytes": 31064,
-      "sha256": "eefd096437da9c274ab775e8f1f8fe893dd4679caed18fc3ebbe353df83e2e9f",
-      "physicalLines": 857
+      "bytes": 38123,
+      "sha256": "87450598c3b6ddfb52486b0c05ec404d3ef0374b2bb754c41a0626f13422ba42",
+      "physicalLines": 1035
     },
     {
       "path": "playwright/e2e/staffing-lifecycle.spec.ts",
-      "bytes": 17604,
-      "sha256": "e8404838b5d8eaf18bbf7b84ec7efe8f3cf769a71900ed3cc297d747990d5b0e",
+      "bytes": 17636,
+      "sha256": "6d50a11a5125e06e1922f04d4f4cab3c8774dd752bb8be7353167531cbae2da5",
       "physicalLines": 224
     },
     {
@@ -593,9 +617,9 @@
     },
     {
       "path": "playwright/staffing-fixtures.ts",
-      "bytes": 8576,
-      "sha256": "9a943852db17d90ec4b304da878cd88d734afd31e92f4d4c2bf0e6885e4f3b5b",
-      "physicalLines": 120
+      "bytes": 8758,
+      "sha256": "36e09425fdbd5f741c023107ab9b5fd88478c813ee7f2b0b6d95adfcef5377ba",
+      "physicalLines": 121
     },
     {
       "path": "playwright/tsconfig.json",
@@ -629,8 +653,8 @@
     },
     {
       "path": "scripts/ai-provider-check.mjs",
-      "bytes": 10561,
-      "sha256": "db7c198debc55b38acc503b5edf31c56068b2cb6c17e59659b7d71ba5a6f85cc",
+      "bytes": 10599,
+      "sha256": "361cac8720107a618fc417b3aa4f7b01198661c11f4470abb56120e626232535",
       "physicalLines": 156
     },
     {
@@ -647,8 +671,8 @@
     },
     {
       "path": "scripts/demo-staffing.mjs",
-      "bytes": 7628,
-      "sha256": "228b495450fc4af238f1474c3081d8b20fd61f1ff4fe718d27ebbb48f8a1ab36",
+      "bytes": 7666,
+      "sha256": "5712a9410b0c7edea6b5756c085c801fd3c642b505a60e37a476ebb16763c37f",
       "physicalLines": 90
     },
     {
@@ -719,21 +743,21 @@
     },
     {
       "path": "server/api/courses/[id].delete.ts",
-      "bytes": 1357,
-      "sha256": "f168401577f0ae60d642bf19abd123affde8645d0c4936f38857c8115e60b978",
-      "physicalLines": 13
+      "bytes": 1606,
+      "sha256": "69f5a68782e8e9d9adabf3d4e32d2151a57d2ef166512d5b9e455f52dc72d00e",
+      "physicalLines": 15
     },
     {
       "path": "server/api/courses/[id].get.ts",
-      "bytes": 1361,
-      "sha256": "408bf69d3baee9fce3645c09f8710ee13bad027b68e4080d460412f4e304c39e",
-      "physicalLines": 18
+      "bytes": 1531,
+      "sha256": "22d6b0e092105187390fce81bf83e259bcb173182a784f3ae91971e9434dbadb",
+      "physicalLines": 19
     },
     {
       "path": "server/api/courses/[id]/admin.get.ts",
-      "bytes": 1931,
-      "sha256": "d912ebfe0eac3154b81b79db1694fe06a7b7c03714ef8174e725cb77af398702",
-      "physicalLines": 22
+      "bytes": 2763,
+      "sha256": "f2dfa07c58917b11a56edcef42878bb1dca0e037a5b964cf2af936ad94ba1b65",
+      "physicalLines": 31
     },
     {
       "path": "server/api/courses/[id]/announcements.post.ts",
@@ -749,15 +773,21 @@
     },
     {
       "path": "server/api/courses/[id]/enrollments/kick.post.ts",
-      "bytes": 1970,
-      "sha256": "3097c8f83bad7559022ba818a95ef2d3b3e3840197069c9e3ee6bbba4d12d67f",
-      "physicalLines": 21
+      "bytes": 2695,
+      "sha256": "8d995255ba9d05f3373c1d2cc5f28364ec6f5e95f2715a044cc6e113be8d3da5",
+      "physicalLines": 28
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/restore.post.ts",
+      "bytes": 1158,
+      "sha256": "eac79616510843effbf2e2e1e6fa55cefd02761bdfe3171e43daf1f60e4b76e6",
+      "physicalLines": 17
     },
     {
       "path": "server/api/courses/[id]/enrollments/role.patch.ts",
-      "bytes": 1932,
-      "sha256": "0602b8fcd7e28c81db16da545bb8e23fa4c9ee50c52676dd85e5e406c4626b69",
-      "physicalLines": 22
+      "bytes": 2036,
+      "sha256": "59e210b7b0c7130c452ca2f339e85e489f1046e96ab0d9aba6873dc935002c7a",
+      "physicalLines": 23
     },
     {
       "path": "server/api/courses/[id]/feedback.post.ts",
@@ -767,21 +797,21 @@
     },
     {
       "path": "server/api/courses/[id]/queue/assign.post.ts",
-      "bytes": 1858,
-      "sha256": "2e2206594969ab7ea7e2a3cca47dfb3b397b7b2746bb77b13dee4511f572cb25",
+      "bytes": 1881,
+      "sha256": "cf819d2982ddfcfe3d61a2cacafd14908176e454485d17e130dfc26695179837",
       "physicalLines": 29
     },
     {
       "path": "server/api/courses/[id]/queue/join.post.ts",
-      "bytes": 1900,
-      "sha256": "75afc66371b86f04f8aef10e5b768783142e84e55325c641da50a5398eacbcf1",
-      "physicalLines": 27
+      "bytes": 2506,
+      "sha256": "8f9e2a5df61993e621ed80294eccbb3852488db3835f928f4ee5a8ccc6de416b",
+      "physicalLines": 32
     },
     {
       "path": "server/api/courses/[id]/queue/leave.post.ts",
-      "bytes": 431,
-      "sha256": "20cc094ff9633bc11ef099abe378d941dd66c331b9bbd4bfadd3a00d0da0fe7b",
-      "physicalLines": 7
+      "bytes": 832,
+      "sha256": "d7dbae6798beffbcf7e1c7f35390cd2fbb28857b2af5c429566823f320e43321",
+      "physicalLines": 11
     },
     {
       "path": "server/api/courses/[id]/queue/move.post.ts",
@@ -791,15 +821,15 @@
     },
     {
       "path": "server/api/courses/[id]/queue/pause.post.ts",
-      "bytes": 1180,
-      "sha256": "5c820265d167ead96374022d45d738fec7d719f8f32de71df24baf6fed87a823",
+      "bytes": 1226,
+      "sha256": "65b2969c245fdec78e57113745327a9ae93a5cad90ff8560f10944ab7b032f98",
       "physicalLines": 22
     },
     {
       "path": "server/api/courses/[id]/queue/remove.post.ts",
-      "bytes": 602,
-      "sha256": "0cff2b8a3086cee1e70011f1b9827d027e8d99a36830877cd68734f0b6f0f4fa",
-      "physicalLines": 10
+      "bytes": 1274,
+      "sha256": "bb8a85f09a933f07869f4031212f5aad6ddb06ddb6e58eef29b7a6e966ba91ce",
+      "physicalLines": 18
     },
     {
       "path": "server/api/courses/[id]/state.patch.ts",
@@ -815,15 +845,15 @@
     },
     {
       "path": "server/api/courses/enroll.post.ts",
-      "bytes": 1413,
-      "sha256": "b57b18e2a297ebaf9d1a3bd651d2c34bcc95af3c2ead8fac7c333c7500af6ed7",
-      "physicalLines": 22
+      "bytes": 1512,
+      "sha256": "cd102ceb629608516c7110a082c6c2905941ee6a099a154f710f5f47f807edc7",
+      "physicalLines": 23
     },
     {
       "path": "server/api/courses/index.get.ts",
-      "bytes": 984,
-      "sha256": "73af702f75b703bd3ebc940edfe68c929f33916e6d4940d14a311280a85d20b0",
-      "physicalLines": 17
+      "bytes": 1140,
+      "sha256": "e2c315a4963d137dc9c678bdda96d28fe9ebb5478b6ebc82c097bfc84501ae27",
+      "physicalLines": 18
     },
     {
       "path": "server/api/courses/index.post.ts",
@@ -839,9 +869,9 @@
     },
     {
       "path": "server/api/staffing/[...path].ts",
-      "bytes": 14961,
-      "sha256": "0a6cf8e94efbb0d0370c1d0aece10093581d7969e31aa6e23eec9044487cc2d0",
-      "physicalLines": 153
+      "bytes": 15507,
+      "sha256": "1d9eded05f23e1d98e7c7c70bb80461526611159f16b98185e325fa820d83f51",
+      "physicalLines": 155
     },
     {
       "path": "server/middleware/logging.ts",
@@ -863,15 +893,15 @@
     },
     {
       "path": "server/utils/ai-refresh.ts",
-      "bytes": 22358,
-      "sha256": "65d77851379cf8fa076aa80558782b0f00ef95e5e274a0827c8a5b9ab830efe9",
-      "physicalLines": 276
+      "bytes": 24288,
+      "sha256": "b440c50969ea79b95d73083e6fa2f7b12d9609fb2e7ab21deead918cd7a723d5",
+      "physicalLines": 301
     },
     {
       "path": "server/utils/ai.ts",
-      "bytes": 27914,
-      "sha256": "a06bb599ad40aece43dba36e5b1be8019169aa1621a5ee4a3944b9d8f2d699b2",
-      "physicalLines": 303
+      "bytes": 33495,
+      "sha256": "405396f517f99414543ab5ce1b05a938feee16287a251555c2d73f2fdd346288",
+      "physicalLines": 362
     },
     {
       "path": "server/utils/auth.ts",
@@ -887,21 +917,27 @@
     },
     {
       "path": "server/utils/courses.ts",
-      "bytes": 8381,
-      "sha256": "d468a4b3cffbf4a602e6a8560b2a57e44ae462d3230521ff89350200afa1b776",
-      "physicalLines": 127
+      "bytes": 9316,
+      "sha256": "83e0b66b486a61296b3d7572c56699f457d56bf2234cfd32227d0a228cadf106",
+      "physicalLines": 136
     },
     {
       "path": "server/utils/db.ts",
-      "bytes": 5900,
-      "sha256": "ba58dde4802d3ff31c15f6c721dd9fac61cc3a40ddc5980310c1985cb51bbd1f",
-      "physicalLines": 112
+      "bytes": 6000,
+      "sha256": "f7a94a02c55fcd21dec22d3b3d7f5ba819ed38ef005c32f24b440b18ed66560a",
+      "physicalLines": 114
+    },
+    {
+      "path": "server/utils/qualification-questions.ts",
+      "bytes": 1632,
+      "sha256": "cfddce5f9668f5eece18745212efb1a52289ce650cf16f79d4c554f6ddaf5d3f",
+      "physicalLines": 17
     },
     {
       "path": "server/utils/queue.ts",
-      "bytes": 5264,
-      "sha256": "c98af471970d5fd7ab2bd476eca363d63f10b67f01c26f74589f20d2610aad55",
-      "physicalLines": 82
+      "bytes": 5817,
+      "sha256": "1e85c2e4b6ecd2eb07e81c70a83e655299b84ce3074230d50e569291ee318b4d",
+      "physicalLines": 87
     },
     {
       "path": "server/utils/seed.ts",
@@ -911,26 +947,26 @@
     },
     {
       "path": "server/utils/staffing-applications.ts",
-      "bytes": 16363,
-      "sha256": "a6efee06697261fcbcfb69da7a4ce27a6f81e7d34aadd26b3f74a88de9cbb9f2",
-      "physicalLines": 165
+      "bytes": 17784,
+      "sha256": "d5ecc469647774cf5e707e66e7d95a2866178d484cf3ebdf09299acbc282c4cc",
+      "physicalLines": 175
     },
     {
       "path": "server/utils/staffing-appointments.ts",
-      "bytes": 25168,
-      "sha256": "0b72314a46b2707307ed2f619de494ee836107d342ebf199ffc02942dd9a2105",
-      "physicalLines": 230
+      "bytes": 26421,
+      "sha256": "677e3832b70d657ff98c83f2ec285fefba796adad01a224c41b968bdfe4e60d3",
+      "physicalLines": 237
     },
     {
       "path": "server/utils/staffing-catalog.ts",
-      "bytes": 13925,
-      "sha256": "08da954dbf36cebc933d2cf70d05b6b30376a74cc3bc439080f85675f25caa63",
-      "physicalLines": 151
+      "bytes": 15766,
+      "sha256": "712421d3e9ef108409fd9277a3dd5cc886314278707977a484126c1eb78dd162",
+      "physicalLines": 168
     },
     {
       "path": "server/utils/staffing-cycle.ts",
-      "bytes": 3655,
-      "sha256": "43a83a387e862fc610178a32b7c85c7665b89fd567251abefd333cd164ca4f2a",
+      "bytes": 3677,
+      "sha256": "5fb9ee6971e847354dff9c281908303104206287018a4246991067f44da827da",
       "physicalLines": 49
     },
     {
@@ -941,15 +977,21 @@
     },
     {
       "path": "server/utils/staffing-reports.ts",
-      "bytes": 8714,
-      "sha256": "9b007e03e4b8841309dd5441339a0db63e580188cce8135ba3909a05d57174c1",
-      "physicalLines": 81
+      "bytes": 10245,
+      "sha256": "83a07c37a8e1d7f029f4a559c30dce762403f57d300617112bd6e5ee892f3a5a",
+      "physicalLines": 86
     },
     {
       "path": "server/utils/staffing.ts",
-      "bytes": 13025,
-      "sha256": "36bdd68d3a69dfd944ab499130456b08574dce7f93ca6df90ad255001635b1e1",
-      "physicalLines": 187
+      "bytes": 14267,
+      "sha256": "e9668a0b1153a519d04b5436b736c6ab18268691a2be61b93ea6418a5f9c22c9",
+      "physicalLines": 201
+    },
+    {
+      "path": "tests/ai-evidence.test.mjs",
+      "bytes": 4929,
+      "sha256": "433dd07b7d4bf103069e556d46c36a7b046bfc64ddd7138be977b73057152714",
+      "physicalLines": 59
     },
     {
       "path": "tests/ai-provider-scripts.test.mjs",

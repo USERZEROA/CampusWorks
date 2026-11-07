@@ -1,42 +1,44 @@
 # CampusWorks verification
 
-Verified on November 7, 2026 against the delivered source. Exact case names, durations, hashes and sanitized provider results are in [results.json](verification/results.json).
+Verified on November 7, 2026 against the delivered source. [Results](verification/results.json) record exact case names, durations, accessibility checks and screenshot hashes. [Business review](BUSINESS_REVIEW.md) maps the seventeen findings, the three owner decisions and the additional integration fixes to regression evidence.
 
-The complete local acceptance run passed **130 tests**, with zero failures, skips or flaky results. It ran six unit tests, application/server/test TypeScript checks, a production build, and two production application instances sharing an isolated disposable MongoDB replica set. The current Linux production image also passed **16 Chromium/Firefox browser tests** using a separate authenticated database. No GitHub Actions, remote push or deployment was used.
+The complete local run passed **163 acceptance tests**, with zero failures, skips or flaky results. It also passed **9 unit tests**, application/server/test TypeScript checks and a production build. Two production application instances shared an isolated disposable MongoDB replica set. The separately built Linux production image passed **24 Chromium/Firefox browser tests** against another authenticated database. No GitHub Actions, remote push or deployment was used.
 
-The accessibility matrix covers nineteen authorized pages at 1440, 768, 390 and 320 pixels in both browsers, in both local targets: **304 page/browser/width scans**, with zero violations in the configured WCAG 2 A/AA and 2.1 AA rules. Keyboard tests cover modal focus trapping, Escape and return focus. Every matrix page checks its intended route, HTTP response, title, main landmark, Duke blue, PNG source/alternate text/loading, and horizontal viewport bounds. A separate test compares the served PNG bytes with the tracked asset. Desktop home, mobile application/settings/reviewer, TA queue, RA appointment and automatic comparison screenshots were inspected.
+## Exercised business and security behavior
 
-## Executed business and security checks
+- Publication, qualification questions, private answers/CV, exact-version submission, shortlist/selection, acceptance, clearance, effective TA course access, duty/queue work, appointment end, incurred-cost settlement, position archive and course deletion through actual browser controls.
+- Persistent course restrictions, authorized restoration without enrollment, cross-course isolation, blocked TA selection/resumption and restricted future activation without discarding budget obligations.
+- Site-admin corrections before and after employment ends, required reasons, administrative versions, private before/after history and unchanged appointment/financial state. Faculty and applicant projections do not expose the private audit.
+- Canonical course identifiers, compatible historical alias reads, linked deletion protection and complete historical report budgets/workload.
+- Stale request edits/leave, current-helper completion, fresh/stale revisions, ABA handoff, paused rows, accurate removal reasons, simultaneous joins/close, archive rollback and exactly-once history.
+- Disabled manual TA/demo-admin duty and claim cleanup while preserving role records. The configured-admin fallback has the same account guard, but was not independently configured in a separate browser fixture.
+- Complete manager pagination across a concurrent 502nd archive, consistent KPIs/CSV, course replacement snapshot rejection, delayed polling and preservation of the previous complete result on temporary refresh failure.
+- Recruitment boundaries, dirty administrator form conflicts, reopening application controls, independent closed-cycle withdrawal and continued local revision ownership across submit/save/upload/withdraw/resubmit.
+- First-commit candidate/vacancy/budget allocation, duplicate command replay, withdrawal/selection races, offer expiry/acceptance and cross-semester overlapping-date exclusion.
+- Four-role and cross-course authority, private drafts/documents, CV quotas and submitted snapshots, session revocation, forged cookies, body/origin/rate boundaries and required index readiness on both instances.
+- Institutional subject/email binding through a loopback fake identity provider; changed/reused identity and demo impersonation refusals.
+- Transactional multi-batch cursor reads and fault rollback, complete aggregates/P90 in one snapshot, distinct requested/approved/committed/settled budget measures, and idempotent notifications to more than 100 recipients.
+- RA applications and appointments without research workspaces, course execution links, TA grants or teaching-work Research choices; historical titles outside the current public catalog.
+- Loopback AI providers: qualification-only projection, technical-question retention, invalid/cross-candidate citations, exact candidate coverage, failures, quotas, distributed concurrency and valid-lease confirmation.
+- Automatic comparisons after submission, selection, withdrawal, timed expiry and course restriction/restoration; worker coalescing, current permissions, stale evidence rejection, candidate page metadata and disabled-provider behavior.
+- Position end stops new comparisons/summaries and automatic calls while preserving authorized, dated historical results and course reviews. Other AI task kinds retain their default interface capability.
 
-- Queue join/close, duplicate arrivals, claims, reordering, handoffs, duty and demotion races across application instances.
-- Atomic archive rollback after an injected insert failure, exactly-once history retry, actual help intervals and helper attribution.
-- Session revocation, forged cookies, shared rate limiting, request origin/body/pagination controls and required-index readiness.
-- Institutional subject binding with a loopback fake identity provider; changed/reused email and demo impersonation refusals.
-- Administrator-only shared semester/window settings, stale versions, synchronized deadlines, concurrent closure/submission and semester switching.
-- Instructor/admin hiring authority; hidden TA/student management links, forbidden-route redirects, private candidate lists and direct-RA ownership revocation.
-- Applications closing while current-semester faculty review remains available; disabling recruitment blocks new selections. Issued offers and appointments remain actionable after a semester switch.
-- Duplicate selection, last vacancy and budget races, withdrawal versus selection, one live allocation per semester and cross-semester overlapping-date exclusion.
-- Offer acceptance, expiry, clearance, start dates, suspension/end, live TA queue access removal and independent manual grant preservation.
-- Private draft/CV snapshots, attachment validation/version/quota boundaries, restricted administrative information and clearance-reason redaction.
-- RA application/offer/appointment history without project pages, research updates, course staff grants or research workload commands.
-- Current-semester report pagination resets on a live administrator semester change; TA reports exclude RA metadata/budget/workload while preserving historical TA observations.
-- Transactional queries across 125 feedback/history/enrollment rows, injected getMore failure rollback, complete reads through both instances, and duplicate-free delivery to 125 administrators with current identity exclusions.
-- AI evidence/reference validation, unauthorized/invented citations, provider failures, quotas, concurrency, in-flight changes, revoked permissions, restart catch-up and time-only offer expiry.
-- Automatic candidate comparison updates without another browser analysis request; exact-page refresh metadata remains reachable after more than 100 approved scopes without cross-reviewer disclosure.
-- Actual browser publication, questions, application/CV submission, shortlist/selection, acceptance, clearance, queue/duty and appointment ending.
+## Browser presentation and accessibility
 
-## OpenAI and dependency checks
+The matrix checks authorized screens at 1440, 768, 390 and 320 pixels in Chromium and Firefox on both local targets: **304 page/browser/width scans**, with zero violations under the configured WCAG 2 A/AA and 2.1 AA rules. Route/response/title/main-landmark, Duke blue, PNG source/alternate text/loading and viewport bounds are checked. A separate test compares the served logo bytes with the tracked PNG. Keyboard checks exercise dialog trapping, Escape and returned focus. Representative home, mobile application/administration/reviewer, TA queue and RA appointment screenshots are retained and inspected.
 
-The owner supplied a Key through the masked local Windows form. DPAPI stores it in ignored local configuration; the application receives it only through a child process environment. Configuration/status commands do not print or return it. Three launcher tests use injected synthetic credentials; no credentials are present in Git or image inputs.
+These scans are automated checks of the exercised states, not proof of universal accessibility or physical-device behavior.
 
-A separate real OpenAI proof passed exactly **five synthetic requests**: qualification summary, requirement/question suggestions, course review, candidate comparison with two applicants, and comparison with one after a synthetic withdrawal. All responses passed application schema/reference validation, and the proof left no concurrency lease. Its temporary application/database were removed. The [sanitized receipt](verification/ai-provider-proof.json) contains no credential or model output. This is interface evidence, not a hiring-quality evaluation. The adapter uses the documented [GPT-5.4 mini endpoint](https://developers.openai.com/api/docs/models/gpt-5.4-mini).
+## Provider, dependency and review boundaries
 
-MongoDB is pinned to **7.8.0**. Vendor guidance identifies pool-isolation and SRV validation vulnerabilities in older releases and deprecates unsafe CSOT options. The application uses separate connection-stage limits, a checked callback work budget and driver-managed commit resolution. The scale regressions exercise the observed multi-batch failure and recovery. See the [official release notes](https://www.mongodb.com/docs/drivers/node/current/reference/release-notes/#what-s-new-in-7-8) and [timeout guidance](https://www.mongodb.com/docs/drivers/node/current/connect/connection-options/csot/). The final npm advisory snapshot reports zero vulnerabilities; that snapshot alone is not a security proof.
+No saved API Key was read and **no real provider call was made in this delivery**. Synthetic loopback providers exercised the current adapter and worker. The retained [five-request OpenAI receipt](verification/ai-provider-proof.json) predates these source changes; it establishes only the historical synthetic integration check, not current hiring quality or a fresh provider validation. The masked DPAPI launcher remains covered by synthetic-credential tests.
 
-## Review coverage and limits
+MongoDB remains pinned to **7.8.0**. The current npm audit snapshot reports **zero vulnerabilities**. Mandatory declared indexes and transaction-capable topology are readiness requirements. Unit/source checks, dependency audit and finite acceptance tests are complementary evidence; none is an exhaustive security proof.
 
-The current [inventory](verification/application-inventory.json) records delivered bytes. The [reading ledger](review/final-reading-ledger.json) combines current domain/integration review of changed source with matching byte receipts from the preceding full-source review for unchanged files. Review covered permission gates, cycle/resource/applicant lock order, appointment/offer continuity, private DTOs, report scope, provider inputs/results, pagination, UI navigation and secure local configuration. Earlier reading ledgers remain historical snapshots.
+The [inventory](verification/application-inventory.json) records delivered file bytes. The [reading ledger](review/final-reading-ledger.json) combines current domain and integration review of changed code with unchanged-byte receipts from the prior complete maintained-source review. Independent cross-review also checked authority, lock order, private projections, canonical resource linkage, command versions, provider evidence, pagination and interface capabilities. Earlier review documents remain explicitly historical.
 
-Passing finite tests does not prove every race, sustained production load, failover, hiring fairness or complete assistive-technology compatibility. No real institutional SSO, private applicant inference, payroll, email, hosted infrastructure, Kubernetes or physical-device behavior was verified. AI analyzes entered qualification fields, screened answers and typed background text; uploaded PDF/TXT bytes are private attachments and are not parsed. Free-text redaction is defensive, not guaranteed anonymization. Queue observations, reported workload and cost scenarios do not establish total paid work or justify automatic staffing cuts.
+Full administrative audit records remain stored; the current detail view displays the most recent 100. Consistent manager reads can retry during continuous writes and retain the previous complete dataset after bounded failure. Sustained production scale, long-running failover, institutional SSO, private applicant inference, provider fairness/quality, external payroll/expense validation, email, hosted infrastructure, Kubernetes and physical devices were not verified.
 
-All interactive demonstration windows and the demonstration website remain closed as requested. Disposable verification services are stopped and cleaned after verification.
+PDF/TXT files are private attachments; their bytes are not parsed by AI. Qualification fields, screened answers and typed background text provide evidence. Classification/redaction is defensive, not guaranteed anonymization. Queue observations, reported work and cost scenarios do not prove total paid work or authorize automatic staffing reductions.
+
+Interactive demonstration windows and the demonstration website remain closed. Disposable verification services are stopped and removed after their runs.
