@@ -392,7 +392,7 @@ const p90Wait = computed(() => {
     .map((s) => s.waitMinutes || 0)
     .sort((a, b) => a - b)
   if (!arr.length) return 0
-  const idx = Math.floor(arr.length * 0.9) - 1
+  const idx = Math.ceil(arr.length * 0.9) - 1
   const v = arr[Math.max(idx, 0)] ?? 0
   return Math.round(v * 10) / 10
 })
@@ -587,6 +587,11 @@ const arcPath = (
 ) => {
   const s = polar(cx, cy, r, end)
   const e = polar(cx, cy, r, start)
+  // SVG requires two arcs when the endpoints describe a complete circle.
+  if (end - start >= 360 - 1e-6) {
+    const midpoint = polar(cx, cy, r, start + 180)
+    return `M ${s.x} ${s.y} A ${r} ${r} 0 0 0 ${midpoint.x} ${midpoint.y} A ${r} ${r} 0 0 0 ${e.x} ${e.y}`
+  }
   const large = end - start <= 180 ? 0 : 1
   return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 0 ${e.x} ${e.y}`
 }
