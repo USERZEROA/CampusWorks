@@ -352,7 +352,7 @@ function addQuestion() {
           <div
             v-for="(duty, index) in form.duties"
             :key="index"
-            class="grid field-actions"
+            class="grid field-actions editor-fields"
           >
             <label
               >Duty {{ index + 1
@@ -415,7 +415,7 @@ function addQuestion() {
           <div
             v-for="(slot, index) in form.requiredSlots"
             :key="index"
-            class="grid field-actions"
+            class="grid field-actions editor-fields"
           >
             <label
               >Day<select v-model.number="slot.day">

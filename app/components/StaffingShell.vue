@@ -252,6 +252,21 @@ const user = useAuthUser();
   align-self: end;
   justify-self: start;
 }
+.staffing-root .editor-fields {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) max-content;
+}
+.staffing-root .editor-fields > button {
+  white-space: nowrap;
+}
+.staffing-root .table-actions {
+  flex-wrap: nowrap;
+  width: max-content;
+}
+.staffing-root .table-actions > button,
+.staffing-root .table-actions > .button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
 .staffing-root .table-actions > button,
 .staffing-root .table-actions > .button,
 .staffing-root .notification-row button {
@@ -520,6 +535,9 @@ const user = useAuthUser();
   font-size: 13px;
 }
 @media (max-width: 700px) {
+  .staffing-root .editor-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .staffing-root .app-navbar {
     padding: 10px 12px;
     flex-wrap: wrap;
@@ -570,6 +588,13 @@ const user = useAuthUser();
   }
 }
 @media (max-width: 520px) {
+  .staffing-root .editor-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .staffing-root .editor-fields > button {
+    width: 100%;
+    justify-self: stretch;
+  }
   .staffing-root .form-actions {
     display: grid;
     grid-template-columns: minmax(0, 1fr);

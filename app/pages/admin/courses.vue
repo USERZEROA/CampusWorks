@@ -211,47 +211,49 @@ const goHelp = () => {
 
       <section class="panel">
         <div class="panel-header">All Courses</div>
-        <table class="course-table" tabindex="0" aria-label="Managed courses">
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Title</th>
-              <th style="width: 220px; text-align: center">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="c in courses"
-              :key="c.id"
-              :data-testid="`admin-course-row-${c.id}`"
-            >
-              <td>{{ c.code }}</td>
-              <td>{{ c.title }}</td>
-              <td>
-                <div class="actions">
-                  <button
-                    class="btn-go"
-                    @click="goCourse(c)"
-                    :data-testid="`admin-course-go-${c.id}`"
-                  >
-                    Go
-                  </button>
-                  <button
-                    :disabled="busyActions"
-                    class="btn-delete"
-                    @click="deleteCourse(c)"
-                    :data-testid="`admin-course-delete-${c.id}`"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr v-if="!courses.length">
-              <td colspan="3" class="empty-text">No courses yet.</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="course-table-scroll">
+          <table class="course-table" tabindex="0" aria-label="Managed courses">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Title</th>
+                <th style="width: 220px; text-align: center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="c in courses"
+                :key="c.id"
+                :data-testid="`admin-course-row-${c.id}`"
+              >
+                <td>{{ c.code }}</td>
+                <td>{{ c.title }}</td>
+                <td>
+                  <div class="actions">
+                    <button
+                      class="btn-go"
+                      @click="goCourse(c)"
+                      :data-testid="`admin-course-go-${c.id}`"
+                    >
+                      Go
+                    </button>
+                    <button
+                      :disabled="busyActions"
+                      class="btn-delete"
+                      @click="deleteCourse(c)"
+                      :data-testid="`admin-course-delete-${c.id}`"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="!courses.length">
+                <td colspan="3" class="empty-text">No courses yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
       <p
         v-if="data?.pagination?.hasMore"
@@ -424,8 +426,13 @@ const goHelp = () => {
   cursor: default;
 }
 
+.course-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
 .course-table {
   width: 100%;
+  min-width: 560px;
   border-collapse: collapse;
 }
 
@@ -443,7 +450,12 @@ const goHelp = () => {
   justify-content: center;
   gap: 8px;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  min-width: 148px;
+}
+.actions > button {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .btn-go,
@@ -555,22 +567,11 @@ const goHelp = () => {
   }
 
   .course-table th:last-child {
-    width: 94px !important;
+    width: 172px !important;
   }
 
   .course-table td {
     overflow-wrap: anywhere;
-  }
-
-  .actions {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .btn-go,
-  .btn-delete {
-    width: 100%;
   }
 }
 
