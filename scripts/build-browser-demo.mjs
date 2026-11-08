@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { resolve, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -42,7 +42,19 @@ The full application uses Nuxt, Vue, TypeScript, Node.js, MongoDB transactions a
 
 All people, workload and feedback are synthetic. This is an independent project demonstration, not an institutional service. The proprietary terms in LICENSE apply.
 `);
-const content = files.filter(file => /\.(?:js|html|css)$/.test(file.path)).map(file => readFileSync(resolve(destination,file.path),'utf8')).join('\n');
+const allowed = new Set([...files.map(file => file.path), 'index.html', '404.html', '.nojekyll', 'README.md']);
+function verifyDirectory(directory = destination) {
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    const path = resolve(directory, entry.name);
+    const name = relative(destination, path).replaceAll('\\', '/');
+    if (directory === destination && entry.name === '.git' && entry.isDirectory()) continue;
+    if (entry.isSymbolicLink()) throw new Error('The public package must not contain symbolic links.');
+    if (entry.isDirectory()) verifyDirectory(path);
+    else if (!allowed.has(name)) throw new Error(`Unexpected public artifact: ${name}. Move it outside the public package before publishing.`);
+  }
+}
+verifyDirectory();
+const content = [...allowed].filter(path => /\.(?:js|html|css|md)$/.test(path)).map(path => readFileSync(resolve(destination,path),'utf8')).join('\n');
 if (/\bsk-(?:proj-|svcacct-)?[A-Za-z0-9_-]{30,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/.test(content)) throw new Error('A credential pattern was found in the public package.');
 writeFileSync(resolve(root,'.cache/browser-demo-package.json'), JSON.stringify({ output: relative(root,destination).replaceAll('\\','/'), scope:'Allowlisted static browser demo and genuine product gallery only; no private application source, runtime settings, database or Key files.', files }, null, 2)+'\n');
 console.log(`Prepared ${files.length + 4} public static files in ${relative(root,destination)}.`);
