@@ -140,6 +140,27 @@ export class DemoStopped extends Error {
   }
 }
 
+export function createDemoClock(now = () => performance.now()) {
+  const startedAt = now();
+  let pausedAt = null;
+  let completedPauses = 0;
+  return {
+    setPaused(value) {
+      if (value && pausedAt === null) pausedAt = now();
+      else if (!value && pausedAt !== null) {
+        completedPauses += now() - pausedAt;
+        pausedAt = null;
+      }
+    },
+    get elapsedMs() {
+      return Math.max(0, (pausedAt ?? now()) - startedAt - completedPauses);
+    },
+    get pausedMs() {
+      return completedPauses + (pausedAt === null ? 0 : now() - pausedAt);
+    },
+  };
+}
+
 // This function executes only inside the automation-owned browser contexts.
 function installDemoOverlay({ titleToken }) {
   let lastState;
@@ -148,6 +169,25 @@ function installDemoOverlay({ titleToken }) {
   let originalPadding;
   const elementId = "campusworks-demo-stage";
   const styleId = "campusworks-demo-stage-style";
+  const command = (value) => {
+    void window.__campusworksDemoCommand(value).catch(() => {});
+  };
+  const keyboard = (event) => {
+    if (event.repeat || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    const target = event.target instanceof Element ? event.target : null;
+    const editing = target?.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"], [role="combobox"]');
+    if (event.key === "Pause") {
+      event.preventDefault();
+      command("toggle-pause");
+    } else if (!editing && ["ArrowLeft", "ArrowRight"].includes(event.key)) {
+      event.preventDefault();
+      command(event.key === "ArrowLeft" ? "previous" : "next");
+    } else if (!editing && (event.code === "Space" || event.key === " ") && !target?.closest(`#${elementId} button`)) {
+      event.preventDefault();
+      command("toggle-pause");
+    }
+  };
+  document.addEventListener("keydown", keyboard, true);
   const fixTitle = () => {
     const prefix = `[${titleToken}] `;
     if (!document.title.startsWith(prefix))
@@ -195,17 +235,32 @@ function installDemoOverlay({ titleToken }) {
       const pauseButton = document.createElement("button");
       pauseButton.type = "button";
       pauseButton.dataset.demoPause = "";
+      pauseButton.setAttribute("aria-keyshortcuts", "Space Pause");
       pauseButton.addEventListener("click", () => {
-        void window.__campusworksDemoCommand("toggle-pause");
+        command("toggle-pause");
       });
+      const previousButton = document.createElement("button");
+      previousButton.type = "button";
+      previousButton.dataset.demoPrev = "";
+      previousButton.textContent = "←";
+      previousButton.setAttribute("aria-label", "Previous visited page");
+      previousButton.setAttribute("aria-keyshortcuts", "ArrowLeft");
+      previousButton.addEventListener("click", () => command("previous"));
+      const nextButton = document.createElement("button");
+      nextButton.type = "button";
+      nextButton.dataset.demoNext = "";
+      nextButton.textContent = "→";
+      nextButton.setAttribute("aria-label", "Next visited page");
+      nextButton.setAttribute("aria-keyshortcuts", "ArrowRight");
+      nextButton.addEventListener("click", () => command("next"));
       const stopButton = document.createElement("button");
       stopButton.type = "button";
       stopButton.dataset.demoStop = "";
       stopButton.textContent = "Stop demo";
       stopButton.addEventListener("click", () => {
-        void window.__campusworksDemoCommand("stop");
+        command("stop");
       });
-      controls.append(pauseButton, stopButton);
+      controls.append(previousButton, pauseButton, nextButton, stopButton);
       const progress = document.createElement("progress");
       progress.setAttribute("aria-label", "Cycle progress");
       banner.append(copy, controls, progress);
@@ -229,14 +284,23 @@ function installDemoOverlay({ titleToken }) {
       `Cycle ${state.cycle} · ${state.index} / ${state.totalSteps}`;
     banner.querySelector(".demo-step-title").textContent = state.stopped
       ? "Demonstration stopped"
-      : `${state.paused ? "Paused · " : ""}${state.title}`;
-    banner.querySelector(".demo-detail").textContent = state.detail || "";
+      : `${state.reviewing ? "Review · " : state.paused ? "Paused · " : ""}${state.title}`;
+    banner.querySelector(".demo-detail").textContent = state.reviewing
+      ? `Visited page · current data. ${state.detail || ""}`
+      : state.detail || "";
     banner.querySelector("[data-demo-pause]").textContent = state.paused
       ? "Resume"
       : "Pause";
     banner
       .querySelector("[data-demo-pause]")
       .setAttribute("aria-pressed", String(state.paused));
+    banner.querySelector("[data-demo-pause]").title = state.paused
+      ? "Resume playback (Space or Pause/Break)"
+      : "Pause playback (Space or Pause/Break)";
+    banner.querySelector("[data-demo-prev]").disabled = !state.canPrevious;
+    banner.querySelector("[data-demo-next]").disabled = !state.canNext;
+    const main = document.querySelector("main");
+    if (main) main.inert = !!state.reviewing;
     banner.querySelector("progress").max = Math.max(1, state.totalSteps);
     banner.querySelector("progress").value = Math.min(
       state.index,
@@ -267,11 +331,14 @@ function installDemoOverlay({ titleToken }) {
     );
   else void boot();
   window.__campusworksDemoRemove = () => {
+    document.removeEventListener("keydown", keyboard, true);
     observer?.disconnect();
     resize?.disconnect();
     document.getElementById(elementId)?.remove();
     document.getElementById(styleId)?.remove();
     document.body?.removeAttribute("data-campusworks-demo-stage");
+    const main = document.querySelector("main");
+    if (main) main.inert = false;
     document.documentElement.style.removeProperty(
       "--campusworks-demo-original-padding",
     );
@@ -317,6 +384,11 @@ export async function createDemoStage({
   let stopped = false;
   let stopReason = null;
   let closing;
+  const clock = createDemoClock();
+  const history = [];
+  const presenterNavigation = [];
+  let review = null;
+  let controls = Promise.resolve();
   let current = {
     actor: null,
     title: "Preparing the full product lifecycle",
@@ -326,12 +398,15 @@ export async function createDemoStage({
     totalSteps,
     cycle,
   };
-  const stateFor = (actor) => ({
-    ...current,
+  const stateFor = (actor, page = actor.page) => ({
+    ...(review?.page === page ? review.entry : current),
     paused,
     stopped,
-    active: current.actor === actor.key,
-    role: actor.displayRole || roleLabels[actor.win.as],
+    reviewing: review?.page === page,
+    canPrevious: review ? review.position > 0 : history.length > (history.at(-1)?.index === current.index ? 1 : 0),
+    canNext: !!review && review.position < history.length - 1,
+    active: (review?.page === page ? review.entry.actor : current.actor) === actor.key,
+    role: review?.page === page ? review.entry.role : actor.displayRole || roleLabels[actor.win.as],
     person: actor.win.name || actor.win.label || actor.key,
   });
   const publish = () =>
@@ -341,13 +416,19 @@ export async function createDemoStage({
           (state) => window.__campusworksDemoRender?.(state),
           stateFor(actor),
         ),
-      ),
+      ).concat(review ? [review.page.evaluate(
+        (state) => window.__campusworksDemoRender?.(state),
+        stateFor(getActor(review.entry.actor), review.page),
+      )] : []),
     );
   function checkStopped() {
     if (stopped) throw new DemoStopped();
   }
   const setPaused = async (value) => {
-    if (!stopped) paused = value;
+    if (!stopped) {
+      paused = value;
+      clock.setPaused(value);
+    }
     await publish();
   };
   const stop = async (reason = "requested") => {
@@ -355,6 +436,7 @@ export async function createDemoStage({
     stopped = true;
     stopReason = reason;
     paused = false;
+    clock.setPaused(true);
     if (onStop) {
       try {
         void Promise.resolve(onStop(reason)).catch(() => {});
@@ -363,13 +445,10 @@ export async function createDemoStage({
     await publish();
   };
   async function pausePoint(milliseconds = 0) {
-    let remaining = milliseconds;
-    let previous = Date.now();
+    const deadline = clock.elapsedMs + milliseconds;
     for (;;) {
       checkStopped();
-      const now = Date.now();
-      if (!paused) remaining -= now - previous;
-      previous = now;
+      const remaining = deadline - clock.elapsedMs;
       if (!paused && remaining <= 0) break;
       await wait(Math.min(100, Math.max(1, remaining || 100)));
     }
@@ -393,6 +472,66 @@ export async function createDemoStage({
       );
     return actor;
   };
+  async function leaveReview({ restore = true } = {}) {
+    const previous = review;
+    review = null;
+    if (previous && !previous.page.isClosed()) await previous.page.close();
+    if (restore && current.actor && !stopped)
+      await foreground(getActor(current.actor), undefined, true);
+  }
+  async function navigateHistory(direction) {
+    await setPaused(true);
+    if (!history.length || stopped) return;
+    const latestIsCurrent = history.at(-1)?.index === current.index && history.at(-1)?.cycle === current.cycle;
+    if (!review && direction > 0) return;
+    const cursor = review ? review.position : history.length - (latestIsCurrent ? 1 : 0);
+    const position = Math.max(0, Math.min(history.length - 1, cursor + direction));
+    if (review?.position === position) return;
+    const entry = history[position];
+    const actor = getActor(entry.actor);
+    await leaveReview({ restore: false });
+    checkStopped();
+    const page = await actor.context.newPage();
+    review = { page, entry, position };
+    page.on("close", () => {
+      if (review?.page !== page) return;
+      review = null;
+      void publish();
+    });
+    await page.route("**/api/**", (route) =>
+      ["GET", "HEAD", "OPTIONS"].includes(route.request().method())
+        ? route.continue()
+        : route.abort("blockedbyclient"),
+    );
+    try {
+      const response = await page.goto(entry.url);
+      if (!response?.ok()) throw new Error("The visited page is no longer available.");
+      await page.locator("#campusworks-demo-stage").waitFor({ state: "visible" });
+      if (review?.page !== page || stopped) return;
+      await publish();
+      await foreground(actor, page, true);
+      presenterNavigation.push({ direction, actor: entry.actor, index: entry.index, cycle: entry.cycle, url: entry.url, paused: true, actionReplayed: false, checkedAt: new Date().toISOString() });
+      if (presenterNavigation.length > 200) presenterNavigation.shift();
+    } catch (error) {
+      await leaveReview();
+      await publish();
+      throw error;
+    }
+  }
+  function control(command) {
+    const work = controls.then(async () => {
+      checkStopped();
+      if (command === "previous" || command === "next") {
+        await navigateHistory(command === "previous" ? -1 : 1);
+      } else {
+        const value = command === "pause" ? true : command === "resume" ? false : !paused;
+        if (!value && review) await leaveReview();
+        await setPaused(value);
+      }
+    });
+    controls = work.catch(() => {});
+    return work;
+  }
   async function login(actor) {
     const response = await actor.context.request.post("/api/auth/mock", {
       data: {
@@ -404,26 +543,30 @@ export async function createDemoStage({
     if (!response.ok())
       throw new Error(`Demonstration sign-in failed (${response.status()}).`);
   }
-  async function foreground(actor) {
+  async function foreground(actor, page = actor.page, whilePaused = false) {
+    if (!whilePaused) await pausePoint();
     checkStopped();
-    await actor.page.bringToFront();
+    await page.bringToFront();
+    if (!whilePaused) await pausePoint();
     actor.lastForeground = {
       method: "Playwright",
       headless,
       confirmed: headless,
     };
     if (!headless) {
-      actor.cdp ||= await actor.context.newCDPSession(actor.page);
-      const { windowId, bounds } = await actor.cdp.send(
+      const cdp = page === actor.page
+        ? actor.cdp ||= await actor.context.newCDPSession(page)
+        : await actor.context.newCDPSession(page);
+      const { windowId, bounds } = await cdp.send(
         "Browser.getWindowForTarget",
       );
       if (bounds.windowState !== "maximized") {
         if (bounds.windowState !== "normal")
-          await actor.cdp.send("Browser.setWindowBounds", {
+          await cdp.send("Browser.setWindowBounds", {
             windowId,
             bounds: { windowState: "normal" },
           });
-        await actor.cdp.send("Browser.setWindowBounds", {
+        await cdp.send("Browser.setWindowBounds", {
           windowId,
           bounds: { windowState: "maximized" },
         });
@@ -456,6 +599,7 @@ export async function createDemoStage({
     }
     foregroundChecks.push({
       actor: actor.key,
+      review: page !== actor.page,
       checkedAt: new Date().toISOString(),
       ...actor.lastForeground,
     });
@@ -472,6 +616,21 @@ export async function createDemoStage({
     },
     get paused() {
       return paused;
+    },
+    get activeElapsedMs() {
+      return clock.elapsedMs;
+    },
+    get pausedElapsedMs() {
+      return clock.pausedMs;
+    },
+    get history() {
+      return history.map((entry) => ({ ...entry }));
+    },
+    get reviewing() {
+      return !!review;
+    },
+    get presenterNavigation() {
+      return presenterNavigation.map((entry) => ({ ...entry }));
     },
     get foregroundChecks() {
       return foregroundChecks.map((check) => ({ ...check }));
@@ -497,12 +656,14 @@ export async function createDemoStage({
       await pausePoint();
       return foreground(actorFor(target));
     },
-    pause: () => setPaused(true),
-    resume: () => setPaused(false),
+    pause: () => control("pause"),
+    resume: () => control("resume"),
     stop,
     checkpoint: () => pausePoint(),
     hold: (milliseconds) => pausePoint(milliseconds),
     async setCycle(nextCycle) {
+      await pausePoint();
+      history.length = 0;
       current = { ...current, cycle: nextCycle, index: 0 };
       await publish();
     },
@@ -553,6 +714,7 @@ export async function createDemoStage({
           behavior: "instant",
         });
       });
+      await pausePoint();
     },
     async step(
       {
@@ -562,10 +724,17 @@ export async function createDemoStage({
         role,
         index = current.index + 1,
         cycle: nextCycle = current.cycle,
+        durationMs,
+        minViewMs = 0,
+        holdMs: stepHoldMs = holdMs,
       },
       action,
     ) {
+      if (![minViewMs, stepHoldMs, ...(durationMs === undefined ? [] : [durationMs])].every(
+        (value) => Number.isFinite(value) && value >= 0 && value <= 60000,
+      )) throw new Error("Use step durations between zero and sixty seconds.");
       await pausePoint();
+      const startedActive = clock.elapsedMs;
       const actor = getActor(key);
       if (role) actor.displayRole = roleLabels[role] || role;
       current = {
@@ -577,11 +746,23 @@ export async function createDemoStage({
         cycle: nextCycle,
       };
       await publish();
+      await pausePoint();
       await foreground(actor);
       await pausePoint(beforeMs);
       const result = await action?.(actor.page, stage);
+      const actionDurationMs = clock.elapsedMs - startedActive;
+      if (index > 0) {
+        const url = actor.page.url();
+        if (new URL(url).origin === origin.origin) {
+          history.push({ ...current, actor: key, role: stateFor(actor).role, url });
+          if (history.length > 200) history.shift();
+        }
+      }
       await publish();
-      await pausePoint(holdMs);
+      const viewHoldMs = durationMs === undefined
+        ? stepHoldMs
+        : Math.max(minViewMs, durationMs - (clock.elapsedMs - startedActive));
+      await pausePoint(viewHoldMs);
       if (onStep)
         await onStep({
           ...current,
@@ -589,6 +770,9 @@ export async function createDemoStage({
           actor: key,
           url: actor.page.url(),
           foreground: actor.lastForeground,
+          actionDurationMs,
+          viewHoldMs,
+          activeDurationMs: clock.elapsedMs - startedActive,
         });
       return result;
     },
@@ -657,11 +841,11 @@ export async function createDemoStage({
       });
       await actor.context.exposeBinding(
         "__campusworksDemoCommand",
-        async (_source, command) => {
-          if (command === "state") return stateFor(actor);
-          if (command === "toggle-pause") await setPaused(!paused);
+        async (source, command) => {
+          if (command === "state") return stateFor(actor, source.page);
+          if (["toggle-pause", "previous", "next"].includes(command)) await control(command);
           if (command === "stop") await stop("button");
-          return stateFor(actor);
+          return stateFor(actor, source.page);
         },
       );
       await actor.context.addInitScript(installDemoOverlay, {
