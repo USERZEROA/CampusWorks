@@ -26,7 +26,7 @@ export default defineEventHandler(event => withCourseTransaction(event, async (a
     const last = await coll.find({ courseId: courseKey }, { session }).sort({ position: -1 }).limit(1).next()
     const position = Math.max(Number(course.queueSequence) || 0, Number(last?.position) || 0) + 1
     await db.collection('courses').updateOne({ _id: course._id }, { $set: { queueSequence: position } }, { session })
-    await coll.insertOne({ ...filter, location, question, studentName: user.name, paused: false, pausedBeforeHelpMs: 0, position, createdAt: new Date(), helpSegments: [], revision: 0 }, { session })
+    await coll.insertOne({ ...filter, studentId: user.id, location, question, studentName: user.name, paused: false, pausedBeforeHelpMs: 0, position, createdAt: new Date(), helpSegments: [], revision: 0 }, { session })
   }
   return { ok: true }
 }))

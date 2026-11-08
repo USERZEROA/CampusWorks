@@ -59,6 +59,7 @@ export async function archiveEntry(db: Db, filter: Document, opts: { reason: Que
   const wasHelped = segments.length > 0
   await db.collection('helpSessions').insertOne({
     _id: entry._id, entryId: entry._id.toString(), courseId: entry.courseId,
+    ...(entry.studentId ? { studentId: entry.studentId } : {}),
     studentEmail: entry.studentEmail || '', studentName: entry.studentName || entry.studentEmail || '',
     taEmail: lastSegment?.taEmail || null, taName: lastSegment?.taName || null,
     location: entry.location || '', question: entry.question || '', joinedAt: joined,

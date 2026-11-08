@@ -79,14 +79,18 @@ const mandatoryIndexes: Record<string, IndexDescription[]> = {
     courseRestrictions: [{ key: { courseId: 1, userEmail: 1 }, unique: true }],
     queueEntries: [
       { key: { courseId: 1, studentEmail: 1 }, unique: true }, { key: { courseId: 1, position: 1 } },
+      { key: { courseId: 1, createdAt: 1 } },
       { key: { courseId: 1, taEmail: 1 }, unique: true, partialFilterExpression: { taEmail: { $type: 'string' } } }
     ],
     helpSessions: [
       { key: { courseId: 1, joinedAt: -1 } },
+      { key: { courseId: 1, studentId: 1, joinedAt: -1, _id: -1 } },
+      { key: { courseId: 1, studentEmail: 1, joinedAt: -1, _id: -1 } },
       { key: { entryId: 1 }, unique: true, partialFilterExpression: { entryId: { $type: 'string' } } }
     ],
     announcements: [{ key: { courseId: 1, createdAt: -1 } }],
-    feedback: [{ key: { courseId: 1, createdAt: -1 } }],
+    feedback: [{ key: { courseId: 1, createdAt: -1 } },
+      { key: { courseId: 1, studentId: 1, helpSessionId: 1, taEmail: 1 }, unique: true, partialFilterExpression: { ratingScope: 'helper' } }],
     users: [{ key: { id: 1 }, unique: true }, { key: { email: 1 }, unique: true }],
     providerIdentities: [{ key: { id: 1 }, unique: true }, { key: { provider: 1, issuer: 1, subject: 1 }, unique: true }, { key: { userId: 1 }, unique: true }, { key: { email: 1 }, unique: true }],
     authSessions: [{ key: { expiresAt: 1 }, expireAfterSeconds: 0 }, { key: { userId: 1 } }],

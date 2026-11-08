@@ -227,18 +227,54 @@ const fbPositive = ref("");
 const fbNegative = ref("");
 const fbAllowContact = ref(true);
 const fbSubmitting = ref(false);
+type FeedbackSession = { id: string; at: string; helpers: Array<{ email: string; name: string }> };
+const feedbackSessions = ref<FeedbackSession[]>([]);
+const feedbackSessionId = ref("");
+const feedbackHelperEmail = ref("");
+const feedbackContextLoading = ref(false);
+const feedbackContextError = ref("");
+let feedbackContextGeneration = 0;
+let feedbackContextRequest: AbortController | null = null;
+const feedbackSession = computed(() => feedbackSessions.value.find(item => item.id === feedbackSessionId.value));
+watch(feedbackSessionId, () => { feedbackHelperEmail.value = ""; });
+watch(fbCategory, category => {
+  if (category !== "ta") { feedbackSessionId.value = ""; feedbackHelperEmail.value = ""; }
+});
 
-const openFeedbackModal = () => {
+const openFeedbackModal = async () => {
   showFeedbackModal.value = true;
+  feedbackContextRequest?.abort();
+  const generation = ++feedbackContextGeneration;
+  const controller = new AbortController();
+  feedbackContextRequest = controller;
+  feedbackContextLoading.value = true;
+  feedbackContextError.value = "";
+  feedbackSessions.value = [];
+  try {
+    const result = await $fetch<{ sessions: FeedbackSession[] }>(`/api/courses/${courseId}/feedback-context`, { signal: controller.signal });
+    if (generation === feedbackContextGeneration && showFeedbackModal.value) feedbackSessions.value = result.sessions;
+  } catch {
+    if (!controller.signal.aborted && generation === feedbackContextGeneration) feedbackContextError.value = "Specific help feedback is temporarily unavailable.";
+  } finally {
+    if (generation === feedbackContextGeneration) feedbackContextLoading.value = false;
+  }
 };
 
 const resetFeedback = () => {
+  feedbackContextGeneration++;
+  feedbackContextRequest?.abort();
+  feedbackContextLoading.value = false;
+  feedbackContextError.value = "";
+  feedbackSessions.value = [];
+  feedbackSessionId.value = "";
+  feedbackHelperEmail.value = "";
   fbCategory.value = "queue";
   fbRating.value = 5;
   fbPositive.value = "";
   fbNegative.value = "";
   fbAllowContact.value = true;
 };
+onBeforeUnmount(() => { feedbackContextGeneration++; feedbackContextRequest?.abort(); });
 
 /**
  * Submit structured course feedback.
@@ -247,6 +283,10 @@ const submitFeedback = async () => {
   if (busyActions.value) return;
   busyActions.value = true;
   try {
+    if (feedbackSessionId.value && !feedbackSession.value?.helpers.some(helper => helper.email === feedbackHelperEmail.value)) {
+      alert("Choose the TA you are reviewing.");
+      return;
+    }
     if (!fbPositive.value.trim() || !fbNegative.value.trim()) {
       alert(
         'Please fill in both "What worked well" and "What can be improved".',
@@ -264,6 +304,7 @@ const submitFeedback = async () => {
           positive: fbPositive.value.trim(),
           negative: fbNegative.value.trim(),
           allowContact: fbAllowContact.value,
+          ...(fbCategory.value === "ta" && feedbackSessionId.value ? { helpSessionId: feedbackSessionId.value, taEmail: feedbackHelperEmail.value } : {}),
         },
       });
 
@@ -826,6 +867,24 @@ const goHelp = () => {
               </select>
             </div>
 
+            <div v-if="fbCategory === 'ta'" class="feedback-target-row">
+              <div class="field">
+                <label for="feedback-help-session">Feedback about</label>
+                <select id="feedback-help-session" v-model="feedbackSessionId" class="text-input" data-testid="fb-help-session" :disabled="feedbackContextLoading || fbSubmitting">
+                  <option value="">Course-level TA support</option>
+                  <option v-for="item in feedbackSessions" :key="item.id" :value="item.id">Help on {{ new Date(item.at).toLocaleString() }}</option>
+                </select>
+              </div>
+              <div v-if="feedbackSession" class="field">
+                <label for="feedback-helper">TA</label>
+                <select id="feedback-helper" v-model="feedbackHelperEmail" class="text-input" data-testid="fb-helper" :disabled="fbSubmitting">
+                  <option value="">Choose the TA</option>
+                  <option v-for="helper in feedbackSession.helpers" :key="helper.email" :value="helper.email">{{ helper.name }}</option>
+                </select>
+              </div>
+              <p v-if="feedbackContextError" class="feedback-target-notice" role="status">{{ feedbackContextError }}</p>
+            </div>
+
             <div class="field">
               <label for="feedback-rating">Overall rating (1–5)</label>
               <select
@@ -901,6 +960,17 @@ const goHelp = () => {
 </template>
 
 <style scoped>
+.feedback-target-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 0 12px;
+}
+.feedback-target-notice {
+  grid-column: 1 / -1;
+  margin: 0 0 12px;
+  color: #536174;
+  font-size: 12px;
+}
 .page-root {
   min-height: 100vh;
   background: #f3f5fa;
