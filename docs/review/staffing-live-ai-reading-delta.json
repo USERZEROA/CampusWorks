@@ -1,0 +1,2809 @@
+{
+  "recordedAt": "2026-11-08T03:03:16.274915+00:00",
+  "priorLedger": {
+    "path": "docs/review/final-reading-ledger.json",
+    "sha256": "da01ef7fcc6696b459f39a826e5f2e612bbf34042b0a2071472e4ad03dfea657"
+  },
+  "coverage": "Byte comparison only. Unchanged prior review records retain their original provenance. Changed/new bytes are explicitly listed without inferring an exhaustive or focused semantic review from tests.",
+  "files": [
+    {
+      "path": "app/app.vue",
+      "bytes": 1947,
+      "sha256": "0056150693bebdea8ab5d63c3cfae2cfc69cfe19582c356d4367924e0216a324",
+      "physicalLines": 95,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "0056150693bebdea8ab5d63c3cfae2cfc69cfe19582c356d4367924e0216a324",
+      "priorReview": {
+        "path": "app/app.vue",
+        "bytes": 1947,
+        "sha256": "0056150693bebdea8ab5d63c3cfae2cfc69cfe19582c356d4367924e0216a324",
+        "physicalLines": 95,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/components/AiAssistance.vue",
+      "bytes": 12646,
+      "sha256": "039205534b32de908868877d4eefb7295d2c1f18f4978c700fd65bd4428cbd09",
+      "physicalLines": 365,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "7d62dfc3e322f70299648eb6bd28b1ad095c48c2c43228ca3f4063c6a6660fd3",
+      "priorReview": null
+    },
+    {
+      "path": "app/components/AnnouncementMessage.vue",
+      "bytes": 884,
+      "sha256": "c60f9bdc2e61eb9f88afeb2d9f80150d6680ad1a441875c91336c1b365622ab5",
+      "physicalLines": 37,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": null,
+      "priorReview": null
+    },
+    {
+      "path": "app/components/CourseInsights.vue",
+      "bytes": 49171,
+      "sha256": "4865108ccb63e4ea6d3f93516d87b5cab34a1894e38655a4e2f82dbe67974e22",
+      "physicalLines": 1713,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "168aa8a3801b3dd209d575a8a80aaa6f8b3eabb9cf1aba5d903c0144f97914e1",
+      "priorReview": null
+    },
+    {
+      "path": "app/components/OpportunityEditor.vue",
+      "bytes": 17043,
+      "sha256": "86e7a794e0ae56fdd2bae4c14200b8e5522d2f68419ff9af5e9af6e7b263d5b2",
+      "physicalLines": 541,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "d3e2a4bd61c0dcbdaf334cf62267059d8d14fdb26e514a9771d3c9bcb45ad744",
+      "priorReview": null
+    },
+    {
+      "path": "app/components/StaffingNavigation.vue",
+      "bytes": 3172,
+      "sha256": "73d66d81c483579d056f7046355c778ca13cbd8f8f509148ea3c6d5eee725877",
+      "physicalLines": 135,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "73d66d81c483579d056f7046355c778ca13cbd8f8f509148ea3c6d5eee725877",
+      "priorReview": {
+        "path": "app/components/StaffingNavigation.vue",
+        "bytes": 3172,
+        "sha256": "73d66d81c483579d056f7046355c778ca13cbd8f8f509148ea3c6d5eee725877",
+        "physicalLines": 135,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/components/StaffingPaging.vue",
+      "bytes": 1474,
+      "sha256": "b69514b15db2c6b09ac6e66e2eff075baac31f743b2ec3184858dfa5fc3ec203",
+      "physicalLines": 55,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "b69514b15db2c6b09ac6e66e2eff075baac31f743b2ec3184858dfa5fc3ec203",
+      "priorReview": {
+        "path": "app/components/StaffingPaging.vue",
+        "bytes": 1474,
+        "sha256": "b69514b15db2c6b09ac6e66e2eff075baac31f743b2ec3184858dfa5fc3ec203",
+        "physicalLines": 55,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/components/StaffingShell.vue",
+      "bytes": 12546,
+      "sha256": "cde7c6b1d6cce7d1951a2007e366798a87fde5e117e0eb114c42b345a73fea51",
+      "physicalLines": 609,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "cde7c6b1d6cce7d1951a2007e366798a87fde5e117e0eb114c42b345a73fea51",
+      "priorReview": {
+        "path": "app/components/StaffingShell.vue",
+        "bytes": 12546,
+        "sha256": "cde7c6b1d6cce7d1951a2007e366798a87fde5e117e0eb114c42b345a73fea51",
+        "physicalLines": 609,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/components/StaffingStatus.vue",
+      "bytes": 1404,
+      "sha256": "b75007b1d1efe850e78eb745c8e4f39f4ead7884ef254e774448cfb5f7b8583f",
+      "physicalLines": 69,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "b75007b1d1efe850e78eb745c8e4f39f4ead7884ef254e774448cfb5f7b8583f",
+      "priorReview": {
+        "path": "app/components/StaffingStatus.vue",
+        "bytes": 1404,
+        "sha256": "b75007b1d1efe850e78eb745c8e4f39f4ead7884ef254e774448cfb5f7b8583f",
+        "physicalLines": 69,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/components/StaffingSummary.vue",
+      "bytes": 1011,
+      "sha256": "43e585bc6d692d7d8bd6c87ba539ba9c4c62e16c83a3a3467c301e77c5aae517",
+      "physicalLines": 49,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "43e585bc6d692d7d8bd6c87ba539ba9c4c62e16c83a3a3467c301e77c5aae517",
+      "priorReview": {
+        "path": "app/components/StaffingSummary.vue",
+        "bytes": 1011,
+        "sha256": "43e585bc6d692d7d8bd6c87ba539ba9c4c62e16c83a3a3467c301e77c5aae517",
+        "physicalLines": 49,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/components/WorkloadRecorder.vue",
+      "bytes": 2462,
+      "sha256": "9f80969feeda8a2942a2f46d89198c9386ad6537194a231a7cac5d5561f4e100",
+      "physicalLines": 86,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "9f80969feeda8a2942a2f46d89198c9386ad6537194a231a7cac5d5561f4e100",
+      "priorReview": {
+        "path": "app/components/WorkloadRecorder.vue",
+        "bytes": 2462,
+        "sha256": "9f80969feeda8a2942a2f46d89198c9386ad6537194a231a7cac5d5561f4e100",
+        "physicalLines": 86,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/composables/useAuth.ts",
+      "bytes": 2143,
+      "sha256": "38998126635af69610fa7cfbeb690aa005d16489b82e3986ac6c893f87692bff",
+      "physicalLines": 67,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "38998126635af69610fa7cfbeb690aa005d16489b82e3986ac6c893f87692bff",
+      "priorReview": {
+        "path": "app/composables/useAuth.ts",
+        "bytes": 2143,
+        "sha256": "38998126635af69610fa7cfbeb690aa005d16489b82e3986ac6c893f87692bff",
+        "physicalLines": 67,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/composables/useCourseCatalogLoader.ts",
+      "bytes": 1692,
+      "sha256": "578790d0849cca07c1f68dc752ed041a9bf20ff16454f797fbf19aeadfdbf385",
+      "physicalLines": 51,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "578790d0849cca07c1f68dc752ed041a9bf20ff16454f797fbf19aeadfdbf385",
+      "priorReview": {
+        "path": "app/composables/useCourseCatalogLoader.ts",
+        "bytes": 1692,
+        "sha256": "578790d0849cca07c1f68dc752ed041a9bf20ff16454f797fbf19aeadfdbf385",
+        "physicalLines": 51,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/composables/useCourseInsights.ts",
+      "bytes": 7057,
+      "sha256": "db118c8107d37747e027f133709cf72e576790023d09a93284dfef6fcf1fa904",
+      "physicalLines": 236,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "db118c8107d37747e027f133709cf72e576790023d09a93284dfef6fcf1fa904",
+      "priorReview": {
+        "path": "app/composables/useCourseInsights.ts",
+        "bytes": 7057,
+        "sha256": "db118c8107d37747e027f133709cf72e576790023d09a93284dfef6fcf1fa904",
+        "physicalLines": 236,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/composables/useIntervalRefresh.ts",
+      "bytes": 2525,
+      "sha256": "3b97be1900fdf5cc004755a55f17d47e85b89c54ecb8a7c8251664024af55bb8",
+      "physicalLines": 84,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "3b97be1900fdf5cc004755a55f17d47e85b89c54ecb8a7c8251664024af55bb8",
+      "priorReview": {
+        "path": "app/composables/useIntervalRefresh.ts",
+        "bytes": 2525,
+        "sha256": "3b97be1900fdf5cc004755a55f17d47e85b89c54ecb8a7c8251664024af55bb8",
+        "physicalLines": 84,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/composables/useStaffing.ts",
+      "bytes": 8317,
+      "sha256": "0c98a1fea4f0f6400d330c054ff3f7bcdb6616cd6fd464ba0946b39d6927ed05",
+      "physicalLines": 257,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "1ad9fd92ce48452d8ccd1351e31e9e644ac5a06ea22f8da9f56277419e85859a",
+      "priorReview": null
+    },
+    {
+      "path": "app/directives/accessibleDialog.ts",
+      "bytes": 3341,
+      "sha256": "fb6a1032bdd0ecf6a45cf8e5662ad883c98d7a0414f6f3ad5b7973616cd6148b",
+      "physicalLines": 100,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "fb6a1032bdd0ecf6a45cf8e5662ad883c98d7a0414f6f3ad5b7973616cd6148b",
+      "priorReview": {
+        "path": "app/directives/accessibleDialog.ts",
+        "bytes": 3341,
+        "sha256": "fb6a1032bdd0ecf6a45cf8e5662ad883c98d7a0414f6f3ad5b7973616cd6148b",
+        "physicalLines": 100,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/middleware/auth.global.ts",
+      "bytes": 2476,
+      "sha256": "63a53263b9ed9d611a1b487034c142743a382f462529a7a123d7fbaa3401707a",
+      "physicalLines": 82,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "63a53263b9ed9d611a1b487034c142743a382f462529a7a123d7fbaa3401707a",
+      "priorReview": {
+        "path": "app/middleware/auth.global.ts",
+        "bytes": 2476,
+        "sha256": "63a53263b9ed9d611a1b487034c142743a382f462529a7a123d7fbaa3401707a",
+        "physicalLines": 82,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/admin/courses.vue",
+      "bytes": 12473,
+      "sha256": "2b4662db2fa600cbd0705505eb50eb88f706b530af549804dec3a28dee02a55f",
+      "physicalLines": 587,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "2b4662db2fa600cbd0705505eb50eb88f706b530af549804dec3a28dee02a55f",
+      "priorReview": {
+        "path": "app/pages/admin/courses.vue",
+        "bytes": 12473,
+        "sha256": "2b4662db2fa600cbd0705505eb50eb88f706b530af549804dec3a28dee02a55f",
+        "physicalLines": 587,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/admin/staffing.vue",
+      "bytes": 12974,
+      "sha256": "63102354ea0b05e794aea767debcfb1abf43b5e7f5233316ad18e40158110fed",
+      "physicalLines": 396,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "3c867bf26b93b868b40a3db5ed0ac2594aa826fb48f6ceebcec6789ef6112dd5",
+      "priorReview": null
+    },
+    {
+      "path": "app/pages/applications/[id].vue",
+      "bytes": 27185,
+      "sha256": "2b18745cf5b4c25e1a73454790fbd5b700f3f8a70916ee242b75a4f757f96581",
+      "physicalLines": 814,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "2b18745cf5b4c25e1a73454790fbd5b700f3f8a70916ee242b75a4f757f96581",
+      "priorReview": {
+        "path": "app/pages/applications/[id].vue",
+        "bytes": 27185,
+        "sha256": "2b18745cf5b4c25e1a73454790fbd5b700f3f8a70916ee242b75a4f757f96581",
+        "physicalLines": 814,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/applications/index.vue",
+      "bytes": 6815,
+      "sha256": "00194578e48c6a427336f00f72fe6e7b6b91e42d6cc62f587f63ad4882c7d03b",
+      "physicalLines": 214,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "00194578e48c6a427336f00f72fe6e7b6b91e42d6cc62f587f63ad4882c7d03b",
+      "priorReview": {
+        "path": "app/pages/applications/index.vue",
+        "bytes": 6815,
+        "sha256": "00194578e48c6a427336f00f72fe6e7b6b91e42d6cc62f587f63ad4882c7d03b",
+        "physicalLines": 214,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/courses/[id].vue",
+      "bytes": 509,
+      "sha256": "599f2ab5bf1aca0b14526b9d12edbde831ac2a45125bd254ba905d056cea6a53",
+      "physicalLines": 22,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "599f2ab5bf1aca0b14526b9d12edbde831ac2a45125bd254ba905d056cea6a53",
+      "priorReview": {
+        "path": "app/pages/courses/[id].vue",
+        "bytes": 509,
+        "sha256": "599f2ab5bf1aca0b14526b9d12edbde831ac2a45125bd254ba905d056cea6a53",
+        "physicalLines": 22,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/courses/[id]/admin.vue",
+      "bytes": 68415,
+      "sha256": "cbb6a10c75424936d567e646d830d2202ce2605fffed33d216a27cf0d8f3cbf3",
+      "physicalLines": 2620,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "cbb6a10c75424936d567e646d830d2202ce2605fffed33d216a27cf0d8f3cbf3",
+      "priorReview": {
+        "path": "app/pages/courses/[id]/admin.vue",
+        "bytes": 68415,
+        "sha256": "cbb6a10c75424936d567e646d830d2202ce2605fffed33d216a27cf0d8f3cbf3",
+        "physicalLines": 2620,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/courses/[id]/review.vue",
+      "bytes": 3650,
+      "sha256": "c247024bff4ef37bbd2e968cf0d4ae4f61a1ebcd337d9bbcfde1e78644ba31ca",
+      "physicalLines": 107,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "03419c77a4aa00799a137cb44c45dc018a2144c8799d7f0d742fa8fd9f8850c6",
+      "priorReview": null
+    },
+    {
+      "path": "app/pages/courses/[id]/student.vue",
+      "bytes": 41399,
+      "sha256": "a60a449b0fd51495ca5b7d7b6c980dc58c0e7fc5635d89f9f50b2c52d7f76b06",
+      "physicalLines": 1649,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "31b6200187d0cd96fcb122939245139eab759721093ca945f89fe72160275835",
+      "priorReview": null
+    },
+    {
+      "path": "app/pages/courses/[id]/ta.vue",
+      "bytes": 38263,
+      "sha256": "8e61d9b188fa2368efb3cab520bfb9c411fb4d5223a77b156c3c8a060eeb9f85",
+      "physicalLines": 1585,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "134196cc86d408bf9ea95b569d950ea7adba85fb90e8f2cc9ea7132e33d4b187",
+      "priorReview": null
+    },
+    {
+      "path": "app/pages/courses/index.vue",
+      "bytes": 17272,
+      "sha256": "25e64cba4d509a8e863958144b62867e73cacefea6c27aba7d012793c0b3ecd7",
+      "physicalLines": 768,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "25e64cba4d509a8e863958144b62867e73cacefea6c27aba7d012793c0b3ecd7",
+      "priorReview": {
+        "path": "app/pages/courses/index.vue",
+        "bytes": 17272,
+        "sha256": "25e64cba4d509a8e863958144b62867e73cacefea6c27aba7d012793c0b3ecd7",
+        "physicalLines": 768,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/help.vue",
+      "bytes": 8466,
+      "sha256": "4e0e6e0ae53708db16e9eff24cd7e51436b3624f9859a86a7b576c774f226281",
+      "physicalLines": 354,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "4e0e6e0ae53708db16e9eff24cd7e51436b3624f9859a86a7b576c774f226281",
+      "priorReview": {
+        "path": "app/pages/help.vue",
+        "bytes": 8466,
+        "sha256": "4e0e6e0ae53708db16e9eff24cd7e51436b3624f9859a86a7b576c774f226281",
+        "physicalLines": 354,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/index.vue",
+      "bytes": 140,
+      "sha256": "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c",
+      "physicalLines": 7,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c",
+      "priorReview": {
+        "path": "app/pages/index.vue",
+        "bytes": 140,
+        "sha256": "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c",
+        "physicalLines": 7,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/insights.vue",
+      "bytes": 480,
+      "sha256": "84750b923a9807705644e12558178af1faf6438cabce4c20e4fb71609a22fc80",
+      "physicalLines": 15,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "84750b923a9807705644e12558178af1faf6438cabce4c20e4fb71609a22fc80",
+      "priorReview": {
+        "path": "app/pages/insights.vue",
+        "bytes": 480,
+        "sha256": "84750b923a9807705644e12558178af1faf6438cabce4c20e4fb71609a22fc80",
+        "physicalLines": 15,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/login.vue",
+      "bytes": 12044,
+      "sha256": "bf35566b059b0a46b127a627857f1ffbfa45c5b4d1d8a45e949986ce1b313f9d",
+      "physicalLines": 566,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "bf35566b059b0a46b127a627857f1ffbfa45c5b4d1d8a45e949986ce1b313f9d",
+      "priorReview": {
+        "path": "app/pages/login.vue",
+        "bytes": 12044,
+        "sha256": "bf35566b059b0a46b127a627857f1ffbfa45c5b4d1d8a45e949986ce1b313f9d",
+        "physicalLines": 566,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/opportunities/[id].vue",
+      "bytes": 6664,
+      "sha256": "5509dd20160164c4e159e557238cf488d3eb4c3c49b41b49f3737719daaafd0f",
+      "physicalLines": 197,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "5509dd20160164c4e159e557238cf488d3eb4c3c49b41b49f3737719daaafd0f",
+      "priorReview": {
+        "path": "app/pages/opportunities/[id].vue",
+        "bytes": 6664,
+        "sha256": "5509dd20160164c4e159e557238cf488d3eb4c3c49b41b49f3737719daaafd0f",
+        "physicalLines": 197,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/opportunities/index.vue",
+      "bytes": 3670,
+      "sha256": "1d8f40a58d8bb5695a11d748601352d8d5a22e8789db02983d44160db2bb0764",
+      "physicalLines": 112,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "1d8f40a58d8bb5695a11d748601352d8d5a22e8789db02983d44160db2bb0764",
+      "priorReview": {
+        "path": "app/pages/opportunities/index.vue",
+        "bytes": 3670,
+        "sha256": "1d8f40a58d8bb5695a11d748601352d8d5a22e8789db02983d44160db2bb0764",
+        "physicalLines": 112,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/staffing/[id].vue",
+      "bytes": 15941,
+      "sha256": "884ea9b844f65afda00d4d4fa3be6101b387ff0a014b1e6e55bbbecc7b6b550f",
+      "physicalLines": 455,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "569f63f1a762bbe01c1f374e5768b2483488d91430cc86afd9646f03a4611927",
+      "priorReview": null
+    },
+    {
+      "path": "app/pages/staffing/edit.vue",
+      "bytes": 195,
+      "sha256": "3af13e79020185248fc17e55686ba2e2a5513d74eac08ee779c5ee8d18c7d05c",
+      "physicalLines": 5,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "3af13e79020185248fc17e55686ba2e2a5513d74eac08ee779c5ee8d18c7d05c",
+      "priorReview": {
+        "path": "app/pages/staffing/edit.vue",
+        "bytes": 195,
+        "sha256": "3af13e79020185248fc17e55686ba2e2a5513d74eac08ee779c5ee8d18c7d05c",
+        "physicalLines": 5,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/staffing/index.vue",
+      "bytes": 5171,
+      "sha256": "2189e052cfa6f1ab1a688e210fcc4e656fc28dbec76f275b1201d3ad5b47d8c8",
+      "physicalLines": 157,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "2189e052cfa6f1ab1a688e210fcc4e656fc28dbec76f275b1201d3ad5b47d8c8",
+      "priorReview": {
+        "path": "app/pages/staffing/index.vue",
+        "bytes": 5171,
+        "sha256": "2189e052cfa6f1ab1a688e210fcc4e656fc28dbec76f275b1201d3ad5b47d8c8",
+        "physicalLines": 157,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer"
+        ]
+      }
+    },
+    {
+      "path": "app/pages/staffing/new.vue",
+      "bytes": 43,
+      "sha256": "13cbf69aeeb13060dfc0f52ee608fbc37d8eea89e3ee5bf9fcb429e0cb7e4d1d",
+      "physicalLines": 1,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "13cbf69aeeb13060dfc0f52ee608fbc37d8eea89e3ee5bf9fcb429e0cb7e4d1d",
+      "priorReview": {
+        "path": "app/pages/staffing/new.vue",
+        "bytes": 43,
+        "sha256": "13cbf69aeeb13060dfc0f52ee608fbc37d8eea89e3ee5bf9fcb429e0cb7e4d1d",
+        "physicalLines": 1,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "interface reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "docs/demo/index.html",
+      "bytes": 50218,
+      "sha256": "7d1ca0cbea2947e939302119b09332bd66c18d42952a55b00e882bc06f37a08c",
+      "physicalLines": 1484,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "ca8f9115636e5713f4db1d4ced3e06687cbc4fd72b5b7c4f4a7048b99cb061fe",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/automatic-ai-fixtures.ts",
+      "bytes": 17113,
+      "sha256": "802e6f6057a0cf4cde101c8e46e86ef785f703b5202bae69516020d3dfeb64ad",
+      "physicalLines": 510,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "b3fee0f9c955353fe2072bb1d2c544808452c8d37841acd19d1d17499b14d450",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/ai-automatic-pages.spec.ts",
+      "bytes": 11915,
+      "sha256": "8d42b457b2c1480abae4c7b1eb6cb19a275b80a751c39886239801c1e180c4b9",
+      "physicalLines": 363,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "8d42b457b2c1480abae4c7b1eb6cb19a275b80a751c39886239801c1e180c4b9",
+      "priorReview": {
+        "path": "playwright/e2e/ai-automatic-pages.spec.ts",
+        "bytes": 11915,
+        "sha256": "8d42b457b2c1480abae4c7b1eb6cb19a275b80a751c39886239801c1e180c4b9",
+        "physicalLines": 363,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/ai-automation.spec.ts",
+      "bytes": 22195,
+      "sha256": "32b1ef4dddbf0ffab687efe29912247319379464342f53320b5bab8e46aed071",
+      "physicalLines": 642,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "ea3740b15fa047dc401f867c1dac48641d8f6c5f595ff2066bbbcf9e8f5126de",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/ai-provider.spec.ts",
+      "bytes": 16816,
+      "sha256": "9c37f4feb6331a5c675463a44d0c66f1886fe6a853fa997e1b2a79ae76517d7e",
+      "physicalLines": 262,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "92640282213318232eaa4f81932f0633a59ef995f7940e0973de942764d8d9ba",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/ai-refresh.spec.ts",
+      "bytes": 36613,
+      "sha256": "efe8aa11b4db6bc1ddf7c9be8bc9f78678fc37dc545ad59bd80eebc20705226c",
+      "physicalLines": 491,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "700625b20fd25ea32bcc464f14c12fa4921dd82b250d58445e90d682ca090994",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/ai-scoped-usage.spec.ts",
+      "bytes": 10567,
+      "sha256": "307ac8003a73dce14a5c7056709c2f952c8ac59e4a0ccebfe41f58db1581dc02",
+      "physicalLines": 169,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": null,
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/appointment-overlap.spec.ts",
+      "bytes": 12216,
+      "sha256": "eea9c9b371f598536b37551b99cb955d3afb253027a6d95ec469d07f27516f8d",
+      "physicalLines": 178,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "eea9c9b371f598536b37551b99cb955d3afb253027a6d95ec469d07f27516f8d",
+      "priorReview": {
+        "path": "playwright/e2e/appointment-overlap.spec.ts",
+        "bytes": 12216,
+        "sha256": "eea9c9b371f598536b37551b99cb955d3afb253027a6d95ec469d07f27516f8d",
+        "physicalLines": 178,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/auth.spec.ts",
+      "bytes": 4231,
+      "sha256": "4a52abca79e21702f86028e0f28bdcca405834855f584863b246f961c3b5d4ae",
+      "physicalLines": 97,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "4a52abca79e21702f86028e0f28bdcca405834855f584863b246f961c3b5d4ae",
+      "priorReview": {
+        "path": "playwright/e2e/auth.spec.ts",
+        "bytes": 4231,
+        "sha256": "4a52abca79e21702f86028e0f28bdcca405834855f584863b246f961c3b5d4ae",
+        "physicalLines": 97,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "primary verification reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/control-alignment.spec.ts",
+      "bytes": 20492,
+      "sha256": "8ba3d4af6822ad11836ad51ee6e57050246ccee8d756ef9f6a6d5b5481232e06",
+      "physicalLines": 580,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "8ba3d4af6822ad11836ad51ee6e57050246ccee8d756ef9f6a6d5b5481232e06",
+      "priorReview": {
+        "path": "playwright/e2e/control-alignment.spec.ts",
+        "bytes": 20492,
+        "sha256": "8ba3d4af6822ad11836ad51ee6e57050246ccee8d756ef9f6a6d5b5481232e06",
+        "physicalLines": 580,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "interface implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/demo-workspaces.spec.ts",
+      "bytes": 2127,
+      "sha256": "716539d9535433de6076b542b32af61ed46baf287bbbcc0fbc0faf74b95d2afa",
+      "physicalLines": 30,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "716539d9535433de6076b542b32af61ed46baf287bbbcc0fbc0faf74b95d2afa",
+      "priorReview": {
+        "path": "playwright/e2e/demo-workspaces.spec.ts",
+        "bytes": 2127,
+        "sha256": "716539d9535433de6076b542b32af61ed46baf287bbbcc0fbc0faf74b95d2afa",
+        "physicalLines": 30,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/extended-flow.spec.ts",
+      "bytes": 24264,
+      "sha256": "33ed5c44008e565cbf80ac8ef5bfa296b2dc9d2dc2c2d18ebad4e729dee5a04e",
+      "physicalLines": 402,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "33ed5c44008e565cbf80ac8ef5bfa296b2dc9d2dc2c2d18ebad4e729dee5a04e",
+      "priorReview": {
+        "path": "playwright/e2e/extended-flow.spec.ts",
+        "bytes": 24264,
+        "sha256": "33ed5c44008e565cbf80ac8ef5bfa296b2dc9d2dc2c2d18ebad4e729dee5a04e",
+        "physicalLines": 402,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/insights.spec.ts",
+      "bytes": 26546,
+      "sha256": "78598ab4c79a4fe56497a542e3794d7638383d77417bc0db7746bc32c8fd36c0",
+      "physicalLines": 701,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "903d8349c058150a5b50395896aa6d9fc0de45ba27e1c586df2b5dff5265d5ed",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/institutional-identity.spec.ts",
+      "bytes": 5474,
+      "sha256": "8f422a2bd713e9f2dc7c573b167339cd0f1e5989472ab6f2a4779ed0bd62edde",
+      "physicalLines": 90,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "8f422a2bd713e9f2dc7c573b167339cd0f1e5989472ab6f2a4779ed0bd62edde",
+      "priorReview": {
+        "path": "playwright/e2e/institutional-identity.spec.ts",
+        "bytes": 5474,
+        "sha256": "8f422a2bd713e9f2dc7c573b167339cd0f1e5989472ab6f2a4779ed0bd62edde",
+        "physicalLines": 90,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "primary verification reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/queue-business.spec.ts",
+      "bytes": 17596,
+      "sha256": "86a3dce622073b481e3d50b9894c140505982016954f4ffec208472ef90a7676",
+      "physicalLines": 249,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "86a3dce622073b481e3d50b9894c140505982016954f4ffec208472ef90a7676",
+      "priorReview": {
+        "path": "playwright/e2e/queue-business.spec.ts",
+        "bytes": 17596,
+        "sha256": "86a3dce622073b481e3d50b9894c140505982016954f4ffec208472ef90a7676",
+        "physicalLines": 249,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/queue-concurrency.spec.ts",
+      "bytes": 12413,
+      "sha256": "640ffad06bb7025492523526a53bd2485a36b9910c6adecaf580e20bdc126b46",
+      "physicalLines": 189,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "640ffad06bb7025492523526a53bd2485a36b9910c6adecaf580e20bdc126b46",
+      "priorReview": {
+        "path": "playwright/e2e/queue-concurrency.spec.ts",
+        "bytes": 12413,
+        "sha256": "640ffad06bb7025492523526a53bd2485a36b9910c6adecaf580e20bdc126b46",
+        "physicalLines": 189,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/queue-flow.spec.ts",
+      "bytes": 10025,
+      "sha256": "3238b8d619e48e4cd4ccc06b4821aaa8e112de619050d370f33177ae020891f8",
+      "physicalLines": 221,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "3238b8d619e48e4cd4ccc06b4821aaa8e112de619050d370f33177ae020891f8",
+      "priorReview": {
+        "path": "playwright/e2e/queue-flow.spec.ts",
+        "bytes": 10025,
+        "sha256": "3238b8d619e48e4cd4ccc06b4821aaa8e112de619050d370f33177ae020891f8",
+        "physicalLines": 221,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/rbac.spec.ts",
+      "bytes": 7896,
+      "sha256": "e05cd026b753141e30e3dd844df6398634c35d5a01edf32417a6dba1c009d1a4",
+      "physicalLines": 154,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "e05cd026b753141e30e3dd844df6398634c35d5a01edf32417a6dba1c009d1a4",
+      "priorReview": {
+        "path": "playwright/e2e/rbac.spec.ts",
+        "bytes": 7896,
+        "sha256": "e05cd026b753141e30e3dd844df6398634c35d5a01edf32417a6dba1c009d1a4",
+        "physicalLines": 154,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/recruitment-cycle.spec.ts",
+      "bytes": 18452,
+      "sha256": "ac07c8bcad25cb2dd778a4f26e0a9b3e040603bc79477c3ffd6dd7722118c7cb",
+      "physicalLines": 225,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "f43d8ec4b78d7b191deeb3e1c061861855aec511aae8c7bf77c800201157635f",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/showcase-ai.spec.ts",
+      "bytes": 7843,
+      "sha256": "e34f4062daeebcbf21693ce6d3872389be5307ad99ee9ccc6e1193ddbda88374",
+      "physicalLines": 93,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "e34f4062daeebcbf21693ce6d3872389be5307ad99ee9ccc6e1193ddbda88374",
+      "priorReview": {
+        "path": "playwright/e2e/showcase-ai.spec.ts",
+        "bytes": 7843,
+        "sha256": "e34f4062daeebcbf21693ce6d3872389be5307ad99ee9ccc6e1193ddbda88374",
+        "physicalLines": 93,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/showcase-flow.spec.ts",
+      "bytes": 14647,
+      "sha256": "07eb691ca2dc0eb2c4fe7324ca8cd2b92224284906c8c110ef78bc9b48b29a35",
+      "physicalLines": 181,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "c2ba66a6adaf9e19edb6c32e6fd5067e58a885fafb33dba419c0c3b25501bebd",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/showcase-visual.spec.ts",
+      "bytes": 17596,
+      "sha256": "a95576d9cd2a9bab74a90acf49d4f6dadc37f33b351feaea31b42b3da0a46fb6",
+      "physicalLines": 451,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "3a24468949b00c4101659aac9db84eebfe25e0e8e4ff9a69b543b6aa99e553be",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/silent-refresh-browser.spec.ts",
+      "bytes": 16111,
+      "sha256": "9eab96deb2a9958141f959adbd050e7332dcc55e231abc617c4121b91de25310",
+      "physicalLines": 254,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "9eab96deb2a9958141f959adbd050e7332dcc55e231abc617c4121b91de25310",
+      "priorReview": {
+        "path": "playwright/e2e/silent-refresh-browser.spec.ts",
+        "bytes": 16111,
+        "sha256": "9eab96deb2a9958141f959adbd050e7332dcc55e231abc617c4121b91de25310",
+        "physicalLines": 254,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/e2e/staffing-audit-regressions.spec.ts",
+      "bytes": 16808,
+      "sha256": "47166f1f449e6f2422d479c512ba98420380107b09ed338f599cfa3fbabb62ae",
+      "physicalLines": 184,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "236b4e8dc6a2cbc031e17d32bcb20821958d77b974d0481dd95ed184246df0c1",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/staffing-boundaries.spec.ts",
+      "bytes": 13608,
+      "sha256": "4a5536afb0216d591356f35335a5832ac6a382a501f7f7750635633b7c4715b9",
+      "physicalLines": 160,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "a2aea20124ec41b7dc69572077477bc14cc8afd3175f01eda79e789769d67108",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/staffing-browser.spec.ts",
+      "bytes": 39007,
+      "sha256": "e987a2710ee86bde1ec617f4840aaafc648e8f172bcd3225fd15347ce148056d",
+      "physicalLines": 1049,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "784c3c02a12729afb7d4bbdaad155531713ac0da3f01a584fec944fb8fafd6ba",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/staffing-lifecycle.spec.ts",
+      "bytes": 17841,
+      "sha256": "551ed9efeb1a1b5ec7cfac3b1a9f4fcd280c7b425f7fdac74197b2124db65feb",
+      "physicalLines": 227,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "6d50a11a5125e06e1922f04d4f4cab3c8774dd752bb8be7353167531cbae2da5",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/staffing-maintenance.spec.ts",
+      "bytes": 11923,
+      "sha256": "8273fe85e8ff881d7965890ffb86286cd123e18e1739ee3d4003864ebb92051c",
+      "physicalLines": 106,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "18d2ea6ae0bc22e528c92871be00308d2543df6fbd15cd94db0e8b618b271b0c",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/e2e/transaction-cursors.spec.ts",
+      "bytes": 6509,
+      "sha256": "6df18546f7876cbe04908d2cf3fd2f947d3a9904701b3fa047da7b6734f0581c",
+      "physicalLines": 75,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "6df18546f7876cbe04908d2cf3fd2f947d3a9904701b3fa047da7b6734f0581c",
+      "priorReview": {
+        "path": "playwright/e2e/transaction-cursors.spec.ts",
+        "bytes": 6509,
+        "sha256": "6df18546f7876cbe04908d2cf3fd2f947d3a9904701b3fa047da7b6734f0581c",
+        "physicalLines": 75,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/helpers.ts",
+      "bytes": 2288,
+      "sha256": "cfafc75c32e45455a79839bc82cc81e841efaa250d3c5e4aece5f2070a9a4af9",
+      "physicalLines": 60,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "cfafc75c32e45455a79839bc82cc81e841efaa250d3c5e4aece5f2070a9a4af9",
+      "priorReview": {
+        "path": "playwright/helpers.ts",
+        "bytes": 2288,
+        "sha256": "cfafc75c32e45455a79839bc82cc81e841efaa250d3c5e4aece5f2070a9a4af9",
+        "physicalLines": 60,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "primary verification reviewer"
+        ]
+      }
+    },
+    {
+      "path": "playwright/showcase-fixtures.ts",
+      "bytes": 8020,
+      "sha256": "201dc488623562cdca2e37879645199df72275271dc56967ce31b73f5a3a2626",
+      "physicalLines": 152,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "9003482cce67b6c8423a1dbb45b3449bd655f26287af4c09d2514dae5f7a332a",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/staffing-fixtures.ts",
+      "bytes": 8728,
+      "sha256": "0b13b677ef3c650d39b97927b29f57d94cf51dd5334ec88e0332834f4138f2d5",
+      "physicalLines": 121,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "36e09425fdbd5f741c023107ab9b5fd88478c813ee7f2b0b6d95adfcef5377ba",
+      "priorReview": null
+    },
+    {
+      "path": "playwright/tsconfig.json",
+      "bytes": 257,
+      "sha256": "9b5e0b22573f9a24d39b4557dd93ca6d9a8f34230b4131643984b8478f9c624f",
+      "physicalLines": 12,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "9b5e0b22573f9a24d39b4557dd93ca6d9a8f34230b4131643984b8478f9c624f",
+      "priorReview": {
+        "path": "playwright/tsconfig.json",
+        "bytes": 257,
+        "sha256": "9b5e0b22573f9a24d39b4557dd93ca6d9a8f34230b4131643984b8478f9c624f",
+        "physicalLines": 12,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "primary verification reviewer"
+        ]
+      }
+    },
+    {
+      "path": "scripts/ai-provider-browser-check.mjs",
+      "bytes": 22105,
+      "sha256": "f883c810c5dd489b004c7a2b529a55bf18bd191f3de2fa48765b6a9c1c7aa295",
+      "physicalLines": 300,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "91587bfb3bcdf021f4aa867eca87bac39efadd7efd6cc3d866769641354199ef",
+      "priorReview": null
+    },
+    {
+      "path": "scripts/ai-provider-check.mjs",
+      "bytes": 10569,
+      "sha256": "cbf018e16e99c7f441b453d4dfdcd6f213266336cd907aa8b7ba61bfe5234a12",
+      "physicalLines": 156,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "361cac8720107a618fc417b3aa4f7b01198661c11f4470abb56120e626232535",
+      "priorReview": null
+    },
+    {
+      "path": "scripts/ai-provider-config.mjs",
+      "bytes": 4408,
+      "sha256": "6b7ed638b882887f36396a4c30804c4844fb002e0f8d3704aacb16e753e769b3",
+      "physicalLines": 69,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "6b7ed638b882887f36396a4c30804c4844fb002e0f8d3704aacb16e753e769b3",
+      "priorReview": {
+        "path": "scripts/ai-provider-config.mjs",
+        "bytes": 4408,
+        "sha256": "6b7ed638b882887f36396a4c30804c4844fb002e0f8d3704aacb16e753e769b3",
+        "physicalLines": 69,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "scripts/ai-provider-dialog.ps1",
+      "bytes": 4716,
+      "sha256": "881fd886c9b390389764272edc60aaded136b99285589d784f11d77d2243777f",
+      "physicalLines": 102,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "881fd886c9b390389764272edc60aaded136b99285589d784f11d77d2243777f",
+      "priorReview": {
+        "path": "scripts/ai-provider-dialog.ps1",
+        "bytes": 4716,
+        "sha256": "881fd886c9b390389764272edc60aaded136b99285589d784f11d77d2243777f",
+        "physicalLines": 102,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "scripts/demo-catalog.mjs",
+      "bytes": 29024,
+      "sha256": "3046151942093045464a7d7619650a625780394f23af4302c8c26bdbd3c64041",
+      "physicalLines": 341,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "2938aa02c1acca8c81beed96a68053b3af3b110e288a92dba0bb92a23b21a016",
+      "priorReview": null
+    },
+    {
+      "path": "scripts/demo-foreground.ps1",
+      "bytes": 4402,
+      "sha256": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424",
+      "physicalLines": 93,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424",
+      "priorReview": {
+        "path": "scripts/demo-foreground.ps1",
+        "bytes": 4402,
+        "sha256": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424",
+        "physicalLines": 93,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "presentation lifecycle reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "scripts/demo-loop-flow.mjs",
+      "bytes": 34097,
+      "sha256": "803ef8b02ce3518c090cd8efdbb0073f247722d10b90450b7cd8a58962710f41",
+      "physicalLines": 953,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "7515c66d940c2d9364f10c26b6a9a7b754b4c8d6bad3028002c2105d250a94a9",
+      "priorReview": null
+    },
+    {
+      "path": "scripts/demo-loop-service.mjs",
+      "bytes": 23323,
+      "sha256": "07c829fda0c1025f86fa4291973e0e5b86de10ac9bdee6bee5f75132a3508415",
+      "physicalLines": 723,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "32672b10f1ba35450b03e232a5fc0bfeb7a87dac998f7b9ed68cd2d6ece41abd",
+      "priorReview": null
+    },
+    {
+      "path": "scripts/demo-loop.mjs",
+      "bytes": 13101,
+      "sha256": "3ff0df36318643355f832b0f3dcb48d62e0c743985d252b815e45b5bb7b23f09",
+      "physicalLines": 371,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "ab656d2e36699411b007f917f5fdfd9d325751baae89e53662570217adf89c95",
+      "priorReview": null
+    },
+    {
+      "path": "scripts/demo-showcase-api.mjs",
+      "bytes": 15174,
+      "sha256": "a5e38bea1e33dafe0f7fc2e45a4c79f5b3c769681e4a6141cbe508122fbaac1d",
+      "physicalLines": 175,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "7696006950840c08a2b320a4bf7c699963a7fc1a211cd7915692da134253830a",
+      "priorReview": null
+    },
+    {
+      "path": "scripts/demo-showcase-data.mjs",
+      "bytes": 14183,
+      "sha256": "606a767610c5aa40651798136100960020b7631e51b041c992d8651ed0f7a534",
+      "physicalLines": 166,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "606a767610c5aa40651798136100960020b7631e51b041c992d8651ed0f7a534",
+      "priorReview": {
+        "path": "scripts/demo-showcase-data.mjs",
+        "bytes": 14183,
+        "sha256": "606a767610c5aa40651798136100960020b7631e51b041c992d8651ed0f7a534",
+        "physicalLines": 166,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "presentation lifecycle reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "scripts/demo-showcase.mjs",
+      "bytes": 4684,
+      "sha256": "ecdb2a1637a10fed7fe5ca57a432ae3f1895eb4aca1ff3b038f89c10bd83a5c1",
+      "physicalLines": 65,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "ecdb2a1637a10fed7fe5ca57a432ae3f1895eb4aca1ff3b038f89c10bd83a5c1",
+      "priorReview": {
+        "path": "scripts/demo-showcase.mjs",
+        "bytes": 4684,
+        "sha256": "ecdb2a1637a10fed7fe5ca57a432ae3f1895eb4aca1ff3b038f89c10bd83a5c1",
+        "physicalLines": 65,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "scripts/demo-staffing.mjs",
+      "bytes": 7636,
+      "sha256": "294c9daf26ad6906d23cc31259a368edca36922eda9f968637f3679a1364e655",
+      "physicalLines": 90,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "5712a9410b0c7edea6b5756c085c801fd3c642b505a60e37a476ebb16763c37f",
+      "priorReview": null
+    },
+    {
+      "path": "scripts/demo-stage.mjs",
+      "bytes": 23902,
+      "sha256": "b0ddd52cba90c3b4c0d19b444e2344737c533db2a69e38f56051452f37ad7ede",
+      "physicalLines": 697,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "b0ddd52cba90c3b4c0d19b444e2344737c533db2a69e38f56051452f37ad7ede",
+      "priorReview": {
+        "path": "scripts/demo-stage.mjs",
+        "bytes": 23902,
+        "sha256": "b0ddd52cba90c3b4c0d19b444e2344737c533db2a69e38f56051452f37ad7ede",
+        "physicalLines": 697,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "presentation lifecycle reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "scripts/demo-windows.mjs",
+      "bytes": 6318,
+      "sha256": "9f1e7a78f94b475cb478763c84285e622e60afbcb1b55a6652414f4829bcf8a2",
+      "physicalLines": 131,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "9f1e7a78f94b475cb478763c84285e622e60afbcb1b55a6652414f4829bcf8a2",
+      "priorReview": {
+        "path": "scripts/demo-windows.mjs",
+        "bytes": 6318,
+        "sha256": "9f1e7a78f94b475cb478763c84285e622e60afbcb1b55a6652414f4829bcf8a2",
+        "physicalLines": 131,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "scripts/local-test.mjs",
+      "bytes": 6247,
+      "sha256": "649647495f68b58f30b918c0204de02820a4d6bb9397268f0cb55aeb8fc5e8fe",
+      "physicalLines": 104,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "bedf4bf919da1bc20462a4a171e0d469c8c09eee299ba7fc4c95dd5acaabac45",
+      "priorReview": null
+    },
+    {
+      "path": "scripts/showcase-runner.mjs",
+      "bytes": 14401,
+      "sha256": "3387cd8fbe47627009f559ce3d9e9249a5ddafca6772ff0e101528987afd2fcb",
+      "physicalLines": 207,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "3387cd8fbe47627009f559ce3d9e9249a5ddafca6772ff0e101528987afd2fcb",
+      "priorReview": {
+        "path": "scripts/showcase-runner.mjs",
+        "bytes": 14401,
+        "sha256": "3387cd8fbe47627009f559ce3d9e9249a5ddafca6772ff0e101528987afd2fcb",
+        "physicalLines": 207,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "scripts/start-with-ai.mjs",
+      "bytes": 2357,
+      "sha256": "f641493627d512059a5b7c125879ba5c51f5da9725475701a1615475814754a2",
+      "physicalLines": 45,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "f641493627d512059a5b7c125879ba5c51f5da9725475701a1615475814754a2",
+      "priorReview": {
+        "path": "scripts/start-with-ai.mjs",
+        "bytes": 2357,
+        "sha256": "f641493627d512059a5b7c125879ba5c51f5da9725475701a1615475814754a2",
+        "physicalLines": 45,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/[...slug].ts",
+      "bytes": 361,
+      "sha256": "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8",
+      "physicalLines": 10,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8",
+      "priorReview": {
+        "path": "server/api/[...slug].ts",
+        "bytes": 361,
+        "sha256": "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8",
+        "physicalLines": 10,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/ai/[...path].ts",
+      "bytes": 1715,
+      "sha256": "a9910708599f946d3b2366761964068249c73272ba51aab0593c9cf69342bc41",
+      "physicalLines": 33,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "a9910708599f946d3b2366761964068249c73272ba51aab0593c9cf69342bc41",
+      "priorReview": {
+        "path": "server/api/ai/[...path].ts",
+        "bytes": 1715,
+        "sha256": "a9910708599f946d3b2366761964068249c73272ba51aab0593c9cf69342bc41",
+        "physicalLines": 33,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/auth/gitlab.get.ts",
+      "bytes": 4495,
+      "sha256": "ecc0a4c0b25a7939fd941b641f5e9d088eb138a3ab0f2a4caabf3260113e4678",
+      "physicalLines": 114,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "ecc0a4c0b25a7939fd941b641f5e9d088eb138a3ab0f2a4caabf3260113e4678",
+      "priorReview": {
+        "path": "server/api/auth/gitlab.get.ts",
+        "bytes": 4495,
+        "sha256": "ecc0a4c0b25a7939fd941b641f5e9d088eb138a3ab0f2a4caabf3260113e4678",
+        "physicalLines": 114,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/auth/gitlab/login.get.ts",
+      "bytes": 1271,
+      "sha256": "0fc448967c2aec42a618e3b0dc86278957e92ba23fd66a061d85e253eaa10ab5",
+      "physicalLines": 43,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "0fc448967c2aec42a618e3b0dc86278957e92ba23fd66a061d85e253eaa10ab5",
+      "priorReview": {
+        "path": "server/api/auth/gitlab/login.get.ts",
+        "bytes": 1271,
+        "sha256": "0fc448967c2aec42a618e3b0dc86278957e92ba23fd66a061d85e253eaa10ab5",
+        "physicalLines": 43,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/auth/logout.post.ts",
+      "bytes": 200,
+      "sha256": "f95c7ca6331d5647a17ca09a439252f234c44de377d86a6cb184e62ed0d110ea",
+      "physicalLines": 6,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "f95c7ca6331d5647a17ca09a439252f234c44de377d86a6cb184e62ed0d110ea",
+      "priorReview": {
+        "path": "server/api/auth/logout.post.ts",
+        "bytes": 200,
+        "sha256": "f95c7ca6331d5647a17ca09a439252f234c44de377d86a6cb184e62ed0d110ea",
+        "physicalLines": 6,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/auth/me.get.ts",
+      "bytes": 359,
+      "sha256": "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64",
+      "physicalLines": 12,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64",
+      "priorReview": {
+        "path": "server/api/auth/me.get.ts",
+        "bytes": 359,
+        "sha256": "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64",
+        "physicalLines": 12,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/auth/mock.post.ts",
+      "bytes": 1622,
+      "sha256": "667ba436f40f6226a067dd2343d0a14ed4f041a7a26e07a3a4981761d6289902",
+      "physicalLines": 20,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "667ba436f40f6226a067dd2343d0a14ed4f041a7a26e07a3a4981761d6289902",
+      "priorReview": {
+        "path": "server/api/auth/mock.post.ts",
+        "bytes": 1622,
+        "sha256": "667ba436f40f6226a067dd2343d0a14ed4f041a7a26e07a3a4981761d6289902",
+        "physicalLines": 20,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/auth/providers.get.ts",
+      "bytes": 638,
+      "sha256": "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233",
+      "physicalLines": 19,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233",
+      "priorReview": {
+        "path": "server/api/auth/providers.get.ts",
+        "bytes": 638,
+        "sha256": "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233",
+        "physicalLines": 19,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id].delete.ts",
+      "bytes": 1554,
+      "sha256": "58d6788a10a6d352f9c7628753788a868fe3813b39a789b2562073e5790efcf7",
+      "physicalLines": 15,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "69f5a68782e8e9d9adabf3d4e32d2151a57d2ef166512d5b9e455f52dc72d00e",
+      "priorReview": null
+    },
+    {
+      "path": "server/api/courses/[id].get.ts",
+      "bytes": 1531,
+      "sha256": "22d6b0e092105187390fce81bf83e259bcb173182a784f3ae91971e9434dbadb",
+      "physicalLines": 19,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "22d6b0e092105187390fce81bf83e259bcb173182a784f3ae91971e9434dbadb",
+      "priorReview": {
+        "path": "server/api/courses/[id].get.ts",
+        "bytes": 1531,
+        "sha256": "22d6b0e092105187390fce81bf83e259bcb173182a784f3ae91971e9434dbadb",
+        "physicalLines": 19,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/admin.get.ts",
+      "bytes": 2763,
+      "sha256": "f2dfa07c58917b11a56edcef42878bb1dca0e037a5b964cf2af936ad94ba1b65",
+      "physicalLines": 31,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "f2dfa07c58917b11a56edcef42878bb1dca0e037a5b964cf2af936ad94ba1b65",
+      "priorReview": {
+        "path": "server/api/courses/[id]/admin.get.ts",
+        "bytes": 2763,
+        "sha256": "f2dfa07c58917b11a56edcef42878bb1dca0e037a5b964cf2af936ad94ba1b65",
+        "physicalLines": 31,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/announcements.post.ts",
+      "bytes": 682,
+      "sha256": "649e675c52a937f9d47e9f3aa1ba794207ecb0e319e8732ec7963fd679b42fd8",
+      "physicalLines": 10,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "649e675c52a937f9d47e9f3aa1ba794207ecb0e319e8732ec7963fd679b42fd8",
+      "priorReview": {
+        "path": "server/api/courses/[id]/announcements.post.ts",
+        "bytes": 682,
+        "sha256": "649e675c52a937f9d47e9f3aa1ba794207ecb0e319e8732ec7963fd679b42fd8",
+        "physicalLines": 10,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/announcements/[announcementId].delete.ts",
+      "bytes": 649,
+      "sha256": "1d2a9b3a49edb1f6ef3a6b7dc35f5c544e2db13d47649f1956e67c147feffd93",
+      "physicalLines": 10,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "1d2a9b3a49edb1f6ef3a6b7dc35f5c544e2db13d47649f1956e67c147feffd93",
+      "priorReview": {
+        "path": "server/api/courses/[id]/announcements/[announcementId].delete.ts",
+        "bytes": 649,
+        "sha256": "1d2a9b3a49edb1f6ef3a6b7dc35f5c544e2db13d47649f1956e67c147feffd93",
+        "physicalLines": 10,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/kick.post.ts",
+      "bytes": 2695,
+      "sha256": "8d995255ba9d05f3373c1d2cc5f28364ec6f5e95f2715a044cc6e113be8d3da5",
+      "physicalLines": 28,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "8d995255ba9d05f3373c1d2cc5f28364ec6f5e95f2715a044cc6e113be8d3da5",
+      "priorReview": {
+        "path": "server/api/courses/[id]/enrollments/kick.post.ts",
+        "bytes": 2695,
+        "sha256": "8d995255ba9d05f3373c1d2cc5f28364ec6f5e95f2715a044cc6e113be8d3da5",
+        "physicalLines": 28,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/restore.post.ts",
+      "bytes": 1158,
+      "sha256": "eac79616510843effbf2e2e1e6fa55cefd02761bdfe3171e43daf1f60e4b76e6",
+      "physicalLines": 17,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "eac79616510843effbf2e2e1e6fa55cefd02761bdfe3171e43daf1f60e4b76e6",
+      "priorReview": {
+        "path": "server/api/courses/[id]/enrollments/restore.post.ts",
+        "bytes": 1158,
+        "sha256": "eac79616510843effbf2e2e1e6fa55cefd02761bdfe3171e43daf1f60e4b76e6",
+        "physicalLines": 17,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/role.patch.ts",
+      "bytes": 2036,
+      "sha256": "59e210b7b0c7130c452ca2f339e85e489f1046e96ab0d9aba6873dc935002c7a",
+      "physicalLines": 23,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "59e210b7b0c7130c452ca2f339e85e489f1046e96ab0d9aba6873dc935002c7a",
+      "priorReview": {
+        "path": "server/api/courses/[id]/enrollments/role.patch.ts",
+        "bytes": 2036,
+        "sha256": "59e210b7b0c7130c452ca2f339e85e489f1046e96ab0d9aba6873dc935002c7a",
+        "physicalLines": 23,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/feedback-context.get.ts",
+      "bytes": 3178,
+      "sha256": "964900e1699b2b763565c821d136c630cd129a2fc1297021ef2ec1e0ca002a14",
+      "physicalLines": 116,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "964900e1699b2b763565c821d136c630cd129a2fc1297021ef2ec1e0ca002a14",
+      "priorReview": {
+        "path": "server/api/courses/[id]/feedback-context.get.ts",
+        "bytes": 3178,
+        "sha256": "964900e1699b2b763565c821d136c630cd129a2fc1297021ef2ec1e0ca002a14",
+        "physicalLines": 116,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/feedback.post.ts",
+      "bytes": 3200,
+      "sha256": "6eb7b0274f8806a8d1f7171973384a65555dd7da5e73db879ee1e1370214ef34",
+      "physicalLines": 35,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "6eb7b0274f8806a8d1f7171973384a65555dd7da5e73db879ee1e1370214ef34",
+      "priorReview": {
+        "path": "server/api/courses/[id]/feedback.post.ts",
+        "bytes": 3200,
+        "sha256": "6eb7b0274f8806a8d1f7171973384a65555dd7da5e73db879ee1e1370214ef34",
+        "physicalLines": 35,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/queue/assign.post.ts",
+      "bytes": 1881,
+      "sha256": "cf819d2982ddfcfe3d61a2cacafd14908176e454485d17e130dfc26695179837",
+      "physicalLines": 29,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "cf819d2982ddfcfe3d61a2cacafd14908176e454485d17e130dfc26695179837",
+      "priorReview": {
+        "path": "server/api/courses/[id]/queue/assign.post.ts",
+        "bytes": 1881,
+        "sha256": "cf819d2982ddfcfe3d61a2cacafd14908176e454485d17e130dfc26695179837",
+        "physicalLines": 29,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/queue/join.post.ts",
+      "bytes": 2544,
+      "sha256": "3373974e04270e7f264de5dd34178f2741de265831a6c2481f3657dda81fa779",
+      "physicalLines": 32,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "3373974e04270e7f264de5dd34178f2741de265831a6c2481f3657dda81fa779",
+      "priorReview": {
+        "path": "server/api/courses/[id]/queue/join.post.ts",
+        "bytes": 2544,
+        "sha256": "3373974e04270e7f264de5dd34178f2741de265831a6c2481f3657dda81fa779",
+        "physicalLines": 32,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/queue/leave.post.ts",
+      "bytes": 834,
+      "sha256": "f7a1b94a13bacd8f7ba93eeed562e9302cd6505d012ff00f7ea5613ff73a2023",
+      "physicalLines": 11,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "f7a1b94a13bacd8f7ba93eeed562e9302cd6505d012ff00f7ea5613ff73a2023",
+      "priorReview": {
+        "path": "server/api/courses/[id]/queue/leave.post.ts",
+        "bytes": 834,
+        "sha256": "f7a1b94a13bacd8f7ba93eeed562e9302cd6505d012ff00f7ea5613ff73a2023",
+        "physicalLines": 11,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/queue/move.post.ts",
+      "bytes": 1174,
+      "sha256": "57cf331f1241660c28b27727bc5c1b8428515506475702b1dbeaedcfdcbea482",
+      "physicalLines": 17,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "57cf331f1241660c28b27727bc5c1b8428515506475702b1dbeaedcfdcbea482",
+      "priorReview": {
+        "path": "server/api/courses/[id]/queue/move.post.ts",
+        "bytes": 1174,
+        "sha256": "57cf331f1241660c28b27727bc5c1b8428515506475702b1dbeaedcfdcbea482",
+        "physicalLines": 17,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/queue/pause.post.ts",
+      "bytes": 1226,
+      "sha256": "65b2969c245fdec78e57113745327a9ae93a5cad90ff8560f10944ab7b032f98",
+      "physicalLines": 22,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "65b2969c245fdec78e57113745327a9ae93a5cad90ff8560f10944ab7b032f98",
+      "priorReview": {
+        "path": "server/api/courses/[id]/queue/pause.post.ts",
+        "bytes": 1226,
+        "sha256": "65b2969c245fdec78e57113745327a9ae93a5cad90ff8560f10944ab7b032f98",
+        "physicalLines": 22,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/queue/remove.post.ts",
+      "bytes": 1274,
+      "sha256": "bb8a85f09a933f07869f4031212f5aad6ddb06ddb6e58eef29b7a6e966ba91ce",
+      "physicalLines": 18,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "bb8a85f09a933f07869f4031212f5aad6ddb06ddb6e58eef29b7a6e966ba91ce",
+      "priorReview": {
+        "path": "server/api/courses/[id]/queue/remove.post.ts",
+        "bytes": 1274,
+        "sha256": "bb8a85f09a933f07869f4031212f5aad6ddb06ddb6e58eef29b7a6e966ba91ce",
+        "physicalLines": 18,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/state.patch.ts",
+      "bytes": 968,
+      "sha256": "ba92a95252249919417134fccd680774021da2085fa4ea028794266f3be7fc9e",
+      "physicalLines": 12,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "ba92a95252249919417134fccd680774021da2085fa4ea028794266f3be7fc9e",
+      "priorReview": {
+        "path": "server/api/courses/[id]/state.patch.ts",
+        "bytes": 968,
+        "sha256": "ba92a95252249919417134fccd680774021da2085fa4ea028794266f3be7fc9e",
+        "physicalLines": 12,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/[id]/ta-duty.post.ts",
+      "bytes": 1095,
+      "sha256": "2cb4222a3397fefef70f56668f9fbb56ef5a6da99d5a07ceb524dfde2b6f7b68",
+      "physicalLines": 14,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "2cb4222a3397fefef70f56668f9fbb56ef5a6da99d5a07ceb524dfde2b6f7b68",
+      "priorReview": {
+        "path": "server/api/courses/[id]/ta-duty.post.ts",
+        "bytes": 1095,
+        "sha256": "2cb4222a3397fefef70f56668f9fbb56ef5a6da99d5a07ceb524dfde2b6f7b68",
+        "physicalLines": 14,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/enroll.post.ts",
+      "bytes": 1512,
+      "sha256": "cd102ceb629608516c7110a082c6c2905941ee6a099a154f710f5f47f807edc7",
+      "physicalLines": 23,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "cd102ceb629608516c7110a082c6c2905941ee6a099a154f710f5f47f807edc7",
+      "priorReview": {
+        "path": "server/api/courses/enroll.post.ts",
+        "bytes": 1512,
+        "sha256": "cd102ceb629608516c7110a082c6c2905941ee6a099a154f710f5f47f807edc7",
+        "physicalLines": 23,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/index.get.ts",
+      "bytes": 1140,
+      "sha256": "e2c315a4963d137dc9c678bdda96d28fe9ebb5478b6ebc82c097bfc84501ae27",
+      "physicalLines": 18,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "e2c315a4963d137dc9c678bdda96d28fe9ebb5478b6ebc82c097bfc84501ae27",
+      "priorReview": {
+        "path": "server/api/courses/index.get.ts",
+        "bytes": 1140,
+        "sha256": "e2c315a4963d137dc9c678bdda96d28fe9ebb5478b6ebc82c097bfc84501ae27",
+        "physicalLines": 18,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/courses/index.post.ts",
+      "bytes": 1509,
+      "sha256": "cd4e0652f026cea7d51c58604e969cecb085be5559a3ba03d00666c2047b54f7",
+      "physicalLines": 19,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "cd4e0652f026cea7d51c58604e969cecb085be5559a3ba03d00666c2047b54f7",
+      "priorReview": {
+        "path": "server/api/courses/index.post.ts",
+        "bytes": 1509,
+        "sha256": "cd4e0652f026cea7d51c58604e969cecb085be5559a3ba03d00666c2047b54f7",
+        "physicalLines": 19,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/health.get.ts",
+      "bytes": 484,
+      "sha256": "316c4777ecf0b37009a080bcabe5c7c8b637e3b5eb8677bcfe7983943db7c228",
+      "physicalLines": 12,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "316c4777ecf0b37009a080bcabe5c7c8b637e3b5eb8677bcfe7983943db7c228",
+      "priorReview": {
+        "path": "server/api/health.get.ts",
+        "bytes": 484,
+        "sha256": "316c4777ecf0b37009a080bcabe5c7c8b637e3b5eb8677bcfe7983943db7c228",
+        "physicalLines": 12,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/api/insights/access.get.ts",
+      "bytes": 362,
+      "sha256": "90a82ba73c55f6597db3bdf383fb5537b6d4db31ca82a0f7d6690895a5354fcc",
+      "physicalLines": 9,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "90a82ba73c55f6597db3bdf383fb5537b6d4db31ca82a0f7d6690895a5354fcc",
+      "priorReview": {
+        "path": "server/api/insights/access.get.ts",
+        "bytes": 362,
+        "sha256": "90a82ba73c55f6597db3bdf383fb5537b6d4db31ca82a0f7d6690895a5354fcc",
+        "physicalLines": 9,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "server/api/insights/index.get.ts",
+      "bytes": 385,
+      "sha256": "b119ffa1b93b5e2251fb2874b9b0b2fdb2e753d44fc960384b0ae8d6ee030d9a",
+      "physicalLines": 9,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "b119ffa1b93b5e2251fb2874b9b0b2fdb2e753d44fc960384b0ae8d6ee030d9a",
+      "priorReview": {
+        "path": "server/api/insights/index.get.ts",
+        "bytes": 385,
+        "sha256": "b119ffa1b93b5e2251fb2874b9b0b2fdb2e753d44fc960384b0ae8d6ee030d9a",
+        "physicalLines": 9,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "server/api/staffing/[...path].ts",
+      "bytes": 15642,
+      "sha256": "a954e1c73f752e020a236519093e86a7aff07920092a1a631b2a5eb31f6a78e4",
+      "physicalLines": 156,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "1d9eded05f23e1d98e7c7c70bb80461526611159f16b98185e325fa820d83f51",
+      "priorReview": null
+    },
+    {
+      "path": "server/middleware/logging.ts",
+      "bytes": 684,
+      "sha256": "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156",
+      "physicalLines": 21,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156",
+      "priorReview": {
+        "path": "server/middleware/logging.ts",
+        "bytes": 684,
+        "sha256": "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156",
+        "physicalLines": 21,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/middleware/security.ts",
+      "bytes": 3388,
+      "sha256": "33913c84ab95284d0ae979491d191116eb8a5beadc332bc44c99e9ceedbd4ddb",
+      "physicalLines": 54,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "33913c84ab95284d0ae979491d191116eb8a5beadc332bc44c99e9ceedbd4ddb",
+      "priorReview": {
+        "path": "server/middleware/security.ts",
+        "bytes": 3388,
+        "sha256": "33913c84ab95284d0ae979491d191116eb8a5beadc332bc44c99e9ceedbd4ddb",
+        "physicalLines": 54,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/plugins/ai-refresh.ts",
+      "bytes": 1543,
+      "sha256": "b5911b37c6d2426ad4153644485f346e6018c03f75ef8ffb4747bebe14faca56",
+      "physicalLines": 28,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "b5911b37c6d2426ad4153644485f346e6018c03f75ef8ffb4747bebe14faca56",
+      "priorReview": {
+        "path": "server/plugins/ai-refresh.ts",
+        "bytes": 1543,
+        "sha256": "b5911b37c6d2426ad4153644485f346e6018c03f75ef8ffb4747bebe14faca56",
+        "physicalLines": 28,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/plugins/staffing-maintenance.ts",
+      "bytes": 1090,
+      "sha256": "c09d2b6c1fd51939bef1033ee7577b78f6fec81586deba4b62943b5a28893058",
+      "physicalLines": 32,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "c09d2b6c1fd51939bef1033ee7577b78f6fec81586deba4b62943b5a28893058",
+      "priorReview": {
+        "path": "server/plugins/staffing-maintenance.ts",
+        "bytes": 1090,
+        "sha256": "c09d2b6c1fd51939bef1033ee7577b78f6fec81586deba4b62943b5a28893058",
+        "physicalLines": 32,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/ai-automation-indexes.ts",
+      "bytes": 781,
+      "sha256": "bfc1fb7a9ea764c1984aa47a30cc59c8c277935cc4beb9e4c5866a9579280ce2",
+      "physicalLines": 17,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "bfc1fb7a9ea764c1984aa47a30cc59c8c277935cc4beb9e4c5866a9579280ce2",
+      "priorReview": {
+        "path": "server/utils/ai-automation-indexes.ts",
+        "bytes": 781,
+        "sha256": "bfc1fb7a9ea764c1984aa47a30cc59c8c277935cc4beb9e4c5866a9579280ce2",
+        "physicalLines": 17,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/ai-automation.ts",
+      "bytes": 35837,
+      "sha256": "e424687d826fa55ad52f2b33f99c0d27715798d30effed452b3ebe466e6a5c13",
+      "physicalLines": 434,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "030d5e6c87c26046656ec13e422d82cc24ec782e07ca4335c1fb256722f36e79",
+      "priorReview": null
+    },
+    {
+      "path": "server/utils/ai-refresh.ts",
+      "bytes": 26065,
+      "sha256": "fa059f9662a56a5edb6a3bd002d67e388cfa8a5a62ed23d4b310b4ffa48a28fa",
+      "physicalLines": 323,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "6e258e9e64dcb4252932c68d7ffab1aa61dc51da89214aa61012429184a2dd37",
+      "priorReview": null
+    },
+    {
+      "path": "server/utils/ai-scope-selection.ts",
+      "bytes": 2742,
+      "sha256": "e6aaff3e4d23d8564d35af44ad3323f4978380dd526be6a6b2134908b8ff3241",
+      "physicalLines": 34,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": null,
+      "priorReview": null
+    },
+    {
+      "path": "server/utils/ai-usage.ts",
+      "bytes": 868,
+      "sha256": "97760a677a9188657deeb21db404248f634eaaa46626400e313e71495c58c556",
+      "physicalLines": 17,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": null,
+      "priorReview": null
+    },
+    {
+      "path": "server/utils/ai.ts",
+      "bytes": 42560,
+      "sha256": "84d6fe208b3ab197f752a1049771c660fef917d0c16f887429264780110987b7",
+      "physicalLines": 462,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "dfdbaec771db33f352eae45ebb6e2e46c481a4f58e84fdc0d77b98227fd0ea7a",
+      "priorReview": null
+    },
+    {
+      "path": "server/utils/auth.ts",
+      "bytes": 10418,
+      "sha256": "9499d6e2f2516032d85d8d40812e470380be5b294c185203a4597ad83746a580",
+      "physicalLines": 159,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "9499d6e2f2516032d85d8d40812e470380be5b294c185203a4597ad83746a580",
+      "priorReview": {
+        "path": "server/utils/auth.ts",
+        "bytes": 10418,
+        "sha256": "9499d6e2f2516032d85d8d40812e470380be5b294c185203a4597ad83746a580",
+        "physicalLines": 159,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/config.ts",
+      "bytes": 3828,
+      "sha256": "dfac743ef2683db45e3c34bc98117997007c23794efae8625f855a4d4f86c3f3",
+      "physicalLines": 60,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "dfac743ef2683db45e3c34bc98117997007c23794efae8625f855a4d4f86c3f3",
+      "priorReview": {
+        "path": "server/utils/config.ts",
+        "bytes": 3828,
+        "sha256": "dfac743ef2683db45e3c34bc98117997007c23794efae8625f855a4d4f86c3f3",
+        "physicalLines": 60,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/course-insights.ts",
+      "bytes": 43665,
+      "sha256": "2109285e785a8dbaa5fe2b1a933732fe1645db8bf09a24ab83387fe8291934b5",
+      "physicalLines": 1341,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "916dccd39d97c4995ec1bbbbc5542f9d8c0f8ffeacc456efae112abd77bcf7d9",
+      "priorReview": null
+    },
+    {
+      "path": "server/utils/courses.ts",
+      "bytes": 9316,
+      "sha256": "83e0b66b486a61296b3d7572c56699f457d56bf2234cfd32227d0a228cadf106",
+      "physicalLines": 136,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "83e0b66b486a61296b3d7572c56699f457d56bf2234cfd32227d0a228cadf106",
+      "priorReview": {
+        "path": "server/utils/courses.ts",
+        "bytes": 9316,
+        "sha256": "83e0b66b486a61296b3d7572c56699f457d56bf2234cfd32227d0a228cadf106",
+        "physicalLines": 136,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/db.ts",
+      "bytes": 6373,
+      "sha256": "66867ba4528faa8dc5369aae1a8afc16631c32b955c3ba668f1e9d07aeea2660",
+      "physicalLines": 118,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "66867ba4528faa8dc5369aae1a8afc16631c32b955c3ba668f1e9d07aeea2660",
+      "priorReview": {
+        "path": "server/utils/db.ts",
+        "bytes": 6373,
+        "sha256": "66867ba4528faa8dc5369aae1a8afc16631c32b955c3ba668f1e9d07aeea2660",
+        "physicalLines": 118,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/help-feedback.ts",
+      "bytes": 2146,
+      "sha256": "2ba942b7945c14db2f749cd7561553147b43a6fffdc305275ce2e042b097e28b",
+      "physicalLines": 36,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "2ba942b7945c14db2f749cd7561553147b43a6fffdc305275ce2e042b097e28b",
+      "priorReview": {
+        "path": "server/utils/help-feedback.ts",
+        "bytes": 2146,
+        "sha256": "2ba942b7945c14db2f749cd7561553147b43a6fffdc305275ce2e042b097e28b",
+        "physicalLines": 36,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/qualification-questions.ts",
+      "bytes": 1632,
+      "sha256": "cfddce5f9668f5eece18745212efb1a52289ce650cf16f79d4c554f6ddaf5d3f",
+      "physicalLines": 17,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "cfddce5f9668f5eece18745212efb1a52289ce650cf16f79d4c554f6ddaf5d3f",
+      "priorReview": {
+        "path": "server/utils/qualification-questions.ts",
+        "bytes": 1632,
+        "sha256": "cfddce5f9668f5eece18745212efb1a52289ce650cf16f79d4c554f6ddaf5d3f",
+        "physicalLines": 17,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/queue.ts",
+      "bytes": 5880,
+      "sha256": "8ec3b349afe1af2e1239c8f5dd532b44ab0050a1e3fe2bb68311f6116a83ca74",
+      "physicalLines": 88,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "8ec3b349afe1af2e1239c8f5dd532b44ab0050a1e3fe2bb68311f6116a83ca74",
+      "priorReview": {
+        "path": "server/utils/queue.ts",
+        "bytes": 5880,
+        "sha256": "8ec3b349afe1af2e1239c8f5dd532b44ab0050a1e3fe2bb68311f6116a83ca74",
+        "physicalLines": 88,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/seed.ts",
+      "bytes": 5028,
+      "sha256": "4dd1bde3c0d627e8f43cf942aa622d54c0fbb9c1c4e9c0c5e41f842a7b4d7821",
+      "physicalLines": 119,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "4dd1bde3c0d627e8f43cf942aa622d54c0fbb9c1c4e9c0c5e41f842a7b4d7821",
+      "priorReview": {
+        "path": "server/utils/seed.ts",
+        "bytes": 5028,
+        "sha256": "4dd1bde3c0d627e8f43cf942aa622d54c0fbb9c1c4e9c0c5e41f842a7b4d7821",
+        "physicalLines": 119,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "core security or staffing domain reviewer",
+          "primary integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/staffing-applications.ts",
+      "bytes": 18859,
+      "sha256": "f2b5ec81a0b4afe6ae53cde8528e3083e50bb5d00a9fb49f84baaa2efad5ffe4",
+      "physicalLines": 185,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "f2b5ec81a0b4afe6ae53cde8528e3083e50bb5d00a9fb49f84baaa2efad5ffe4",
+      "priorReview": {
+        "path": "server/utils/staffing-applications.ts",
+        "bytes": 18859,
+        "sha256": "f2b5ec81a0b4afe6ae53cde8528e3083e50bb5d00a9fb49f84baaa2efad5ffe4",
+        "physicalLines": 185,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/staffing-appointments.ts",
+      "bytes": 25140,
+      "sha256": "1a673f810d064f950a43515d1d85da5cd93138253f1830da93e721ea29a3bd82",
+      "physicalLines": 230,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "62a50871cebd209870bac75825806c40d0c30726e97a9596fa702c459d209ce9",
+      "priorReview": null
+    },
+    {
+      "path": "server/utils/staffing-catalog.ts",
+      "bytes": 15393,
+      "sha256": "d39bb0081a005e14814b7ebb743b1ce0f70e680e46e549ae371d27c2d5b46a80",
+      "physicalLines": 164,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "e3c9e6c39d2d5d2293c4fca44cdcd400896e02f00996778e7916e7bb4d5c1df6",
+      "priorReview": null
+    },
+    {
+      "path": "server/utils/staffing-cycle.ts",
+      "bytes": 3685,
+      "sha256": "de3b89f48e7a03d3455dc082260fea8eca6b5437f7153d7e29a2c4e453f6f4f6",
+      "physicalLines": 49,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "de3b89f48e7a03d3455dc082260fea8eca6b5437f7153d7e29a2c4e453f6f4f6",
+      "priorReview": {
+        "path": "server/utils/staffing-cycle.ts",
+        "bytes": 3685,
+        "sha256": "de3b89f48e7a03d3455dc082260fea8eca6b5437f7153d7e29a2c4e453f6f4f6",
+        "physicalLines": 49,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/staffing-maintenance.ts",
+      "bytes": 5386,
+      "sha256": "b83c54248d7769bd99b60c078095d0e2a350d99e51abb7035f3975c771311917",
+      "physicalLines": 93,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "b83c54248d7769bd99b60c078095d0e2a350d99e51abb7035f3975c771311917",
+      "priorReview": {
+        "path": "server/utils/staffing-maintenance.ts",
+        "bytes": 5386,
+        "sha256": "b83c54248d7769bd99b60c078095d0e2a350d99e51abb7035f3975c771311917",
+        "physicalLines": 93,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/staffing-outbox.ts",
+      "bytes": 5780,
+      "sha256": "f5fdc0d7e15ebc0580de669b5cbcec5aeb2aa90d5a54bd59002c3ca0f931ebdb",
+      "physicalLines": 76,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "f5fdc0d7e15ebc0580de669b5cbcec5aeb2aa90d5a54bd59002c3ca0f931ebdb",
+      "priorReview": {
+        "path": "server/utils/staffing-outbox.ts",
+        "bytes": 5780,
+        "sha256": "f5fdc0d7e15ebc0580de669b5cbcec5aeb2aa90d5a54bd59002c3ca0f931ebdb",
+        "physicalLines": 76,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "database and domain reviewer"
+        ]
+      }
+    },
+    {
+      "path": "server/utils/staffing-reports.ts",
+      "bytes": 9589,
+      "sha256": "bfdca922db9d87d4e94328af9f460ce7abce5807c5a9fc455db27c925c343983",
+      "physicalLines": 90,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "ba1bd65a77cb39d09ae88ea869bf77638cca16c08cb566611c85187e5e466fee",
+      "priorReview": null
+    },
+    {
+      "path": "server/utils/staffing.ts",
+      "bytes": 14757,
+      "sha256": "1687f5b28ea62ace6a93273adf1de29d42829caa15382142d3508e621a838431",
+      "physicalLines": 204,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "c6588335a00eadcae9608d8aee04a4be8a55b52bcdb796d4d37fc63b828e6589",
+      "priorReview": null
+    },
+    {
+      "path": "shared/announcement-links.ts",
+      "bytes": 1793,
+      "sha256": "e2c14d52737f4c68a0a23ac7ae6adbe222219be12054def963e2d80dc545f3dd",
+      "physicalLines": 61,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": null,
+      "priorReview": null
+    },
+    {
+      "path": "shared/course-insights.ts",
+      "bytes": 2979,
+      "sha256": "d3884e5af4c4c50ce4899ad18061a781f9284354d6513c78659b74f89000d21d",
+      "physicalLines": 118,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "905cd186516c7d3a05a6d0fcc5088c4e2c0ba473789de48090a09322617866d4",
+      "priorReview": null
+    },
+    {
+      "path": "tests/ai-automatic-fairness.test.mjs",
+      "bytes": 5209,
+      "sha256": "0d95b5b0b5c6b0b2c855d9332bed4dfc61911d4f52823c773847e019dd269731",
+      "physicalLines": 85,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "0d95b5b0b5c6b0b2c855d9332bed4dfc61911d4f52823c773847e019dd269731",
+      "priorReview": {
+        "path": "tests/ai-automatic-fairness.test.mjs",
+        "bytes": 5209,
+        "sha256": "0d95b5b0b5c6b0b2c855d9332bed4dfc61911d4f52823c773847e019dd269731",
+        "physicalLines": 85,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "tests/ai-automatic-input.test.mjs",
+      "bytes": 10419,
+      "sha256": "0e4c4b79cca9cd68813da77d4bf8baac8f88e5ec6d68e44c48a9470aed4913df",
+      "physicalLines": 151,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "0ebfe2e040f37288dde2b7bbf31fc94a6590103381dbac436d2b031189dcc757",
+      "priorReview": null
+    },
+    {
+      "path": "tests/ai-discovery-scale.test.mjs",
+      "bytes": 15762,
+      "sha256": "096dec53564fa94b92918838c7d8f7de76672d11d9d7e80132eec7359145ff84",
+      "physicalLines": 225,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "096dec53564fa94b92918838c7d8f7de76672d11d9d7e80132eec7359145ff84",
+      "priorReview": {
+        "path": "tests/ai-discovery-scale.test.mjs",
+        "bytes": 15762,
+        "sha256": "096dec53564fa94b92918838c7d8f7de76672d11d9d7e80132eec7359145ff84",
+        "physicalLines": 225,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "tests/ai-evidence.test.mjs",
+      "bytes": 4992,
+      "sha256": "ff4f4062c271e5759c38c67b35cc4bc05ed5cf21bfa841627902e6de718d1c50",
+      "physicalLines": 59,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "433dd07b7d4bf103069e556d46c36a7b046bfc64ddd7138be977b73057152714",
+      "priorReview": null
+    },
+    {
+      "path": "tests/ai-execution-fairness.test.mjs",
+      "bytes": 13923,
+      "sha256": "33d41e75487524fe1e2773715cc5b74d281ad234cea8eb8ed3461d2e78e5b505",
+      "physicalLines": 239,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "4adc6de1aa344ecccc500a5bce9b3b104f1ab33f084f776ca154cc8e46e18324",
+      "priorReview": null
+    },
+    {
+      "path": "tests/ai-provider-scripts.test.mjs",
+      "bytes": 2112,
+      "sha256": "f42eac9b000534bc946c2d1085719a2e4a72370368d3dd267d7127a47ad463c2",
+      "physicalLines": 32,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "f42eac9b000534bc946c2d1085719a2e4a72370368d3dd267d7127a47ad463c2",
+      "priorReview": {
+        "path": "tests/ai-provider-scripts.test.mjs",
+        "bytes": 2112,
+        "sha256": "f42eac9b000534bc946c2d1085719a2e4a72370368d3dd267d7127a47ad463c2",
+        "physicalLines": 32,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "tests/ai-refresh-durability.test.mjs",
+      "bytes": 12779,
+      "sha256": "2ba3156f2b9adb41b69a5857369d85f517756612b21453e22ae2dc1a45fb66e8",
+      "physicalLines": 186,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "2ba3156f2b9adb41b69a5857369d85f517756612b21453e22ae2dc1a45fb66e8",
+      "priorReview": {
+        "path": "tests/ai-refresh-durability.test.mjs",
+        "bytes": 12779,
+        "sha256": "2ba3156f2b9adb41b69a5857369d85f517756612b21453e22ae2dc1a45fb66e8",
+        "physicalLines": 186,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "AI and integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "tests/ai-scope-selection.test.mjs",
+      "bytes": 8928,
+      "sha256": "d35d141647d5b29cd77b9f4b3b18e022a0ea8e35edb4780d8c7ccd5bf7304487",
+      "physicalLines": 147,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": null,
+      "priorReview": null
+    },
+    {
+      "path": "tests/ai-usage.test.mjs",
+      "bytes": 12372,
+      "sha256": "930937ee6b23b3ff28f3e9fc639c7c70cc765c61e0354c8cbe8c0b5adb072e2c",
+      "physicalLines": 193,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": null,
+      "priorReview": null
+    },
+    {
+      "path": "tests/announcement-links.test.mjs",
+      "bytes": 2962,
+      "sha256": "29d7e9b030bdad85560813867f8f883995e3fd0eee8f35dc47d57e8cd347200b",
+      "physicalLines": 97,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": null,
+      "priorReview": null
+    },
+    {
+      "path": "tests/course-insights.test.mjs",
+      "bytes": 23495,
+      "sha256": "669bfb90e8d4aaa0ddca3fb1803c48a6a056692b42ea27e0b0b95f559fbfe0d3",
+      "physicalLines": 787,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "e4a2009801f9e266711f2f882d7c422375fb6e15d5e9dddadfb8f7be7cfb426d",
+      "priorReview": null
+    },
+    {
+      "path": "tests/course-report-stability.test.mjs",
+      "bytes": 1935,
+      "sha256": "1da8c9e99750dfb9a8123bc3a1a82504d42301c882434315e440f7735915f6db",
+      "physicalLines": 29,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "1da8c9e99750dfb9a8123bc3a1a82504d42301c882434315e440f7735915f6db",
+      "priorReview": {
+        "path": "tests/course-report-stability.test.mjs",
+        "bytes": 1935,
+        "sha256": "1da8c9e99750dfb9a8123bc3a1a82504d42301c882434315e440f7735915f6db",
+        "physicalLines": 29,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "tests/demo-catalog.test.mjs",
+      "bytes": 15987,
+      "sha256": "90753dbfcf45cbe604cbbc1cd02ce5c67b4fea85cb86ad1d129114aaaf8ae563",
+      "physicalLines": 230,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "f06881d7638b7dfb2bcaf45e91001776194d600ef5a83d651d9c80f521dc0b50",
+      "priorReview": null
+    },
+    {
+      "path": "tests/demo-showcase-data.test.mjs",
+      "bytes": 11658,
+      "sha256": "9db03614a97aae824c5a800bba2b190eb8403d9be0a19dea957e125d5b1d4347",
+      "physicalLines": 189,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "cac369690b13723d111c65e8185655a52ad89969429eb05697f8c8cb9887ccb8",
+      "priorReview": null
+    },
+    {
+      "path": "tests/dependency-security.test.mjs",
+      "bytes": 1887,
+      "sha256": "c6e8565c82e67d4fbe99a46826938a3348809d71e8cf882a6ebc3af9dbbef630",
+      "physicalLines": 40,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "c6e8565c82e67d4fbe99a46826938a3348809d71e8cf882a6ebc3af9dbbef630",
+      "priorReview": {
+        "path": "tests/dependency-security.test.mjs",
+        "bytes": 1887,
+        "sha256": "c6e8565c82e67d4fbe99a46826938a3348809d71e8cf882a6ebc3af9dbbef630",
+        "physicalLines": 40,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "primary verification reviewer"
+        ]
+      }
+    },
+    {
+      "path": "tests/feedback-context.test.mjs",
+      "bytes": 6487,
+      "sha256": "4420220aa0bb3164ea6f393127949097e7f3bf059e125ab83e635b1466aa5e01",
+      "physicalLines": 216,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "4420220aa0bb3164ea6f393127949097e7f3bf059e125ab83e635b1466aa5e01",
+      "priorReview": {
+        "path": "tests/feedback-context.test.mjs",
+        "bytes": 6487,
+        "sha256": "4420220aa0bb3164ea6f393127949097e7f3bf059e125ab83e635b1466aa5e01",
+        "physicalLines": 216,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "tests/help-feedback.test.mjs",
+      "bytes": 3085,
+      "sha256": "7dc1d8e0eb174449bc31d1f14741a5c0f03fdb267dd9d3507474fbf2a6ff9e3b",
+      "physicalLines": 41,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "7dc1d8e0eb174449bc31d1f14741a5c0f03fdb267dd9d3507474fbf2a6ff9e3b",
+      "priorReview": {
+        "path": "tests/help-feedback.test.mjs",
+        "bytes": 3085,
+        "sha256": "7dc1d8e0eb174449bc31d1f14741a5c0f03fdb267dd9d3507474fbf2a6ff9e3b",
+        "physicalLines": 41,
+        "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+        "reviewers": [
+          "primary integration reviewer",
+          "domain implementation reviewer"
+        ],
+        "evidence": [
+          "docs/verification/insights-proof.json",
+          "docs/verification/insights-lifecycle-headless-proof.json",
+          "docs/verification/insights-lifecycle-headed-proof.json",
+          "docs/verification/insights-gallery-proof.json"
+        ]
+      }
+    },
+    {
+      "path": "tests/staffing-duty-types.test.mjs",
+      "bytes": 4970,
+      "sha256": "a2dff3b3dfd6655fcceb9015af517682981d61ebe6cbc76fa3609d57f8ae39cd",
+      "physicalLines": 69,
+      "status": "changed-bytes-require-scoped-review-evidence",
+      "previousSha256": "ee3afed3d7cbab2e53992b1efc6d45ffec3ae37eceddfbbcdddf0d47bbadf9e9",
+      "priorReview": null
+    },
+    {
+      "path": "tests/staffing-maintenance.test.mjs",
+      "bytes": 5330,
+      "sha256": "3eb655c8943b6cfecf381f521ea3f168a7a0af22ace8ad10a8aeed4bb5a4ba36",
+      "physicalLines": 104,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "3eb655c8943b6cfecf381f521ea3f168a7a0af22ace8ad10a8aeed4bb5a4ba36",
+      "priorReview": {
+        "path": "tests/staffing-maintenance.test.mjs",
+        "bytes": 5330,
+        "sha256": "3eb655c8943b6cfecf381f521ea3f168a7a0af22ace8ad10a8aeed4bb5a4ba36",
+        "physicalLines": 104,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "integration reviewer"
+        ]
+      }
+    },
+    {
+      "path": "vendor/safe-deepmerge/LICENSE",
+      "bytes": 1116,
+      "sha256": "6cfc4687cb2f2d86f4a77e6b526290d3878e5e512f3fec2f4cb36a9cb36f798b",
+      "physicalLines": 21,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "6cfc4687cb2f2d86f4a77e6b526290d3878e5e512f3fec2f4cb36a9cb36f798b",
+      "priorReview": {
+        "path": "vendor/safe-deepmerge/LICENSE",
+        "bytes": 1116,
+        "sha256": "6cfc4687cb2f2d86f4a77e6b526290d3878e5e512f3fec2f4cb36a9cb36f798b",
+        "physicalLines": 21,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "primary verification reviewer"
+        ]
+      }
+    },
+    {
+      "path": "vendor/safe-deepmerge/README.md",
+      "bytes": 668,
+      "sha256": "0eed632aa2352bad3173089154d4e1756640c8baddf8a93649255f16753a8019",
+      "physicalLines": 5,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "0eed632aa2352bad3173089154d4e1756640c8baddf8a93649255f16753a8019",
+      "priorReview": {
+        "path": "vendor/safe-deepmerge/README.md",
+        "bytes": 668,
+        "sha256": "0eed632aa2352bad3173089154d4e1756640c8baddf8a93649255f16753a8019",
+        "physicalLines": 5,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "primary verification reviewer"
+        ]
+      }
+    },
+    {
+      "path": "vendor/safe-deepmerge/index.cjs",
+      "bytes": 2576,
+      "sha256": "91d7133da7ba8f8dc806b5381ad67208366b65ac0e4303ab38c5f8b8c342ed73",
+      "physicalLines": 56,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "91d7133da7ba8f8dc806b5381ad67208366b65ac0e4303ab38c5f8b8c342ed73",
+      "priorReview": {
+        "path": "vendor/safe-deepmerge/index.cjs",
+        "bytes": 2576,
+        "sha256": "91d7133da7ba8f8dc806b5381ad67208366b65ac0e4303ab38c5f8b8c342ed73",
+        "physicalLines": 56,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "primary verification reviewer"
+        ]
+      }
+    },
+    {
+      "path": "vendor/safe-deepmerge/package.json",
+      "bytes": 218,
+      "sha256": "1504ece1f179a069202d97ca88d5460278cf40f780e5c121303aa969443d0f6f",
+      "physicalLines": 8,
+      "status": "unchanged-prior-reviewed-bytes",
+      "previousSha256": "1504ece1f179a069202d97ca88d5460278cf40f780e5c121303aa969443d0f6f",
+      "priorReview": {
+        "path": "vendor/safe-deepmerge/package.json",
+        "bytes": 218,
+        "sha256": "1504ece1f179a069202d97ca88d5460278cf40f780e5c121303aa969443d0f6f",
+        "physicalLines": 8,
+        "review": "Prior full-source review receipt retained; current bytes unchanged.",
+        "reviewers": [
+          "primary verification reviewer"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-08T02:59:42.715Z",
+  "applicationSourceSha256": "e5fce9e34ae59cf0269922a77102c8103e3df8d8be0a429bd3218174639a599f",
+  "closedEndpoints": [
+    {
+      "url": "http://127.0.0.1:63822/api/health",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:63823/api/health",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:55610/api/health",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:55611/api/health",
+      "closed": true
+    }
+  ],
+  "ownedContainers": [
+    {
+      "id": "15acbcaa1f5ea5f9c872840135e3d1ef2e22a5414e9a918610e737e820b388b0",
+      "absent": true,
+      "runnerTranscript": ".cache/no-finance-full.log",
+      "runnerTranscriptSha256": "0086cf5a1c96f787174395346df0fc53777b69780d5e19831a562ba60baafd9e"
+    },
+    {
+      "id": "dfa419cd79163aaff14018cf04fd1d81b6413348a58d1437b4d4daf5f9937f86",
+      "absent": true,
+      "runnerTranscript": ".cache/staffing-audit-recheck.log",
+      "runnerTranscriptSha256": "8c8b8d7020e6d299e365d43ce42506ca981209a926fa107b1695aa0845de7b0b"
+    }
+  ],
+  "validationBoundary": "The first full execution had 207 passes and one test-projection failure; the later corrected eight-case group passed. Cleanup is independent of the test outcome.",
+  "scope": "The four full-suite and focused-recheck endpoints and their uniquely recorded disposable containers. Independent lifecycle and presentation resources have separate cleanup receipts; persistent AI usage records are deliberately retained."
+}

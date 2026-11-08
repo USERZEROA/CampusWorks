@@ -1,0 +1,1873 @@
+{
+  "recordedAt": "2026-11-08T03:03:16.274915+00:00",
+  "count": 311,
+  "coverage": "Current tracked and untracked delivered working-tree bytes, excluding the two new self-referential outputs. A byte inventory is not semantic review. Historical inventories and receipts remain unchanged.",
+  "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 343,
+      "sha256": "5f2fa0df284d6a027a0180cc2f5bc9e846f011f4578f05022bf0cd66c61ce030",
+      "physicalLines": 27
+    },
+    {
+      "path": ".env.example",
+      "bytes": 1500,
+      "sha256": "df6b774956979ed7c635c8c30ee5dccbe601f11d34e813209942d416b3ce2ba2",
+      "physicalLines": 44
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 883,
+      "sha256": "73feedfc43c1ffb865f1171f10f51a2d2c0cf708f107c38f5ff387072a31ab8e",
+      "physicalLines": 44
+    },
+    {
+      "path": ".nvmrc",
+      "bytes": 3,
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "physicalLines": 1
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 650,
+      "sha256": "b7b3cb9c183163706d9887a36b4a1e298b6d0ac1b4c1a5731c6ea9077e405066",
+      "physicalLines": 28
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 922,
+      "sha256": "25a2f64d480b1ca2ec042e9bdcebff8c903ec26b56f0be264fff86c3ca8fbde4",
+      "physicalLines": 18
+    },
+    {
+      "path": "README.md",
+      "bytes": 22918,
+      "sha256": "113750dbaf2e06fc6803866655bcd8a6d538e9393d7058ccb7079b72b65adc24",
+      "physicalLines": 162
+    },
+    {
+      "path": "app/app.vue",
+      "bytes": 1947,
+      "sha256": "0056150693bebdea8ab5d63c3cfae2cfc69cfe19582c356d4367924e0216a324",
+      "physicalLines": 95
+    },
+    {
+      "path": "app/components/AiAssistance.vue",
+      "bytes": 12646,
+      "sha256": "039205534b32de908868877d4eefb7295d2c1f18f4978c700fd65bd4428cbd09",
+      "physicalLines": 365
+    },
+    {
+      "path": "app/components/AnnouncementMessage.vue",
+      "bytes": 884,
+      "sha256": "c60f9bdc2e61eb9f88afeb2d9f80150d6680ad1a441875c91336c1b365622ab5",
+      "physicalLines": 37
+    },
+    {
+      "path": "app/components/CourseInsights.vue",
+      "bytes": 49171,
+      "sha256": "4865108ccb63e4ea6d3f93516d87b5cab34a1894e38655a4e2f82dbe67974e22",
+      "physicalLines": 1713
+    },
+    {
+      "path": "app/components/OpportunityEditor.vue",
+      "bytes": 17043,
+      "sha256": "86e7a794e0ae56fdd2bae4c14200b8e5522d2f68419ff9af5e9af6e7b263d5b2",
+      "physicalLines": 541
+    },
+    {
+      "path": "app/components/StaffingNavigation.vue",
+      "bytes": 3172,
+      "sha256": "73d66d81c483579d056f7046355c778ca13cbd8f8f509148ea3c6d5eee725877",
+      "physicalLines": 135
+    },
+    {
+      "path": "app/components/StaffingPaging.vue",
+      "bytes": 1474,
+      "sha256": "b69514b15db2c6b09ac6e66e2eff075baac31f743b2ec3184858dfa5fc3ec203",
+      "physicalLines": 55
+    },
+    {
+      "path": "app/components/StaffingShell.vue",
+      "bytes": 12546,
+      "sha256": "cde7c6b1d6cce7d1951a2007e366798a87fde5e117e0eb114c42b345a73fea51",
+      "physicalLines": 609
+    },
+    {
+      "path": "app/components/StaffingStatus.vue",
+      "bytes": 1404,
+      "sha256": "b75007b1d1efe850e78eb745c8e4f39f4ead7884ef254e774448cfb5f7b8583f",
+      "physicalLines": 69
+    },
+    {
+      "path": "app/components/StaffingSummary.vue",
+      "bytes": 1011,
+      "sha256": "43e585bc6d692d7d8bd6c87ba539ba9c4c62e16c83a3a3467c301e77c5aae517",
+      "physicalLines": 49
+    },
+    {
+      "path": "app/components/WorkloadRecorder.vue",
+      "bytes": 2462,
+      "sha256": "9f80969feeda8a2942a2f46d89198c9386ad6537194a231a7cac5d5561f4e100",
+      "physicalLines": 86
+    },
+    {
+      "path": "app/composables/useAuth.ts",
+      "bytes": 2143,
+      "sha256": "38998126635af69610fa7cfbeb690aa005d16489b82e3986ac6c893f87692bff",
+      "physicalLines": 67
+    },
+    {
+      "path": "app/composables/useCourseCatalogLoader.ts",
+      "bytes": 1692,
+      "sha256": "578790d0849cca07c1f68dc752ed041a9bf20ff16454f797fbf19aeadfdbf385",
+      "physicalLines": 51
+    },
+    {
+      "path": "app/composables/useCourseInsights.ts",
+      "bytes": 7057,
+      "sha256": "db118c8107d37747e027f133709cf72e576790023d09a93284dfef6fcf1fa904",
+      "physicalLines": 236
+    },
+    {
+      "path": "app/composables/useIntervalRefresh.ts",
+      "bytes": 2525,
+      "sha256": "3b97be1900fdf5cc004755a55f17d47e85b89c54ecb8a7c8251664024af55bb8",
+      "physicalLines": 84
+    },
+    {
+      "path": "app/composables/useStaffing.ts",
+      "bytes": 8317,
+      "sha256": "0c98a1fea4f0f6400d330c054ff3f7bcdb6616cd6fd464ba0946b39d6927ed05",
+      "physicalLines": 257
+    },
+    {
+      "path": "app/directives/accessibleDialog.ts",
+      "bytes": 3341,
+      "sha256": "fb6a1032bdd0ecf6a45cf8e5662ad883c98d7a0414f6f3ad5b7973616cd6148b",
+      "physicalLines": 100
+    },
+    {
+      "path": "app/middleware/auth.global.ts",
+      "bytes": 2476,
+      "sha256": "63a53263b9ed9d611a1b487034c142743a382f462529a7a123d7fbaa3401707a",
+      "physicalLines": 82
+    },
+    {
+      "path": "app/pages/admin/courses.vue",
+      "bytes": 12473,
+      "sha256": "2b4662db2fa600cbd0705505eb50eb88f706b530af549804dec3a28dee02a55f",
+      "physicalLines": 587
+    },
+    {
+      "path": "app/pages/admin/staffing.vue",
+      "bytes": 12974,
+      "sha256": "63102354ea0b05e794aea767debcfb1abf43b5e7f5233316ad18e40158110fed",
+      "physicalLines": 396
+    },
+    {
+      "path": "app/pages/applications/[id].vue",
+      "bytes": 27185,
+      "sha256": "2b18745cf5b4c25e1a73454790fbd5b700f3f8a70916ee242b75a4f757f96581",
+      "physicalLines": 814
+    },
+    {
+      "path": "app/pages/applications/index.vue",
+      "bytes": 6815,
+      "sha256": "00194578e48c6a427336f00f72fe6e7b6b91e42d6cc62f587f63ad4882c7d03b",
+      "physicalLines": 214
+    },
+    {
+      "path": "app/pages/courses/[id].vue",
+      "bytes": 509,
+      "sha256": "599f2ab5bf1aca0b14526b9d12edbde831ac2a45125bd254ba905d056cea6a53",
+      "physicalLines": 22
+    },
+    {
+      "path": "app/pages/courses/[id]/admin.vue",
+      "bytes": 68415,
+      "sha256": "cbb6a10c75424936d567e646d830d2202ce2605fffed33d216a27cf0d8f3cbf3",
+      "physicalLines": 2620
+    },
+    {
+      "path": "app/pages/courses/[id]/review.vue",
+      "bytes": 3650,
+      "sha256": "c247024bff4ef37bbd2e968cf0d4ae4f61a1ebcd337d9bbcfde1e78644ba31ca",
+      "physicalLines": 107
+    },
+    {
+      "path": "app/pages/courses/[id]/student.vue",
+      "bytes": 41399,
+      "sha256": "a60a449b0fd51495ca5b7d7b6c980dc58c0e7fc5635d89f9f50b2c52d7f76b06",
+      "physicalLines": 1649
+    },
+    {
+      "path": "app/pages/courses/[id]/ta.vue",
+      "bytes": 38263,
+      "sha256": "8e61d9b188fa2368efb3cab520bfb9c411fb4d5223a77b156c3c8a060eeb9f85",
+      "physicalLines": 1585
+    },
+    {
+      "path": "app/pages/courses/index.vue",
+      "bytes": 17272,
+      "sha256": "25e64cba4d509a8e863958144b62867e73cacefea6c27aba7d012793c0b3ecd7",
+      "physicalLines": 768
+    },
+    {
+      "path": "app/pages/help.vue",
+      "bytes": 8466,
+      "sha256": "4e0e6e0ae53708db16e9eff24cd7e51436b3624f9859a86a7b576c774f226281",
+      "physicalLines": 354
+    },
+    {
+      "path": "app/pages/index.vue",
+      "bytes": 140,
+      "sha256": "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c",
+      "physicalLines": 7
+    },
+    {
+      "path": "app/pages/insights.vue",
+      "bytes": 480,
+      "sha256": "84750b923a9807705644e12558178af1faf6438cabce4c20e4fb71609a22fc80",
+      "physicalLines": 15
+    },
+    {
+      "path": "app/pages/login.vue",
+      "bytes": 12044,
+      "sha256": "bf35566b059b0a46b127a627857f1ffbfa45c5b4d1d8a45e949986ce1b313f9d",
+      "physicalLines": 566
+    },
+    {
+      "path": "app/pages/opportunities/[id].vue",
+      "bytes": 6664,
+      "sha256": "5509dd20160164c4e159e557238cf488d3eb4c3c49b41b49f3737719daaafd0f",
+      "physicalLines": 197
+    },
+    {
+      "path": "app/pages/opportunities/index.vue",
+      "bytes": 3670,
+      "sha256": "1d8f40a58d8bb5695a11d748601352d8d5a22e8789db02983d44160db2bb0764",
+      "physicalLines": 112
+    },
+    {
+      "path": "app/pages/staffing/[id].vue",
+      "bytes": 15941,
+      "sha256": "884ea9b844f65afda00d4d4fa3be6101b387ff0a014b1e6e55bbbecc7b6b550f",
+      "physicalLines": 455
+    },
+    {
+      "path": "app/pages/staffing/edit.vue",
+      "bytes": 195,
+      "sha256": "3af13e79020185248fc17e55686ba2e2a5513d74eac08ee779c5ee8d18c7d05c",
+      "physicalLines": 5
+    },
+    {
+      "path": "app/pages/staffing/index.vue",
+      "bytes": 5171,
+      "sha256": "2189e052cfa6f1ab1a688e210fcc4e656fc28dbec76f275b1201d3ad5b47d8c8",
+      "physicalLines": 157
+    },
+    {
+      "path": "app/pages/staffing/new.vue",
+      "bytes": 43,
+      "sha256": "13cbf69aeeb13060dfc0f52ee608fbc37d8eea89e3ee5bf9fcb429e0cb7e4d1d",
+      "physicalLines": 1
+    },
+    {
+      "path": "docker-compose.yml",
+      "bytes": 2868,
+      "sha256": "529ee55105b5caf346b29ab1b0763aec07d7e0cbc2a26bea84c1e5def3473db4",
+      "physicalLines": 75
+    },
+    {
+      "path": "docs/AI_WORKFLOWS.md",
+      "bytes": 7549,
+      "sha256": "f29c27695a7846c6301cbe41055cd29ac9f0f2115001ee30b6db256fb4cadba3",
+      "physicalLines": 44
+    },
+    {
+      "path": "docs/AUTOMATED_DEMO.md",
+      "bytes": 10669,
+      "sha256": "83235e4e299dfbb1f169c5c46e9b91e4dec0c40156b374637bce496895dfddff",
+      "physicalLines": 90
+    },
+    {
+      "path": "docs/BUSINESS_REVIEW.md",
+      "bytes": 9637,
+      "sha256": "eebf869d31d59bfeba2e1f517b02d4cfec813a77f44030d50691cb9941415e8c",
+      "physicalLines": 62
+    },
+    {
+      "path": "docs/COURSE_INSIGHTS.md",
+      "bytes": 4603,
+      "sha256": "e2d937948ed22c638b91f4c5ddc1cb315ea90d250974176e79df11d2161e20ca",
+      "physicalLines": 42
+    },
+    {
+      "path": "docs/DEMO_GUIDE.md",
+      "bytes": 12643,
+      "sha256": "0a74050527144eb1e4e140c1019e9c80b054330ce304755702b416a49bbe0d62",
+      "physicalLines": 112
+    },
+    {
+      "path": "docs/IMPLEMENTATION_PLAN.md",
+      "bytes": 4393,
+      "sha256": "98c744d3caad0633a98fa0f1fc4dea58d443658b41a5bdd63b2f003c729a87ea",
+      "physicalLines": 35
+    },
+    {
+      "path": "docs/PRODUCT_POLICY.md",
+      "bytes": 4961,
+      "sha256": "d5ffe3882b19c937ae765c549e01c0090089cf34dd46372a148ecaa2941f0596",
+      "physicalLines": 45
+    },
+    {
+      "path": "docs/PRODUCT_READINESS.md",
+      "bytes": 17064,
+      "sha256": "e47f9b5fc1753cc8f239c578076fa6c4d7fdef0dac88285dcf5587e450527fae",
+      "physicalLines": 81
+    },
+    {
+      "path": "docs/ROADSHOW.md",
+      "bytes": 14649,
+      "sha256": "d2da74b8ab88116ec592e7d3af036df47c6b5d7081ee67852de1a56f22976370",
+      "physicalLines": 101
+    },
+    {
+      "path": "docs/STAFFING_DESIGN.md",
+      "bytes": 18548,
+      "sha256": "8a9251d61c8a4f4308613fe15c5ee694b032745cf354a9474ffc580db3b66777",
+      "physicalLines": 148
+    },
+    {
+      "path": "docs/STAFFING_OPERATIONS.md",
+      "bytes": 26107,
+      "sha256": "97c9b4ea8c8a7f64afea3773ce041fa0021178cb5ceeac35d969fae1cd3cb1d5",
+      "physicalLines": 176
+    },
+    {
+      "path": "docs/VERIFICATION.md",
+      "bytes": 6761,
+      "sha256": "16f430b07697762618bfd2730348bbbe6d3e0098fe2521aa26580bf9bcf6ae28",
+      "physicalLines": 41
+    },
+    {
+      "path": "docs/WORK_PLAN.md",
+      "bytes": 3820,
+      "sha256": "c4774c062c2f65b36d91e13c6e23605db90825d06c433a080d47712615fcfbc5",
+      "physicalLines": 35
+    },
+    {
+      "path": "docs/demo/index.html",
+      "bytes": 50218,
+      "sha256": "7d1ca0cbea2947e939302119b09332bd66c18d42952a55b00e882bc06f37a08c",
+      "physicalLines": 1484
+    },
+    {
+      "path": "docs/demo/materials/sample-cv.txt",
+      "bytes": 456,
+      "sha256": "2be490502f345763682087965377a017aa77305436895b57f14296398d0df9ac",
+      "physicalLines": 8
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-ai-candidates-desktop.png",
+      "bytes": 407947,
+      "sha256": "97d212b0e1c08485922e97bf7520e00fe7dabf2cc622c6c47a909de9e788411a",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-ai-course-review-desktop.png",
+      "bytes": 109296,
+      "sha256": "db9db39d33997b73da1fdccd219e8462945f0021be10ed3174472d8ec91bf39e",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-ai-requirements-desktop.png",
+      "bytes": 114020,
+      "sha256": "dae066e5b499118b9273a64a80c2ba403769188164bd605988f1ea593f739ce3",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-ai-summary-desktop.png",
+      "bytes": 102372,
+      "sha256": "cd567b36a83ba9717024cfd4df8d77033162bfa851eb08f8ef17630fd7b92969",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-applicant-applications-desktop.png",
+      "bytes": 93597,
+      "sha256": "5917c53ee70d79554174a9e9dbcb01e061515a0837aaa939378767a9eee002b3",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-applicant-offer-mobile.png",
+      "bytes": 145994,
+      "sha256": "286970ecbee177eb7899a21130e8daebca4d89ceb16de991cb16d59262bb641f",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-avery-active-application.png",
+      "bytes": 67248,
+      "sha256": "e46c62c241424761c2b6532734078d683c356942cd024e5cd9ba5a6b18378e40",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-avery-ta-queue.png",
+      "bytes": 103626,
+      "sha256": "afe82e43a6b06afc5de2e82a0ad7899f54a5bcaa99c019fb86a4faa0625992b6",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-candidate-pool-desktop.png",
+      "bytes": 223466,
+      "sha256": "9e9a5280421ee2bd44572d794b13a796d9d6d2629701d868a0ee0e12ac48dd5a",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-clearance-desktop.png",
+      "bytes": 313503,
+      "sha256": "f126a893ac3d8f1beb6e62e2d5fc444a30d45362b289ef6d7e317eeea9d0b258",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-course-report-desktop.png",
+      "bytes": 68673,
+      "sha256": "7e4cbd544d01a198c5ab51744503537e46f6c990a71716037d3daaa0f9bcb4c3",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-department-insights-desktop.png",
+      "bytes": 429730,
+      "sha256": "9d931d9c435eb4fc35d403a0b579c904c22b6b16bf471762bcfc35ba38ab390a",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-position-catalog-mobile.png",
+      "bytes": 291794,
+      "sha256": "d465848861779170cad0332c016bbf3320f0ee4eb0cbaeda7880e1d2168c0924",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-recruitment-desktop.png",
+      "bytes": 161265,
+      "sha256": "6f7bdb675e69138ce7d9a3220e4437a8885fb97dcb06e9568d7c4de076880cac",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-ta-queue-desktop.png",
+      "bytes": 125496,
+      "sha256": "75447c55f782addf3f3f7177b176b63a9f0c88981c416d58ca4cef22beb6e606",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/review/final-reading-ledger.json",
+      "bytes": 83437,
+      "sha256": "da01ef7fcc6696b459f39a826e5f2e612bbf34042b0a2071472e4ad03dfea657",
+      "physicalLines": 2026
+    },
+    {
+      "path": "docs/review/operations-reading-ledger.json",
+      "bytes": 6651,
+      "sha256": "31d8c797670eb7a703d5a5a2b3e5f1b8dbf4003c0f59cbd46859fcb1d4b61b9d",
+      "physicalLines": 210
+    },
+    {
+      "path": "docs/review/operations-review.md",
+      "bytes": 9711,
+      "sha256": "23721160595f358312af312fa7732650187ca44b60387ff286df50f421dab4ee",
+      "physicalLines": 69
+    },
+    {
+      "path": "docs/review/server-reading-ledger.json",
+      "bytes": 16856,
+      "sha256": "78bdb5fdbbb9a4bc9b5b8ccd450ca91b35ba2f44a4151fb58673a1533d0da1f2",
+      "physicalLines": 315
+    },
+    {
+      "path": "docs/review/server-review.md",
+      "bytes": 11277,
+      "sha256": "77ebe9836f479a8757f09f68c44fc8dd32c26161db99b1edf708a489dbde45b7",
+      "physicalLines": 74
+    },
+    {
+      "path": "docs/review/staffing-live-ai-review.md",
+      "bytes": 12597,
+      "sha256": "fd888d25aadc1a8c0c2c63a858fca0440953b011b20654bf9489c0d81c305ff0",
+      "physicalLines": 67
+    },
+    {
+      "path": "docs/review/ui-reading-ledger.json",
+      "bytes": 5726,
+      "sha256": "c135d3fda4e687cd8526fd208c4e4a93011e89dded64d8c67a27032901dbb5ff",
+      "physicalLines": 123
+    },
+    {
+      "path": "docs/review/ui-review.md",
+      "bytes": 15556,
+      "sha256": "a64365c0d6265af469c2cda861cd6b550e18fdae6f30ab2e3337caea8bb32c02",
+      "physicalLines": 128
+    },
+    {
+      "path": "docs/verification/ai-browser-proof.json",
+      "bytes": 3164,
+      "sha256": "f9ad8f92dda32d65a554a76b740d606f255f075f9ed1d22bd2861a43e06b0316",
+      "physicalLines": 124
+    },
+    {
+      "path": "docs/verification/ai-execution-mongo-proof.json",
+      "bytes": 1685,
+      "sha256": "949b36d05c1e9fc39d190a2ecd77e547683c2abed2c7662257e58c893c20877f",
+      "physicalLines": 57
+    },
+    {
+      "path": "docs/verification/ai-provider-proof.json",
+      "bytes": 716,
+      "sha256": "a724a7d5cabe32d47c957a39ef046f7799f0a45ed2d6db48ff17609b0f1b990d",
+      "physicalLines": 38
+    },
+    {
+      "path": "docs/verification/aligned-story-proof.json",
+      "bytes": 4124,
+      "sha256": "a0267ba32b62bc47dc10dc8a4872ca3ebbf4666680644194eb1241fceda8a6eb",
+      "physicalLines": 123
+    },
+    {
+      "path": "docs/verification/application-inventory.json",
+      "bytes": 57647,
+      "sha256": "c986859a28d366daa4c9f69519cdb510c32177fb7becd3b35e97d21e9a17cac8",
+      "physicalLines": 1687
+    },
+    {
+      "path": "docs/verification/control-alignment-proof.json",
+      "bytes": 54681,
+      "sha256": "c91411a7b3fe41f4d04f72b1fead70de002667227139a5093f47d22e5202a8ff",
+      "physicalLines": 2146
+    },
+    {
+      "path": "docs/verification/control-gallery-proof.json",
+      "bytes": 8851,
+      "sha256": "98f916ec3fdef2c382aedf3dcdd7a7d9f5d0ee91fae8e0a97d10ab862c2873bd",
+      "physicalLines": 292
+    },
+    {
+      "path": "docs/verification/gallery-proof.json",
+      "bytes": 8036,
+      "sha256": "b24d1967fe359e432be4f1b90d470aaeb84b7b9e2cc8fc34ff2173a6f7805b08",
+      "physicalLines": 226
+    },
+    {
+      "path": "docs/verification/historical-ai-panels.json",
+      "bytes": 1041,
+      "sha256": "8405c28f4984f30f23dbe6c87d7b26461a07f9dd7a7c3026075110c5a9a0e7eb",
+      "physicalLines": 21
+    },
+    {
+      "path": "docs/verification/insights-gallery-proof.json",
+      "bytes": 9188,
+      "sha256": "8e1d9de9427d87e34d78ebb50994126b81abc3ff9553b61de3418dce217d2e5d",
+      "physicalLines": 301
+    },
+    {
+      "path": "docs/verification/insights-lifecycle-headed-proof.json",
+      "bytes": 50782,
+      "sha256": "130b8e1e261b97bd295c6f406e0622e44e5ddadd3c9987e9525281b54d29ea78",
+      "physicalLines": 1749
+    },
+    {
+      "path": "docs/verification/insights-lifecycle-headless-proof.json",
+      "bytes": 93666,
+      "sha256": "09d6309901967a1eac1bd648972eccf362f549c0d9e7af254d8317008717a1ae",
+      "physicalLines": 3526
+    },
+    {
+      "path": "docs/verification/insights-proof.json",
+      "bytes": 184040,
+      "sha256": "d2f6c78848d40260783bb88c80ef40f9556682521d2fec10187250067f844d39",
+      "physicalLines": 5603
+    },
+    {
+      "path": "docs/verification/insights-service-cleanup.json",
+      "bytes": 741,
+      "sha256": "4deaec86d739fc9ab8e0a6ca33d302f5c2ffab87ba12df5e53389a428a130c03",
+      "physicalLines": 19
+    },
+    {
+      "path": "docs/verification/prepared-windows-proof.json",
+      "bytes": 1549,
+      "sha256": "9ae5feb47582a70df21febcaa0e5811489949c6d33e033c66aff3a65a3f7981b",
+      "physicalLines": 62
+    },
+    {
+      "path": "docs/verification/provider-activity.json",
+      "bytes": 2090,
+      "sha256": "83b562eb82f038a6a5680712841ac1ea99c3e7b744334a2ec597d32631edfce8",
+      "physicalLines": 48
+    },
+    {
+      "path": "docs/verification/results.json",
+      "bytes": 107396,
+      "sha256": "3c975562336ae6bb388f0e0f35fb51c10f1804384b85cfaefb5432c11a43d800",
+      "physicalLines": 3093
+    },
+    {
+      "path": "docs/verification/roadshow-gallery-proof.json",
+      "bytes": 8851,
+      "sha256": "ab585ea4e319e52a37f076e880a019302d3d3d95cabf8ca8724ba42f28422062",
+      "physicalLines": 292
+    },
+    {
+      "path": "docs/verification/roadshow-story-proof.json",
+      "bytes": 4104,
+      "sha256": "d34433ff6c8e3de4860dea6ee8585e715aa7fdb2386827cd1b20b1f7bc719f4f",
+      "physicalLines": 123
+    },
+    {
+      "path": "docs/verification/screenshots/active-ra-appointment.png",
+      "bytes": 120747,
+      "sha256": "020afbb32728075b4421f544fa1f7a1dc6548c37090a0ad8ccb521ef7069d76d",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/active-ta-application.png",
+      "bytes": 144650,
+      "sha256": "fed11559101d99e292b0258a55ffbc8160b1287812ab74ad997c1f7dbe33511b",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/appointed-ta-queue.png",
+      "bytes": 68233,
+      "sha256": "5687d0f9df796c2393e67d14b5ac623bc598df151ade37a2ab0a0b6f011c48d0",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/automatic-candidate-refresh.png",
+      "bytes": 134249,
+      "sha256": "7ff3c2decee90068f2d5986e8162fc053ea08451a7ff569b66a895e66b4ee3f5",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-clearance-mobile.png",
+      "bytes": 280846,
+      "sha256": "d2eaf44fcb1df22f04430314cb2721af152b700aff3daa1f93338ff34c613dfc",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-course-admin-mobile.png",
+      "bytes": 192776,
+      "sha256": "8c1005770ee894b0ccf7ee907599ec3b85c54b8015fc084371221c1443810fdd",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-draft-desktop.png",
+      "bytes": 108889,
+      "sha256": "6c3ffe142a5adae6e4d9b4184d129b69ed51b45309fba4bd404c5e2ac2bd1345",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-draft-mobile.png",
+      "bytes": 103307,
+      "sha256": "72808ab7f59653e4a924129a69af064f615ad5a5f5c2dade2c6ecdd623cf435d",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-feedback-dialog-mobile.png",
+      "bytes": 80394,
+      "sha256": "0b0acd4160b4828eacdb8f28c170f72b773a0a2ee61ad57eae329fbed4a0701c",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-join-dialog-mobile.png",
+      "bytes": 79627,
+      "sha256": "3ae69b1e04499639e3139c30933b34de83474594c3dd55211cef5f7c810b42b8",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-ta-queue-desktop.png",
+      "bytes": 116738,
+      "sha256": "a178216dff57e7325500d0d5c6914ce23f6dee0b62ea003f4456323352fc0ab4",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/desktop-admin.png",
+      "bytes": 42635,
+      "sha256": "e4016f05d938ae976b2aa7b8d85a98adccb7651df515a16c2d8eddec7b733a7a",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/desktop-directory.png",
+      "bytes": 62337,
+      "sha256": "e719ae0016113d36204407f17c75c186f32c3f39c94d3aca3f2f299e4f712157",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/desktop-help.png",
+      "bytes": 143544,
+      "sha256": "70d7122e4a17622d3c927720e80503a6f1564edee87040a763172837de807d5a",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/desktop-instructor.png",
+      "bytes": 116754,
+      "sha256": "ecb81fa2b09764aa7437618836e41fd972cd5860740e4beb50dc313c4fea2172",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/desktop-login.png",
+      "bytes": 70166,
+      "sha256": "4a29ec66f1fb88c29d35492fa0d389fbef72978e198bdaf81748249649286291",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/desktop-student.png",
+      "bytes": 71993,
+      "sha256": "832774d8d8545740302d688d3c0a6188dc39897dc3b4053585892b91de4e8290",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/desktop-ta.png",
+      "bytes": 74737,
+      "sha256": "43821433465e5b18785a0d2f2564597fee38d03e4cf35f9d375dd75e04ddb3e5",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/historical-ai-candidates-20261107.png",
+      "bytes": 142042,
+      "sha256": "ed8b97e9a91f48cccb1518d618fa2e0fa029e3edcc69bc7ba753d4cdc71db42d",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/historical-ai-course-review-20261107.png",
+      "bytes": 41198,
+      "sha256": "3050187a4f9cbfc42da209bcfbfa4863475438e3a8dafc044af8aeeb0e5876d4",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/insights-course-desktop.png",
+      "bytes": 544569,
+      "sha256": "03f7b4b76c02880d1a772341f134645b8364637dbd67c9828de7db91a56a3edd",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/insights-department-desktop.png",
+      "bytes": 469820,
+      "sha256": "7dd0fdf781d42caef53c1ec14a3c4e38329fbcdd26f4e1771cf068812fe2c053",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/insights-helper-feedback-mobile.png",
+      "bytes": 206886,
+      "sha256": "232bb5fa98d656dc9e1bd916f699913cc82465fed35d4cf2bb5d0c4bc26d37a8",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/insights-queue-nowrap-desktop.png",
+      "bytes": 83708,
+      "sha256": "639e627e44d20380363b0914bec266016bdd4ada532ec3cd627b2b313d8d94ba",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/mobile-admin.png",
+      "bytes": 32381,
+      "sha256": "b50731f1cc0502b0c00285e81faf481f1e7059bfd81655329143827b68f4a62c",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/mobile-application.png",
+      "bytes": 72119,
+      "sha256": "d15f56386096faa1c8661eb0ddc28b599ac8ddea1aa53ced65e1ec43e490de55",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/mobile-instructor.png",
+      "bytes": 92084,
+      "sha256": "5b3444a6e03c6ffae9f6b840f5684f0ff987d3384eff0526b67d077437c4258a",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/mobile-reviewer.png",
+      "bytes": 75559,
+      "sha256": "dd63a4ecf2e553c61ceac32f2b10529f7bbc446524598c08da06ea167abaab1d",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/mobile-staffing-admin.png",
+      "bytes": 107385,
+      "sha256": "c1cea86eed6d862db27fb2027a2ed6a7cd6fe8d9d0006308d79bdbb4500f3be2",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/mobile-student.png",
+      "bytes": 58091,
+      "sha256": "f3a5682c5b2b182de3171a15bfa6823978ca7b374d5200dd746f93ba7d8a9877",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/mobile-ta.png",
+      "bytes": 57665,
+      "sha256": "59ec61d08f1a69e1710945c7e79f370a85a545e109176fcf2d4cfe6e1c7e0613",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/showcase-applicant-applications-desktop.png",
+      "bytes": 93172,
+      "sha256": "188ab5f05f7eda1f06d5735f0c5226a9bb36bb56f96d4a76c80872857bd52621",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/showcase-applicant-offer-mobile.png",
+      "bytes": 144454,
+      "sha256": "43fd919b0e275346f7b5769bd12c524bc5a9af6a718b40950e95f4d0d1b43f7f",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/showcase-candidate-pool-desktop.png",
+      "bytes": 220601,
+      "sha256": "dd7defdbdc91815122fe263f25f9aee77395ec97da65852113ca1e82c9dee82c",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/showcase-clearance-desktop.png",
+      "bytes": 311603,
+      "sha256": "f5c42e7cc0b28392647e70d10efb064a460ceac3e79422e183b1bf7313346964",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/showcase-course-report-desktop.png",
+      "bytes": 109539,
+      "sha256": "1b38742cf247d19f79fc5bcbca3b999ed66e7983a409b48ae6521567419685cb",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/showcase-position-catalog-mobile.png",
+      "bytes": 290380,
+      "sha256": "f04fc980ab786c6be24870f12023f3748dde59178666f99f9744468b5001821a",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/showcase-recruitment-desktop.png",
+      "bytes": 158651,
+      "sha256": "0599ca4b3ceba98a985b71f569b2a45fe1eb7f96594e205ebb12b4a79dc781e4",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/showcase-ta-queue-desktop.png",
+      "bytes": 115461,
+      "sha256": "ceb022ce8e14caae1bcae32cf7a93ebbf1f6b0919faebe4d7403951194d66069",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/cycle-1-instructor-candidate_fit-f45ca0d0-f5a4-4aa2-98e9-1a45b63cf90b.png",
+      "bytes": 107938,
+      "sha256": "275a64ffa58f7e3eaceebfe21d061198f55645298014638499c5864cea5702a1",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/cycle-1-instructor-cv_summary-62f54840-a1cc-43ea-9ccd-7b4ee004fe32.png",
+      "bytes": 102372,
+      "sha256": "cd567b36a83ba9717024cfd4df8d77033162bfa851eb08f8ef17630fd7b92969",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/cycle-1-instructor-opportunity_draft-f45ca0d0-f5a4-4aa2-98e9-1a45b63cf90b.png",
+      "bytes": 114020,
+      "sha256": "dae066e5b499118b9273a64a80c2ba403769188164bd605988f1ea593f739ce3",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/cycle-1-instructor-term_review-cs201.png",
+      "bytes": 109296,
+      "sha256": "db9db39d33997b73da1fdccd219e8462945f0021be10ed3174472d8ec91bf39e",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/cycle-1-peer-candidate_fit-dbaa46b8-9b48-4684-b684-d59c637b11d0.png",
+      "bytes": 407947,
+      "sha256": "97d212b0e1c08485922e97bf7520e00fe7dabf2cc622c6c47a909de9e788411a",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/insights-course-desktop.png",
+      "bytes": 509160,
+      "sha256": "4480107a6a9613649985d1b1375221403c426fe2c932e758727bc860e344c53e",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/insights-department-desktop.png",
+      "bytes": 429730,
+      "sha256": "9d931d9c435eb4fc35d403a0b579c904c22b6b16bf471762bcfc35ba38ab390a",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/insights-helper-feedback-mobile.png",
+      "bytes": 174129,
+      "sha256": "5df218401553751eb934f69868c19decae3964f30b618597ec4586cabb951098",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/insights-queue-nowrap-desktop.png",
+      "bytes": 86868,
+      "sha256": "843934314d63ad5fa31f8b6ed0e9bfbb84f21522a073d4ae81a8cff060e6d3e1",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/showcase-avery-active-application.png",
+      "bytes": 67248,
+      "sha256": "e46c62c241424761c2b6532734078d683c356942cd024e5cd9ba5a6b18378e40",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/staffing-live-ai/showcase-avery-ta-queue.png",
+      "bytes": 103626,
+      "sha256": "afe82e43a6b06afc5de2e82a0ad7899f54a5bcaa99c019fb86a4faa0625992b6",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/synthetic-single-ta-analytics.png",
+      "bytes": 107634,
+      "sha256": "f727089bdcb849c420fa800ba107fc45d8f8f7f1408ab670daf380e96a0f2860",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/showcase-provider-proof.json",
+      "bytes": 2251,
+      "sha256": "fd30c52eb05b0debe7b9e3ff665297a80577fd17d1ddca901f6804f1af8e89a5",
+      "physicalLines": 89
+    },
+    {
+      "path": "docs/verification/staffing-live-ai-capture-provenance.json",
+      "bytes": 11360,
+      "sha256": "4c3c33ef2d02a1d428298da6f8ab412a28dc43505f305b5ab21482e47501f3d3",
+      "physicalLines": 263
+    },
+    {
+      "path": "docs/verification/staffing-live-ai-cleanup.json",
+      "bytes": 1543,
+      "sha256": "8a41c25a91e7b1d52be573f18eea873a3ef6fc432090bec13b9d613f02dd4f79",
+      "physicalLines": 39
+    },
+    {
+      "path": "docs/verification/staffing-live-ai-gallery-proof.json",
+      "bytes": 13209,
+      "sha256": "563b5c5b0baf54499535c21c5840f959c3e5e727c00fd96aed30460b4990b1ae",
+      "physicalLines": 397
+    },
+    {
+      "path": "docs/verification/staffing-live-ai-proof.json",
+      "bytes": 413736,
+      "sha256": "d8ec93b437835ef060da34ab928cabb64f0cba9c7b9490705dd00a3124088259",
+      "physicalLines": 12049
+    },
+    {
+      "path": "docs/verification/ui-browser-proof.json",
+      "bytes": 39458,
+      "sha256": "c6b9a798a7ebeb95ae8402d8a69152ff64cd7e673ef2e45af41831be384bf165",
+      "physicalLines": 1204
+    },
+    {
+      "path": "docs/verification/ui-script-boundary-proof.json",
+      "bytes": 4039,
+      "sha256": "40100791b07fbfbb2a93fdda96197ec534e9b79fc8f8e6271ca2b1941c587710",
+      "physicalLines": 120
+    },
+    {
+      "path": "k8s/README.md",
+      "bytes": 1865,
+      "sha256": "5658e1ab22b40e80c75b147f717279e826d49d1786e897d35e85c8c1ef7d8eb0",
+      "physicalLines": 18
+    },
+    {
+      "path": "k8s/app.yaml",
+      "bytes": 1584,
+      "sha256": "e0b0c8de8e28a83f50517e751355850000c64904239c39a95eafe22303f81fa3",
+      "physicalLines": 62
+    },
+    {
+      "path": "k8s/mongo-init.yaml",
+      "bytes": 672,
+      "sha256": "d3ed25c503d763a4cc31a58708726a3388eb99bde0b53fa03f562c63bec5b90e",
+      "physicalLines": 23
+    },
+    {
+      "path": "k8s/mongo.yaml",
+      "bytes": 1945,
+      "sha256": "797b2c550bfe40b02cd47a116a935682120f6e38fc4cfe40042bcab6617624f8",
+      "physicalLines": 71
+    },
+    {
+      "path": "k8s/namespace.yaml",
+      "bytes": 65,
+      "sha256": "70f21aad337640eb878994cb57d1d0b2cfe8b52fe21670f906f50372119a287b",
+      "physicalLines": 4
+    },
+    {
+      "path": "nuxt.config.ts",
+      "bytes": 779,
+      "sha256": "d4062b247c7b861f1a95f469b32f96100288e68749940c20d5e086329a8a4321",
+      "physicalLines": 28
+    },
+    {
+      "path": "ops/init-mongo-replica.js",
+      "bytes": 1374,
+      "sha256": "689e664d58060813edcaf87204c86ecef55027b2291023d2e4dabf7a11efb1a6",
+      "physicalLines": 25
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 304880,
+      "sha256": "424e5d75c72c1495702d1a1531a72ee3fe0c9e9821a347f330b1bcdc8183c555",
+      "physicalLines": 8701
+    },
+    {
+      "path": "package.json",
+      "bytes": 1472,
+      "sha256": "971a9c5c1196af1186574881638c8aa0ea819a2e28b0cc5a00d43388201460f0",
+      "physicalLines": 47
+    },
+    {
+      "path": "playwright.config.ts",
+      "bytes": 1075,
+      "sha256": "90176bcbc68f676fb1e4909e0152a8e8b3d88c04129810535e73f82fb12bd4fa",
+      "physicalLines": 37
+    },
+    {
+      "path": "playwright/automatic-ai-fixtures.ts",
+      "bytes": 17113,
+      "sha256": "802e6f6057a0cf4cde101c8e46e86ef785f703b5202bae69516020d3dfeb64ad",
+      "physicalLines": 510
+    },
+    {
+      "path": "playwright/e2e/ai-automatic-pages.spec.ts",
+      "bytes": 11915,
+      "sha256": "8d42b457b2c1480abae4c7b1eb6cb19a275b80a751c39886239801c1e180c4b9",
+      "physicalLines": 363
+    },
+    {
+      "path": "playwright/e2e/ai-automation.spec.ts",
+      "bytes": 22195,
+      "sha256": "32b1ef4dddbf0ffab687efe29912247319379464342f53320b5bab8e46aed071",
+      "physicalLines": 642
+    },
+    {
+      "path": "playwright/e2e/ai-provider.spec.ts",
+      "bytes": 16816,
+      "sha256": "9c37f4feb6331a5c675463a44d0c66f1886fe6a853fa997e1b2a79ae76517d7e",
+      "physicalLines": 262
+    },
+    {
+      "path": "playwright/e2e/ai-refresh.spec.ts",
+      "bytes": 36613,
+      "sha256": "efe8aa11b4db6bc1ddf7c9be8bc9f78678fc37dc545ad59bd80eebc20705226c",
+      "physicalLines": 491
+    },
+    {
+      "path": "playwright/e2e/ai-scoped-usage.spec.ts",
+      "bytes": 10567,
+      "sha256": "307ac8003a73dce14a5c7056709c2f952c8ac59e4a0ccebfe41f58db1581dc02",
+      "physicalLines": 169
+    },
+    {
+      "path": "playwright/e2e/appointment-overlap.spec.ts",
+      "bytes": 12216,
+      "sha256": "eea9c9b371f598536b37551b99cb955d3afb253027a6d95ec469d07f27516f8d",
+      "physicalLines": 178
+    },
+    {
+      "path": "playwright/e2e/auth.spec.ts",
+      "bytes": 4231,
+      "sha256": "4a52abca79e21702f86028e0f28bdcca405834855f584863b246f961c3b5d4ae",
+      "physicalLines": 97
+    },
+    {
+      "path": "playwright/e2e/control-alignment.spec.ts",
+      "bytes": 20492,
+      "sha256": "8ba3d4af6822ad11836ad51ee6e57050246ccee8d756ef9f6a6d5b5481232e06",
+      "physicalLines": 580
+    },
+    {
+      "path": "playwright/e2e/demo-workspaces.spec.ts",
+      "bytes": 2127,
+      "sha256": "716539d9535433de6076b542b32af61ed46baf287bbbcc0fbc0faf74b95d2afa",
+      "physicalLines": 30
+    },
+    {
+      "path": "playwright/e2e/extended-flow.spec.ts",
+      "bytes": 24264,
+      "sha256": "33ed5c44008e565cbf80ac8ef5bfa296b2dc9d2dc2c2d18ebad4e729dee5a04e",
+      "physicalLines": 402
+    },
+    {
+      "path": "playwright/e2e/insights.spec.ts",
+      "bytes": 26546,
+      "sha256": "78598ab4c79a4fe56497a542e3794d7638383d77417bc0db7746bc32c8fd36c0",
+      "physicalLines": 701
+    },
+    {
+      "path": "playwright/e2e/institutional-identity.spec.ts",
+      "bytes": 5474,
+      "sha256": "8f422a2bd713e9f2dc7c573b167339cd0f1e5989472ab6f2a4779ed0bd62edde",
+      "physicalLines": 90
+    },
+    {
+      "path": "playwright/e2e/queue-business.spec.ts",
+      "bytes": 17596,
+      "sha256": "86a3dce622073b481e3d50b9894c140505982016954f4ffec208472ef90a7676",
+      "physicalLines": 249
+    },
+    {
+      "path": "playwright/e2e/queue-concurrency.spec.ts",
+      "bytes": 12413,
+      "sha256": "640ffad06bb7025492523526a53bd2485a36b9910c6adecaf580e20bdc126b46",
+      "physicalLines": 189
+    },
+    {
+      "path": "playwright/e2e/queue-flow.spec.ts",
+      "bytes": 10025,
+      "sha256": "3238b8d619e48e4cd4ccc06b4821aaa8e112de619050d370f33177ae020891f8",
+      "physicalLines": 221
+    },
+    {
+      "path": "playwright/e2e/rbac.spec.ts",
+      "bytes": 7896,
+      "sha256": "e05cd026b753141e30e3dd844df6398634c35d5a01edf32417a6dba1c009d1a4",
+      "physicalLines": 154
+    },
+    {
+      "path": "playwright/e2e/recruitment-cycle.spec.ts",
+      "bytes": 18452,
+      "sha256": "ac07c8bcad25cb2dd778a4f26e0a9b3e040603bc79477c3ffd6dd7722118c7cb",
+      "physicalLines": 225
+    },
+    {
+      "path": "playwright/e2e/showcase-ai.spec.ts",
+      "bytes": 7843,
+      "sha256": "e34f4062daeebcbf21693ce6d3872389be5307ad99ee9ccc6e1193ddbda88374",
+      "physicalLines": 93
+    },
+    {
+      "path": "playwright/e2e/showcase-flow.spec.ts",
+      "bytes": 14647,
+      "sha256": "07eb691ca2dc0eb2c4fe7324ca8cd2b92224284906c8c110ef78bc9b48b29a35",
+      "physicalLines": 181
+    },
+    {
+      "path": "playwright/e2e/showcase-visual.spec.ts",
+      "bytes": 17596,
+      "sha256": "a95576d9cd2a9bab74a90acf49d4f6dadc37f33b351feaea31b42b3da0a46fb6",
+      "physicalLines": 451
+    },
+    {
+      "path": "playwright/e2e/silent-refresh-browser.spec.ts",
+      "bytes": 16111,
+      "sha256": "9eab96deb2a9958141f959adbd050e7332dcc55e231abc617c4121b91de25310",
+      "physicalLines": 254
+    },
+    {
+      "path": "playwright/e2e/staffing-audit-regressions.spec.ts",
+      "bytes": 16808,
+      "sha256": "47166f1f449e6f2422d479c512ba98420380107b09ed338f599cfa3fbabb62ae",
+      "physicalLines": 184
+    },
+    {
+      "path": "playwright/e2e/staffing-boundaries.spec.ts",
+      "bytes": 13608,
+      "sha256": "4a5536afb0216d591356f35335a5832ac6a382a501f7f7750635633b7c4715b9",
+      "physicalLines": 160
+    },
+    {
+      "path": "playwright/e2e/staffing-browser.spec.ts",
+      "bytes": 39007,
+      "sha256": "e987a2710ee86bde1ec617f4840aaafc648e8f172bcd3225fd15347ce148056d",
+      "physicalLines": 1049
+    },
+    {
+      "path": "playwright/e2e/staffing-lifecycle.spec.ts",
+      "bytes": 17841,
+      "sha256": "551ed9efeb1a1b5ec7cfac3b1a9f4fcd280c7b425f7fdac74197b2124db65feb",
+      "physicalLines": 227
+    },
+    {
+      "path": "playwright/e2e/staffing-maintenance.spec.ts",
+      "bytes": 11923,
+      "sha256": "8273fe85e8ff881d7965890ffb86286cd123e18e1739ee3d4003864ebb92051c",
+      "physicalLines": 106
+    },
+    {
+      "path": "playwright/e2e/transaction-cursors.spec.ts",
+      "bytes": 6509,
+      "sha256": "6df18546f7876cbe04908d2cf3fd2f947d3a9904701b3fa047da7b6734f0581c",
+      "physicalLines": 75
+    },
+    {
+      "path": "playwright/helpers.ts",
+      "bytes": 2288,
+      "sha256": "cfafc75c32e45455a79839bc82cc81e841efaa250d3c5e4aece5f2070a9a4af9",
+      "physicalLines": 60
+    },
+    {
+      "path": "playwright/showcase-fixtures.ts",
+      "bytes": 8020,
+      "sha256": "201dc488623562cdca2e37879645199df72275271dc56967ce31b73f5a3a2626",
+      "physicalLines": 152
+    },
+    {
+      "path": "playwright/staffing-fixtures.ts",
+      "bytes": 8728,
+      "sha256": "0b13b677ef3c650d39b97927b29f57d94cf51dd5334ec88e0332834f4138f2d5",
+      "physicalLines": 121
+    },
+    {
+      "path": "playwright/tsconfig.json",
+      "bytes": 257,
+      "sha256": "9b5e0b22573f9a24d39b4557dd93ca6d9a8f34230b4131643984b8478f9c624f",
+      "physicalLines": 12
+    },
+    {
+      "path": "public/campusworks-logo.svg",
+      "bytes": 269,
+      "sha256": "005d99ecc9d7e34894ed539c0132f381902e2ed780d269838112bc327c6b6109",
+      "physicalLines": 4
+    },
+    {
+      "path": "public/duke-cs-logo.png",
+      "bytes": 10497,
+      "sha256": "f13da47b151485056dee3e755a28e194c6b5e5846bbcb44ce700378de668e1f6",
+      "physicalLines": null
+    },
+    {
+      "path": "public/favicon.ico",
+      "bytes": 4286,
+      "sha256": "1057b17aec08a7191d134000203947f195a8aa7c84c39f1164cee8d01279762a",
+      "physicalLines": null
+    },
+    {
+      "path": "public/robots.txt",
+      "bytes": 24,
+      "sha256": "e1f21c9aa28d50ca112ed357f34b67c550597effd4d42fd55b4e27300dd8f9c1",
+      "physicalLines": 2
+    },
+    {
+      "path": "scripts/ai-provider-browser-check.mjs",
+      "bytes": 22105,
+      "sha256": "f883c810c5dd489b004c7a2b529a55bf18bd191f3de2fa48765b6a9c1c7aa295",
+      "physicalLines": 300
+    },
+    {
+      "path": "scripts/ai-provider-check.mjs",
+      "bytes": 10569,
+      "sha256": "cbf018e16e99c7f441b453d4dfdcd6f213266336cd907aa8b7ba61bfe5234a12",
+      "physicalLines": 156
+    },
+    {
+      "path": "scripts/ai-provider-config.mjs",
+      "bytes": 4408,
+      "sha256": "6b7ed638b882887f36396a4c30804c4844fb002e0f8d3704aacb16e753e769b3",
+      "physicalLines": 69
+    },
+    {
+      "path": "scripts/ai-provider-dialog.ps1",
+      "bytes": 4716,
+      "sha256": "881fd886c9b390389764272edc60aaded136b99285589d784f11d77d2243777f",
+      "physicalLines": 102
+    },
+    {
+      "path": "scripts/demo-catalog.mjs",
+      "bytes": 29024,
+      "sha256": "3046151942093045464a7d7619650a625780394f23af4302c8c26bdbd3c64041",
+      "physicalLines": 341
+    },
+    {
+      "path": "scripts/demo-foreground.ps1",
+      "bytes": 4402,
+      "sha256": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424",
+      "physicalLines": 93
+    },
+    {
+      "path": "scripts/demo-loop-flow.mjs",
+      "bytes": 34097,
+      "sha256": "803ef8b02ce3518c090cd8efdbb0073f247722d10b90450b7cd8a58962710f41",
+      "physicalLines": 953
+    },
+    {
+      "path": "scripts/demo-loop-service.mjs",
+      "bytes": 23323,
+      "sha256": "07c829fda0c1025f86fa4291973e0e5b86de10ac9bdee6bee5f75132a3508415",
+      "physicalLines": 723
+    },
+    {
+      "path": "scripts/demo-loop.mjs",
+      "bytes": 13101,
+      "sha256": "3ff0df36318643355f832b0f3dcb48d62e0c743985d252b815e45b5bb7b23f09",
+      "physicalLines": 371
+    },
+    {
+      "path": "scripts/demo-showcase-api.mjs",
+      "bytes": 15174,
+      "sha256": "a5e38bea1e33dafe0f7fc2e45a4c79f5b3c769681e4a6141cbe508122fbaac1d",
+      "physicalLines": 175
+    },
+    {
+      "path": "scripts/demo-showcase-data.mjs",
+      "bytes": 14183,
+      "sha256": "606a767610c5aa40651798136100960020b7631e51b041c992d8651ed0f7a534",
+      "physicalLines": 166
+    },
+    {
+      "path": "scripts/demo-showcase.mjs",
+      "bytes": 4684,
+      "sha256": "ecdb2a1637a10fed7fe5ca57a432ae3f1895eb4aca1ff3b038f89c10bd83a5c1",
+      "physicalLines": 65
+    },
+    {
+      "path": "scripts/demo-staffing.mjs",
+      "bytes": 7636,
+      "sha256": "294c9daf26ad6906d23cc31259a368edca36922eda9f968637f3679a1364e655",
+      "physicalLines": 90
+    },
+    {
+      "path": "scripts/demo-stage.mjs",
+      "bytes": 23902,
+      "sha256": "b0ddd52cba90c3b4c0d19b444e2344737c533db2a69e38f56051452f37ad7ede",
+      "physicalLines": 697
+    },
+    {
+      "path": "scripts/demo-windows.mjs",
+      "bytes": 6318,
+      "sha256": "9f1e7a78f94b475cb478763c84285e622e60afbcb1b55a6652414f4829bcf8a2",
+      "physicalLines": 131
+    },
+    {
+      "path": "scripts/local-test.mjs",
+      "bytes": 6247,
+      "sha256": "649647495f68b58f30b918c0204de02820a4d6bb9397268f0cb55aeb8fc5e8fe",
+      "physicalLines": 104
+    },
+    {
+      "path": "scripts/showcase-runner.mjs",
+      "bytes": 14401,
+      "sha256": "3387cd8fbe47627009f559ce3d9e9249a5ddafca6772ff0e101528987afd2fcb",
+      "physicalLines": 207
+    },
+    {
+      "path": "scripts/start-with-ai.mjs",
+      "bytes": 2357,
+      "sha256": "f641493627d512059a5b7c125879ba5c51f5da9725475701a1615475814754a2",
+      "physicalLines": 45
+    },
+    {
+      "path": "server/api/[...slug].ts",
+      "bytes": 361,
+      "sha256": "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8",
+      "physicalLines": 10
+    },
+    {
+      "path": "server/api/ai/[...path].ts",
+      "bytes": 1715,
+      "sha256": "a9910708599f946d3b2366761964068249c73272ba51aab0593c9cf69342bc41",
+      "physicalLines": 33
+    },
+    {
+      "path": "server/api/auth/gitlab.get.ts",
+      "bytes": 4495,
+      "sha256": "ecc0a4c0b25a7939fd941b641f5e9d088eb138a3ab0f2a4caabf3260113e4678",
+      "physicalLines": 114
+    },
+    {
+      "path": "server/api/auth/gitlab/login.get.ts",
+      "bytes": 1271,
+      "sha256": "0fc448967c2aec42a618e3b0dc86278957e92ba23fd66a061d85e253eaa10ab5",
+      "physicalLines": 43
+    },
+    {
+      "path": "server/api/auth/logout.post.ts",
+      "bytes": 200,
+      "sha256": "f95c7ca6331d5647a17ca09a439252f234c44de377d86a6cb184e62ed0d110ea",
+      "physicalLines": 6
+    },
+    {
+      "path": "server/api/auth/me.get.ts",
+      "bytes": 359,
+      "sha256": "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64",
+      "physicalLines": 12
+    },
+    {
+      "path": "server/api/auth/mock.post.ts",
+      "bytes": 1622,
+      "sha256": "667ba436f40f6226a067dd2343d0a14ed4f041a7a26e07a3a4981761d6289902",
+      "physicalLines": 20
+    },
+    {
+      "path": "server/api/auth/providers.get.ts",
+      "bytes": 638,
+      "sha256": "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233",
+      "physicalLines": 19
+    },
+    {
+      "path": "server/api/courses/[id].delete.ts",
+      "bytes": 1554,
+      "sha256": "58d6788a10a6d352f9c7628753788a868fe3813b39a789b2562073e5790efcf7",
+      "physicalLines": 15
+    },
+    {
+      "path": "server/api/courses/[id].get.ts",
+      "bytes": 1531,
+      "sha256": "22d6b0e092105187390fce81bf83e259bcb173182a784f3ae91971e9434dbadb",
+      "physicalLines": 19
+    },
+    {
+      "path": "server/api/courses/[id]/admin.get.ts",
+      "bytes": 2763,
+      "sha256": "f2dfa07c58917b11a56edcef42878bb1dca0e037a5b964cf2af936ad94ba1b65",
+      "physicalLines": 31
+    },
+    {
+      "path": "server/api/courses/[id]/announcements.post.ts",
+      "bytes": 682,
+      "sha256": "649e675c52a937f9d47e9f3aa1ba794207ecb0e319e8732ec7963fd679b42fd8",
+      "physicalLines": 10
+    },
+    {
+      "path": "server/api/courses/[id]/announcements/[announcementId].delete.ts",
+      "bytes": 649,
+      "sha256": "1d2a9b3a49edb1f6ef3a6b7dc35f5c544e2db13d47649f1956e67c147feffd93",
+      "physicalLines": 10
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/kick.post.ts",
+      "bytes": 2695,
+      "sha256": "8d995255ba9d05f3373c1d2cc5f28364ec6f5e95f2715a044cc6e113be8d3da5",
+      "physicalLines": 28
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/restore.post.ts",
+      "bytes": 1158,
+      "sha256": "eac79616510843effbf2e2e1e6fa55cefd02761bdfe3171e43daf1f60e4b76e6",
+      "physicalLines": 17
+    },
+    {
+      "path": "server/api/courses/[id]/enrollments/role.patch.ts",
+      "bytes": 2036,
+      "sha256": "59e210b7b0c7130c452ca2f339e85e489f1046e96ab0d9aba6873dc935002c7a",
+      "physicalLines": 23
+    },
+    {
+      "path": "server/api/courses/[id]/feedback-context.get.ts",
+      "bytes": 3178,
+      "sha256": "964900e1699b2b763565c821d136c630cd129a2fc1297021ef2ec1e0ca002a14",
+      "physicalLines": 116
+    },
+    {
+      "path": "server/api/courses/[id]/feedback.post.ts",
+      "bytes": 3200,
+      "sha256": "6eb7b0274f8806a8d1f7171973384a65555dd7da5e73db879ee1e1370214ef34",
+      "physicalLines": 35
+    },
+    {
+      "path": "server/api/courses/[id]/queue/assign.post.ts",
+      "bytes": 1881,
+      "sha256": "cf819d2982ddfcfe3d61a2cacafd14908176e454485d17e130dfc26695179837",
+      "physicalLines": 29
+    },
+    {
+      "path": "server/api/courses/[id]/queue/join.post.ts",
+      "bytes": 2544,
+      "sha256": "3373974e04270e7f264de5dd34178f2741de265831a6c2481f3657dda81fa779",
+      "physicalLines": 32
+    },
+    {
+      "path": "server/api/courses/[id]/queue/leave.post.ts",
+      "bytes": 834,
+      "sha256": "f7a1b94a13bacd8f7ba93eeed562e9302cd6505d012ff00f7ea5613ff73a2023",
+      "physicalLines": 11
+    },
+    {
+      "path": "server/api/courses/[id]/queue/move.post.ts",
+      "bytes": 1174,
+      "sha256": "57cf331f1241660c28b27727bc5c1b8428515506475702b1dbeaedcfdcbea482",
+      "physicalLines": 17
+    },
+    {
+      "path": "server/api/courses/[id]/queue/pause.post.ts",
+      "bytes": 1226,
+      "sha256": "65b2969c245fdec78e57113745327a9ae93a5cad90ff8560f10944ab7b032f98",
+      "physicalLines": 22
+    },
+    {
+      "path": "server/api/courses/[id]/queue/remove.post.ts",
+      "bytes": 1274,
+      "sha256": "bb8a85f09a933f07869f4031212f5aad6ddb06ddb6e58eef29b7a6e966ba91ce",
+      "physicalLines": 18
+    },
+    {
+      "path": "server/api/courses/[id]/state.patch.ts",
+      "bytes": 968,
+      "sha256": "ba92a95252249919417134fccd680774021da2085fa4ea028794266f3be7fc9e",
+      "physicalLines": 12
+    },
+    {
+      "path": "server/api/courses/[id]/ta-duty.post.ts",
+      "bytes": 1095,
+      "sha256": "2cb4222a3397fefef70f56668f9fbb56ef5a6da99d5a07ceb524dfde2b6f7b68",
+      "physicalLines": 14
+    },
+    {
+      "path": "server/api/courses/enroll.post.ts",
+      "bytes": 1512,
+      "sha256": "cd102ceb629608516c7110a082c6c2905941ee6a099a154f710f5f47f807edc7",
+      "physicalLines": 23
+    },
+    {
+      "path": "server/api/courses/index.get.ts",
+      "bytes": 1140,
+      "sha256": "e2c315a4963d137dc9c678bdda96d28fe9ebb5478b6ebc82c097bfc84501ae27",
+      "physicalLines": 18
+    },
+    {
+      "path": "server/api/courses/index.post.ts",
+      "bytes": 1509,
+      "sha256": "cd4e0652f026cea7d51c58604e969cecb085be5559a3ba03d00666c2047b54f7",
+      "physicalLines": 19
+    },
+    {
+      "path": "server/api/health.get.ts",
+      "bytes": 484,
+      "sha256": "316c4777ecf0b37009a080bcabe5c7c8b637e3b5eb8677bcfe7983943db7c228",
+      "physicalLines": 12
+    },
+    {
+      "path": "server/api/insights/access.get.ts",
+      "bytes": 362,
+      "sha256": "90a82ba73c55f6597db3bdf383fb5537b6d4db31ca82a0f7d6690895a5354fcc",
+      "physicalLines": 9
+    },
+    {
+      "path": "server/api/insights/index.get.ts",
+      "bytes": 385,
+      "sha256": "b119ffa1b93b5e2251fb2874b9b0b2fdb2e753d44fc960384b0ae8d6ee030d9a",
+      "physicalLines": 9
+    },
+    {
+      "path": "server/api/staffing/[...path].ts",
+      "bytes": 15642,
+      "sha256": "a954e1c73f752e020a236519093e86a7aff07920092a1a631b2a5eb31f6a78e4",
+      "physicalLines": 156
+    },
+    {
+      "path": "server/middleware/logging.ts",
+      "bytes": 684,
+      "sha256": "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156",
+      "physicalLines": 21
+    },
+    {
+      "path": "server/middleware/security.ts",
+      "bytes": 3388,
+      "sha256": "33913c84ab95284d0ae979491d191116eb8a5beadc332bc44c99e9ceedbd4ddb",
+      "physicalLines": 54
+    },
+    {
+      "path": "server/plugins/ai-refresh.ts",
+      "bytes": 1543,
+      "sha256": "b5911b37c6d2426ad4153644485f346e6018c03f75ef8ffb4747bebe14faca56",
+      "physicalLines": 28
+    },
+    {
+      "path": "server/plugins/staffing-maintenance.ts",
+      "bytes": 1090,
+      "sha256": "c09d2b6c1fd51939bef1033ee7577b78f6fec81586deba4b62943b5a28893058",
+      "physicalLines": 32
+    },
+    {
+      "path": "server/utils/ai-automation-indexes.ts",
+      "bytes": 781,
+      "sha256": "bfc1fb7a9ea764c1984aa47a30cc59c8c277935cc4beb9e4c5866a9579280ce2",
+      "physicalLines": 17
+    },
+    {
+      "path": "server/utils/ai-automation.ts",
+      "bytes": 35837,
+      "sha256": "e424687d826fa55ad52f2b33f99c0d27715798d30effed452b3ebe466e6a5c13",
+      "physicalLines": 434
+    },
+    {
+      "path": "server/utils/ai-refresh.ts",
+      "bytes": 26065,
+      "sha256": "fa059f9662a56a5edb6a3bd002d67e388cfa8a5a62ed23d4b310b4ffa48a28fa",
+      "physicalLines": 323
+    },
+    {
+      "path": "server/utils/ai-scope-selection.ts",
+      "bytes": 2742,
+      "sha256": "e6aaff3e4d23d8564d35af44ad3323f4978380dd526be6a6b2134908b8ff3241",
+      "physicalLines": 34
+    },
+    {
+      "path": "server/utils/ai-usage.ts",
+      "bytes": 868,
+      "sha256": "97760a677a9188657deeb21db404248f634eaaa46626400e313e71495c58c556",
+      "physicalLines": 17
+    },
+    {
+      "path": "server/utils/ai.ts",
+      "bytes": 42560,
+      "sha256": "84d6fe208b3ab197f752a1049771c660fef917d0c16f887429264780110987b7",
+      "physicalLines": 462
+    },
+    {
+      "path": "server/utils/auth.ts",
+      "bytes": 10418,
+      "sha256": "9499d6e2f2516032d85d8d40812e470380be5b294c185203a4597ad83746a580",
+      "physicalLines": 159
+    },
+    {
+      "path": "server/utils/config.ts",
+      "bytes": 3828,
+      "sha256": "dfac743ef2683db45e3c34bc98117997007c23794efae8625f855a4d4f86c3f3",
+      "physicalLines": 60
+    },
+    {
+      "path": "server/utils/course-insights.ts",
+      "bytes": 43665,
+      "sha256": "2109285e785a8dbaa5fe2b1a933732fe1645db8bf09a24ab83387fe8291934b5",
+      "physicalLines": 1341
+    },
+    {
+      "path": "server/utils/courses.ts",
+      "bytes": 9316,
+      "sha256": "83e0b66b486a61296b3d7572c56699f457d56bf2234cfd32227d0a228cadf106",
+      "physicalLines": 136
+    },
+    {
+      "path": "server/utils/db.ts",
+      "bytes": 6373,
+      "sha256": "66867ba4528faa8dc5369aae1a8afc16631c32b955c3ba668f1e9d07aeea2660",
+      "physicalLines": 118
+    },
+    {
+      "path": "server/utils/help-feedback.ts",
+      "bytes": 2146,
+      "sha256": "2ba942b7945c14db2f749cd7561553147b43a6fffdc305275ce2e042b097e28b",
+      "physicalLines": 36
+    },
+    {
+      "path": "server/utils/qualification-questions.ts",
+      "bytes": 1632,
+      "sha256": "cfddce5f9668f5eece18745212efb1a52289ce650cf16f79d4c554f6ddaf5d3f",
+      "physicalLines": 17
+    },
+    {
+      "path": "server/utils/queue.ts",
+      "bytes": 5880,
+      "sha256": "8ec3b349afe1af2e1239c8f5dd532b44ab0050a1e3fe2bb68311f6116a83ca74",
+      "physicalLines": 88
+    },
+    {
+      "path": "server/utils/seed.ts",
+      "bytes": 5028,
+      "sha256": "4dd1bde3c0d627e8f43cf942aa622d54c0fbb9c1c4e9c0c5e41f842a7b4d7821",
+      "physicalLines": 119
+    },
+    {
+      "path": "server/utils/staffing-applications.ts",
+      "bytes": 18859,
+      "sha256": "f2b5ec81a0b4afe6ae53cde8528e3083e50bb5d00a9fb49f84baaa2efad5ffe4",
+      "physicalLines": 185
+    },
+    {
+      "path": "server/utils/staffing-appointments.ts",
+      "bytes": 25140,
+      "sha256": "1a673f810d064f950a43515d1d85da5cd93138253f1830da93e721ea29a3bd82",
+      "physicalLines": 230
+    },
+    {
+      "path": "server/utils/staffing-catalog.ts",
+      "bytes": 15393,
+      "sha256": "d39bb0081a005e14814b7ebb743b1ce0f70e680e46e549ae371d27c2d5b46a80",
+      "physicalLines": 164
+    },
+    {
+      "path": "server/utils/staffing-cycle.ts",
+      "bytes": 3685,
+      "sha256": "de3b89f48e7a03d3455dc082260fea8eca6b5437f7153d7e29a2c4e453f6f4f6",
+      "physicalLines": 49
+    },
+    {
+      "path": "server/utils/staffing-maintenance.ts",
+      "bytes": 5386,
+      "sha256": "b83c54248d7769bd99b60c078095d0e2a350d99e51abb7035f3975c771311917",
+      "physicalLines": 93
+    },
+    {
+      "path": "server/utils/staffing-outbox.ts",
+      "bytes": 5780,
+      "sha256": "f5fdc0d7e15ebc0580de669b5cbcec5aeb2aa90d5a54bd59002c3ca0f931ebdb",
+      "physicalLines": 76
+    },
+    {
+      "path": "server/utils/staffing-reports.ts",
+      "bytes": 9589,
+      "sha256": "bfdca922db9d87d4e94328af9f460ce7abce5807c5a9fc455db27c925c343983",
+      "physicalLines": 90
+    },
+    {
+      "path": "server/utils/staffing.ts",
+      "bytes": 14757,
+      "sha256": "1687f5b28ea62ace6a93273adf1de29d42829caa15382142d3508e621a838431",
+      "physicalLines": 204
+    },
+    {
+      "path": "shared/announcement-links.ts",
+      "bytes": 1793,
+      "sha256": "e2c14d52737f4c68a0a23ac7ae6adbe222219be12054def963e2d80dc545f3dd",
+      "physicalLines": 61
+    },
+    {
+      "path": "shared/course-insights.ts",
+      "bytes": 2979,
+      "sha256": "d3884e5af4c4c50ce4899ad18061a781f9284354d6513c78659b74f89000d21d",
+      "physicalLines": 118
+    },
+    {
+      "path": "tests/ai-automatic-fairness.test.mjs",
+      "bytes": 5209,
+      "sha256": "0d95b5b0b5c6b0b2c855d9332bed4dfc61911d4f52823c773847e019dd269731",
+      "physicalLines": 85
+    },
+    {
+      "path": "tests/ai-automatic-input.test.mjs",
+      "bytes": 10419,
+      "sha256": "0e4c4b79cca9cd68813da77d4bf8baac8f88e5ec6d68e44c48a9470aed4913df",
+      "physicalLines": 151
+    },
+    {
+      "path": "tests/ai-discovery-scale.test.mjs",
+      "bytes": 15762,
+      "sha256": "096dec53564fa94b92918838c7d8f7de76672d11d9d7e80132eec7359145ff84",
+      "physicalLines": 225
+    },
+    {
+      "path": "tests/ai-evidence.test.mjs",
+      "bytes": 4992,
+      "sha256": "ff4f4062c271e5759c38c67b35cc4bc05ed5cf21bfa841627902e6de718d1c50",
+      "physicalLines": 59
+    },
+    {
+      "path": "tests/ai-execution-fairness.test.mjs",
+      "bytes": 13923,
+      "sha256": "33d41e75487524fe1e2773715cc5b74d281ad234cea8eb8ed3461d2e78e5b505",
+      "physicalLines": 239
+    },
+    {
+      "path": "tests/ai-provider-scripts.test.mjs",
+      "bytes": 2112,
+      "sha256": "f42eac9b000534bc946c2d1085719a2e4a72370368d3dd267d7127a47ad463c2",
+      "physicalLines": 32
+    },
+    {
+      "path": "tests/ai-refresh-durability.test.mjs",
+      "bytes": 12779,
+      "sha256": "2ba3156f2b9adb41b69a5857369d85f517756612b21453e22ae2dc1a45fb66e8",
+      "physicalLines": 186
+    },
+    {
+      "path": "tests/ai-scope-selection.test.mjs",
+      "bytes": 8928,
+      "sha256": "d35d141647d5b29cd77b9f4b3b18e022a0ea8e35edb4780d8c7ccd5bf7304487",
+      "physicalLines": 147
+    },
+    {
+      "path": "tests/ai-usage.test.mjs",
+      "bytes": 12372,
+      "sha256": "930937ee6b23b3ff28f3e9fc639c7c70cc765c61e0354c8cbe8c0b5adb072e2c",
+      "physicalLines": 193
+    },
+    {
+      "path": "tests/announcement-links.test.mjs",
+      "bytes": 2962,
+      "sha256": "29d7e9b030bdad85560813867f8f883995e3fd0eee8f35dc47d57e8cd347200b",
+      "physicalLines": 97
+    },
+    {
+      "path": "tests/course-insights.test.mjs",
+      "bytes": 23495,
+      "sha256": "669bfb90e8d4aaa0ddca3fb1803c48a6a056692b42ea27e0b0b95f559fbfe0d3",
+      "physicalLines": 787
+    },
+    {
+      "path": "tests/course-report-stability.test.mjs",
+      "bytes": 1935,
+      "sha256": "1da8c9e99750dfb9a8123bc3a1a82504d42301c882434315e440f7735915f6db",
+      "physicalLines": 29
+    },
+    {
+      "path": "tests/demo-catalog.test.mjs",
+      "bytes": 15987,
+      "sha256": "90753dbfcf45cbe604cbbc1cd02ce5c67b4fea85cb86ad1d129114aaaf8ae563",
+      "physicalLines": 230
+    },
+    {
+      "path": "tests/demo-showcase-data.test.mjs",
+      "bytes": 11658,
+      "sha256": "9db03614a97aae824c5a800bba2b190eb8403d9be0a19dea957e125d5b1d4347",
+      "physicalLines": 189
+    },
+    {
+      "path": "tests/dependency-security.test.mjs",
+      "bytes": 1887,
+      "sha256": "c6e8565c82e67d4fbe99a46826938a3348809d71e8cf882a6ebc3af9dbbef630",
+      "physicalLines": 40
+    },
+    {
+      "path": "tests/feedback-context.test.mjs",
+      "bytes": 6487,
+      "sha256": "4420220aa0bb3164ea6f393127949097e7f3bf059e125ab83e635b1466aa5e01",
+      "physicalLines": 216
+    },
+    {
+      "path": "tests/help-feedback.test.mjs",
+      "bytes": 3085,
+      "sha256": "7dc1d8e0eb174449bc31d1f14741a5c0f03fdb267dd9d3507474fbf2a6ff9e3b",
+      "physicalLines": 41
+    },
+    {
+      "path": "tests/staffing-duty-types.test.mjs",
+      "bytes": 4970,
+      "sha256": "a2dff3b3dfd6655fcceb9015af517682981d61ebe6cbc76fa3609d57f8ae39cd",
+      "physicalLines": 69
+    },
+    {
+      "path": "tests/staffing-maintenance.test.mjs",
+      "bytes": 5330,
+      "sha256": "3eb655c8943b6cfecf381f521ea3f168a7a0af22ace8ad10a8aeed4bb5a4ba36",
+      "physicalLines": 104
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 320,
+      "sha256": "5dcf8b6d48da0438811c1b22d010604192d0898742331bcee8cf7998e1a1ff45",
+      "physicalLines": 18
+    },
+    {
+      "path": "vendor/safe-deepmerge/LICENSE",
+      "bytes": 1116,
+      "sha256": "6cfc4687cb2f2d86f4a77e6b526290d3878e5e512f3fec2f4cb36a9cb36f798b",
+      "physicalLines": 21
+    },
+    {
+      "path": "vendor/safe-deepmerge/README.md",
+      "bytes": 668,
+      "sha256": "0eed632aa2352bad3173089154d4e1756640c8baddf8a93649255f16753a8019",
+      "physicalLines": 5
+    },
+    {
+      "path": "vendor/safe-deepmerge/index.cjs",
+      "bytes": 2576,
+      "sha256": "91d7133da7ba8f8dc806b5381ad67208366b65ac0e4303ab38c5f8b8c342ed73",
+      "physicalLines": 56
+    },
+    {
+      "path": "vendor/safe-deepmerge/package.json",
+      "bytes": 218,
+      "sha256": "1504ece1f179a069202d97ca88d5460278cf40f780e5c121303aa969443d0f6f",
+      "physicalLines": 8
+    }
+  ]
+}

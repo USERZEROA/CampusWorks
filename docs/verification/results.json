@@ -2916,39 +2916,33 @@
   },
   "currentDelivery": {
     "status": "passed",
-    "recordedAt": "2026-11-08T01:47:41.573626+00:00",
-    "verifiedAt": "2026-11-08T01:44:32.722015+00:00",
-    "scope": "Current local insights, explicitly linked helper feedback, complete TA lifecycle rehearsal and offline presentation evidence.",
-    "applicationSha256": "207429869c5cf98f9093d35b438d41b98196121707d4361a033a86d5a9a40d4e",
+    "recordedAt": "2026-11-08T03:03:16.105791+00:00",
+    "scope": "Position-and-workload staffing, linked online announcements, scoped automatic AI and a live six-window TA lifecycle.",
+    "applicationSha256": "e5fce9e34ae59cf0269922a77102c8103e3df8d8be0a429bd3218174639a599f",
     "receipts": {
-      "insights": {
-        "path": "docs/verification/insights-proof.json",
-        "bytes": 184040,
-        "sha256": "d2f6c78848d40260783bb88c80ef40f9556682521d2fec10187250067f844d39"
-      },
-      "headless": {
-        "path": "docs/verification/insights-lifecycle-headless-proof.json",
-        "bytes": 93666,
-        "sha256": "09d6309901967a1eac1bd648972eccf362f549c0d9e7af254d8317008717a1ae"
-      },
-      "headed": {
-        "path": "docs/verification/insights-lifecycle-headed-proof.json",
-        "bytes": 50782,
-        "sha256": "130b8e1e261b97bd295c6f406e0622e44e5ddadd3c9987e9525281b54d29ea78"
+      "acceptanceAndLiveAI": {
+        "path": "docs/verification/staffing-live-ai-proof.json",
+        "bytes": 413736,
+        "sha256": "d8ec93b437835ef060da34ab928cabb64f0cba9c7b9490705dd00a3124088259"
       },
       "gallery": {
-        "path": "docs/verification/insights-gallery-proof.json",
-        "bytes": 9188,
-        "sha256": "8e1d9de9427d87e34d78ebb50994126b81abc3ff9553b61de3418dce217d2e5d"
+        "path": "docs/verification/staffing-live-ai-gallery-proof.json",
+        "bytes": 13209,
+        "sha256": "563b5c5b0baf54499535c21c5840f959c3e5e727c00fd96aed30460b4990b1ae"
       },
       "cleanup": {
-        "path": "docs/verification/insights-service-cleanup.json",
-        "bytes": 741,
-        "sha256": "4deaec86d739fc9ab8e0a6ca33d302f5c2ffab87ba12df5e53389a428a130c03"
+        "path": "docs/verification/staffing-live-ai-cleanup.json",
+        "bytes": 1543,
+        "sha256": "8a41c25a91e7b1d52be573f18eea873a3ef6fc432090bec13b9d613f02dd4f79"
+      },
+      "review": {
+        "path": "docs/review/staffing-live-ai-review.md",
+        "bytes": 12597,
+        "sha256": "fd888d25aadc1a8c0c2c63a858fca0440953b011b20654bf9489c0d81c305ff0"
       }
     },
     "local": {
-      "passingCases": 204,
+      "passingCases": 208,
       "failures": 0,
       "skipped": 0,
       "flaky": 0,
@@ -2958,46 +2952,142 @@
       "controlGeometryStates": 230,
       "controlGeometryIssues": 0,
       "insightsQueueWidthChecks": 10,
-      "insightsQueueGeometryIssues": 0
+      "insightsQueueGeometryIssues": 0,
+      "uniquePassingCases": 208,
+      "fullRunPassingCases": 207,
+      "fullRunFailedCases": 1,
+      "focusedRecheckPassingCases": 8,
+      "combinedEvidence": true
     },
-    "unitTests": 100,
-    "lifecycle": {
-      "headless": {
-        "cycles": 2,
-        "steps": 68,
-        "resets": 1,
-        "accessibilityScans": 6,
-        "foregroundChecks": 262,
-        "cleanup": "complete"
+    "unitTests": 129,
+    "acceptanceMode": {
+      "method": "combined-full-plus-focused",
+      "cleanFullRun": false,
+      "fullRun": {
+        "passed": 207,
+        "failed": 1
       },
-      "headed": {
-        "cycles": 1,
-        "steps": 34,
-        "resets": 0,
-        "accessibilityScans": 0,
-        "foregroundChecks": 131,
-        "cleanup": "complete"
-      }
+      "focusedRecheck": {
+        "passed": 8,
+        "failed": 0
+      },
+      "uniqueCasesCovered": 208,
+      "unresolvedFailures": 0,
+      "correction": "Test-only same-role projection comparison and full stored-appointment invariant; application code and build unchanged."
+    },
+    "liveOpenAI": {
+      "completedResults": 5,
+      "advisoryKinds": 4,
+      "steps": 38,
+      "headless": false,
+      "foregroundChecks": 141,
+      "reservedRequests": 5,
+      "usageBoundary": "Shared protected request reservations, not billed usage; persistent daily limits survive database restoration and relaunches.",
+      "cleanup": "complete"
+    },
+    "providerDisabledReset": {
+      "cycles": 2,
+      "steps": 66,
+      "resets": 1,
+      "reauthenticatedWindows": 6,
+      "accessibilityScans": 6,
+      "providerCalls": 0,
+      "cleanup": "complete"
     },
     "gallery": {
-      "screenshots": 13,
+      "screenshots": 15,
       "workflowCaptures": 11,
-      "savedRealProviderPanels": 2,
+      "realProviderPanels": 4,
       "browserWidthCases": 8,
-      "accessibilityScans": 16
+      "accessibilityScans": 16,
+      "providerCallsWhenViewed": 0
     },
-    "realProviderCallsThisScope": 0,
-    "savedProviderKeyLoadedThisScope": false,
-    "cleanupBoundary": "Only the named disposable validation targets were checked at the cleanup receipt time. This says nothing about unrelated services or a later interactive preview.",
-    "baselineBoundary": {
-      "rootFieldsRetained": true,
-      "rootRecordedAt": "2026-11-07T21:57:13.890133+00:00",
-      "rootLocalTests": 198,
-      "rootUnitTests": 64,
-      "rootContainerTests": 36,
-      "rootRealProviderApplicationSha256": "21c3704a6da36a05953fe24fbfd25f3784f7bb109d1851aaa865933f7357c8fe",
-      "canonicalBaselineSha256": "73fa9254bcb316e88dc8ceda9a8cfa5dd71b7ea7e220f06cf4b3a7807ecbd901",
-      "meaning": "All root fields other than currentDelivery, including historical local/container/provider results, dates, counts and wording, retain their original baseline meaning. They are not current-source real-provider or container validation."
-    }
+    "previousDelivery": {
+      "status": "passed",
+      "recordedAt": "2026-11-08T01:47:41.573626+00:00",
+      "verifiedAt": "2026-11-08T01:44:32.722015+00:00",
+      "scope": "Current local insights, explicitly linked helper feedback, complete TA lifecycle rehearsal and offline presentation evidence.",
+      "applicationSha256": "207429869c5cf98f9093d35b438d41b98196121707d4361a033a86d5a9a40d4e",
+      "receipts": {
+        "insights": {
+          "path": "docs/verification/insights-proof.json",
+          "bytes": 184040,
+          "sha256": "d2f6c78848d40260783bb88c80ef40f9556682521d2fec10187250067f844d39"
+        },
+        "headless": {
+          "path": "docs/verification/insights-lifecycle-headless-proof.json",
+          "bytes": 93666,
+          "sha256": "09d6309901967a1eac1bd648972eccf362f549c0d9e7af254d8317008717a1ae"
+        },
+        "headed": {
+          "path": "docs/verification/insights-lifecycle-headed-proof.json",
+          "bytes": 50782,
+          "sha256": "130b8e1e261b97bd295c6f406e0622e44e5ddadd3c9987e9525281b54d29ea78"
+        },
+        "gallery": {
+          "path": "docs/verification/insights-gallery-proof.json",
+          "bytes": 9188,
+          "sha256": "8e1d9de9427d87e34d78ebb50994126b81abc3ff9553b61de3418dce217d2e5d"
+        },
+        "cleanup": {
+          "path": "docs/verification/insights-service-cleanup.json",
+          "bytes": 741,
+          "sha256": "4deaec86d739fc9ab8e0a6ca33d302f5c2ffab87ba12df5e53389a428a130c03"
+        }
+      },
+      "local": {
+        "passingCases": 204,
+        "failures": 0,
+        "skipped": 0,
+        "flaky": 0,
+        "runnerErrors": 0,
+        "accessibilityScans": 256,
+        "accessibilityViolations": 0,
+        "controlGeometryStates": 230,
+        "controlGeometryIssues": 0,
+        "insightsQueueWidthChecks": 10,
+        "insightsQueueGeometryIssues": 0
+      },
+      "unitTests": 100,
+      "lifecycle": {
+        "headless": {
+          "cycles": 2,
+          "steps": 68,
+          "resets": 1,
+          "accessibilityScans": 6,
+          "foregroundChecks": 262,
+          "cleanup": "complete"
+        },
+        "headed": {
+          "cycles": 1,
+          "steps": 34,
+          "resets": 0,
+          "accessibilityScans": 0,
+          "foregroundChecks": 131,
+          "cleanup": "complete"
+        }
+      },
+      "gallery": {
+        "screenshots": 13,
+        "workflowCaptures": 11,
+        "savedRealProviderPanels": 2,
+        "browserWidthCases": 8,
+        "accessibilityScans": 16
+      },
+      "realProviderCallsThisScope": 0,
+      "savedProviderKeyLoadedThisScope": false,
+      "cleanupBoundary": "Only the named disposable validation targets were checked at the cleanup receipt time. This says nothing about unrelated services or a later interactive preview.",
+      "baselineBoundary": {
+        "rootFieldsRetained": true,
+        "rootRecordedAt": "2026-11-07T21:57:13.890133+00:00",
+        "rootLocalTests": 198,
+        "rootUnitTests": 64,
+        "rootContainerTests": 36,
+        "rootRealProviderApplicationSha256": "21c3704a6da36a05953fe24fbfd25f3784f7bb109d1851aaa865933f7357c8fe",
+        "canonicalBaselineSha256": "73fa9254bcb316e88dc8ceda9a8cfa5dd71b7ea7e220f06cf4b3a7807ecbd901",
+        "meaning": "All root fields other than currentDelivery, including historical local/container/provider results, dates, counts and wording, retain their original baseline meaning. They are not current-source real-provider or container validation."
+      }
+    },
+    "baselineBoundary": "Every root field outside currentDelivery retains its historical content. The preceding 204-case/100-unit delivery is retained within previousDelivery; current evidence has separate receipt paths."
   }
 }

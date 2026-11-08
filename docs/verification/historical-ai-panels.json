@@ -1,0 +1,21 @@
+{
+  "retentionRecordedAt": "2026-11-08",
+  "scope": "Original saved provider panels retained byte-for-byte from the recorded Git delivery; no new provider call or current-source validation is implied. Current demonstration images have separate live-run provenance.",
+  "historicalProviderReceipt": "docs/verification/showcase-provider-proof.json",
+  "panels": [
+    {
+      "originalPath": "docs/demo/screenshots/showcase-ai-candidates-desktop.png",
+      "retainedPath": "docs/verification/screenshots/historical-ai-candidates-20261107.png",
+      "bytes": 142042,
+      "sha256": "ed8b97e9a91f48cccb1518d618fa2e0fa029e3edcc69bc7ba753d4cdc71db42d",
+      "gitCommit": "17651c7"
+    },
+    {
+      "originalPath": "docs/demo/screenshots/showcase-ai-course-review-desktop.png",
+      "retainedPath": "docs/verification/screenshots/historical-ai-course-review-20261107.png",
+      "bytes": 41198,
+      "sha256": "3050187a4f9cbfc42da209bcfbfa4863475438e3a8dafc044af8aeeb0e5876d4",
+      "gitCommit": "17651c7"
+    }
+  ]
+}
