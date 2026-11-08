@@ -3106,6 +3106,22 @@
       "targetActiveCycleMs": 300000,
       "normalFiveMinuteCycleMeasured": false,
       "boundary": "Presentation-only follow-up; business application bytes/build unchanged. Earlier acceptance and real-provider records keep their own dates/script hashes."
+    },
+    "cleanClone": {
+      "status": "passed",
+      "recordedAt": "2026-11-08T04:03:47.458Z",
+      "receipt": {
+        "path": "docs/verification/fresh-clone-proof.json",
+        "sha256": "ed95fc20bf297d9d1291497d9b05b048b07fd545b310863c997b35af2cc8d910"
+      },
+      "testedGitHubCommit": "8b62c2c10cc88d421dbb6c2afb6ed0b667215060",
+      "unitTests": 143,
+      "nativeDemoSteps": 33,
+      "nativeForegroundChecks": 126,
+      "coldDockerQueueCases": 9,
+      "keyConfiguration": "synthetic-only .env and new Windows encrypted file passed",
+      "realProviderCallsForThisScope": 0,
+      "boundary": "New-computer follow-up; earlier application, presentation and real-provider receipts retain their own dates and source hashes."
     }
   }
 }

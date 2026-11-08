@@ -1,0 +1,2519 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-08T04:03:47.458Z",
+  "scope": "Actual authenticated GitHub clone on Windows, fresh npm/browser installation, build/type/unit checks, local key configuration and the complete provider-disabled six-window lifecycle; separate cold Linux-container startup and queue checks.",
+  "clone": {
+    "origin": "https://github.com/USERZEROA/CampusWorks.git",
+    "testedCommit": "8b62c2c10cc88d421dbb6c2afb6ed0b667215060",
+    "gitTree": "672b3c1bf3049bde16677954f1c4c418436a1ef9",
+    "trackedTreeClean": true,
+    "initialObservation": "Immediately after the remote clone, explicit filesystem checks found no node_modules, .output, .nuxt, .env or .cache/ai-provider.xml. No files were copied from the original computer to satisfy those requirements.",
+    "source": [
+      {
+        "path": "package.json",
+        "sha256": "0f058e3239604ac486be961095e463e1649f1a5bcf28e552e727dd3760a96627"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "424e5d75c72c1495702d1a1531a72ee3fe0c9e9821a347f330b1bcdc8183c555"
+      },
+      {
+        "path": ".nvmrc",
+        "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+      },
+      {
+        "path": ".gitignore",
+        "sha256": "73feedfc43c1ffb865f1171f10f51a2d2c0cf708f107c38f5ff387072a31ab8e"
+      },
+      {
+        "path": ".dockerignore",
+        "sha256": "5f2fa0df284d6a027a0180cc2f5bc9e846f011f4578f05022bf0cd66c61ce030"
+      },
+      {
+        "path": ".env.example",
+        "sha256": "bea9797633b120eb33eac0c83bd9de45b95530d1ed58655021029c47ce0229b2"
+      },
+      {
+        "path": "Dockerfile",
+        "sha256": "b7b3cb9c183163706d9887a36b4a1e298b6d0ac1b4c1a5731c6ea9077e405066"
+      },
+      {
+        "path": "docker-compose.yml",
+        "sha256": "7ddcd7a6d964ec230f3c4a14b575b5c65d0999e1c64335e75bed288e120dfa73"
+      },
+      {
+        "path": "ops/init-mongo-replica.js",
+        "sha256": "689e664d58060813edcaf87204c86ecef55027b2291023d2e4dabf7a11efb1a6"
+      },
+      {
+        "path": "scripts/runtime-tools.mjs",
+        "sha256": "dd671d37ccaaafa95fb343a604fb96e34ebafd3be6d02fe877f60a00165bc95f"
+      },
+      {
+        "path": "scripts/ai-provider-config.mjs",
+        "sha256": "e9aa9921446db8532923298876d457f469fb4d0da7c7f1a52eb21af5ea37340a"
+      },
+      {
+        "path": "scripts/ai-provider-dialog.ps1",
+        "sha256": "881fd886c9b390389764272edc60aaded136b99285589d784f11d77d2243777f"
+      },
+      {
+        "path": "scripts/start-with-ai.mjs",
+        "sha256": "6fd13ce9f850d23c0e67c4a34ab8e633a6be01be9c37e6f199c0c74900c08c72"
+      },
+      {
+        "path": "scripts/demo-loop.mjs",
+        "sha256": "75f673c72bfe177ffcbcc19696f8df99a69f3ddffd2ab4f82bf06997ec04fad8"
+      },
+      {
+        "path": "scripts/demo-loop-service.mjs",
+        "sha256": "e8bffda47711edef964951e48f30f4d5ac9112374f2cb62d7409ceacbfb12d2e"
+      },
+      {
+        "path": "scripts/demo-loop-flow.mjs",
+        "sha256": "38829fb42e19d283916e6cb0a6c6d7614c315232ace771c0f40fd9b6fb1c62b1"
+      },
+      {
+        "path": "scripts/demo-stage.mjs",
+        "sha256": "6c023c3c420203915f21efac36b6c29015163681029c646cf6d1fa238cb04f4a"
+      },
+      {
+        "path": "scripts/demo-pacing.mjs",
+        "sha256": "0be83c7381821e029cbf589e36b9261b7c04248c437a2465f76c622f2b35e7b7"
+      },
+      {
+        "path": "scripts/demo-foreground.ps1",
+        "sha256": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424"
+      },
+      {
+        "path": "vendor/safe-deepmerge/package.json",
+        "sha256": "1504ece1f179a069202d97ca88d5460278cf40f780e5c121303aa969443d0f6f"
+      },
+      {
+        "path": "README.md",
+        "sha256": "4892c4249cb82a0d87b6568a7f72a81bd9c9d1be49c3dcbc80e00f0de1cc59ae"
+      },
+      {
+        "path": "docs/QUICKSTART.md",
+        "sha256": "b70422fb1f70eb6119a7b7a8e74f1e9569ef52cfdab883d265fc51bade61a6d7"
+      }
+    ],
+    "dependencies": "npm ci --cache .cache/npm --no-audit",
+    "browsers": "npx playwright install chromium firefox with PLAYWRIGHT_BROWSERS_PATH inside the clone; browser binaries were downloaded into that new directory.",
+    "hostNode": "v24.21.0",
+    "hostPlatform": "win32",
+    "hostArchitecture": "x64",
+    "checks": {
+      "install": "passed",
+      "unit": {
+        "tests": 143,
+        "passed": 143,
+        "failed": 0
+      },
+      "typecheck": "passed",
+      "productionBuild": "passed"
+    },
+    "logs": [
+      {
+        "path": ".cache/github-fresh-install.log",
+        "bytes": 19478,
+        "sha256": "1a4f704f1d534ce0e2000bf7be1cc8749c9581f4549bfb888d4e18d0eb9b9aea"
+      },
+      {
+        "path": ".cache/github-fresh-browsers.log",
+        "bytes": 13612,
+        "sha256": "53a33aa09c159da5c0a10a56c287afd91d996bf533852c0c07387f4259c1ba31"
+      },
+      {
+        "path": ".cache/github-fresh-unit.log",
+        "bytes": 29862,
+        "sha256": "1894e0b3c6b29d38032045f817a043031ab3eee5400d0c7e4a5651193700d712"
+      },
+      {
+        "path": ".cache/github-fresh-typecheck.log",
+        "bytes": 17924,
+        "sha256": "ac00842c982781ce77b79bab8487c5faad55a46d1ff97251fb544a1276c1e1ee"
+      },
+      {
+        "path": ".cache/github-fresh-build.log",
+        "bytes": 72566,
+        "sha256": "fc703d9761753a14ad10863b95b599834c66b8e8dfb767e6b3e827d8c9b6b7df"
+      },
+      {
+        "path": ".cache/github-fresh-demo.log",
+        "bytes": 5276,
+        "sha256": "edd9ca0989823694d47476dc3282c950cf13d8534f2e3ba02cc31d3a3abbe4c2"
+      }
+    ],
+    "lifecycle": {
+      "input": {
+        "path": ".cache/github-fresh-clone/.cache/demo-loop-proof.json",
+        "bytes": 63150,
+        "sha256": "d8b5de30cbf6f03ccca455319ead811c69ca6eee814ee61039ad828bb78153cc"
+      },
+      "proof": {
+        "startedAt": "2026-11-08T03:56:26.140Z",
+        "synthetic": true,
+        "headless": false,
+        "pace": "fast",
+        "requestedCycles": 1,
+        "providerCalls": 0,
+        "provider": "disabled",
+        "completedProviderResults": 0,
+        "totalSteps": 33,
+        "pacing": {
+          "targetActiveMs": 0,
+          "steps": [
+            {
+              "title": "Open the shared recruitment cycle",
+              "actor": "admin",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Define the course position",
+              "actor": "instructor",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Set qualifications and publish for approval",
+              "actor": "instructor",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Approve the course opening",
+              "actor": "admin",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Discover the opportunity",
+              "actor": "applicant",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Answer the qualification questions",
+              "actor": "applicant",
+              "category": "application",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Attach a CV and submit",
+              "actor": "applicant",
+              "category": "document",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Apply to another course as well",
+              "actor": "applicant",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "A second instructor reviews the same applicant",
+              "actor": "peer",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Review Alex for CS201",
+              "actor": "instructor",
+              "category": "review",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Shortlist and issue the offer",
+              "actor": "instructor",
+              "category": "decision",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "The other instructor sees availability update",
+              "actor": "peer",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Accept the CS201 offer",
+              "actor": "applicant",
+              "category": "decision",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Record the appointment clearance",
+              "actor": "admin",
+              "category": "clearance",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Alex becomes the appointed course TA",
+              "actor": "applicant",
+              "category": "activation",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Start the office-hours shift",
+              "actor": "applicant",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "The existing TA coordinates the session",
+              "actor": "mentor",
+              "category": "document",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "A student enrolls in the course",
+              "actor": "learner",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Ask for help through the live queue",
+              "actor": "learner",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Alex claims Sam’s request",
+              "actor": "applicant",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "The student sees who is helping",
+              "actor": "learner",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Complete the help session",
+              "actor": "applicant",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Give feedback on the support",
+              "actor": "learner",
+              "category": "review",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Record work beyond queue timing",
+              "actor": "applicant",
+              "category": "document",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Review course operations and feedback",
+              "actor": "instructor",
+              "category": "operations",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Close the course support queue",
+              "actor": "mentor",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Return to the TA page before closeout",
+              "actor": "applicant",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "End the appointment with a reason",
+              "actor": "instructor",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "TA access disappears automatically",
+              "actor": "applicant",
+              "category": "decision",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "See the evidence for the next cycle",
+              "actor": "instructor",
+              "category": "course",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Compare department demand and support",
+              "actor": "admin",
+              "category": "department",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "Archive the completed opening",
+              "actor": "instructor",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            },
+            {
+              "title": "One account, a complete lifecycle",
+              "actor": "applicant",
+              "category": "transition",
+              "holdMs": 150,
+              "minViewMs": 0
+            }
+          ],
+          "boundary": "Paused time is excluded. Slow actions may extend a cycle to preserve result-reading time; no remaining time is parked on the final page."
+        },
+        "providerUsageBoundary": "Shared protected request reservations, not billed usage; persistent daily limits survive database restoration and relaunches.",
+        "providerKeyLoaded": false,
+        "completedCycles": 1,
+        "cycles": [
+          {
+            "courseId": "cs201",
+            "cycle": 1,
+            "startedAt": "2026-11-08T03:58:10.018Z",
+            "ai": [],
+            "review": {
+              "reportedHours": 0.5,
+              "sessions": 28
+            },
+            "department": {
+              "courses": 10,
+              "personalFeedbackCount": 1,
+              "personalFeedbackAverage": 5,
+              "reviewers": 1
+            },
+            "positionId": "ff1b2ad2-2312-4606-9d4f-5ba33e8b9879",
+            "applicationId": "0088d4b9-9b53-4273-acd2-3455f80e671c",
+            "peerApplicationId": "7eec169d-f8c6-4942-81f2-dff260b30b1c",
+            "appointmentId": "e65b48f2-4806-4c23-8557-f6d0adcaf4ce",
+            "steps": [
+              {
+                "actor": "admin",
+                "role": "Administrator",
+                "title": "Open the shared recruitment cycle",
+                "status": "passed",
+                "durationMs": 499
+              },
+              {
+                "actor": "instructor",
+                "role": "Instructor",
+                "title": "Define the course position",
+                "status": "passed",
+                "durationMs": 873
+              },
+              {
+                "actor": "instructor",
+                "role": "Instructor",
+                "title": "Set qualifications and publish for approval",
+                "status": "passed",
+                "durationMs": 688
+              },
+              {
+                "actor": "admin",
+                "role": "Administrator",
+                "title": "Approve the course opening",
+                "status": "passed",
+                "durationMs": 3678
+              },
+              {
+                "actor": "applicant",
+                "role": "Student",
+                "title": "Discover the opportunity",
+                "status": "passed",
+                "durationMs": 1009
+              },
+              {
+                "actor": "applicant",
+                "role": "Student",
+                "title": "Answer the qualification questions",
+                "status": "passed",
+                "durationMs": 293
+              },
+              {
+                "actor": "applicant",
+                "role": "Student",
+                "title": "Attach a CV and submit",
+                "status": "passed",
+                "durationMs": 892
+              },
+              {
+                "actor": "applicant",
+                "role": "Student",
+                "title": "Apply to another course as well",
+                "status": "passed",
+                "durationMs": 1320
+              },
+              {
+                "actor": "peer",
+                "role": "Instructor",
+                "title": "A second instructor reviews the same applicant",
+                "status": "passed",
+                "durationMs": 478
+              },
+              {
+                "actor": "instructor",
+                "role": "Instructor",
+                "title": "Review Alex for CS201",
+                "status": "passed",
+                "durationMs": 3613
+              },
+              {
+                "actor": "instructor",
+                "role": "Instructor",
+                "title": "Shortlist and issue the offer",
+                "status": "passed",
+                "durationMs": 608
+              },
+              {
+                "actor": "peer",
+                "role": "Instructor",
+                "title": "The other instructor sees availability update",
+                "status": "passed",
+                "durationMs": 1065
+              },
+              {
+                "actor": "applicant",
+                "role": "Student",
+                "title": "Accept the CS201 offer",
+                "status": "passed",
+                "durationMs": 488
+              },
+              {
+                "actor": "admin",
+                "role": "Administrator",
+                "title": "Record the appointment clearance",
+                "status": "passed",
+                "durationMs": 354
+              },
+              {
+                "actor": "applicant",
+                "role": "Student → TA",
+                "title": "Alex becomes the appointed course TA",
+                "status": "passed",
+                "durationMs": 5300
+              },
+              {
+                "actor": "applicant",
+                "role": "TA",
+                "title": "Start the office-hours shift",
+                "status": "passed",
+                "durationMs": 325
+              },
+              {
+                "actor": "mentor",
+                "role": "TA",
+                "title": "The existing TA coordinates the session",
+                "status": "passed",
+                "durationMs": 352
+              },
+              {
+                "actor": "learner",
+                "role": "Student",
+                "title": "A student enrolls in the course",
+                "status": "passed",
+                "durationMs": 462
+              },
+              {
+                "actor": "learner",
+                "role": "Student",
+                "title": "Ask for help through the live queue",
+                "status": "passed",
+                "durationMs": 404
+              },
+              {
+                "actor": "applicant",
+                "role": "TA",
+                "title": "Alex claims Sam’s request",
+                "status": "passed",
+                "durationMs": 2171
+              },
+              {
+                "actor": "learner",
+                "role": "Student",
+                "title": "The student sees who is helping",
+                "status": "passed",
+                "durationMs": 2066
+              },
+              {
+                "actor": "applicant",
+                "role": "TA",
+                "title": "Complete the help session",
+                "status": "passed",
+                "durationMs": 5277
+              },
+              {
+                "actor": "learner",
+                "role": "Student",
+                "title": "Give feedback on the support",
+                "status": "passed",
+                "durationMs": 708
+              },
+              {
+                "actor": "applicant",
+                "role": "TA",
+                "title": "Record work beyond queue timing",
+                "status": "passed",
+                "durationMs": 475
+              },
+              {
+                "actor": "instructor",
+                "role": "Instructor",
+                "title": "Review course operations and feedback",
+                "status": "passed",
+                "durationMs": 617
+              },
+              {
+                "actor": "mentor",
+                "role": "TA",
+                "title": "Close the course support queue",
+                "status": "passed",
+                "durationMs": 334
+              },
+              {
+                "actor": "applicant",
+                "role": "TA",
+                "title": "Return to the TA page before closeout",
+                "status": "passed",
+                "durationMs": 308
+              },
+              {
+                "actor": "instructor",
+                "role": "Instructor",
+                "title": "End the appointment with a reason",
+                "status": "passed",
+                "durationMs": 462
+              },
+              {
+                "actor": "applicant",
+                "role": "TA → Student",
+                "title": "TA access disappears automatically",
+                "status": "passed",
+                "durationMs": 3108
+              },
+              {
+                "actor": "instructor",
+                "role": "Instructor",
+                "title": "See the evidence for the next cycle",
+                "status": "passed",
+                "durationMs": 354
+              },
+              {
+                "actor": "admin",
+                "role": "Administrator",
+                "title": "Compare department demand and support",
+                "status": "passed",
+                "durationMs": 415
+              },
+              {
+                "actor": "instructor",
+                "role": "Instructor",
+                "title": "Archive the completed opening",
+                "status": "passed",
+                "durationMs": 445
+              },
+              {
+                "actor": "applicant",
+                "role": "Student",
+                "title": "One account, a complete lifecycle",
+                "status": "passed",
+                "durationMs": 277
+              }
+            ],
+            "durationMs": 39726,
+            "activeDurationMs": 39726.60879999999,
+            "pausedDurationMs": 0,
+            "finishedAt": "2026-11-08T03:58:49.744Z",
+            "providerCalls": 0,
+            "completedProviderResults": 0,
+            "aiUsage": {
+              "before": {
+                "usageDatabase": null,
+                "reservedRequests": 0,
+                "reservedTokens": 0,
+                "daily": []
+              },
+              "after": {
+                "usageDatabase": null,
+                "reservedRequests": 0,
+                "reservedTokens": 0,
+                "daily": []
+              },
+              "reservedRequests": 0,
+              "boundary": "Shared protected request reservations; may include retries or another concurrent presentation and are not billed-token measurements."
+            },
+            "status": "passed"
+          }
+        ],
+        "resets": [],
+        "stage": [
+          {
+            "actor": "admin",
+            "title": "Pause verification",
+            "detail": "The next action waits until Resume.",
+            "index": 0,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Administrator",
+            "url": "http://127.0.0.1:62918/admin/staffing",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 394.70960000000196,
+            "viewHoldMs": 150,
+            "activeDurationMs": 554.6756000000023
+          },
+          {
+            "actor": "admin",
+            "title": "Open the shared recruitment cycle",
+            "detail": "One administrator sets the current semester and recruitment window for everyone.",
+            "index": 1,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Administrator",
+            "url": "http://127.0.0.1:62918/admin/staffing",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 330.42729999999574,
+            "viewHoldMs": 150,
+            "activeDurationMs": 497.2317999999941
+          },
+          {
+            "actor": "instructor",
+            "title": "Define the course position",
+            "detail": "CS201 needs a TA for attendance, labs, grading and office hours.",
+            "index": 2,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/staffing/new",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 711.8315000000002,
+            "viewHoldMs": 150,
+            "activeDurationMs": 872.1318000000028
+          },
+          {
+            "actor": "instructor",
+            "title": "Set qualifications and publish for approval",
+            "detail": "The instructor defines the evidence applicants must supply; publication requires administrator approval.",
+            "index": 3,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/staffing/ff1b2ad2-2312-4606-9d4f-5ba33e8b9879",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 459.95599999999104,
+            "viewHoldMs": 150,
+            "activeDurationMs": 612.9426999999996
+          },
+          {
+            "actor": "admin",
+            "title": "Approve the course opening",
+            "detail": "The administrator confirms the posting before students can apply.",
+            "index": 4,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Administrator",
+            "url": "http://127.0.0.1:62918/admin/staffing",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 3508.279800000004,
+            "viewHoldMs": 150,
+            "activeDurationMs": 3676.294399999999
+          },
+          {
+            "actor": "applicant",
+            "title": "Discover the opportunity",
+            "detail": "Alex begins as an ordinary student, with no TA role or existing offer.",
+            "index": 5,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/applications/0088d4b9-9b53-4273-acd2-3455f80e671c",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 840.9587000000029,
+            "viewHoldMs": 150,
+            "activeDurationMs": 1007.757500000007
+          },
+          {
+            "actor": "applicant",
+            "title": "Answer the qualification questions",
+            "detail": "Personal background, availability and technical answers remain private to the authorized reviewers.",
+            "index": 6,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/applications/0088d4b9-9b53-4273-acd2-3455f80e671c",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 136.65100000001257,
+            "viewHoldMs": 150,
+            "activeDurationMs": 291.25790000001143
+          },
+          {
+            "actor": "applicant",
+            "title": "Attach a CV and submit",
+            "detail": "The submitted application records a stable version of the answers and private attachment.",
+            "index": 7,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/applications/0088d4b9-9b53-4273-acd2-3455f80e671c",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 737.2540000000008,
+            "viewHoldMs": 150,
+            "activeDurationMs": 891.2357999999949
+          },
+          {
+            "actor": "applicant",
+            "title": "Apply to another course as well",
+            "detail": "Alex also applies to CS101, so the next selection will demonstrate coordination between two instructors.",
+            "index": 8,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/applications/7eec169d-f8c6-4942-81f2-dff260b30b1c",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 1164.7831000000006,
+            "viewHoldMs": 150,
+            "activeDurationMs": 1318.4273000000103
+          },
+          {
+            "actor": "peer",
+            "title": "A second instructor reviews the same applicant",
+            "detail": "Before an offer, Alex is available to both courses. Neither instructor receives automatic hiring authority.",
+            "index": 9,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/staffing/a695a417-6d6f-4c13-9804-2260fed84409",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 324.4552999999869,
+            "viewHoldMs": 150,
+            "activeDurationMs": 477.06479999999283
+          },
+          {
+            "actor": "instructor",
+            "title": "Review Alex for CS201",
+            "detail": "The faculty reviewer can inspect the submitted profile, answers and private CV.",
+            "index": 10,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/applications/0088d4b9-9b53-4273-acd2-3455f80e671c",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 3069.3641999999963,
+            "viewHoldMs": 150,
+            "activeDurationMs": 3224.3784000000014
+          },
+          {
+            "actor": "instructor",
+            "title": "Shortlist and issue the offer",
+            "detail": "The faculty decision reserves the candidate and position together.",
+            "index": 11,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/staffing/ff1b2ad2-2312-4606-9d4f-5ba33e8b9879",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 443.5103999999992,
+            "viewHoldMs": 150,
+            "activeDurationMs": 606.6576999999961
+          },
+          {
+            "actor": "peer",
+            "title": "The other instructor sees availability update",
+            "detail": "Alex now has an overlapping offer. CS101 cannot select the same applicant again.",
+            "index": 12,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/staffing/a695a417-6d6f-4c13-9804-2260fed84409",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 899.7789000000048,
+            "viewHoldMs": 150,
+            "activeDurationMs": 1064.3190000000031
+          },
+          {
+            "actor": "applicant",
+            "title": "Accept the CS201 offer",
+            "detail": "The candidate chooses. Acceptance alone does not grant TA course access.",
+            "index": 13,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/applications/0088d4b9-9b53-4273-acd2-3455f80e671c",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 331.1119000000035,
+            "viewHoldMs": 150,
+            "activeDurationMs": 487.9976999999926
+          },
+          {
+            "actor": "admin",
+            "title": "Record the appointment clearance",
+            "detail": "An administrator confirms clearance; no manual TA role grant is needed.",
+            "index": 14,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Administrator",
+            "url": "http://127.0.0.1:62918/admin/staffing",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 185.51309999999648,
+            "viewHoldMs": 150,
+            "activeDurationMs": 353.4664000000048
+          },
+          {
+            "actor": "applicant",
+            "title": "Alex becomes the appointed course TA",
+            "detail": "The same account updates silently from pending clearance to Active and gains the CS201 queue link.",
+            "index": 15,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student → TA",
+            "url": "http://127.0.0.1:62918/courses/cs201/ta",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 5132.055099999998,
+            "viewHoldMs": 150,
+            "activeDurationMs": 5299.828800000003
+          },
+          {
+            "actor": "applicant",
+            "title": "Start the office-hours shift",
+            "detail": "Alex is on duty for CS201, with appointment-derived authority for this course only.",
+            "index": 16,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "TA",
+            "url": "http://127.0.0.1:62918/courses/cs201/ta",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 169.33640000000014,
+            "viewHoldMs": 150,
+            "activeDurationMs": 323.14220000000205
+          },
+          {
+            "actor": "mentor",
+            "title": "The existing TA coordinates the session",
+            "detail": "A second TA sees the same live course and posts an announcement for students.",
+            "index": 17,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "TA",
+            "url": "http://127.0.0.1:62918/courses/cs201/ta",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 190.36600000000908,
+            "viewHoldMs": 150,
+            "activeDurationMs": 350.77120000000286
+          },
+          {
+            "actor": "learner",
+            "title": "A student enrolls in the course",
+            "detail": "Sam has a separate student session. The course requires enrollment before joining the queue.",
+            "index": 18,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/courses/cs201/student",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 305.77300000000105,
+            "viewHoldMs": 150,
+            "activeDurationMs": 461.30530000000726
+          },
+          {
+            "actor": "learner",
+            "title": "Ask for help through the live queue",
+            "detail": "Sam supplies a location and a concrete debugging question.",
+            "index": 19,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/courses/cs201/student",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 234.66820000000007,
+            "viewHoldMs": 150,
+            "activeDurationMs": 402.7183999999979
+          },
+          {
+            "actor": "applicant",
+            "title": "Alex claims Sam’s request",
+            "detail": "The queue assigns one helper to this request; the student sees the same claim automatically.",
+            "index": 20,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "TA",
+            "url": "http://127.0.0.1:62918/courses/cs201/ta",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 2002.840400000001,
+            "viewHoldMs": 150,
+            "activeDurationMs": 2168.9274000000005
+          },
+          {
+            "actor": "learner",
+            "title": "The student sees who is helping",
+            "detail": "Sam’s queue state updates without refreshing the page.",
+            "index": 21,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/courses/cs201/student",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 1898.1754999999976,
+            "viewHoldMs": 150,
+            "activeDurationMs": 2064.79849999999
+          },
+          {
+            "actor": "applicant",
+            "title": "Complete the help session",
+            "detail": "The completed session enters the course history. This is one synthetic help interaction, not a simulated semester.",
+            "index": 22,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "TA",
+            "url": "http://127.0.0.1:62918/courses/cs201/ta",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 5109.197600000014,
+            "viewHoldMs": 150,
+            "activeDurationMs": 5276.656199999998
+          },
+          {
+            "actor": "learner",
+            "title": "Give feedback on the support",
+            "detail": "Sam rates Alex's recorded help session. Personal feedback stays separate from general course feedback.",
+            "index": 23,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/courses/cs201/student",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 541.2906999999832,
+            "viewHoldMs": 150,
+            "activeDurationMs": 707.3671999999788
+          },
+          {
+            "actor": "applicant",
+            "title": "Record work beyond queue timing",
+            "detail": "Alex reports office-hours work separately; queue duration does not represent all teaching work.",
+            "index": 24,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "TA",
+            "url": "http://127.0.0.1:62918/applications/0088d4b9-9b53-4273-acd2-3455f80e671c",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 319.92149999999674,
+            "viewHoldMs": 150,
+            "activeDurationMs": 473.06280000001425
+          },
+          {
+            "actor": "instructor",
+            "title": "Review course operations and feedback",
+            "detail": "The instructor sees the completed session and Sam’s feedback in the course management view.",
+            "index": 25,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/courses/cs201/admin",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 451.35250000000815,
+            "viewHoldMs": 150,
+            "activeDurationMs": 616.5855000000156
+          },
+          {
+            "actor": "mentor",
+            "title": "Close the course support queue",
+            "detail": "Course closeout clears remaining requests and duty. This is a queue closure, not calendar semester expiry.",
+            "index": 26,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "TA",
+            "url": "http://127.0.0.1:62918/courses/cs201/ta",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 167.6024000000034,
+            "viewHoldMs": 150,
+            "activeDurationMs": 332.8287999999884
+          },
+          {
+            "actor": "applicant",
+            "title": "Return to the TA page before closeout",
+            "detail": "Keep the appointed TA’s page open so automatic access removal will be visible.",
+            "index": 27,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "TA",
+            "url": "http://127.0.0.1:62918/courses/cs201/ta",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 149.96119999999064,
+            "viewHoldMs": 150,
+            "activeDurationMs": 305.94370000000345
+          },
+          {
+            "actor": "instructor",
+            "title": "End the appointment with a reason",
+            "detail": "The faculty member closes Alex’s appointment and its dated course authority ends.",
+            "index": 28,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/staffing/ff1b2ad2-2312-4606-9d4f-5ba33e8b9879",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 293.4794000000111,
+            "viewHoldMs": 150,
+            "activeDurationMs": 461.06849999999395
+          },
+          {
+            "actor": "applicant",
+            "title": "TA access disappears automatically",
+            "detail": "The same person returns to the student course view; no administrator manually removes a role.",
+            "index": 29,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "TA → Student",
+            "url": "http://127.0.0.1:62918/courses/cs201/student",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 2941.6809000000067,
+            "viewHoldMs": 150,
+            "activeDurationMs": 3106.7625999999873
+          },
+          {
+            "actor": "instructor",
+            "title": "See the evidence for the next cycle",
+            "detail": "Course activity, reported work and staffing capacity inform the next support plan.",
+            "index": 30,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/courses/cs201/review",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 196.92819999999483,
+            "viewHoldMs": 150,
+            "activeDurationMs": 352.8430000000226
+          },
+          {
+            "actor": "admin",
+            "title": "Compare department demand and support",
+            "detail": "The administrator compares courses, busy hours and attributed feedback, with sample sizes and teaching workload visible.",
+            "index": 31,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Administrator",
+            "url": "http://127.0.0.1:62918/insights",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 248.25719999999274,
+            "viewHoldMs": 150,
+            "activeDurationMs": 414.49220000000787
+          },
+          {
+            "actor": "instructor",
+            "title": "Archive the completed opening",
+            "detail": "The instructor archives this position after the appointment has ended.",
+            "index": 32,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:62918/staffing/ff1b2ad2-2312-4606-9d4f-5ba33e8b9879",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 289.4591000000073,
+            "viewHoldMs": 150,
+            "activeDurationMs": 442.94659999999567
+          },
+          {
+            "actor": "applicant",
+            "title": "One account, a complete lifecycle",
+            "detail": "Alex retains the application and appointment history, with no remaining TA course authority. The next loop restores only this isolated demo.",
+            "index": 33,
+            "totalSteps": 33,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:62918/applications/0088d4b9-9b53-4273-acd2-3455f80e671c",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 124.69029999998747,
+            "viewHoldMs": 150,
+            "activeDurationMs": 276.98989999998594
+          }
+        ],
+        "accessibility": [],
+        "runtimeErrors": [],
+        "source": {
+          "scripts/demo-loop.mjs": "75f673c72bfe177ffcbcc19696f8df99a69f3ddffd2ab4f82bf06997ec04fad8",
+          "scripts/demo-loop-flow.mjs": "38829fb42e19d283916e6cb0a6c6d7614c315232ace771c0f40fd9b6fb1c62b1",
+          "scripts/demo-loop-service.mjs": "e8bffda47711edef964951e48f30f4d5ac9112374f2cb62d7409ceacbfb12d2e",
+          "scripts/demo-pacing.mjs": "0be83c7381821e029cbf589e36b9261b7c04248c437a2465f76c622f2b35e7b7",
+          "scripts/demo-stage.mjs": "6c023c3c420203915f21efac36b6c29015163681029c646cf6d1fa238cb04f4a",
+          "scripts/demo-foreground.ps1": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424"
+        },
+        "origin": "http://127.0.0.1:62918",
+        "database": "campusworks_showcase_loop_70605bd17d00761c3b1a4f39",
+        "ai": {
+          "enabled": false,
+          "provider": "disabled",
+          "model": null,
+          "keyLoaded": false,
+          "usageDatabase": null
+        },
+        "aiUsageBefore": {
+          "usageDatabase": null,
+          "reservedRequests": 0,
+          "reservedTokens": 0,
+          "daily": []
+        },
+        "pauseResume": "passed",
+        "aiUsageAfter": {
+          "usageDatabase": null,
+          "reservedRequests": 0,
+          "reservedTokens": 0,
+          "daily": []
+        },
+        "status": "passed",
+        "foregroundCheckCount": 126,
+        "foregroundChecks": [
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:09.851Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:10.025Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:10.169Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:10.185Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:10.537Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:10.684Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:10.743Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:10.902Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.010Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.026Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.042Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.060Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.098Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.147Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.196Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.205Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.218Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.396Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.398Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.426Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.464Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.479Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:11.620Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:12.098Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:12.101Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:15.777Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:15.917Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:15.971Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.071Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.102Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.771Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.773Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.786Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.801Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.814Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.827Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.839Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.851Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.865Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.878Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:16.891Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:17.064Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:17.066Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:17.228Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:17.239Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:17.399Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:17.956Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.066Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.213Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.223Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.235Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.247Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.261Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.274Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.288Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.303Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.315Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.327Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.338Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.351Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.365Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.397Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.549Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.560Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:18.703Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "peer",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:19.288Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "peer",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:19.434Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:19.767Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:22.650Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:23.368Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:23.484Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:23.636Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "peer",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:23.986Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:25.053Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:25.167Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:25.544Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:25.547Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:25.559Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:25.898Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:30.855Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:31.184Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:31.188Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "mentor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:31.522Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "mentor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:31.528Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "mentor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:31.548Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:31.877Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:32.002Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:32.324Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:32.326Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:32.376Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:32.386Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:32.397Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:32.739Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:32.745Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:34.911Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:36.978Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:41.932Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.256Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.378Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.417Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.576Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.586Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.595Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.602Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.615Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "learner",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.628Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:42.962Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:43.068Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:43.077Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:43.087Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:43.103Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:43.436Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:43.864Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "mentor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:44.053Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "mentor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:44.056Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:44.390Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:44.698Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:44.818Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:44.829Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:45.156Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:48.268Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:48.619Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "admin",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:48.841Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:49.036Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "instructor",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:49.152Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "applicant",
+            "review": false,
+            "checkedAt": "2026-11-08T03:58:49.482Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          }
+        ],
+        "stageCleanupComplete": true,
+        "cleanupReceipt": {
+          "complete": true,
+          "applicationStopped": true,
+          "databaseDropped": true,
+          "reusedMongo": false,
+          "ownedMongoStopped": true
+        },
+        "cleanup": "complete",
+        "finishedAt": "2026-11-08T03:58:51.552Z"
+      }
+    },
+    "keyConfiguration": {
+      "status": "passed",
+      "recordedAt": "2026-11-08T03:57:21.647Z",
+      "scope": "Clean GitHub clone local key configuration only; synthetic credential, no provider call.",
+      "missingKeyRejected": true,
+      "keyOnlyEnvironmentFileReady": true,
+      "newWindowsEncryptedKeyReady": true,
+      "originalComputerKeyCopied": false,
+      "syntheticFilesRemoved": true,
+      "realProviderCalls": 0
+    }
+  },
+  "docker": {
+    "coldTrackedBuild": {
+      "input": {
+        "path": ".cache/fresh-docker-2d0875df4732/proof.json",
+        "bytes": 2790,
+        "sha256": "e54645d5e209388ca517cdff2490a3b70e64f0ea56ead77cfd222c6e2618f775"
+      },
+      "proof": {
+        "status": "passed",
+        "startedAt": "2026-11-08T03:48:43.337Z",
+        "gitCommit": "e8ab04391199e58a9e41f3f1eb00f38b6786afd3",
+        "project": "campusworks-fresh-2d0875df4732",
+        "folder": "C:\\Users\\yuhai\\Desktop\\项目\\CampusWorks\\.cache\\fresh-docker-2d0875df4732",
+        "origin": "http://127.0.0.1:59111",
+        "mongoPort": 59112,
+        "image": "campusworks-fresh:2d0875df4732",
+        "sourceArchiveSha256": "cad7015a7d0f0790d2693ee062cbcacb1841a5c346782b9ef97b65091c48fce9",
+        "workingTreeConfig": [
+          {
+            "path": "docker-compose.yml",
+            "sha256": "7ddcd7a6d964ec230f3c4a14b575b5c65d0999e1c64335e75bed288e120dfa73"
+          },
+          {
+            "path": ".env.example",
+            "sha256": "bea9797633b120eb33eac0c83bd9de45b95530d1ed58655021029c47ce0229b2"
+          },
+          {
+            "path": "package.json",
+            "sha256": "0f058e3239604ac486be961095e463e1649f1a5bcf28e552e727dd3760a96627"
+          }
+        ],
+        "cleanContext": {
+          "nodeModulesAbsent": true,
+          "productionOutputAbsent": true,
+          "generatedTypesAbsent": true,
+          "environmentAbsent": true,
+          "localCacheAbsent": true,
+          "gitMetadataAbsent": true
+        },
+        "deploymentOnlySubstitutions": {
+          "isolatedProject": true,
+          "isolatedVolumes": true,
+          "loopbackPorts": [
+            59111,
+            59112
+          ],
+          "imageTag": "campusworks-fresh:2d0875df4732",
+          "publicOrigin": "http://127.0.0.1:59111"
+        },
+        "provider": {
+          "configured": false,
+          "realCalls": 0,
+          "keyLoaded": false
+        },
+        "build": "passed",
+        "health": {
+          "status": "ok",
+          "db": "up",
+          "transactions": "ready",
+          "indexes": "ready"
+        },
+        "logo": {
+          "bytes": 10497,
+          "sha256": "f13da47b151485056dee3e755a28e194c6b5e5846bbcb44ce700378de668e1f6",
+          "contentType": "image/png"
+        },
+        "container": {
+          "id": "7dca30362dbe5c36515d6177b5d46de8a29c65fa820754704e32eb4e48d6db96",
+          "imageId": "sha256:ff614108b58e77542e4a7063453e7bac3cb9d9ec6615ef94b429f7f9d75329a7",
+          "user": "node",
+          "runtimeNode": "v22.23.4"
+        },
+        "runtimeFiles": {
+          ".env": false,
+          ".cache": false,
+          "node_modules": false,
+          "scripts": false,
+          ".git": false
+        },
+        "browser": {
+          "stats": {
+            "startTime": "2026-11-08T03:49:18.387Z",
+            "duration": 23718.64,
+            "expected": 9,
+            "skipped": 0,
+            "unexpected": 0,
+            "flaky": 0
+          },
+          "reportPath": "C:\\Users\\yuhai\\Desktop\\项目\\CampusWorks\\.cache\\fresh-docker-2d0875df4732\\browser-results.json",
+          "reportSha256": "dce89fb74e3763a716dc7968e789644e54dac5726a80d715365d3f88333e6a1d",
+          "scope": "Actual Chromium four-role queue lifecycle against the newly built Linux container and fresh authenticated replica-set volumes."
+        },
+        "cleanup": {
+          "complete": true,
+          "ownedProjectRemoved": true,
+          "ownedVolumesRemoved": true
+        },
+        "finishedAt": "2026-11-08T03:49:45.454Z"
+      }
+    },
+    "actualGitHubCloneBuild": {
+      "status": "passed",
+      "startedAt": "2026-11-08T04:00:56.834Z",
+      "finishedAt": "2026-11-08T04:00:58.220Z",
+      "gitCommit": "8b62c2c10cc88d421dbb6c2afb6ed0b667215060",
+      "buildExitCode": 0,
+      "imageId": "sha256:806337c5c7e959bbe581fb5820407849a2892e76911f8264a64e795693a2b837",
+      "log": ".cache/github-fresh-docker-confirm.log",
+      "boundary": "Docker build from the actual clean GitHub clone, using normal layer caching. The separate tracked-only cold build and fresh-volume runtime checks are retained independently. PowerShell stderr-redirection status is not used as a Docker exit-code substitute."
+    },
+    "healthGate": {
+      "startedAt": "2026-11-08T03:49:31.970Z",
+      "scope": "A disposable standalone MongoDB must not satisfy the replica-set startup gate even though ping succeeds.",
+      "container": "campusworks-mongo-health-564ded74ecf6",
+      "ping": {
+        "code": 0,
+        "output": "1"
+      },
+      "replicaGate": {
+        "code": 1,
+        "output": "{\"isreplicaset\":false,\"setName\":null}"
+      },
+      "status": "passed",
+      "cleanup": {
+        "code": 0,
+        "output": "campusworks-mongo-health-564ded74ecf6"
+      },
+      "finishedAt": "2026-11-08T03:49:33.735Z"
+    },
+    "cleanup": {
+      "status": "passed",
+      "project": "campusworks-fresh-2d0875df4732",
+      "containersAbsent": true,
+      "volumesAbsent": true,
+      "healthEndpointClosed": true,
+      "recordedAt": "2026-11-08T03:51:24.895Z"
+    },
+    "boundary": "The cold container used tracked application files from its recorded commit plus hashed current package/Compose/example-config overlays. The actual GitHub clone also built a Linux image with an explicitly recorded Docker exit code, using normal layer caching. Deployment-only substitutions selected isolated project/volume names and free loopback ports."
+  },
+  "sourceHistoryScan": {
+    "historyBlobs": 1002,
+    "textBlobsScanned": 832,
+    "privatePaths": [],
+    "largeBlobs": [],
+    "credentialPatternHits": [],
+    "originWordsInCommitMessages": false
+  },
+  "boundaries": [
+    "The native lifecycle used the explicit no-AI mode and a newly generated application database. It did not test new OpenAI authentication or model quality. Key-only .env and new Windows-encrypted settings were checked with synthetic credentials, then removed; no real Key was copied or loaded.",
+    "The normal live launcher still requires the user to enter a valid Key on the new computer and obtain fresh OpenAI responses. Earlier real-provider receipts retain their own dates and source/script hashes.",
+    "Windows x64 and Linux Docker runtime behavior were exercised. No physical second computer, macOS desktop, ARM hardware or institutional SSO is claimed as tested.",
+    "Docker, a compatible Node version for the native presentation, browser system dependencies, a graphical desktop and required network access remain installation prerequisites.",
+    "Finite local tests and a clean clone do not establish universal correctness or remove provider/account/network constraints."
+  ]
+}
