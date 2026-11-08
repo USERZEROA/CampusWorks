@@ -6,7 +6,11 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect } from "@playwright/test";
 import { createLoopService } from "./demo-loop-service.mjs";
 import { createDemoStage, DemoStopped } from "./demo-stage.mjs";
-import { loopWindows, runLoopCycle } from "./demo-loop-flow.mjs";
+import {
+  LOOP_STEP_COUNT,
+  loopWindows,
+  runLoopCycle,
+} from "./demo-loop-flow.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const profiles = {
@@ -110,9 +114,10 @@ export async function runDemoLoop({
       headless,
       holdMs: profiles[pace].holdMs,
       beforeMs: profiles[pace].beforeMs,
-      totalSteps: 33,
-      onStop: () => {
-        cancelled = true;
+      totalSteps: LOOP_STEP_COUNT,
+      onStop: (reason) => {
+        proof.stopReason = reason;
+        cancelled = reason !== "page-crashed";
         void stage?.close().catch(() => {
           stageCleanupFailed = true;
         });
@@ -214,7 +219,7 @@ export async function runDemoLoop({
         dwell: (ms) => stage.hold(ms),
         onStep: (event) => {
           onProgress(
-            `Cycle ${cycle} · ${event.step}/33 · ${event.role}: ${event.title}`,
+            `Cycle ${cycle} · ${event.step}/${LOOP_STEP_COUNT} · ${event.role}: ${event.title}`,
           );
         },
       });
@@ -251,7 +256,13 @@ export async function runDemoLoop({
   } catch (error) {
     if (!service && error.cleanupReceipt)
       proof.startupCleanupReceipt = error.cleanupReceipt;
-    if (error instanceof DemoStopped || cancelled) proof.status = "stopped";
+    const stopReason = proof.stopReason || stage?.stopReason;
+    if (stopReason) proof.stopReason = stopReason;
+    if (
+      stopReason !== "page-crashed" &&
+      (error instanceof DemoStopped || cancelled)
+    )
+      proof.status = "stopped";
     else {
       proof.status = "failed";
       proof.error = String(error.message).slice(0, 4000);

@@ -21,6 +21,8 @@ Recruitment links appear on the course-list home page. Only authorized instructo
 
 Selection reserves a candidate and vacancy atomically. TA and RA commitments cannot overlap in dates, even across different recruitment terms, and two half appointments cannot coexist. The one-live-allocation-per-term rule also remains. Acceptance, clearance and the appointment start date are required for access. Expiration, suspension or ending removes appointment-derived access and releases queue claims while preserving independently granted roles. See [product policy](docs/PRODUCT_POLICY.md) and [staffing operations](docs/STAFFING_OPERATIONS.md).
 
+[Course insights](docs/COURSE_INSIGHTS.md) opens from Home for course managers. Administrators compare the department; faculty see their managed courses. Request trends, busy hours, TA coverage, staffing plans, reported work and conditional costs share the current semester. Students can optionally rate a recorded helper from their own completed session. Individual feedback retains its sample counts and stays separate from general course feedback.
+
 ## Local demonstration
 
 Install Docker with Compose:
@@ -64,6 +66,7 @@ Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell), gen
 | `npm run demo:windows` | Six isolated visible queue demonstration windows; set `DEMO_LAYOUT=staffing` for four roles plus application/recruitment windows |
 | `npm run demo:prepare` | Prepare the complete labelled showcase without browser windows or model calls |
 | `npm run demo:showcase` | Open six prepared role windows; use the encrypted AI configuration when available |
+| `node scripts/demo-loop.mjs` | Repeat the complete 34-step lifecycle in six visible role windows; Pause/Resume and Stop controls appear only in the demonstration |
 
 Install browsers once with `npx playwright install chromium firefox`. The complete suite requires Docker. Its runner creates a uniquely named, loopback-only disposable database, enables database fault injection only in that test container, starts two production app processes and cleans up its own resources. It uses local synthetic identity and AI providers. No real provider key or institutional login is required. Reports and traces stay in ignored directories. The runner rejects skipped, flaky and failed tests. Set `E2E_HEADED=1` to display browsers.
 

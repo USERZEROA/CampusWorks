@@ -1,5 +1,7 @@
 import { expect } from "@playwright/test";
 
+export const LOOP_STEP_COUNT = 34;
+
 export const LOOP_APPLICANT = Object.freeze({
   key: "applicant",
   as: "student",
@@ -263,15 +265,13 @@ export async function runLoopCycle({
       /saved/i,
     );
     await stage.spotlight(page.getByTestId("application-cv"));
-    await page
-      .getByTestId("application-cv")
-      .setInputFiles({
-        name: "alex-morgan-synthetic-cv.txt",
-        mimeType: "text/plain",
-        buffer: Buffer.from(
-          "SYNTHETIC DEMONSTRATION CV\nAlex Morgan\nComputer Science coursework: data structures, recursion and software testing.\nPeer programming tutor. No real applicant information.\n",
-        ),
-      });
+    await page.getByTestId("application-cv").setInputFiles({
+      name: "alex-morgan-synthetic-cv.txt",
+      mimeType: "text/plain",
+      buffer: Buffer.from(
+        "SYNTHETIC DEMONSTRATION CV\nAlex Morgan\nComputer Science coursework: data structures, recursion and software testing.\nPeer programming tutor. No real applicant information.\n",
+      ),
+    });
     await click(page.getByTestId("application-cv-upload"));
     await expect(page.getByTestId("application-notice")).toContainText(
       /uploaded/i,
@@ -513,13 +513,23 @@ export async function runLoopCycle({
   await step(
     "learner",
     "Give feedback on the support",
-    "Identified course feedback is available to authorized course managers.",
+    "Sam rates Alex's recorded help session. Personal feedback stays separate from general course feedback.",
     async (page) => {
       await expect(page.getByTestId("queue-position")).toHaveCount(0, {
         timeout: 20000,
       });
       await click(page.getByTestId("feedback-open-btn"));
       await select(page.getByTestId("fb-category"), "ta");
+      await expect(page.getByTestId("fb-help-session")).toBeEnabled();
+      const context = await read(
+        page.request.get(`/api/courses/${courseId}/feedback-context`),
+      );
+      const session = context.sessions.find((item) =>
+        item.helpers.some((helper) => helper.email === LOOP_APPLICANT.email),
+      );
+      expect(session).toBeTruthy();
+      await select(page.getByTestId("fb-help-session"), session.id);
+      await select(page.getByTestId("fb-helper"), LOOP_APPLICANT.email);
       await select(page.getByTestId("fb-rating"), "5");
       await fill(
         page.getByTestId("fb-positive"),
@@ -531,6 +541,16 @@ export async function runLoopCycle({
       );
       await click(page.getByTestId("fb-submit"));
       await expect(page.getByTestId("fb-submit")).toHaveCount(0);
+      expect(
+        await service.db
+          .collection("feedback")
+          .findOne({
+            courseId,
+            studentEmail: LOOP_LEARNER.email,
+            helpSessionId: session.id,
+            taEmail: LOOP_APPLICANT.email,
+          }),
+      ).toMatchObject({ ratingScope: "helper", rating: 5 });
     },
   );
   await step(
@@ -568,6 +588,11 @@ export async function runLoopCycle({
           .getByTestId("feedback-row")
           .filter({ hasText: "Alex helped me trace" }),
       ).toBeVisible();
+      await stage.spotlight(
+        page
+          .getByTestId("feedback-row")
+          .filter({ hasText: "Alex helped me trace" }),
+      );
     },
   );
   await step(
@@ -651,6 +676,31 @@ export async function runLoopCycle({
         reportedHours: report.workload.totalHours,
         settledCost: report.budget.settledBudget,
         sessions: report.metrics.sessions,
+      };
+    },
+  );
+  await step(
+    "admin",
+    "Compare department demand and support",
+    "The administrator compares courses, busy hours and attributed feedback, with sample sizes and staffing costs visible.",
+    async (page) => {
+      await open(page, "/insights");
+      await expect(page.getByTestId("insights-root")).toBeVisible();
+      const report = await read(page.request.get("/api/insights"));
+      const helper = report.helpers.find(
+        (item) => item.email === LOOP_APPLICANT.email,
+      );
+      expect(helper.feedbackCount).toBe(1);
+      expect(helper.feedbackAverage).toBe(5);
+      expect(helper.feedbackReviewers).toBe(1);
+      await stage.spotlight(
+        page.getByTestId(`insights-helper-${LOOP_APPLICANT.email}`),
+      );
+      details.department = {
+        courses: report.courses.length,
+        personalFeedbackCount: helper.feedbackCount,
+        personalFeedbackAverage: helper.feedbackAverage,
+        reviewers: helper.feedbackReviewers,
       };
     },
   );

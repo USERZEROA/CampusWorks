@@ -179,7 +179,7 @@ function installDemoOverlay({ titleToken }) {
         #${elementId} progress::-webkit-progress-bar { background:#5475ac; border-radius:2px; }
         #${elementId} progress::-webkit-progress-value { background:#00e1b5; border-radius:2px; }
         #${elementId} progress::-moz-progress-bar { background:#00e1b5; }
-        [data-campusworks-demo-spotlight] { outline:3px solid #b45309 !important; outline-offset:5px !important; scroll-margin-top:calc(var(--campusworks-demo-offset, 92px) + 24px) !important; }
+        [data-campusworks-demo-spotlight] { outline:2px solid #b45309 !important; outline-offset:2px !important; scroll-margin-top:calc(var(--campusworks-demo-offset, 92px) + 24px) !important; }
         @media(max-width:600px) { #${elementId} { padding:10px 12px 8px; gap:6px 10px; } #${elementId} .demo-role { font-size:14px; } #${elementId} .demo-step-title { font-size:14px; } #${elementId} .demo-controls { flex-direction:column; gap:5px; } #${elementId} button { min-height:32px; padding:4px 9px; } }
       `;
       document.head.append(style);
@@ -315,6 +315,7 @@ export async function createDemoStage({
   let foregroundBridge;
   let paused = false;
   let stopped = false;
+  let stopReason = null;
   let closing;
   let current = {
     actor: null,
@@ -352,12 +353,14 @@ export async function createDemoStage({
   const stop = async (reason = "requested") => {
     if (stopped) return;
     stopped = true;
+    stopReason = reason;
     paused = false;
+    if (onStop) {
+      try {
+        void Promise.resolve(onStop(reason)).catch(() => {});
+      } catch {}
+    }
     await publish();
-    if (onStop)
-      void Promise.resolve()
-        .then(() => onStop(reason))
-        .catch(() => {});
   };
   async function pausePoint(milliseconds = 0) {
     let remaining = milliseconds;
@@ -463,6 +466,9 @@ export async function createDemoStage({
   const stage = {
     get stopped() {
       return stopped;
+    },
+    get stopReason() {
+      return stopReason;
     },
     get paused() {
       return paused;
@@ -665,6 +671,9 @@ export async function createDemoStage({
       actor.page = await actor.context.newPage();
       actor.page.on("close", () => {
         if (!closing) void stop("window-closed");
+      });
+      actor.page.on("crash", () => {
+        if (!closing) void stop("page-crashed");
       });
       browser.on("disconnected", () => {
         if (!closing) void stop("browser-closed");
