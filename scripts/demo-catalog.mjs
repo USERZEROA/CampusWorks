@@ -1,6 +1,32 @@
-export const DEMO_CATALOG_VERSION = 4;
+export const DEMO_CATALOG_VERSION = 5;
 const DAY = 86400000;
 const MINUTE = 60000;
+const easternClock = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
+const easternFields = instant => Object.fromEntries(easternClock.formatToParts(instant).filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)]));
+
+function easternInstant(day, hour, minute = 0) {
+  const desired = Date.UTC(day.year, day.month - 1, day.day, hour, minute);
+  let value = desired;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const observed = easternFields(new Date(value));
+    const correction = desired - Date.UTC(observed.year, observed.month - 1, observed.day, observed.hour, observed.minute, observed.second);
+    value += correction;
+    if (!correction) break;
+  }
+  return new Date(value);
+}
+
+function easternDays(referenceTime, firstDayAgo, lastDayAgo, weekdays) {
+  const local = easternFields(new Date(referenceTime));
+  const anchor = Date.UTC(local.year, local.month - 1, local.day);
+  const days = [];
+  for (let ago = firstDayAgo; ago <= lastDayAgo; ago++) {
+    const date = new Date(anchor - ago * DAY);
+    if (!weekdays.includes(date.getUTCDay())) continue;
+    days.push({ year: date.getUTCFullYear(), month: date.getUTCMonth() + 1, day: date.getUTCDate(), date: date.toISOString().slice(0, 10), weekday: date.getUTCDay() });
+  }
+  return days;
+}
 
 export const DEMO_STAGE_ACTIONS = Object.freeze({
   draft: ['save'],
@@ -223,12 +249,19 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
   add('student-three', 'intro-ta', 'draft_missing_answers', 2);
   add('student-main', 'discrete-ta', 'draft_missing_cv');
 
-  const workloads = applications.filter(application => application.seedActions.includes('workload') && opportunityByKey.get(application.opportunityKey).input.type === 'ta').flatMap((application, index) => Array.from({ length: 6 }, (_, row) => ({
-    key: `${application.key}--work-${row}`, applicationKey: application.key, date: at(-2 - row * 3).slice(0, 10),
-    kind: ['office_hours', 'grading', 'lab', 'preparation', 'discussion', 'coordination'][row],
-    hours: [2, 1.5, 1, 1.25, 1, 0.5][(row + index) % 6],
-    notes: ['Worked through representative questions and checked understanding.', 'Applied the published rubric and documented common misconceptions.', 'Supported the scheduled lab and collected recurring questions.', 'Prepared examples and checked the next worksheet.', 'Facilitated discussion with short reasoning exercises.', 'Coordinated handoffs and the next support session.'][row],
-  })));
+  const workDays = easternDays(instant, 2, 19, [1, 2, 3, 4, 5]);
+  const workNotes = { office_hours: 'Worked through representative questions and checked understanding.', grading: 'Applied the published rubric and documented common misconceptions.', lab: 'Supported the scheduled lab and collected recurring questions.', preparation: 'Prepared examples and checked the next worksheet.', discussion: 'Facilitated discussion with short reasoning exercises.', coordination: 'Coordinated handoffs and the next support session.' };
+  const workloads = applications.filter(application => application.seedActions.includes('workload') && opportunityByKey.get(application.opportunityKey).input.type === 'ta').flatMap((application, index) => {
+    const opportunity = opportunityByKey.get(application.opportunityKey).input;
+    const count = 8 - index;
+    const kinds = ['office_hours', opportunity.requiresGrading ? 'grading' : 'preparation', opportunity.hasLab ? 'lab' : 'discussion', 'preparation', 'coordination'];
+    return Array.from({ length: count }, (_, row) => {
+      const kind = kinds[row % kinds.length];
+      return { key: `${application.key}--work-${row}`, applicationKey: application.key,
+        date: workDays[Math.floor(row * (workDays.length - 1) / (count - 1))].date, kind,
+        hours: [2.5, 1.25, 2, 0.75, 1.5, 3, 1, 1.75][(row + index * 2) % 8], notes: workNotes[kind] };
+    });
+  });
   const questions = [
     'Why does my loop skip the final element?', 'How do I design tests for an empty input?', 'Can we walk through a recursive call stack?', 'Why is my SQL join duplicating rows?',
     'How should I compare two algorithmic approaches?', 'Can you help me interpret a memory error?', 'How can I make this interaction keyboard accessible?', 'What would be a fair baseline for this experiment?',
@@ -252,30 +285,49 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
       { actorKey: 'candidate-09', location: 'Computing Lab · Seat 5', question: 'Why does this query plan stop using the index?', state: 'waiting' },
     ] },
   ];
-  const history = courses.flatMap((course, courseIndex) => ['current', 'previous'].flatMap((termKey, period) => Array.from({ length: period ? 14 : 24 }, (_, index) => {
-    const day = period ? -128 - index * 6 : -1 - index;
-    const joinedAt = new Date(timestamp + day * DAY + ((index * 37 + courseIndex * 11) % 240) * MINUTE);
+  const meetingWeekdays = [[2, 4], [1, 3], [2, 5], [1, 4], [2, 4], [2, 4], [1, 3], [3, 5], [2, 4], [1, 4]];
+  const history = courses.flatMap((course, courseIndex) => ['current', 'previous'].flatMap((termKey, period) => {
+    const dates = easternDays(instant, period ? 128 : 1, period ? 218 : 28, meetingWeekdays[courseIndex]);
+    const densities = period ? [3, 1, 2, 1, 3, 1, 2, 1] : [5, 2, 4, 1, 3, 2, 4, 3];
+    const schedule = densities.flatMap((_, group) => {
+      const count = densities[(group + courseIndex) % densities.length];
+      const day = dates[Math.floor(group * (dates.length - 1) / 7)];
+      const peak = count >= (period ? 3 : 4);
+      const hour = peak ? [15, 16, 17][courseIndex % 3] : [10, 13, 14, 15][(group + courseIndex) % 4];
+      return Array.from({ length: count }, (_, within) => ({ joinedAt: easternInstant(day, hour, [5, 12, 20, 33, 42][within]), peak }));
+    });
+    return schedule.map(({ joinedAt, peak }, index) => {
     const helped = index % 9 !== 8;
-    const waitMinutes = 3 + ((index * 7 + courseIndex * 3) % 23) + (!period && ['intro', 'databases'].includes(course.key) && index % 6 === 0 ? 12 : 0);
+    const waitMinutes = 3 + ((index * 7 + courseIndex * 3) % 18) + (peak ? 12 : 0);
     const helpMinutes = helped ? 6 + ((index * 5 + courseIndex) % 18) : 0;
     const helpStartAt = helped ? new Date(joinedAt.getTime() + waitMinutes * MINUTE) : null;
     const leftQueueAt = new Date((helpStartAt?.getTime() || joinedAt.getTime() + 18 * MINUTE) + helpMinutes * MINUTE);
     return { key: `${course.key}-${termKey}-session-${String(index + 1).padStart(2, '0')}`, courseKey: course.key, termKey,
-      actorKey: `candidate-${String(4 + (index % 12)).padStart(2, '0')}`, helperKey: course.taKeys[index % course.taKeys.length],
+      actorKey: `candidate-${String(4 + (index % 12)).padStart(2, '0')}`, helperKey: course.taKeys[course.taKeys.length > 1 && (index + courseIndex) % 3 === 2 ? 1 : 0],
       location: index % 2 ? 'Online office hours' : 'Learning Studio', question: questions[(index + courseIndex) % questions.length],
       joinedAt: joinedAt.toISOString(), helpStartAt: helpStartAt?.toISOString() || null, helpEndAt: helped ? leftQueueAt.toISOString() : null,
       closedAt: helped ? leftQueueAt.toISOString() : null, leftQueueAt: leftQueueAt.toISOString(),
       waitMinutes: helped ? waitMinutes : null, helpMinutes, wasHelped: helped, endReason: helped ? 'completed' : 'left',
     };
-  })));
-  const feedback = courses.flatMap((course, courseIndex) => Array.from({ length: 8 }, (_, index) => ({
-    key: `${course.key}-feedback-${index}`, courseKey: course.key, termKey: 'current',
-    actorKey: `candidate-${String(4 + index).padStart(2, '0')}`, category: ['queue', 'ta', 'wait', 'other'][index % 4],
-    rating: index % 5 === 0 ? 3 : index % 3 === 0 ? 4 : 5,
-    positive: ['The worked example made the reasoning clear.', 'Seeing the queue position helped me plan my work.', 'The TA asked questions that helped me find the issue.', 'The discussion connected the lab to the main course ideas.'][index % 4],
-    negative: ['The queue was longer just before the assignment deadline.', 'I would benefit from an earlier practice example.', 'A short recap of the most common questions would help.', 'The online and in-person schedules could be easier to compare.'][(index + courseIndex) % 4],
-    allowContact: index % 3 === 0, createdAt: at(-1 - index * 3, -courseIndex * 7),
-  })));
+    });
+  }));
+  const ratingPatterns = [[5, 4, 5, 4, 3, 5], [4, 5, 4, 3, 4, 4], [3, 4, 4, 5, 4, 3], [5, 5, 4, 5, 4, 5], [2, 4, 3, 4, 5, 4]];
+  const feedback = courses.flatMap((course, courseIndex) => {
+    const sessions = history.filter(session => session.courseKey === course.key && session.termKey === 'current' && session.wasHelped);
+    return Array.from({ length: 8 }, (_, index) => {
+      const helperRating = index < 6;
+      const followUpExample = helperRating && course.key === 'structures' && index < 2;
+      const session = sessions[helperRating ? index : 18 + index - 6];
+      return { key: `${course.key}-feedback-${index}`, courseKey: course.key, termKey: 'current',
+        actorKey: session.actorKey, ratingScope: helperRating ? 'helper' : 'course',
+        ...(helperRating ? { helpSessionKey: session.key, helperKey: session.helperKey } : {}),
+        category: helperRating ? 'ta' : index === 6 ? 'queue' : 'wait',
+        rating: followUpExample ? 1 : helperRating ? ratingPatterns[courseIndex % ratingPatterns.length][index] : [3, 4, 2, 5][(courseIndex + index) % 4],
+        positive: helperRating ? ['The worked example made the reasoning clear.', 'The TA asked questions that helped me find the issue.', 'The explanation connected the lab to the course ideas.'][index % 3] : 'Seeing the queue position helped me plan my work.',
+        negative: followUpExample ? ['The session ended while my main question was still unresolved. I needed a traced example and a check of the revised solution.', 'The explanation skipped the steps I asked about, and I left without a usable example or a chance to check my understanding.'][index] : helperRating ? ['An earlier practice example would help.', 'A short written recap would make the explanation easier to revisit.', 'I would benefit from one more check of my reasoning.'][(index + courseIndex) % 3] : 'The queue was longer just before the assignment deadline.',
+        allowContact: index % 3 === 0, createdAt: new Date(new Date(session.helpEndAt).getTime() + (15 + index * 17) * MINUTE).toISOString() };
+    });
+  });
   return {
     version: DEMO_CATALOG_VERSION, synthetic: true, marker: `campusworks-showcase-v${DEMO_CATALOG_VERSION}`, referenceTime: instant.toISOString(),
     disclosure: 'All people, qualifications, appointments, workload, feedback and queue observations are synthetic demonstration records.',

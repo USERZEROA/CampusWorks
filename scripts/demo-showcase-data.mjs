@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { ObjectId } from 'mongodb';
 import { request } from '@playwright/test';
+import { DEMO_CATALOG_VERSION } from './demo-catalog.mjs';
 
 export const SHOWCASE_MANIFEST_ID = 'campusworks-showcase';
 const loopback = hostname => ['localhost', '127.0.0.1', '[::1]'].includes(hostname);
@@ -47,33 +48,69 @@ async function assertBoundShowcase(db, manifest) {
 
 /** Dated observations are labelled fixtures; lifecycle records use ordinary APIs. */
 export async function seedShowcaseObservations({ db, catalog, manifest, save }) {
+  if (!catalog.synthetic || catalog.version !== DEMO_CATALOG_VERSION || catalog.version !== manifest.version || catalog.marker !== `campusworks-showcase-v${catalog.version}` || catalog.marker !== manifest.marker || catalog.referenceTime !== manifest.referenceTime) throw new Error('The observation catalog does not match this showcase data version.');
   if (manifest.stages?.observations) return manifest;
   await assertBoundShowcase(db, manifest);
   const provenance = { synthetic: true, scenario: catalog.marker, source: 'synthetic-demo-observation' };
+  const history = new Map();
+  const validDate = value => value instanceof Date && Number.isFinite(value.getTime());
+  const referenceTime = new Date(catalog.referenceTime);
+  if (!validDate(referenceTime)) throw new Error('The observation reference time is invalid.');
   for (const sample of catalog.history) {
     const person = manifest.actors[sample.actorKey];
     const helper = manifest.actors[sample.helperKey];
     const courseId = manifest.courseIds[sample.courseKey];
-    if (!person || !helper || !courseId || !manifest.termIds[sample.termKey]) throw new Error('A history fixture references an unknown resource.');
+    const course = catalog.courses.find(item => item.key === sample.courseKey);
+    if (!person || !helper || helper.role !== 'ta' || !course?.taKeys.includes(sample.helperKey) || !courseId || !manifest.termIds[sample.termKey] || history.has(sample.key)) throw new Error('A history fixture references an unknown or repeated resource.');
     const helpStartAt = instant(sample.helpStartAt), helpEndAt = instant(sample.helpEndAt);
+    const joinedAt = instant(sample.joinedAt), leftQueueAt = instant(sample.leftQueueAt);
+    const term = catalog.terms[sample.termKey];
+    if (!validDate(joinedAt) || !validDate(leftQueueAt) || leftQueueAt < joinedAt || leftQueueAt > referenceTime || !term || joinedAt < new Date(term.startDate) || leftQueueAt >= new Date(term.endDate)) throw new Error('A history fixture has invalid observation dates.');
+    if (sample.wasHelped && (!validDate(helpStartAt) || !validDate(helpEndAt) || helpStartAt < joinedAt || helpEndAt <= helpStartAt || helpEndAt > leftQueueAt || (helpEndAt - helpStartAt) / 60000 !== sample.helpMinutes || (helpStartAt - joinedAt) / 60000 !== sample.waitMinutes)) throw new Error('A helped fixture must contain an actual positive help interval.');
+    if (!sample.wasHelped && (helpStartAt || helpEndAt || sample.helpMinutes !== 0)) throw new Error('An unhelped fixture cannot attribute helper time.');
     const record = {
       ...provenance, courseId, studentId: person.id, studentEmail: person.email, studentName: person.name,
       taEmail: sample.wasHelped ? helper.email : null, taName: sample.wasHelped ? helper.name : null,
       entryId: syntheticId(catalog.marker, 'history', sample.key), location: sample.location, question: sample.question,
-      joinedAt: instant(sample.joinedAt), helpStartAt, helpEndAt, closedAt: instant(sample.closedAt), leftQueueAt: instant(sample.leftQueueAt),
+      joinedAt, helpStartAt, helpEndAt, closedAt: instant(sample.closedAt), leftQueueAt,
       waitMinutes: sample.waitMinutes, helpMinutes: sample.helpMinutes, wasHelped: sample.wasHelped, endReason: sample.endReason,
       helpSegments: sample.wasHelped ? [{ taEmail: helper.email, taName: helper.name, startAt: helpStartAt, endAt: helpEndAt, durationMs: helpEndAt.getTime() - helpStartAt.getTime() }] : [],
       removedBy: sample.wasHelped ? helper.email : person.email,
     };
-    await db.collection('helpSessions').updateOne({ _id: new ObjectId(syntheticId(catalog.marker, 'history', sample.key)) }, { $setOnInsert: record }, { upsert: true });
+    history.set(sample.key, { sample, helper, id: new ObjectId(syntheticId(catalog.marker, 'history', sample.key)), record });
   }
+  const feedback = [];
+  const feedbackKeys = new Set(), helperRatings = new Set();
   for (const sample of catalog.feedback) {
     const person = manifest.actors[sample.actorKey];
     const courseId = manifest.courseIds[sample.courseKey];
-    if (!person || !courseId) throw new Error('A feedback fixture references an unknown resource.');
+    if (!person || !courseId || feedbackKeys.has(sample.key)) throw new Error('A feedback fixture references an unknown or repeated resource.');
+    feedbackKeys.add(sample.key);
     const course = catalog.courses.find(item => item.key === sample.courseKey);
-    const record = { ...provenance, courseId, courseCode: course.code, studentId: person.id, studentEmail: person.email, studentName: person.name, category: sample.category, rating: sample.rating, positive: sample.positive, negative: sample.negative, identified: true, allowContact: sample.allowContact, createdAt: instant(sample.createdAt) };
-    await db.collection('feedback').updateOne({ _id: new ObjectId(syntheticId(catalog.marker, 'feedback', sample.key)) }, { $setOnInsert: record }, { upsert: true });
+    const createdAt = instant(sample.createdAt);
+    if (!course || !validDate(createdAt) || createdAt > referenceTime || !Number.isInteger(sample.rating) || sample.rating < 1 || sample.rating > 5 || !['helper', 'course'].includes(sample.ratingScope)) throw new Error('A feedback fixture has invalid rating evidence.');
+    const record = { ...provenance, courseId, courseCode: course.code, studentId: person.id, studentEmail: person.email, studentName: person.name, ratingScope: sample.ratingScope, category: sample.category, rating: sample.rating, positive: sample.positive, negative: sample.negative, identified: true, allowContact: sample.allowContact, createdAt };
+    let linked;
+    if (sample.ratingScope === 'helper') {
+      linked = history.get(sample.helpSessionKey);
+      if (!linked || !linked.sample.wasHelped || linked.sample.actorKey !== sample.actorKey || linked.sample.courseKey !== sample.courseKey || linked.sample.termKey !== sample.termKey || linked.sample.helperKey !== sample.helperKey || createdAt < linked.record.leftQueueAt) throw new Error('A helper rating must follow a matching completed student session.');
+      const identity = `${courseId}:${person.id}:${linked.id.toHexString()}:${linked.helper.email}`;
+      if (helperRatings.has(identity)) throw new Error('A student cannot rate the same session helper twice.');
+      helperRatings.add(identity);
+    } else if (sample.helpSessionKey || sample.helperKey) throw new Error('Course feedback cannot claim a helper-session link.');
+    feedback.push({ id: new ObjectId(syntheticId(catalog.marker, 'feedback', sample.key)), linked, record });
+  }
+  for (const { id, record } of history.values()) await db.collection('helpSessions').updateOne({ _id: id }, { $setOnInsert: record }, { upsert: true });
+  for (const { id, linked, record } of feedback) {
+    if (linked) {
+      const session = await db.collection('helpSessions').findOne({ _id: linked.id });
+      const segment = Array.isArray(session?.helpSegments) ? session.helpSegments.find(item => item.taEmail === linked.helper.email && item.taName === linked.helper.name && validDate(item.startAt) && validDate(item.endAt) && item.endAt - item.startAt >= 6000 && item.durationMs === item.endAt - item.startAt) : undefined;
+      if (!session || String(session._id) !== linked.id.toHexString() || !session.synthetic || session.scenario !== catalog.marker || session.source !== provenance.source || session.courseId !== record.courseId || session.studentId !== record.studentId || session.studentEmail !== record.studentEmail || !session.wasHelped || !segment || !validDate(session.helpEndAt) || !validDate(session.leftQueueAt) || record.createdAt < session.helpEndAt || record.createdAt < session.leftQueueAt || record.createdAt < segment.endAt) throw new Error('The stored help-session evidence does not authorize this synthetic helper rating.');
+      record.helpSessionId = String(session._id);
+      record.taEmail = segment.taEmail;
+      record.taName = segment.taName;
+    }
+    await db.collection('feedback').updateOne({ _id: id }, { $setOnInsert: record }, { upsert: true });
   }
   manifest.stages ||= {};
   manifest.stages.observations = true;
