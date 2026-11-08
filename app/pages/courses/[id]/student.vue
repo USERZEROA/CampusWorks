@@ -1291,14 +1291,24 @@ const goHelp = () => {
   color: #111827;
 }
 
+.queue-panel {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .queue-table {
   width: 100%;
+  min-width: 620px;
   border-collapse: collapse;
+  table-layout: auto;
   font-size: 14px;
 }
 
 .queue-table th,
 .queue-table td {
+  box-sizing: border-box;
   padding: 9px 14px;
   border-bottom: 1px solid #e5e7eb;
   text-align: left;
@@ -1317,19 +1327,23 @@ const goHelp = () => {
 }
 
 .col-student {
-  width: 60px;
+  width: 1%;
+  white-space: nowrap;
 }
 
 .col-location {
-  width: 260px;
+  width: 24%;
+  overflow-wrap: anywhere;
 }
 
 .col-question {
-  width: 360px;
+  width: auto;
+  overflow-wrap: anywhere;
 }
 
 .col-ta {
-  width: 120px;
+  width: 1%;
+  white-space: nowrap;
   text-align: center;
 }
 

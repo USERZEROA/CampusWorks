@@ -663,7 +663,7 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 
           <section class="panel">
             <div class="panel-header">Live Queue</div>
-            <div class="panel-body">
+            <div class="panel-body queue-panel">
               <table
                 class="queue-table"
                 tabindex="0"
@@ -1277,14 +1277,24 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
   cursor: pointer;
 }
 
+.queue-panel {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .queue-table {
   width: 100%;
+  min-width: 840px;
   border-collapse: collapse;
+  table-layout: auto;
   font-size: 14px;
 }
 
 .queue-table th,
 .queue-table td {
+  box-sizing: border-box;
   padding: 9px 14px;
   border-bottom: 1px solid #e5e7eb;
   text-align: left;
@@ -1303,25 +1313,32 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 }
 
 .col-student {
-  width: 80px;
+  width: 1%;
+  white-space: nowrap;
 }
 
 .col-location {
-  width: 220px;
+  width: 18%;
+  overflow-wrap: anywhere;
 }
 
 .col-question {
-  width: 320px;
+  width: auto;
+  overflow-wrap: anywhere;
 }
 
 .col-ta {
-  width: 80px;
+  width: 1%;
+  white-space: nowrap;
   text-align: center;
 }
 
 .col-actions {
-  width: 430px;
+  box-sizing: border-box;
+  width: 330px;
+  min-width: 330px;
   padding-left: 12px;
+  white-space: nowrap;
 }
 
 .queue-row.is-paused {
@@ -1345,7 +1362,8 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 
 .actions-wrap {
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  width: max-content;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
@@ -1474,9 +1492,6 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
     margin-top: 6px;
   }
 
-  .col-actions {
-    width: auto;
-  }
 }
 
 @media (max-width: 768px) {
@@ -1529,15 +1544,11 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
     font-size: 12px;
   }
 
-  .panel-body .queue-table,
   .panel-body .ann-table {
     display: block;
     overflow-x: auto;
   }
 
-  .actions-wrap {
-    flex-wrap: wrap;
-  }
 }
 
 @media (max-width: 480px) {
