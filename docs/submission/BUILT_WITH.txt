@@ -1,0 +1,13 @@
+Nuxt
+Vue.js
+TypeScript
+JavaScript
+HTML5
+CSS3
+Node.js
+MongoDB
+Docker
+OpenAI API
+Playwright
+axe-core
+GitHub Pages
