@@ -12,7 +12,10 @@ function definitions(path, names) {
 }
 const source = [definitions('server/utils/staffing.ts', ['fail', 'text', 'object', 'publicRecord']), definitions('server/utils/ai.ts', ['aiKinds', 'taskDirections', 'aiOutputTokenLimit', 'safeAiFailureCategory', 'preparedAiInput', 'createAiTask'])].join('\n');
 const javascript = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
-const build = (dependencies = {}) => new Function('createHash', 'createError', ...Object.keys(dependencies), `${javascript}\nreturn { preparedAiInput, createAiTask, aiOutputTokenLimit, safeAiFailureCategory };`)(createHash, createError, ...Object.values(dependencies));
+const build = (dependencies = {}) => {
+  const injected = { aiUsageCollection: db => db.collection('staffingAiBudgets'), ...dependencies };
+  return new Function('createHash', 'createError', ...Object.keys(injected), `${javascript}\nreturn { preparedAiInput, createAiTask, aiOutputTokenLimit, safeAiFailureCategory };`)(createHash, createError, ...Object.values(injected));
+};
 const actual = build();
 const bytes = value => Buffer.byteLength(JSON.stringify(value), 'utf8');
 test('automatic output reservations fit each advisory task while manual limits remain compatible', () => {

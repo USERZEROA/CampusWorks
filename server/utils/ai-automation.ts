@@ -9,6 +9,8 @@ import { getRecruitmentCycle } from './staffing-cycle'
 import { actorId, applicationAccess, assertOpportunityManager, fail, findOpportunity, manualCourseManager, staffingCourseAliases, type StaffingActor } from './staffing'
 import { aiStatus, aiTaskFingerprint, candidateAnalysisEnded, createAiTask, type AiExecution, type AiKind } from './ai'
 import { aiAutomationIndexes } from './ai-automation-indexes'
+import { aiUsageCollection } from './ai-usage'
+import { selectedAutomaticScopes } from './ai-scope-selection'
 export { aiAutomationIndexes } from './ai-automation-indexes'
 
 type Scope = { kind: AiKind; targetId: string; termId: string; page: number; pageSize: number }
@@ -96,6 +98,8 @@ async function scopeActor(db: Db, scope: Scope, preferredId?: string): Promise<S
 export async function assertAutomaticExecution(db: Db, user: StaffingActor, execution: AiExecution, inputHash: string, minimumLeaseMs = 0) {
   const job = await jobs(db).findOne({ _id: execution.automationScopeId, status: 'running', leaseToken: execution.leaseToken, generation: execution.generation, runningGeneration: execution.generation, runningInputHash: inputHash, inputHash, leaseUntil: { $gt: new Date(Date.now() + minimumLeaseMs) } })
   if (!job) fail(409, 'Automatic evidence or execution authority changed')
+  const selected = selectedAutomaticScopes(process.env.AI_AUTOMATION_SCOPES, automaticCandidatePageSize())
+  if (selected && !selected.some(value => automaticScopeId(value) === job._id)) fail(409, 'Automatic AI scope is no longer enabled')
   const actor = await scopeActor(db, job, actorId(user))
   if (!actor || actorId(actor) !== actorId(user)) fail(403, 'Automatic reviewer authority changed')
 }
@@ -296,7 +300,7 @@ async function discover(db: Db, signal?: AbortSignal) {
   }
 }
 
-async function claimAutomaticJob(db: Db) {
+async function claimAutomaticJob(db: Db, allowedIds?: string[]) {
   const controls = db.collection<any>('staffingAiAutomationControl')
   // Initialize outside the claim transaction: concurrent first-time upserts
   // may collide on _id, while later cursor writes remain transactionally fenced.
@@ -313,7 +317,7 @@ async function claimAutomaticJob(db: Db) {
     const due = { $or: [{ status: { $in: ['queued', 'failed', 'blocked', 'unconfigured'] }, nextAttemptAt: { $lte: now } }, { status: 'running', leaseUntil: { $lte: now } }] }
     for (let offset = 0; offset < kinds.length; offset++) {
       const index = (first + offset) % kinds.length
-      const pending = await jobs(database).findOne({ kind: kinds[index], ...due }, { session, sort: { nextAttemptAt: 1, _id: 1 } })
+      const pending = await jobs(database).findOne({ kind: kinds[index], ...due, ...(allowedIds ? { _id: { $in: allowedIds } } : {}) }, { session, sort: { nextAttemptAt: 1, _id: 1 } })
       if (!pending) continue
       const claimed = await jobs(database).findOneAndUpdate({ _id: pending._id, kind: kinds[index], generation: pending.generation, ...due }, { $set: { status: 'running', runningGeneration: pending.generation, runningInputHash: pending.inputHash, leaseToken: randomUUID(), leaseUntil: new Date(Date.now() + 90000), taskId: randomUUID(), updatedAt: new Date() }, $inc: { fence: 1 } }, { session, returnDocument: 'after' })
       if (!claimed) continue
@@ -326,10 +330,10 @@ async function claimAutomaticJob(db: Db) {
   })
 }
 
-async function executeOne(db: Db, signal?: AbortSignal) {
-  const capacity = await db.collection<any>('staffingAiBudgets').findOne({ _id: 'concurrency' })
+async function executeOne(db: Db, signal?: AbortSignal, allowedIds?: string[]) {
+  const capacity = await aiUsageCollection(db).findOne({ _id: 'concurrency' })
   if ((capacity?.leases || []).filter((lease: any) => lease.expiresAt > new Date()).length >= boundedSetting('AI_MAX_CONCURRENT', 2, 1, 20)) return
-  const job = await claimAutomaticJob(db)
+  const job = await claimAutomaticJob(db, allowedIds)
   if (!job) return
   const leaseToken = job.leaseToken
   let actor: StaffingActor | null = null
@@ -368,6 +372,21 @@ async function executeOne(db: Db, signal?: AbortSignal) {
 export async function runAiAutomationDiscovery(db: Db, signal?: AbortSignal) {
   if (!automaticDiscoveryEnabled() || !aiStatus().configured || signal?.aborted) return
   await initializeAiAutomation(db)
+  const selected = selectedAutomaticScopes(process.env.AI_AUTOMATION_SCOPES, automaticCandidatePageSize())
+  if (selected) {
+    const endScope = async (value: Scope) => jobs(db).updateOne({ _id: automaticScopeId(value) }, { $set: { status: 'ended', reason: 'Automatic guidance is unavailable for this scope.', nextObserveAt: new Date(Date.now() + 30000), updatedAt: new Date() }, $unset: { leaseToken: '', leaseUntil: '' } })
+    for (const value of selected) {
+      if (signal?.aborted) break
+      const prior = await jobs(db).findOne({ _id: automaticScopeId(value) }, { projection: { nextObserveAt: 1 } })
+      if (prior?.nextObserveAt > new Date()) continue
+      try { if (!await observeScope(db, value)) await endScope(value) }
+      catch (error: any) {
+        if (![403, 404, 409].includes(error?.statusCode)) throw error
+        await endScope(value)
+      }
+    }
+    return
+  }
   await discover(db, signal)
 }
 
@@ -377,7 +396,8 @@ export async function runAiAutomationExecution(db: Db, signal?: AbortSignal) {
   const { reconcileDueStaffing } = await import('./staffing-appointments')
   await reconcileDueStaffing(db)
   if (signal?.aborted) return
-  await executeOne(db, signal)
+  const selected = selectedAutomaticScopes(process.env.AI_AUTOMATION_SCOPES, automaticCandidatePageSize())
+  await executeOne(db, signal, selected?.map(automaticScopeId))
 }
 
 export async function runAiAutomationCycle(db: Db, signal?: AbortSignal) {

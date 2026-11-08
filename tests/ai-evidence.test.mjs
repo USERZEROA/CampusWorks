@@ -17,7 +17,7 @@ const source = [
   definitions('server/utils/ai.ts', ['redactText', 'qualificationEvidence', 'validatedResult', 'quotaError', 'confirmAiLease']),
 ].join('\n');
 const javascript = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
-const actual = new Function('createError', `${javascript}\nreturn { qualificationQuestionPurpose, qualificationEvidence, validatedResult, confirmAiLease };`)(createError);
+const actual = new Function('createError', 'aiUsageCollection', `${javascript}\nreturn { qualificationQuestionPurpose, qualificationEvidence, validatedResult, confirmAiLease };`)(createError, db => db.collection('staffingAiBudgets'));
 
 test('qualification screening preserves computing evidence and isolates administrative or unclassified answers', () => {
   const questions = [

@@ -78,7 +78,7 @@ try {
   const common = {
     ...process.env, NODE_ENV: 'production', MONGODB_URI: mongoUri, MONGODB_DB: database,
     SESSION_SECRET: randomBytes(32).toString('hex'), ENABLE_MOCK_LOGIN: 'true', SEED_DEMO_DATA: 'true',
-    GITLAB_BASE_URL: '', GITLAB_CLIENT_ID: '', GITLAB_CLIENT_SECRET: '', AI_BASE_URL: '', AI_API_KEY: '', AI_MODEL: '',
+    GITLAB_BASE_URL: '', GITLAB_CLIENT_ID: '', GITLAB_CLIENT_SECRET: '', AI_BASE_URL: '', AI_API_KEY: '', AI_MODEL: '', AI_USAGE_DATABASE: '', AI_AUTOMATION_SCOPES: undefined,
     HOST: '127.0.0.1', TRUST_PROXY: 'false', API_RATE_LIMIT: '10000', LOGIN_RATE_LIMIT: '1000',
   };
   for (const [index, origin] of origins.entries()) {

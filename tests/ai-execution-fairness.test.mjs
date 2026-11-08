@@ -89,6 +89,7 @@ function harness({ rows = [], control, initializationError, concurrentControl, f
     staffingAiBudgets: { findOne: async () => ({ leases: Array.from({ length: capacity }, () => ({ expiresAt: new Date(Date.now() + 60000) })) }) },
   })[name] };
   const dependencies = {
+    aiUsageCollection: db => db.collection('staffingAiBudgets'),
     jobs: () => jobCollection, randomUUID: () => `synthetic-token-${++nextId}`, boundedSetting: (_name, fallback) => fallback,
     withTransaction: async work => { transactions++; activeTransactions++; try { return await work(db, { synthetic: true }); } finally { activeTransactions--; } },
     scopeActor: async () => { assert.equal(activeTransactions, 0); return { id: 'synthetic-faculty' }; },
@@ -104,7 +105,7 @@ function harness({ rows = [], control, initializationError, concurrentControl, f
   };
   const actual = new Function(...Object.keys(dependencies), `${javascript}\nreturn {claimAutomaticJob, executeOne};`)(...Object.values(dependencies));
   return { records, controls, tasks, calls, claimFilters, transactions: () => transactions,
-    claim: () => actual.claimAutomaticJob(db), run: () => actual.executeOne(db),
+    claim: allowedIds => actual.claimAutomaticJob(db, allowedIds), run: allowedIds => actual.executeOne(db, undefined, allowedIds),
     restart: () => new Function(...Object.keys(dependencies), `${javascript}\nreturn claimAutomaticJob;`)(...Object.values(dependencies))(db),
   };
 }
@@ -216,4 +217,23 @@ test('the default two occupied provider slots prevent claims without initializin
   assert.equal(setup.transactions(), 0);
   assert.equal(setup.calls.length, 0);
   assert.ok([...setup.records.values()].every(row => row.status === 'queued'));
+});
+
+test('an explicit empty scope cannot claim queued work or call the provider', async () => {
+  const setup = harness({ rows: kinds.map(kind => job(kind)) });
+  assert.equal(await setup.claim([]), null);
+  await setup.run([]);
+  assert.deepEqual(setup.calls, []);
+  assert.ok([...setup.records.values()].every(row => row.status === 'queued'));
+});
+
+test('selected scope claims skip earlier kinds and leave every excluded job unchanged', async () => {
+  const rows = kinds.map(kind => job(kind));
+  const setup = harness({ rows });
+  await setup.run(['term_review']);
+  assert.deepEqual(setup.calls, ['term_review']);
+  assert.equal(setup.records.get('term_review').status, 'idle');
+  for (const row of rows.filter(row => row.kind !== 'term_review'))
+    assert.deepEqual(setup.records.get(row._id), row);
+  assert.equal(await setup.claim(['missing']), null);
 });

@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto'
 import type { ClientSession, Db, Document } from 'mongodb'
 import { getServerConfig } from './config'
+import { aiUsageCollection } from './ai-usage'
 import { actorId, assertOpportunityManager, fail, publicRecord, type StaffingActor } from './staffing'
 
 const initialized = new WeakMap<Db, Promise<void>>()
@@ -283,7 +284,7 @@ export async function runAiRefreshCycle(db: Db, signal?: AbortSignal) {
   const { reconcileDueStaffing } = await import('./staffing-appointments')
   await reconcileDueStaffing(db)
   await observeChanges(db)
-  const concurrency = await db.collection<any>('staffingAiBudgets').findOne({ _id: 'concurrency' })
+  const concurrency = await aiUsageCollection(db).findOne({ _id: 'concurrency' })
   const cap = Number(process.env.AI_MAX_CONCURRENT) || 2
   if ((concurrency?.leases || []).filter((lease: any) => lease.expiresAt > new Date()).length >= cap) return
   const pending = await nextRefreshJob(db)

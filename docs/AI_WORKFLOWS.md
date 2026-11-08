@@ -7,7 +7,7 @@ All four advisory tasks run in the background when the provider is configured. O
 | Prepare requirements | Saved position review | A position is saved or its requirements change | Concise wording and qualification-question suggestions; the saved position is not edited automatically |
 | Read applications | Application detail | An application is submitted or its reviewed qualifications change | Evidence-linked qualifications and missing information |
 | Compare candidates | Position review | Submitted candidate evidence or eligibility/availability changes, including another teacher's selection | A comparison for each currently eligible candidate in the page, with evidence references |
-| Review course staffing | Course review | Checked course/semester aggregates change; a final review becomes due at the semester end | Course improvements, evidence gaps and conditional staffing/budget scenarios |
+| Review course staffing | Course review | Checked course/semester aggregates change; a final review becomes due at the semester end | Course improvements, evidence gaps, approved/reserved headcount and teaching coverage |
 
 Recruitment starts from the course-list home page. Only current instructors and administrators manage hiring. RA owners must retain instructional authority. A TA identity alone confers no hiring authority. RA remains an application and appointment type without a research workspace or queue grant.
 
@@ -27,18 +27,18 @@ Automatic output caps are 900 tokens for qualification summaries, 1,200 for requ
 
 ## Decisions and appointment authority
 
-Selection, offer acceptance, clearance, settlement, suspension/end and deletion remain explicit human commands. Their existing transactions reserve the candidate, vacancy and financial commitment. Another teacher cannot reserve that person for an overlapping appointment. Automatic comparisons then exclude that applicant and update the available candidates. Acceptance, clearance and the effective appointment start still precede TA course authority.
+Selection, offer acceptance, clearance, suspension/end and deletion remain explicit human commands. Their existing transactions reserve the candidate and vacancy. Another teacher cannot reserve that person for an overlapping appointment. Automatic comparisons then exclude that applicant and update the available candidates. Acceptance, clearance and the effective appointment start still precede TA course authority. Staffing has no financial budget or settlement workflow; AI request, token and concurrency quotas remain operational protections.
 
-Timed offer expiry, cleared appointment activation, appointment end and in-app notification delivery have an independent persistent maintenance worker. They run without an AI provider or an open browser. Date-valid authorization also checks expiry directly. The worker never chooses a hire, accepts an offer, approves clearance or settles a cost.
+Timed offer expiry, cleared appointment activation, appointment end and in-app notification delivery have an independent persistent maintenance worker. They run without an AI provider or an open browser. Date-valid authorization also checks expiry directly. The worker never chooses a hire, accepts an offer or approves clearance.
 
-At position end, new candidate comparisons and application summaries stop. Authorized history keeps its original date and evidence; settlement and course reviews remain available. Revoked managers lose access to cached results as well as new analysis.
+At position end, new candidate comparisons and application summaries stop. Authorized history keeps its original date and evidence; course reviews remain available. Revoked managers lose access to cached results as well as new analysis.
 
 ## Verification and limits
 
 The maintained [headless provider harness](../scripts/ai-provider-browser-check.mjs) uses only synthetic records and the production OpenAI adapter. It checks unattended generation before opening a browser, all four result panels, shared candidate updates after manual selection, competing selection refusal, final semester advice, ended-position history and cleanup. It reserves at most fourteen calls, allowing twelve expected successful tasks and bounded retry headroom. The Key is loaded only through the saved encrypted Windows configuration and the application child environment.
 
-The current sanitized receipt records actual outcomes; the earlier [five-request receipt](verification/ai-provider-proof.json) remains historical. Controlled loopback providers exercise timeout, malformed output, quota, revoked authority, stale publication, restart and lease cases. Finite synthetic tests do not establish real hiring accuracy, fairness or production scale.
+Sanitized receipts record their actual outcomes and source boundaries; the earlier [five-request receipt](verification/ai-provider-proof.json) remains historical. Controlled loopback providers exercise timeout, malformed output, quota, revoked authority, stale publication, restart and lease cases. Finite synthetic tests do not establish real hiring accuracy, fairness or production scale.
 
-The final automatic workflow check completed twelve `gpt-5.4-mini` tasks in twelve reserved requests: nine unattended initial results, two updated candidate comparisons after manual selection and one final semester review. Both teachers read the same shared position result. Browser analysis POSTs, runtime errors and remaining concurrency leases were zero; competing selection returned 409 and cleanup completed.
+A historical automatic workflow check completed twelve `gpt-5.4-mini` tasks in twelve reserved requests: nine unattended initial results, two updated candidate comparisons after manual selection and one final semester review. Both teachers read the same shared position result. Browser analysis POSTs, runtime errors and remaining concurrency leases were zero; competing selection returned 409 and cleanup completed. Those results apply to the source digest recorded in that receipt, before the staffing headcount evidence update.
 
 PDF/TXT attachments remain private download records. Their bytes are not parsed or sent to the model. Entered qualification fields, screened answers and background text supply evidence; administrative records are excluded. Free-text filtering is defensive and does not guarantee complete anonymization. Queue observations and submitted work do not establish total paid hours or authorize automatic staffing cuts.

@@ -3,6 +3,7 @@ import type { Db, Document } from 'mongodb'
 import { isGlobalAdmin } from './auth'
 import { actorId, commitmentUnavailable, applicationAccess, assertOpportunityManager, eligibility, fail, findOpportunity, manualCourseManager, object, publicRecord, text, uid, type StaffingActor } from './staffing'
 import { administrativeQuestion, aiQualificationQuestion } from './qualification-questions'
+import { aiUsageActorKey, aiUsageCollection } from './ai-usage'
 
 export const aiKinds = ['candidate_fit', 'cv_summary', 'opportunity_draft', 'term_review'] as const
 export type AiKind = typeof aiKinds[number]
@@ -42,10 +43,10 @@ function quotaError(quotaCode: 'concurrency' | 'daily'): never {
 async function reserveAiBudget(user: StaffingActor, taskId: string, reservedTokens: number) {
   const day = new Date().toISOString().slice(0, 10)
   const globalId = `global:${day}`
-  const userId = `user:${day}:${actorId(user)}`
+  const userId = `user:${day}:${aiUsageActorKey(user)}`
   const { withTransaction } = await import('./db')
   await withTransaction(async (db, session) => {
-    const budgets = db.collection<any>('staffingAiBudgets')
+    const budgets = aiUsageCollection(db)
     const concurrency = await budgets.findOneAndUpdate({ _id: 'concurrency' }, { $setOnInsert: { leases: [] } }, { upsert: true, returnDocument: 'after', session })
     const global = await budgets.findOneAndUpdate({ _id: globalId }, { $setOnInsert: { day, requests: 0, reservedTokens: 0 } }, { upsert: true, returnDocument: 'after', session })
     const own = await budgets.findOneAndUpdate({ _id: userId }, { $setOnInsert: { day, requests: 0, reservedTokens: 0 } }, { upsert: true, returnDocument: 'after', session })
@@ -62,7 +63,7 @@ async function reserveAiBudget(user: StaffingActor, taskId: string, reservedToke
 async function confirmAiLease(db: Db, taskId: string) {
   const now = new Date()
   const expiresAt = new Date(now.getTime() + 30000)
-  const record = await db.collection<any>('staffingAiBudgets').findOneAndUpdate(
+  const record = await aiUsageCollection(db).findOneAndUpdate(
     { _id: 'concurrency', leases: { $elemMatch: { taskId, expiresAt: { $gt: now } } } },
     { $set: { 'leases.$.expiresAt': expiresAt } }, { returnDocument: 'after' },
   )
@@ -308,6 +309,7 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
       ? { max_completion_tokens: outputTokens, store: false, ...(model === 'gpt-5.4-mini' || model.startsWith('gpt-5.4-mini-') ? { reasoning_effort: 'none' } : {}) }
       : { temperature: 0, max_tokens: outputTokens }
     let encoded: string
+    let providerRequestId: string | undefined
     try {
       if ('analysisExpiresAt' in input && new Date(input.analysisExpiresAt as string).getTime() <= Date.now()) fail(409, 'Candidate analysis has ended for this appointment')
       const response = await fetch(`${base.toString().replace(/\/$/, '')}/chat/completions`, {
@@ -318,6 +320,7 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
         ] })
       })
       if (!response.ok) throw Object.assign(new Error('AI provider request failed'), { aiFailureCategory: 'provider_http' })
+      providerRequestId = response.headers?.get('x-request-id') || undefined
       const reader = response.body?.getReader()
       if (!reader) throw Object.assign(new Error('AI provider returned an empty response'), { aiFailureCategory: 'response_shape' })
       const chunks: Uint8Array[] = []
@@ -336,6 +339,8 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
     const content = envelope.choices?.[0]?.message?.content
     if (typeof content !== 'string' || content.length > 50000) throw Object.assign(new Error('AI provider response has no bounded JSON content'), { aiFailureCategory: 'response_shape' })
     const parsed = JSON.parse(content)
+    const identifier = (value: unknown) => typeof value === 'string' && /^[a-zA-Z0-9_.:\/-]{1,180}$/.test(value) && !value.includes(process.env.AI_API_KEY!) ? value : undefined
+    const provider = { host: base.hostname, model: identifier(envelope.model) || identifier(model) || 'configured-model', responseId: identifier(envelope.id), requestId: identifier(providerRequestId) }
     let result: ReturnType<typeof validatedResult>
     try { result = validatedResult(parsed, input.evidence, input.targetIds, kind) }
     catch (error) {
@@ -358,13 +363,13 @@ export async function createAiTask(db: Db, user: StaffingActor, raw: unknown, ex
       await assertAutomaticExecution(db, user, execution, task.inputHash)
     }
     const changed = createHash('sha256').update(JSON.stringify(current)).digest('hex') !== task.inputHash
-    await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: changed ? 'stale' : 'completed', result: changed ? null : result, completedAt: new Date(), message: changed ? 'Evidence changed; automatic guidance is updating.' : 'Review these evidence-linked suggestions before deciding.' } })
+    await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: changed ? 'stale' : 'completed', result: changed ? null : result, provider, completedAt: new Date(), message: changed ? 'Evidence changed; automatic guidance is updating.' : 'Review these evidence-linked suggestions before deciding.' } })
   } catch (error) {
     // Provider messages are deliberately excluded: they may echo credentials or private text.
     const message = (error as any)?.aiFailureCode === 'input_budget' ? 'Evidence exceeds the automatic input budget; processing resumes when the evidence changes.' : (error as any)?.statusCode === 429 ? 'AI is waiting for request, concurrency, or token budget capacity.' : error instanceof Error && ['AbortError', 'TimeoutError'].includes(error.name) ? 'AI is waiting to retry after a provider timeout.' : 'AI guidance is temporarily unavailable; automatic processing will retry.'
     await db.collection('staffingAiTasks').updateOne({ id: task.id }, { $set: { status: 'failed', message, failureCode: (error as any)?.aiFailureCode || ((error as any)?.quotaCode ? `quota_${(error as any).quotaCode}` : 'provider_or_validation'), failureCategory: safeAiFailureCategory(error), completedAt: new Date() } })
   } finally {
-    if (budgetLease) await db.collection<any>('staffingAiBudgets').updateOne({ _id: budgetLease }, { $pull: { leases: { taskId: task.id } } } as any)
+    if (budgetLease) await aiUsageCollection(db).updateOne({ _id: budgetLease }, { $pull: { leases: { taskId: task.id } } } as any)
   }
   return { task: publicRecord(await db.collection('staffingAiTasks').findOne({ id: task.id })) }
 }
