@@ -1,15 +1,22 @@
 {
-  "recordedAt": "2026-11-07T21:57:13.890133+00:00",
-  "coverage": "Current domain/integration review for changed code plus matching byte receipts from the previous full-source review for unchanged code. No claim of exhaustive security proof.",
+  "recordedAt": "2026-11-08T01:47:41.743244+00:00",
+  "coverage": "Matching prior review receipts are retained for unchanged bytes. Changed and added files received focused implementation, domain, integration and interface review, with current local unit/browser/geometry/lifecycle evidence. No claim of a new exhaustive whole-source semantic or security proof.",
   "files": [
     {
       "path": "app/app.vue",
-      "bytes": 1712,
-      "sha256": "c0d98a75666d5ffdb49b94396c7bc3cfc8804c0836d80fd8adc626404577c1c1",
-      "physicalLines": 82,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 1947,
+      "sha256": "0056150693bebdea8ab5d63c3cfae2cfc69cfe19582c356d4367924e0216a324",
+      "physicalLines": 95,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -23,23 +30,54 @@
       ]
     },
     {
-      "path": "app/components/OpportunityEditor.vue",
-      "bytes": 17233,
-      "sha256": "4f7c6c822536aff3d02c73f5b6f14296dae26ea95dd51740dccc4c111231b78c",
-      "physicalLines": 545,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "path": "app/components/CourseInsights.vue",
+      "bytes": 53451,
+      "sha256": "168aa8a3801b3dd209d575a8a80aaa6f8b3eabb9cf1aba5d903c0144f97914e1",
+      "physicalLines": 1865,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "app/components/OpportunityEditor.vue",
+      "bytes": 17796,
+      "sha256": "d3e2a4bd61c0dcbdaf334cf62267059d8d14fdb26e514a9771d3c9bcb45ad744",
+      "physicalLines": 564,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
       "path": "app/components/StaffingNavigation.vue",
-      "bytes": 1685,
-      "sha256": "9055e312243a0c9dc8fe892cac9e5519500abb219fc8a88c2ca03c71f33130a7",
-      "physicalLines": 83,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 3172,
+      "sha256": "73d66d81c483579d056f7046355c778ca13cbd8f8f509148ea3c6d5eee725877",
+      "physicalLines": 135,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -54,22 +92,36 @@
     },
     {
       "path": "app/components/StaffingSettlement.vue",
-      "bytes": 1208,
-      "sha256": "9182bb43343202b600a8910b2ab5cab01bf9b44107bf02d0f79ecadbfe31bbeb",
-      "physicalLines": 44,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 1283,
+      "sha256": "4b5691f5815ac6d64988782935021286eae8f8ddd09ab7ec8539eba382a09884",
+      "physicalLines": 46,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
       "path": "app/components/StaffingShell.vue",
-      "bytes": 10345,
-      "sha256": "0fd5db5a8b1869d9f74f17f881905e232c8ace39f049f0bfa30504c8f93a9571",
-      "physicalLines": 518,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 12546,
+      "sha256": "cde7c6b1d6cce7d1951a2007e366798a87fde5e117e0eb114c42b345a73fea51",
+      "physicalLines": 609,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -94,12 +146,19 @@
     },
     {
       "path": "app/components/WorkloadRecorder.vue",
-      "bytes": 2395,
-      "sha256": "c385129b297476fb3e369bb47e3ed45b745a0fea2b1260fb9a9e98eb813fd4e9",
-      "physicalLines": 83,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 2462,
+      "sha256": "9f80969feeda8a2942a2f46d89198c9386ad6537194a231a7cac5d5561f4e100",
+      "physicalLines": 86,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -121,6 +180,23 @@
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "interface reviewer"
+      ]
+    },
+    {
+      "path": "app/composables/useCourseInsights.ts",
+      "bytes": 7057,
+      "sha256": "db118c8107d37747e027f133709cf72e576790023d09a93284dfef6fcf1fa904",
+      "physicalLines": 236,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -166,32 +242,53 @@
     },
     {
       "path": "app/pages/admin/courses.vue",
-      "bytes": 11659,
-      "sha256": "f512cf4188ba8ac37a21b51ce38eea613421ffe8cde9a0936e8d438770e21742",
-      "physicalLines": 537,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 12473,
+      "sha256": "2b4662db2fa600cbd0705505eb50eb88f706b530af549804dec3a28dee02a55f",
+      "physicalLines": 587,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
       "path": "app/pages/admin/staffing.vue",
-      "bytes": 12977,
-      "sha256": "4e90e588f07bca411c567ec7923405a9b7ae9e297b5246fa6a4d0bab4d424f44",
-      "physicalLines": 397,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 13169,
+      "sha256": "3c867bf26b93b868b40a3db5ed0ac2594aa826fb48f6ceebcec6789ef6112dd5",
+      "physicalLines": 401,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
       "path": "app/pages/applications/[id].vue",
-      "bytes": 26817,
-      "sha256": "ff759db47be9b8dceff1b20f249a55437372bb8b8613bea628a8fecc3167e2f5",
-      "physicalLines": 804,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 27185,
+      "sha256": "2b18745cf5b4c25e1a73454790fbd5b700f3f8a70916ee242b75a4f757f96581",
+      "physicalLines": 814,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -217,12 +314,19 @@
     },
     {
       "path": "app/pages/courses/[id]/admin.vue",
-      "bytes": 66507,
-      "sha256": "111e5bf4882c8e083ae0c0a0eadf8ee08795e4616ca01c92ef4e5f9c58d2188a",
-      "physicalLines": 2544,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 68415,
+      "sha256": "cbb6a10c75424936d567e646d830d2202ce2605fffed33d216a27cf0d8f3cbf3",
+      "physicalLines": 2620,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -237,42 +341,70 @@
     },
     {
       "path": "app/pages/courses/[id]/student.vue",
-      "bytes": 36329,
-      "sha256": "6762f2695403dfb5e6000b3a891e8550f217134c8581884a7c9615b15bbb809d",
-      "physicalLines": 1523,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 41373,
+      "sha256": "31b6200187d0cd96fcb122939245139eab759721093ca945f89fe72160275835",
+      "physicalLines": 1649,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
       "path": "app/pages/courses/[id]/ta.vue",
-      "bytes": 36492,
-      "sha256": "ff8cf9fbabc587154cdb8871c2ba20c72ff12cab3b93d764a5f8189b24b5d89d",
-      "physicalLines": 1513,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 38237,
+      "sha256": "134196cc86d408bf9ea95b569d950ea7adba85fb90e8f2cc9ea7132e33d4b187",
+      "physicalLines": 1585,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
       "path": "app/pages/courses/index.vue",
-      "bytes": 16016,
-      "sha256": "e9280482f7d006d1f619e0f9309f9f86cece55a211d71322a6c7abd08faa9ec3",
-      "physicalLines": 709,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 17272,
+      "sha256": "25e64cba4d509a8e863958144b62867e73cacefea6c27aba7d012793c0b3ecd7",
+      "physicalLines": 768,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
       "path": "app/pages/help.vue",
-      "bytes": 8300,
-      "sha256": "4105a585644c6bdf6b5306bd34176e33d7fe64fda71df1af496634a27173d901",
-      "physicalLines": 348,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 8466,
+      "sha256": "4e0e6e0ae53708db16e9eff24cd7e51436b3624f9859a86a7b576c774f226281",
+      "physicalLines": 354,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -287,13 +419,37 @@
       ]
     },
     {
-      "path": "app/pages/login.vue",
-      "bytes": 11795,
-      "sha256": "8bfdd426f15e64177565e1f9d70660d238548a29fe821e5c479ec5a78b3ad919",
-      "physicalLines": 556,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "path": "app/pages/insights.vue",
+      "bytes": 480,
+      "sha256": "84750b923a9807705644e12558178af1faf6438cabce4c20e4fb71609a22fc80",
+      "physicalLines": 15,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "app/pages/login.vue",
+      "bytes": 12044,
+      "sha256": "bf35566b059b0a46b127a627857f1ffbfa45c5b4d1d8a45e949986ce1b313f9d",
+      "physicalLines": 566,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -318,12 +474,19 @@
     },
     {
       "path": "app/pages/staffing/[id].vue",
-      "bytes": 16612,
-      "sha256": "aab047a930542fc33706ddd8bd930cc083be87297cb7a243e7bb9b6e3e6a3a44",
-      "physicalLines": 476,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 16706,
+      "sha256": "569f63f1a762bbe01c1f374e5768b2483488d91430cc86afd9646f03a4611927",
+      "physicalLines": 477,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "interface reviewer"
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -356,6 +519,23 @@
       "reviewers": [
         "interface reviewer",
         "primary integration reviewer"
+      ]
+    },
+    {
+      "path": "docs/demo/index.html",
+      "bytes": 46521,
+      "sha256": "ca8f9115636e5713f4db1d4ced3e06687cbc4fd72b5b7c4f4a7048b99cb061fe",
+      "physicalLines": 1405,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -439,6 +619,23 @@
       ]
     },
     {
+      "path": "playwright/e2e/control-alignment.spec.ts",
+      "bytes": 20492,
+      "sha256": "8ba3d4af6822ad11836ad51ee6e57050246ccee8d756ef9f6a6d5b5481232e06",
+      "physicalLines": 580,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
       "path": "playwright/e2e/demo-workspaces.spec.ts",
       "bytes": 2127,
       "sha256": "716539d9535433de6076b542b32af61ed46baf287bbbcc0fbc0faf74b95d2afa",
@@ -456,6 +653,23 @@
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "integration reviewer"
+      ]
+    },
+    {
+      "path": "playwright/e2e/insights.spec.ts",
+      "bytes": 26842,
+      "sha256": "903d8349c058150a5b50395896aa6d9fc0de45ba27e1c586df2b5dff5265d5ed",
+      "physicalLines": 708,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "interface implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -700,12 +914,87 @@
     },
     {
       "path": "scripts/demo-catalog.mjs",
-      "bytes": 25954,
-      "sha256": "00838173c37c6041016316a48754b9862025e2e66128b76c4d5ea5e73e10ccc6",
-      "physicalLines": 295,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 29582,
+      "sha256": "2938aa02c1acca8c81beed96a68053b3af3b110e288a92dba0bb92a23b21a016",
+      "physicalLines": 347,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "AI and integration reviewer"
+        "primary integration reviewer",
+        "presentation lifecycle reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "scripts/demo-foreground.ps1",
+      "bytes": 4402,
+      "sha256": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424",
+      "physicalLines": 93,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "presentation lifecycle reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "scripts/demo-loop-flow.mjs",
+      "bytes": 26945,
+      "sha256": "7515c66d940c2d9364f10c26b6a9a7b754b4c8d6bad3028002c2105d250a94a9",
+      "physicalLines": 763,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "presentation lifecycle reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "scripts/demo-loop-service.mjs",
+      "bytes": 15908,
+      "sha256": "32672b10f1ba35450b03e232a5fc0bfeb7a87dac998f7b9ed68cd2d6ece41abd",
+      "physicalLines": 508,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "presentation lifecycle reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "scripts/demo-loop.mjs",
+      "bytes": 11320,
+      "sha256": "ab656d2e36699411b007f917f5fdfd9d325751baae89e53662570217adf89c95",
+      "physicalLines": 346,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "presentation lifecycle reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -720,12 +1009,19 @@
     },
     {
       "path": "scripts/demo-showcase-data.mjs",
-      "bytes": 9706,
-      "sha256": "43c2fa5cb329fb78f9d2afeeaa57a5339453bb72fa2c4bc6c4d71e17a2419db4",
-      "physicalLines": 129,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 14183,
+      "sha256": "606a767610c5aa40651798136100960020b7631e51b041c992d8651ed0f7a534",
+      "physicalLines": 166,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "AI and integration reviewer"
+        "primary integration reviewer",
+        "presentation lifecycle reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -746,6 +1042,23 @@
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "AI and integration reviewer"
+      ]
+    },
+    {
+      "path": "scripts/demo-stage.mjs",
+      "bytes": 23902,
+      "sha256": "b0ddd52cba90c3b4c0d19b444e2344737c533db2a69e38f56051452f37ad7ede",
+      "physicalLines": 697,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "presentation lifecycle reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -958,14 +1271,37 @@
       ]
     },
     {
-      "path": "server/api/courses/[id]/feedback.post.ts",
-      "bytes": 1208,
-      "sha256": "91df10bc221be5e89002ef41f8e1f4b67094f899b43f3dd844365658aa811288",
-      "physicalLines": 16,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "path": "server/api/courses/[id]/feedback-context.get.ts",
+      "bytes": 3178,
+      "sha256": "964900e1699b2b763565c821d136c630cd129a2fc1297021ef2ec1e0ca002a14",
+      "physicalLines": 116,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "core security or staffing domain reviewer",
-        "primary integration reviewer"
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "server/api/courses/[id]/feedback.post.ts",
+      "bytes": 3200,
+      "sha256": "6eb7b0274f8806a8d1f7171973384a65555dd7da5e73db879ee1e1370214ef34",
+      "physicalLines": 35,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -980,12 +1316,19 @@
     },
     {
       "path": "server/api/courses/[id]/queue/join.post.ts",
-      "bytes": 2524,
-      "sha256": "f2f7e60337877f2a47b8721acd892e90b9a4a0bfc0dbda581b7dc6e70f0058fe",
+      "bytes": 2544,
+      "sha256": "3373974e04270e7f264de5dd34178f2741de265831a6c2481f3657dda81fa779",
       "physicalLines": 32,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "database and domain reviewer"
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -1091,6 +1434,40 @@
       "reviewers": [
         "core security or staffing domain reviewer",
         "primary integration reviewer"
+      ]
+    },
+    {
+      "path": "server/api/insights/access.get.ts",
+      "bytes": 362,
+      "sha256": "90a82ba73c55f6597db3bdf383fb5537b6d4db31ca82a0f7d6690895a5354fcc",
+      "physicalLines": 9,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "server/api/insights/index.get.ts",
+      "bytes": 385,
+      "sha256": "b119ffa1b93b5e2251fb2874b9b0b2fdb2e753d44fc960384b0ae8d6ee030d9a",
+      "physicalLines": 9,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -1208,6 +1585,23 @@
       ]
     },
     {
+      "path": "server/utils/course-insights.ts",
+      "bytes": 45338,
+      "sha256": "916dccd39d97c4995ec1bbbbc5542f9d8c0f8ffeacc456efae112abd77bcf7d9",
+      "physicalLines": 1373,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
       "path": "server/utils/courses.ts",
       "bytes": 9316,
       "sha256": "83e0b66b486a61296b3d7572c56699f457d56bf2234cfd32227d0a228cadf106",
@@ -1219,12 +1613,36 @@
     },
     {
       "path": "server/utils/db.ts",
-      "bytes": 6044,
-      "sha256": "806ac3a19f1ab21204f6425427a6c8466ea6718e66e073273084363f8f19f9d6",
-      "physicalLines": 114,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 6373,
+      "sha256": "66867ba4528faa8dc5369aae1a8afc16631c32b955c3ba668f1e9d07aeea2660",
+      "physicalLines": 118,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "database and domain reviewer"
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "server/utils/help-feedback.ts",
+      "bytes": 2146,
+      "sha256": "2ba942b7945c14db2f749cd7561553147b43a6fffdc305275ce2e042b097e28b",
+      "physicalLines": 36,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -1239,12 +1657,19 @@
     },
     {
       "path": "server/utils/queue.ts",
-      "bytes": 5816,
-      "sha256": "269a716bd553413352b2e529e8738a35084c5aa53e6fbe78311c13c6c5877e59",
-      "physicalLines": 87,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 5880,
+      "sha256": "8ec3b349afe1af2e1239c8f5dd532b44ab0050a1e3fe2bb68311f6116a83ca74",
+      "physicalLines": 88,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "database and domain reviewer"
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -1330,12 +1755,36 @@
     },
     {
       "path": "server/utils/staffing.ts",
-      "bytes": 14396,
-      "sha256": "c71fa48bd9ff0fc7c78135290d5d340e9163fffc775c67811b2f263c9dfe0641",
+      "bytes": 14534,
+      "sha256": "c6588335a00eadcae9608d8aee04a4be8a55b52bcdb796d4d37fc63b828e6589",
       "physicalLines": 203,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "database and domain reviewer"
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "shared/course-insights.ts",
+      "bytes": 3445,
+      "sha256": "905cd186516c7d3a05a6d0fcc5088c4e2c0ba473789de48090a09322617866d4",
+      "physicalLines": 140,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -1409,6 +1858,23 @@
       ]
     },
     {
+      "path": "tests/course-insights.test.mjs",
+      "bytes": 22511,
+      "sha256": "e4a2009801f9e266711f2f882d7c422375fb6e15d5e9dddadfb8f7be7cfb426d",
+      "physicalLines": 766,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
       "path": "tests/course-report-stability.test.mjs",
       "bytes": 1935,
       "sha256": "1da8c9e99750dfb9a8123bc3a1a82504d42301c882434315e440f7735915f6db",
@@ -1420,22 +1886,36 @@
     },
     {
       "path": "tests/demo-catalog.test.mjs",
-      "bytes": 9418,
-      "sha256": "f32b043b3ee35396a8b46da128714355612acea1a50b8a9697258acde6190119",
-      "physicalLines": 128,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 15803,
+      "sha256": "f06881d7638b7dfb2bcaf45e91001776194d600ef5a83d651d9c80f521dc0b50",
+      "physicalLines": 229,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "integration reviewer"
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
       "path": "tests/demo-showcase-data.test.mjs",
-      "bytes": 4677,
-      "sha256": "9f6a4e25dae164ea2cd1a39552fdd95e0ac08cb519407a487b72eac3faa2d5a6",
-      "physicalLines": 70,
-      "review": "Prior full-source review receipt retained; current bytes unchanged.",
+      "bytes": 11578,
+      "sha256": "cac369690b13723d111c65e8185655a52ad89969429eb05697f8c8cb9887ccb8",
+      "physicalLines": 187,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
       "reviewers": [
-        "integration reviewer"
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {
@@ -1446,6 +1926,40 @@
       "review": "Prior full-source review receipt retained; current bytes unchanged.",
       "reviewers": [
         "primary verification reviewer"
+      ]
+    },
+    {
+      "path": "tests/feedback-context.test.mjs",
+      "bytes": 6487,
+      "sha256": "4420220aa0bb3164ea6f393127949097e7f3bf059e125ab83e635b1466aa5e01",
+      "physicalLines": 216,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
+      ]
+    },
+    {
+      "path": "tests/help-feedback.test.mjs",
+      "bytes": 3085,
+      "sha256": "7dc1d8e0eb174449bc31d1f14741a5c0f03fdb267dd9d3507474fbf2a6ff9e3b",
+      "physicalLines": 41,
+      "review": "Current changed-file implementation and focused domain, integration or interface review. Unit, browser, geometry and lifecycle evidence is scoped in the current receipts; this is not a new exhaustive security or semantic proof.",
+      "reviewers": [
+        "primary integration reviewer",
+        "domain implementation reviewer"
+      ],
+      "evidence": [
+        "docs/verification/insights-proof.json",
+        "docs/verification/insights-lifecycle-headless-proof.json",
+        "docs/verification/insights-lifecycle-headed-proof.json",
+        "docs/verification/insights-gallery-proof.json"
       ]
     },
     {

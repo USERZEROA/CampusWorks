@@ -1,0 +1,120 @@
+{
+  "status": "passed",
+  "base": "68310e6",
+  "recordedAt": "2026-11-07T23:59:31.474Z",
+  "scope": "Script AST and button-count preservation for changed Vue files; UI behavior and geometry are checked separately in browsers.",
+  "files": [
+    {
+      "path": "app/app.vue",
+      "sha256": "0056150693bebdea8ab5d63c3cfae2cfc69cfe19582c356d4367924e0216a324",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 0
+    },
+    {
+      "path": "app/components/OpportunityEditor.vue",
+      "sha256": "cdf933008eb5939545773a85385a2067e9bd77902e6f29dba1aaaa16774b5aa6",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 8
+    },
+    {
+      "path": "app/components/StaffingNavigation.vue",
+      "sha256": "c2664a797c4f3801a1fcd411548782d1a578c59c95bd1c465e2573e9b0fd06b4",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 0
+    },
+    {
+      "path": "app/components/StaffingSettlement.vue",
+      "sha256": "4b5691f5815ac6d64988782935021286eae8f8ddd09ab7ec8539eba382a09884",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 1
+    },
+    {
+      "path": "app/components/StaffingShell.vue",
+      "sha256": "5712cee1f05f29cc404f4d2a14c600a7f41d9b2cbc86ab8f504d6c91efba1826",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 1
+    },
+    {
+      "path": "app/components/WorkloadRecorder.vue",
+      "sha256": "9f80969feeda8a2942a2f46d89198c9386ad6537194a231a7cac5d5561f4e100",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 1
+    },
+    {
+      "path": "app/pages/admin/courses.vue",
+      "sha256": "0b53c5428d50f526deda15eb99f3ff177d15867da1ba93f13bcc756aded69862",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 8
+    },
+    {
+      "path": "app/pages/admin/staffing.vue",
+      "sha256": "3c867bf26b93b868b40a3db5ed0ac2594aa826fb48f6ceebcec6789ef6112dd5",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 6
+    },
+    {
+      "path": "app/pages/applications/[id].vue",
+      "sha256": "2b18745cf5b4c25e1a73454790fbd5b700f3f8a70916ee242b75a4f757f96581",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 10
+    },
+    {
+      "path": "app/pages/courses/[id]/admin.vue",
+      "sha256": "a485c7ea9645f3cece13d919eff756470f19708a595e360c5eb51cfdb582d2fd",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 14
+    },
+    {
+      "path": "app/pages/courses/[id]/student.vue",
+      "sha256": "341f6d4946bb717e86937c2eddef99e5405e6de1685ab6213c37e5f29602fe32",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 15
+    },
+    {
+      "path": "app/pages/courses/[id]/ta.vue",
+      "sha256": "35e2d09c0fb5b5c9f36e5e15137e434938652f47e6f15e21d67541dd1722b2bb",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 19
+    },
+    {
+      "path": "app/pages/courses/index.vue",
+      "sha256": "25e64cba4d509a8e863958144b62867e73cacefea6c27aba7d012793c0b3ecd7",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 7
+    },
+    {
+      "path": "app/pages/help.vue",
+      "sha256": "4e0e6e0ae53708db16e9eff24cd7e51436b3624f9859a86a7b576c774f226281",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 2
+    },
+    {
+      "path": "app/pages/login.vue",
+      "sha256": "bf35566b059b0a46b127a627857f1ffbfa45c5b4d1d8a45e949986ce1b313f9d",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 6
+    },
+    {
+      "path": "app/pages/staffing/[id].vue",
+      "sha256": "569f63f1a762bbe01c1f374e5768b2483488d91430cc86afd9646f03a4611927",
+      "scriptAstUnchanged": true,
+      "buttonCountUnchanged": true,
+      "buttonCount": 10
+    }
+  ]
+}

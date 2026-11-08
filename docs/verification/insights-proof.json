@@ -1,0 +1,5603 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-08T01:44:32.722015+00:00",
+  "synthetic": true,
+  "headless": true,
+  "receiptBuilder": {
+    "path": ".cache/summarize-insights-results.py",
+    "bytes": 21237,
+    "sha256": "b1e0636cad23e1cb6b903a5c2cd15fedb7deee28252fe9012671ad7b765a0dfd"
+  },
+  "scope": "Current-source full local acceptance for department/course insights, explicitly linked helper feedback, control alignment and maintained lifecycle regressions.",
+  "source": {
+    "applicationSha256": "207429869c5cf98f9093d35b438d41b98196121707d4361a033a86d5a9a40d4e",
+    "scope": [
+      "app",
+      "server",
+      "shared",
+      "package.json",
+      "package-lock.json",
+      "nuxt.config.ts"
+    ],
+    "algorithm": "SHA-256 of sorted present tracked AND untracked app/server/shared/package/nuxt paths, each UTF-8 path and working-tree file content followed by a NUL byte.",
+    "applicationFiles": [
+      {
+        "path": "app/app.vue",
+        "bytes": 1947,
+        "sha256": "0056150693bebdea8ab5d63c3cfae2cfc69cfe19582c356d4367924e0216a324"
+      },
+      {
+        "path": "app/components/AiAssistance.vue",
+        "bytes": 12265,
+        "sha256": "7d62dfc3e322f70299648eb6bd28b1ad095c48c2c43228ca3f4063c6a6660fd3"
+      },
+      {
+        "path": "app/components/CourseInsights.vue",
+        "bytes": 53451,
+        "sha256": "168aa8a3801b3dd209d575a8a80aaa6f8b3eabb9cf1aba5d903c0144f97914e1"
+      },
+      {
+        "path": "app/components/OpportunityEditor.vue",
+        "bytes": 17796,
+        "sha256": "d3e2a4bd61c0dcbdaf334cf62267059d8d14fdb26e514a9771d3c9bcb45ad744"
+      },
+      {
+        "path": "app/components/StaffingNavigation.vue",
+        "bytes": 3172,
+        "sha256": "73d66d81c483579d056f7046355c778ca13cbd8f8f509148ea3c6d5eee725877"
+      },
+      {
+        "path": "app/components/StaffingPaging.vue",
+        "bytes": 1474,
+        "sha256": "b69514b15db2c6b09ac6e66e2eff075baac31f743b2ec3184858dfa5fc3ec203"
+      },
+      {
+        "path": "app/components/StaffingSettlement.vue",
+        "bytes": 1283,
+        "sha256": "4b5691f5815ac6d64988782935021286eae8f8ddd09ab7ec8539eba382a09884"
+      },
+      {
+        "path": "app/components/StaffingShell.vue",
+        "bytes": 12546,
+        "sha256": "cde7c6b1d6cce7d1951a2007e366798a87fde5e117e0eb114c42b345a73fea51"
+      },
+      {
+        "path": "app/components/StaffingStatus.vue",
+        "bytes": 1404,
+        "sha256": "b75007b1d1efe850e78eb745c8e4f39f4ead7884ef254e774448cfb5f7b8583f"
+      },
+      {
+        "path": "app/components/StaffingSummary.vue",
+        "bytes": 1011,
+        "sha256": "43e585bc6d692d7d8bd6c87ba539ba9c4c62e16c83a3a3467c301e77c5aae517"
+      },
+      {
+        "path": "app/components/WorkloadRecorder.vue",
+        "bytes": 2462,
+        "sha256": "9f80969feeda8a2942a2f46d89198c9386ad6537194a231a7cac5d5561f4e100"
+      },
+      {
+        "path": "app/composables/useAuth.ts",
+        "bytes": 2143,
+        "sha256": "38998126635af69610fa7cfbeb690aa005d16489b82e3986ac6c893f87692bff"
+      },
+      {
+        "path": "app/composables/useCourseCatalogLoader.ts",
+        "bytes": 1692,
+        "sha256": "578790d0849cca07c1f68dc752ed041a9bf20ff16454f797fbf19aeadfdbf385"
+      },
+      {
+        "path": "app/composables/useCourseInsights.ts",
+        "bytes": 7057,
+        "sha256": "db118c8107d37747e027f133709cf72e576790023d09a93284dfef6fcf1fa904"
+      },
+      {
+        "path": "app/composables/useIntervalRefresh.ts",
+        "bytes": 2525,
+        "sha256": "3b97be1900fdf5cc004755a55f17d47e85b89c54ecb8a7c8251664024af55bb8"
+      },
+      {
+        "path": "app/composables/useStaffing.ts",
+        "bytes": 8521,
+        "sha256": "1ad9fd92ce48452d8ccd1351e31e9e644ac5a06ea22f8da9f56277419e85859a"
+      },
+      {
+        "path": "app/directives/accessibleDialog.ts",
+        "bytes": 3341,
+        "sha256": "fb6a1032bdd0ecf6a45cf8e5662ad883c98d7a0414f6f3ad5b7973616cd6148b"
+      },
+      {
+        "path": "app/middleware/auth.global.ts",
+        "bytes": 2476,
+        "sha256": "63a53263b9ed9d611a1b487034c142743a382f462529a7a123d7fbaa3401707a"
+      },
+      {
+        "path": "app/pages/admin/courses.vue",
+        "bytes": 12473,
+        "sha256": "2b4662db2fa600cbd0705505eb50eb88f706b530af549804dec3a28dee02a55f"
+      },
+      {
+        "path": "app/pages/admin/staffing.vue",
+        "bytes": 13169,
+        "sha256": "3c867bf26b93b868b40a3db5ed0ac2594aa826fb48f6ceebcec6789ef6112dd5"
+      },
+      {
+        "path": "app/pages/applications/[id].vue",
+        "bytes": 27185,
+        "sha256": "2b18745cf5b4c25e1a73454790fbd5b700f3f8a70916ee242b75a4f757f96581"
+      },
+      {
+        "path": "app/pages/applications/index.vue",
+        "bytes": 6815,
+        "sha256": "00194578e48c6a427336f00f72fe6e7b6b91e42d6cc62f587f63ad4882c7d03b"
+      },
+      {
+        "path": "app/pages/courses/[id].vue",
+        "bytes": 509,
+        "sha256": "599f2ab5bf1aca0b14526b9d12edbde831ac2a45125bd254ba905d056cea6a53"
+      },
+      {
+        "path": "app/pages/courses/[id]/admin.vue",
+        "bytes": 68415,
+        "sha256": "cbb6a10c75424936d567e646d830d2202ce2605fffed33d216a27cf0d8f3cbf3"
+      },
+      {
+        "path": "app/pages/courses/[id]/review.vue",
+        "bytes": 4349,
+        "sha256": "03419c77a4aa00799a137cb44c45dc018a2144c8799d7f0d742fa8fd9f8850c6"
+      },
+      {
+        "path": "app/pages/courses/[id]/student.vue",
+        "bytes": 41373,
+        "sha256": "31b6200187d0cd96fcb122939245139eab759721093ca945f89fe72160275835"
+      },
+      {
+        "path": "app/pages/courses/[id]/ta.vue",
+        "bytes": 38237,
+        "sha256": "134196cc86d408bf9ea95b569d950ea7adba85fb90e8f2cc9ea7132e33d4b187"
+      },
+      {
+        "path": "app/pages/courses/index.vue",
+        "bytes": 17272,
+        "sha256": "25e64cba4d509a8e863958144b62867e73cacefea6c27aba7d012793c0b3ecd7"
+      },
+      {
+        "path": "app/pages/help.vue",
+        "bytes": 8466,
+        "sha256": "4e0e6e0ae53708db16e9eff24cd7e51436b3624f9859a86a7b576c774f226281"
+      },
+      {
+        "path": "app/pages/index.vue",
+        "bytes": 140,
+        "sha256": "7e56b5c0ea0c9ec93f493decd33f9a8757e9cb95c33ab250b2387c5441b7704c"
+      },
+      {
+        "path": "app/pages/insights.vue",
+        "bytes": 480,
+        "sha256": "84750b923a9807705644e12558178af1faf6438cabce4c20e4fb71609a22fc80"
+      },
+      {
+        "path": "app/pages/login.vue",
+        "bytes": 12044,
+        "sha256": "bf35566b059b0a46b127a627857f1ffbfa45c5b4d1d8a45e949986ce1b313f9d"
+      },
+      {
+        "path": "app/pages/opportunities/[id].vue",
+        "bytes": 6664,
+        "sha256": "5509dd20160164c4e159e557238cf488d3eb4c3c49b41b49f3737719daaafd0f"
+      },
+      {
+        "path": "app/pages/opportunities/index.vue",
+        "bytes": 3670,
+        "sha256": "1d8f40a58d8bb5695a11d748601352d8d5a22e8789db02983d44160db2bb0764"
+      },
+      {
+        "path": "app/pages/staffing/[id].vue",
+        "bytes": 16706,
+        "sha256": "569f63f1a762bbe01c1f374e5768b2483488d91430cc86afd9646f03a4611927"
+      },
+      {
+        "path": "app/pages/staffing/edit.vue",
+        "bytes": 195,
+        "sha256": "3af13e79020185248fc17e55686ba2e2a5513d74eac08ee779c5ee8d18c7d05c"
+      },
+      {
+        "path": "app/pages/staffing/index.vue",
+        "bytes": 5171,
+        "sha256": "2189e052cfa6f1ab1a688e210fcc4e656fc28dbec76f275b1201d3ad5b47d8c8"
+      },
+      {
+        "path": "app/pages/staffing/new.vue",
+        "bytes": 43,
+        "sha256": "13cbf69aeeb13060dfc0f52ee608fbc37d8eea89e3ee5bf9fcb429e0cb7e4d1d"
+      },
+      {
+        "path": "nuxt.config.ts",
+        "bytes": 779,
+        "sha256": "d4062b247c7b861f1a95f469b32f96100288e68749940c20d5e086329a8a4321"
+      },
+      {
+        "path": "package-lock.json",
+        "bytes": 304880,
+        "sha256": "424e5d75c72c1495702d1a1531a72ee3fe0c9e9821a347f330b1bcdc8183c555"
+      },
+      {
+        "path": "package.json",
+        "bytes": 1472,
+        "sha256": "971a9c5c1196af1186574881638c8aa0ea819a2e28b0cc5a00d43388201460f0"
+      },
+      {
+        "path": "server/api/[...slug].ts",
+        "bytes": 361,
+        "sha256": "a849901a91204f191c7cbe1b55b11b3d74c7e612017057141d5ec195a01fabe8"
+      },
+      {
+        "path": "server/api/ai/[...path].ts",
+        "bytes": 1715,
+        "sha256": "a9910708599f946d3b2366761964068249c73272ba51aab0593c9cf69342bc41"
+      },
+      {
+        "path": "server/api/auth/gitlab.get.ts",
+        "bytes": 4495,
+        "sha256": "ecc0a4c0b25a7939fd941b641f5e9d088eb138a3ab0f2a4caabf3260113e4678"
+      },
+      {
+        "path": "server/api/auth/gitlab/login.get.ts",
+        "bytes": 1271,
+        "sha256": "0fc448967c2aec42a618e3b0dc86278957e92ba23fd66a061d85e253eaa10ab5"
+      },
+      {
+        "path": "server/api/auth/logout.post.ts",
+        "bytes": 200,
+        "sha256": "f95c7ca6331d5647a17ca09a439252f234c44de377d86a6cb184e62ed0d110ea"
+      },
+      {
+        "path": "server/api/auth/me.get.ts",
+        "bytes": 359,
+        "sha256": "16935ebab91faf3871cb95d27821432a0bb3ff186fd916dcff8b84c2f4c6be64"
+      },
+      {
+        "path": "server/api/auth/mock.post.ts",
+        "bytes": 1622,
+        "sha256": "667ba436f40f6226a067dd2343d0a14ed4f041a7a26e07a3a4981761d6289902"
+      },
+      {
+        "path": "server/api/auth/providers.get.ts",
+        "bytes": 638,
+        "sha256": "879f82b7119da8de731f1e0a16f40b91a20d88c93990185653877f2932252233"
+      },
+      {
+        "path": "server/api/courses/[id].delete.ts",
+        "bytes": 1606,
+        "sha256": "69f5a68782e8e9d9adabf3d4e32d2151a57d2ef166512d5b9e455f52dc72d00e"
+      },
+      {
+        "path": "server/api/courses/[id].get.ts",
+        "bytes": 1531,
+        "sha256": "22d6b0e092105187390fce81bf83e259bcb173182a784f3ae91971e9434dbadb"
+      },
+      {
+        "path": "server/api/courses/[id]/admin.get.ts",
+        "bytes": 2763,
+        "sha256": "f2dfa07c58917b11a56edcef42878bb1dca0e037a5b964cf2af936ad94ba1b65"
+      },
+      {
+        "path": "server/api/courses/[id]/announcements.post.ts",
+        "bytes": 682,
+        "sha256": "649e675c52a937f9d47e9f3aa1ba794207ecb0e319e8732ec7963fd679b42fd8"
+      },
+      {
+        "path": "server/api/courses/[id]/announcements/[announcementId].delete.ts",
+        "bytes": 649,
+        "sha256": "1d2a9b3a49edb1f6ef3a6b7dc35f5c544e2db13d47649f1956e67c147feffd93"
+      },
+      {
+        "path": "server/api/courses/[id]/enrollments/kick.post.ts",
+        "bytes": 2695,
+        "sha256": "8d995255ba9d05f3373c1d2cc5f28364ec6f5e95f2715a044cc6e113be8d3da5"
+      },
+      {
+        "path": "server/api/courses/[id]/enrollments/restore.post.ts",
+        "bytes": 1158,
+        "sha256": "eac79616510843effbf2e2e1e6fa55cefd02761bdfe3171e43daf1f60e4b76e6"
+      },
+      {
+        "path": "server/api/courses/[id]/enrollments/role.patch.ts",
+        "bytes": 2036,
+        "sha256": "59e210b7b0c7130c452ca2f339e85e489f1046e96ab0d9aba6873dc935002c7a"
+      },
+      {
+        "path": "server/api/courses/[id]/feedback-context.get.ts",
+        "bytes": 3178,
+        "sha256": "964900e1699b2b763565c821d136c630cd129a2fc1297021ef2ec1e0ca002a14"
+      },
+      {
+        "path": "server/api/courses/[id]/feedback.post.ts",
+        "bytes": 3200,
+        "sha256": "6eb7b0274f8806a8d1f7171973384a65555dd7da5e73db879ee1e1370214ef34"
+      },
+      {
+        "path": "server/api/courses/[id]/queue/assign.post.ts",
+        "bytes": 1881,
+        "sha256": "cf819d2982ddfcfe3d61a2cacafd14908176e454485d17e130dfc26695179837"
+      },
+      {
+        "path": "server/api/courses/[id]/queue/join.post.ts",
+        "bytes": 2544,
+        "sha256": "3373974e04270e7f264de5dd34178f2741de265831a6c2481f3657dda81fa779"
+      },
+      {
+        "path": "server/api/courses/[id]/queue/leave.post.ts",
+        "bytes": 834,
+        "sha256": "f7a1b94a13bacd8f7ba93eeed562e9302cd6505d012ff00f7ea5613ff73a2023"
+      },
+      {
+        "path": "server/api/courses/[id]/queue/move.post.ts",
+        "bytes": 1174,
+        "sha256": "57cf331f1241660c28b27727bc5c1b8428515506475702b1dbeaedcfdcbea482"
+      },
+      {
+        "path": "server/api/courses/[id]/queue/pause.post.ts",
+        "bytes": 1226,
+        "sha256": "65b2969c245fdec78e57113745327a9ae93a5cad90ff8560f10944ab7b032f98"
+      },
+      {
+        "path": "server/api/courses/[id]/queue/remove.post.ts",
+        "bytes": 1274,
+        "sha256": "bb8a85f09a933f07869f4031212f5aad6ddb06ddb6e58eef29b7a6e966ba91ce"
+      },
+      {
+        "path": "server/api/courses/[id]/state.patch.ts",
+        "bytes": 968,
+        "sha256": "ba92a95252249919417134fccd680774021da2085fa4ea028794266f3be7fc9e"
+      },
+      {
+        "path": "server/api/courses/[id]/ta-duty.post.ts",
+        "bytes": 1095,
+        "sha256": "2cb4222a3397fefef70f56668f9fbb56ef5a6da99d5a07ceb524dfde2b6f7b68"
+      },
+      {
+        "path": "server/api/courses/enroll.post.ts",
+        "bytes": 1512,
+        "sha256": "cd102ceb629608516c7110a082c6c2905941ee6a099a154f710f5f47f807edc7"
+      },
+      {
+        "path": "server/api/courses/index.get.ts",
+        "bytes": 1140,
+        "sha256": "e2c315a4963d137dc9c678bdda96d28fe9ebb5478b6ebc82c097bfc84501ae27"
+      },
+      {
+        "path": "server/api/courses/index.post.ts",
+        "bytes": 1509,
+        "sha256": "cd4e0652f026cea7d51c58604e969cecb085be5559a3ba03d00666c2047b54f7"
+      },
+      {
+        "path": "server/api/health.get.ts",
+        "bytes": 484,
+        "sha256": "316c4777ecf0b37009a080bcabe5c7c8b637e3b5eb8677bcfe7983943db7c228"
+      },
+      {
+        "path": "server/api/insights/access.get.ts",
+        "bytes": 362,
+        "sha256": "90a82ba73c55f6597db3bdf383fb5537b6d4db31ca82a0f7d6690895a5354fcc"
+      },
+      {
+        "path": "server/api/insights/index.get.ts",
+        "bytes": 385,
+        "sha256": "b119ffa1b93b5e2251fb2874b9b0b2fdb2e753d44fc960384b0ae8d6ee030d9a"
+      },
+      {
+        "path": "server/api/staffing/[...path].ts",
+        "bytes": 15507,
+        "sha256": "1d9eded05f23e1d98e7c7c70bb80461526611159f16b98185e325fa820d83f51"
+      },
+      {
+        "path": "server/middleware/logging.ts",
+        "bytes": 684,
+        "sha256": "90be71d456b37ceb2c3c920287538fbfba5f918e8f3ad0e25d60bf5f77cb3156"
+      },
+      {
+        "path": "server/middleware/security.ts",
+        "bytes": 3388,
+        "sha256": "33913c84ab95284d0ae979491d191116eb8a5beadc332bc44c99e9ceedbd4ddb"
+      },
+      {
+        "path": "server/plugins/ai-refresh.ts",
+        "bytes": 1543,
+        "sha256": "b5911b37c6d2426ad4153644485f346e6018c03f75ef8ffb4747bebe14faca56"
+      },
+      {
+        "path": "server/plugins/staffing-maintenance.ts",
+        "bytes": 1090,
+        "sha256": "c09d2b6c1fd51939bef1033ee7577b78f6fec81586deba4b62943b5a28893058"
+      },
+      {
+        "path": "server/utils/ai-automation-indexes.ts",
+        "bytes": 781,
+        "sha256": "bfc1fb7a9ea764c1984aa47a30cc59c8c277935cc4beb9e4c5866a9579280ce2"
+      },
+      {
+        "path": "server/utils/ai-automation.ts",
+        "bytes": 34361,
+        "sha256": "030d5e6c87c26046656ec13e422d82cc24ec782e07ca4335c1fb256722f36e79"
+      },
+      {
+        "path": "server/utils/ai-refresh.ts",
+        "bytes": 26036,
+        "sha256": "6e258e9e64dcb4252932c68d7ffab1aa61dc51da89214aa61012429184a2dd37"
+      },
+      {
+        "path": "server/utils/ai.ts",
+        "bytes": 42760,
+        "sha256": "dfdbaec771db33f352eae45ebb6e2e46c481a4f58e84fdc0d77b98227fd0ea7a"
+      },
+      {
+        "path": "server/utils/auth.ts",
+        "bytes": 10418,
+        "sha256": "9499d6e2f2516032d85d8d40812e470380be5b294c185203a4597ad83746a580"
+      },
+      {
+        "path": "server/utils/config.ts",
+        "bytes": 3828,
+        "sha256": "dfac743ef2683db45e3c34bc98117997007c23794efae8625f855a4d4f86c3f3"
+      },
+      {
+        "path": "server/utils/course-insights.ts",
+        "bytes": 45338,
+        "sha256": "916dccd39d97c4995ec1bbbbc5542f9d8c0f8ffeacc456efae112abd77bcf7d9"
+      },
+      {
+        "path": "server/utils/courses.ts",
+        "bytes": 9316,
+        "sha256": "83e0b66b486a61296b3d7572c56699f457d56bf2234cfd32227d0a228cadf106"
+      },
+      {
+        "path": "server/utils/db.ts",
+        "bytes": 6373,
+        "sha256": "66867ba4528faa8dc5369aae1a8afc16631c32b955c3ba668f1e9d07aeea2660"
+      },
+      {
+        "path": "server/utils/help-feedback.ts",
+        "bytes": 2146,
+        "sha256": "2ba942b7945c14db2f749cd7561553147b43a6fffdc305275ce2e042b097e28b"
+      },
+      {
+        "path": "server/utils/qualification-questions.ts",
+        "bytes": 1632,
+        "sha256": "cfddce5f9668f5eece18745212efb1a52289ce650cf16f79d4c554f6ddaf5d3f"
+      },
+      {
+        "path": "server/utils/queue.ts",
+        "bytes": 5880,
+        "sha256": "8ec3b349afe1af2e1239c8f5dd532b44ab0050a1e3fe2bb68311f6116a83ca74"
+      },
+      {
+        "path": "server/utils/seed.ts",
+        "bytes": 5028,
+        "sha256": "4dd1bde3c0d627e8f43cf942aa622d54c0fbb9c1c4e9c0c5e41f842a7b4d7821"
+      },
+      {
+        "path": "server/utils/staffing-applications.ts",
+        "bytes": 18859,
+        "sha256": "f2b5ec81a0b4afe6ae53cde8528e3083e50bb5d00a9fb49f84baaa2efad5ffe4"
+      },
+      {
+        "path": "server/utils/staffing-appointments.ts",
+        "bytes": 26420,
+        "sha256": "62a50871cebd209870bac75825806c40d0c30726e97a9596fa702c459d209ce9"
+      },
+      {
+        "path": "server/utils/staffing-catalog.ts",
+        "bytes": 15906,
+        "sha256": "e3c9e6c39d2d5d2293c4fca44cdcd400896e02f00996778e7916e7bb4d5c1df6"
+      },
+      {
+        "path": "server/utils/staffing-cycle.ts",
+        "bytes": 3685,
+        "sha256": "de3b89f48e7a03d3455dc082260fea8eca6b5437f7153d7e29a2c4e453f6f4f6"
+      },
+      {
+        "path": "server/utils/staffing-maintenance.ts",
+        "bytes": 5386,
+        "sha256": "b83c54248d7769bd99b60c078095d0e2a350d99e51abb7035f3975c771311917"
+      },
+      {
+        "path": "server/utils/staffing-outbox.ts",
+        "bytes": 5780,
+        "sha256": "f5fdc0d7e15ebc0580de669b5cbcec5aeb2aa90d5a54bd59002c3ca0f931ebdb"
+      },
+      {
+        "path": "server/utils/staffing-reports.ts",
+        "bytes": 10448,
+        "sha256": "ba1bd65a77cb39d09ae88ea869bf77638cca16c08cb566611c85187e5e466fee"
+      },
+      {
+        "path": "server/utils/staffing.ts",
+        "bytes": 14534,
+        "sha256": "c6588335a00eadcae9608d8aee04a4be8a55b52bcdb796d4d37fc63b828e6589"
+      },
+      {
+        "path": "shared/course-insights.ts",
+        "bytes": 3445,
+        "sha256": "905cd186516c7d3a05a6d0fcc5088c4e2c0ba473789de48090a09322617866d4"
+      }
+    ],
+    "applicationFileCount": 100,
+    "byteBoundary": "Working-tree bytes; Git may normalize line endings. This digest includes shared and untracked application source and is not directly comparable to older tracked-only provider digests.",
+    "featureFiles": [
+      {
+        "path": "shared/course-insights.ts",
+        "bytes": 3445,
+        "sha256": "905cd186516c7d3a05a6d0fcc5088c4e2c0ba473789de48090a09322617866d4"
+      },
+      {
+        "path": "app/components/CourseInsights.vue",
+        "bytes": 53451,
+        "sha256": "168aa8a3801b3dd209d575a8a80aaa6f8b3eabb9cf1aba5d903c0144f97914e1"
+      },
+      {
+        "path": "app/composables/useCourseInsights.ts",
+        "bytes": 7057,
+        "sha256": "db118c8107d37747e027f133709cf72e576790023d09a93284dfef6fcf1fa904"
+      },
+      {
+        "path": "app/pages/insights.vue",
+        "bytes": 480,
+        "sha256": "84750b923a9807705644e12558178af1faf6438cabce4c20e4fb71609a22fc80"
+      },
+      {
+        "path": "server/utils/course-insights.ts",
+        "bytes": 45338,
+        "sha256": "916dccd39d97c4995ec1bbbbc5542f9d8c0f8ffeacc456efae112abd77bcf7d9"
+      },
+      {
+        "path": "server/utils/help-feedback.ts",
+        "bytes": 2146,
+        "sha256": "2ba942b7945c14db2f749cd7561553147b43a6fffdc305275ce2e042b097e28b"
+      },
+      {
+        "path": "server/api/insights/index.get.ts",
+        "bytes": 385,
+        "sha256": "b119ffa1b93b5e2251fb2874b9b0b2fdb2e753d44fc960384b0ae8d6ee030d9a"
+      },
+      {
+        "path": "server/api/insights/access.get.ts",
+        "bytes": 362,
+        "sha256": "90a82ba73c55f6597db3bdf383fb5537b6d4db31ca82a0f7d6690895a5354fcc"
+      },
+      {
+        "path": "server/api/courses/[id]/feedback-context.get.ts",
+        "bytes": 3178,
+        "sha256": "964900e1699b2b763565c821d136c630cd129a2fc1297021ef2ec1e0ca002a14"
+      },
+      {
+        "path": "server/api/courses/[id]/feedback.post.ts",
+        "bytes": 3200,
+        "sha256": "6eb7b0274f8806a8d1f7171973384a65555dd7da5e73db879ee1e1370214ef34"
+      },
+      {
+        "path": "server/api/courses/[id]/queue/join.post.ts",
+        "bytes": 2544,
+        "sha256": "3373974e04270e7f264de5dd34178f2741de265831a6c2481f3657dda81fa779"
+      },
+      {
+        "path": "server/utils/queue.ts",
+        "bytes": 5880,
+        "sha256": "8ec3b349afe1af2e1239c8f5dd532b44ab0050a1e3fe2bb68311f6116a83ca74"
+      },
+      {
+        "path": "scripts/demo-catalog.mjs",
+        "bytes": 29582,
+        "sha256": "2938aa02c1acca8c81beed96a68053b3af3b110e288a92dba0bb92a23b21a016"
+      },
+      {
+        "path": "scripts/demo-showcase-data.mjs",
+        "bytes": 14183,
+        "sha256": "606a767610c5aa40651798136100960020b7631e51b041c992d8651ed0f7a534"
+      },
+      {
+        "path": "scripts/demo-loop.mjs",
+        "bytes": 11320,
+        "sha256": "ab656d2e36699411b007f917f5fdfd9d325751baae89e53662570217adf89c95"
+      },
+      {
+        "path": "scripts/demo-loop-flow.mjs",
+        "bytes": 26945,
+        "sha256": "7515c66d940c2d9364f10c26b6a9a7b754b4c8d6bad3028002c2105d250a94a9"
+      },
+      {
+        "path": "scripts/demo-loop-service.mjs",
+        "bytes": 15908,
+        "sha256": "32672b10f1ba35450b03e232a5fc0bfeb7a87dac998f7b9ed68cd2d6ece41abd"
+      },
+      {
+        "path": "scripts/demo-stage.mjs",
+        "bytes": 23902,
+        "sha256": "b0ddd52cba90c3b4c0d19b444e2344737c533db2a69e38f56051452f37ad7ede"
+      },
+      {
+        "path": "scripts/demo-foreground.ps1",
+        "bytes": 4402,
+        "sha256": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424"
+      },
+      {
+        "path": "scripts/local-test.mjs",
+        "bytes": 6191,
+        "sha256": "bedf4bf919da1bc20462a4a171e0d469c8c09eee299ba7fc4c95dd5acaabac45"
+      },
+      {
+        "path": "playwright.config.ts",
+        "bytes": 1075,
+        "sha256": "90176bcbc68f676fb1e4909e0152a8e8b3d88c04129810535e73f82fb12bd4fa"
+      },
+      {
+        "path": "playwright/e2e/control-alignment.spec.ts",
+        "bytes": 20492,
+        "sha256": "8ba3d4af6822ad11836ad51ee6e57050246ccee8d756ef9f6a6d5b5481232e06"
+      },
+      {
+        "path": "playwright/e2e/insights.spec.ts",
+        "bytes": 26842,
+        "sha256": "903d8349c058150a5b50395896aa6d9fc0de45ba27e1c586df2b5dff5265d5ed"
+      },
+      {
+        "path": "tests/course-insights.test.mjs",
+        "bytes": 22511,
+        "sha256": "e4a2009801f9e266711f2f882d7c422375fb6e15d5e9dddadfb8f7be7cfb426d"
+      },
+      {
+        "path": "tests/help-feedback.test.mjs",
+        "bytes": 3085,
+        "sha256": "7dc1d8e0eb174449bc31d1f14741a5c0f03fdb267dd9d3507474fbf2a6ff9e3b"
+      },
+      {
+        "path": "tests/feedback-context.test.mjs",
+        "bytes": 6487,
+        "sha256": "4420220aa0bb3164ea6f393127949097e7f3bf059e125ab83e635b1466aa5e01"
+      }
+    ],
+    "featureFileCount": 26,
+    "productionEntry": {
+      "path": ".output/server/index.mjs",
+      "bytes": 2236,
+      "sha256": "444c92c4a9bd18740e5ba3138935d1266fcf7fd93ae9c2641c9eeab0130cdbc2"
+    }
+  },
+  "local": {
+    "input": {
+      "path": ".cache/local-e2e-results.json",
+      "bytes": 306081,
+      "sha256": "a0dd8a369f59e128df2410273d58364d0b68e8ce92350172f2d515c987b2331b"
+    },
+    "stats": {
+      "startTime": "2026-11-08T01:14:16.958Z",
+      "duration": 1734082.678,
+      "expected": 204,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "playwrightVersion": "1.56.1",
+    "tests": [
+      {
+        "file": "ai-automatic-pages.spec.ts",
+        "title": "automatic ten-candidate pages cover all twelve applicants and Next candidates only reads existing guidance",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 11701
+      },
+      {
+        "file": "ai-automatic-pages.spec.ts",
+        "title": "persisted discovery resumes beyond twelve predecessor resources after restart without repeating completed scopes",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 26332
+      },
+      {
+        "file": "ai-automation.spec.ts",
+        "title": "four kinds of TA and RA guidance start unattended, are shared by current faculty and do not buy calls on reads",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 8647
+      },
+      {
+        "file": "ai-automation.spec.ts",
+        "title": "manual selection refreshes both faculty comparisons while unchanged summaries and requirements reuse their results",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 11642
+      },
+      {
+        "file": "ai-automation.spec.ts",
+        "title": "semester end generates final course advice without a page and bypasses preview cooldown using changed metrics",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 8986
+      },
+      {
+        "file": "ai-automation.spec.ts",
+        "title": "provider failures back off and exhausted daily capacity stays blocked despite repeated reads",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 9499
+      },
+      {
+        "file": "ai-automation.spec.ts",
+        "title": "revoking the in-flight reviewer prevents publication, allows a current peer to take over and stops with no manager",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 9288
+      },
+      {
+        "file": "ai-automation.spec.ts",
+        "title": "an expired execution lease cannot publish after another node takes over the same scope",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 5829
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "configured AI uses a local provider, qualification evidence and validated citations",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1481
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "term_review browser assistance displays completed evidence without an analysis control",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1216
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "opportunity_draft browser assistance displays completed evidence without an analysis control",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1131
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "AI results with invented or cross-candidate citations are rejected",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1000
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "AI excludes administrative and unclassified screening while retaining technical qualification answers",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1174
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "candidate comparison rejects empty target coverage",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1366
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "candidate comparison rejects omitted target coverage",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1302
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "candidate comparison rejects duplicate target coverage",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1195
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "AI output becomes stale when a candidate is reserved during analysis",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 992
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "provider failures expose a safe task error and leave manual staffing usable",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1017
+      },
+      {
+        "file": "ai-provider.spec.ts",
+        "title": "durable per-user AI quota refuses a call before contacting the provider",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 949
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "exact candidate-page refresh metadata remains reachable beyond one hundred approved scopes",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1206
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "current-semester review survives application closing while a disabled cycle revokes automatic analysis",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 3482
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "ended appointments stop new candidate analysis and automatic calls while retaining authorized history and course reviews",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 7248
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "course restrictions update TA recommendations automatically while leaving RA evidence and provider usage unchanged",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 4060
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "the reviewer browser updates named candidate advice automatically without another analysis request",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 5001
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "two application workers coalesce selection, submission and withdrawal refreshes without read cycles",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 5939
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "a change during an in-flight model call hides the old result and schedules one fresh generation",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 3453
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "offer expiry triggers automatic reconsideration without any reviewer page or polling request",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 2453
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "revoked reviewer authority prevents automatic generation after a genuine list change",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 2472
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "a provider failure does not retry historical events or ordinary status reads",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 3035
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "provider-disabled instances retain pending changes without making an automatic call",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 3982
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "an automatic refresh respects durable per-user quota without a provider retry storm",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 4074
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "a provider-disabled submission queues before historical events drain and resumes past an orphan job",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 5453
+      },
+      {
+        "file": "ai-refresh.spec.ts",
+        "title": "a queued submission reaches exhausted reviewer capacity behind historical events without repeated attempts",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 5647
+      },
+      {
+        "file": "appointment-overlap.spec.ts",
+        "title": "different application instances serialize overlapping half TA and RA offers in the current semester",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 872
+      },
+      {
+        "file": "appointment-overlap.spec.ts",
+        "title": "adjacent cross-term dates are allowed while the same term remains exclusive without overlapping dates",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1199
+      },
+      {
+        "file": "appointment-overlap.spec.ts",
+        "title": "accepted, future, active and suspended commitments block overlapping work until ended",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1241
+      },
+      {
+        "file": "appointment-overlap.spec.ts",
+        "title": "acceptance, clearance and resume independently reject a conflicting stored appointment",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1214
+      },
+      {
+        "file": "appointment-overlap.spec.ts",
+        "title": "expired offers release availability and old cleanup cannot release a replacement allocation",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 937
+      },
+      {
+        "file": "appointment-overlap.spec.ts",
+        "title": "disabled future appointments suspend without starving eligible activation or blocking an authorized release",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1502
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "visitors without a session are sent to /login",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 566
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "APIs reject requests without a valid session",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 32
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "forged or tampered cookies are not trusted",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 27
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "demo login, server-rendered reload and logout",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1121
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "one-click demo accounts sign in with their own names",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 345
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "only site admins can open the admin console",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 412
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "visitors without a session are sent to /login",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 1477
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "APIs reject requests without a valid session",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 44
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "forged or tampered cookies are not trusted",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 35
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "demo login, server-rendered reload and logout",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 1580
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "one-click demo accounts sign in with their own names",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 515
+      },
+      {
+        "file": "auth.spec.ts",
+        "title": "only site admins can open the admin console",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 628
+      },
+      {
+        "file": "control-alignment.spec.ts",
+        "title": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 15261
+      },
+      {
+        "file": "control-alignment.spec.ts",
+        "title": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 22400
+      },
+      {
+        "file": "demo-workspaces.spec.ts",
+        "title": "interactive staffing setup is repeatable and prepares real submitted candidates for all four roles",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1314
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "queue edits, ordering, pause, handoff and removal preserve lifecycle invariants",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1718
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "course identifiers and current roles bound announcements and staff authority",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1153
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "all four roles retain usable Duke blue screens at a 390px viewport",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1989
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "downloaded history CSV preserves multiline answers and neutralizes formulas",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1012
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "synthetic analytics render an empty range, nearest-rank P90 and a full single-TA ring",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 11556
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "desktop navigation and all four workspaces retain their visual contracts",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 2496
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "queue edits, ordering, pause, handoff and removal preserve lifecycle invariants",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 1840
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "course identifiers and current roles bound announcements and staff authority",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 1070
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "all four roles retain usable Duke blue screens at a 390px viewport",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 2809
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "downloaded history CSV preserves multiline answers and neutralizes formulas",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 757
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "synthetic analytics render an empty range, nearest-rank P90 and a full single-TA ring",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 11658
+      },
+      {
+        "file": "extended-flow.spec.ts",
+        "title": "desktop navigation and all four workspaces retain their visual contracts",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 3111
+      },
+      {
+        "file": "insights.spec.ts",
+        "title": "insights use current course authority, complete snapshot totals and private aggregate projections",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 12615
+      },
+      {
+        "file": "insights.spec.ts",
+        "title": "real help-session feedback updates one helper and responsive dashboards retain complete readable queue actions",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 24351
+      },
+      {
+        "file": "insights.spec.ts",
+        "title": "insights use current course authority, complete snapshot totals and private aggregate projections",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 13627
+      },
+      {
+        "file": "insights.spec.ts",
+        "title": "real help-session feedback updates one helper and responsive dashboards retain complete readable queue actions",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 26299
+      },
+      {
+        "file": "institutional-identity.spec.ts",
+        "title": "institutional identity binding rejects email changes, reused addresses and demo impersonation",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1768
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "removed students remain restricted until a manager restores access without enrolling them",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 837
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "completion rejects changed ownership, paused rows and an ABA handoff while explicit removal retains its own reason",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1248
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "stale edit and leave commands cannot create or remove a replacement request",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 778
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "course record pages reject dataset changes and reload every row exactly once",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 461
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "disabled manual staff and demo administrators release duty and claims without deleting manual grants",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 736
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "slow polling delivers queue updates without cancelling every pending response",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 6511
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "course managers can remove and restore students through visible controls while restricted students see no enrollment or queue action",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 4219
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "a course restriction does not disable the account or survive deletion and recreation of its course",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 588
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "a replaced course cannot reuse the previous course pagination snapshot",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 406
+      },
+      {
+        "file": "queue-business.spec.ts",
+        "title": "the manager screen retries changing pages before publishing complete analytics and preserves them after a failed refresh",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1721
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "joins and queue closure serialize across two application instances",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 2247
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "concurrent claims, joins, duty toggles and moves retain queue invariants",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 2306
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "an interrupted history insert rolls back removal and a retry archives exactly once",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 564
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "help intervals exclude paused gaps and preserve both helpers after handoff",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1001
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "staff authority is enforced on duty and revoked while claims race with demotion",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 534
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "logout revokes a copied session on the other application instance",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 258
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "mutations reject cross-origin requests and malformed flags",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 285
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "API rate limits are shared across application instances",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 271
+      },
+      {
+        "file": "queue-concurrency.spec.ts",
+        "title": "readiness rejects missing domain and automatic AI constraints on every instance",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 807
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "site admin creates the course and adds a TA",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 920
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "TA opens the queue and goes on duty",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 844
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "student must enroll before joining, then joins the queue",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 734
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "TA picks the student up and completes the session",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 11934
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "student leaves feedback for the course",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 234
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "a second student who leaves on their own is also recorded",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 560
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "instructor sees the sessions, outcomes and feedback",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 669
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "closing the queue archives waiting students and clears duty",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 3081
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "site admin deletes the course and all of its data",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 259
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "site admin creates the course and adds a TA",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 1206
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "TA opens the queue and goes on duty",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 979
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "student must enroll before joining, then joins the queue",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 951
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "TA picks the student up and completes the session",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 12027
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "student leaves feedback for the course",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 264
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "a second student who leaves on their own is also recorded",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 802
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "instructor sees the sessions, outcomes and feedback",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 959
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "closing the queue archives waiting students and clears duty",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 6489
+      },
+      {
+        "file": "queue-flow.spec.ts",
+        "title": "site admin deletes the course and all of its data",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 408
+      },
+      {
+        "file": "rbac.spec.ts",
+        "title": "students cannot use staff or admin endpoints",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 208
+      },
+      {
+        "file": "rbac.spec.ts",
+        "title": "students only see their own email in the queue and only edit their own entry",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 202
+      },
+      {
+        "file": "rbac.spec.ts",
+        "title": "users who are not enrolled cannot join, give feedback or see the queue",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 85
+      },
+      {
+        "file": "rbac.spec.ts",
+        "title": "TAs run the queue but cannot manage the course",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 177
+      },
+      {
+        "file": "rbac.spec.ts",
+        "title": "one active entry per TA: claiming a second entry releases the first",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 131
+      },
+      {
+        "file": "rbac.spec.ts",
+        "title": "instructors manage people but not the admin role or the course itself",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 185
+      },
+      {
+        "file": "rbac.spec.ts",
+        "title": "input validation rejects malformed requests",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 145
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "only server-authorized instructors and administrators receive recruitment management capabilities",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 845
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "ordinary postings inherit the shared semester dates and cannot select another semester or deadline",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 433
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "closing recruitment blocks publishing and submission while existing applications remain selectable",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1027
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "semester changes preserve issued offers and reuse the same course while blocking stale recruitment commands",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 857
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "the shared cycle fence serializes concurrent closing and application creation across app instances",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 420
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "disabled or not-yet-open cycles block review and selection until an administrator opens recruitment",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 734
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "a cross-instance semester switch orders new drafts and resubmission without accepting stale-semester commands",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 731
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "RA hiring uses the direct instructor owner and administrator without a separate research project",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 803
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "course queue reads leave linked RA lifecycle changes to the canonical opportunity transaction",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 732
+      },
+      {
+        "file": "recruitment-cycle.spec.ts",
+        "title": "current-semester course reports include legacy TA observations while excluding RA course metadata",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 785
+      },
+      {
+        "file": "showcase-ai.spec.ts",
+        "title": "the populated main demonstration generates its five AI scopes within the default daily budgets without analysis requests",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 29703
+      },
+      {
+        "file": "showcase-flow.spec.ts",
+        "title": "the complete showcase has coherent real lifecycle records and repeated preparation preserves data and human decisions",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 437
+      },
+      {
+        "file": "showcase-flow.spec.ts",
+        "title": "a populated candidate accepts an offer, gains only cleared course authority and completes manual financial closeout through the browser",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 11995
+      },
+      {
+        "file": "showcase-flow.spec.ts",
+        "title": "fractional hours save and submit through real controls while a full position disables every further offer",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 3107
+      },
+      {
+        "file": "showcase-flow.spec.ts",
+        "title": "the complete showcase has coherent real lifecycle records and repeated preparation preserves data and human decisions",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 315
+      },
+      {
+        "file": "showcase-flow.spec.ts",
+        "title": "a populated candidate accepts an offer, gains only cleared course authority and completes manual financial closeout through the browser",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 12795
+      },
+      {
+        "file": "showcase-flow.spec.ts",
+        "title": "fractional hours save and submit through real controls while a full position disables every further offer",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 3340
+      },
+      {
+        "file": "showcase-visual.spec.ts",
+        "title": "populated four-role screens show complete real records and retain accessible Duke blue layouts",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 22543
+      },
+      {
+        "file": "showcase-visual.spec.ts",
+        "title": "populated four-role screens show complete real records and retain accessible Duke blue layouts",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 31283
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "offer and clearance changes arrive automatically while the applicant still chooses whether to accept",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1589
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "qualification edits survive workflow updates and remote content conflicts require an explicit discard",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 2135
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "private administrative edits remain local across polling and preserve remote corrections until discarded",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1623
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "recruitment schedules and opportunity drafts retain unsaved inputs when another reviewer changes their source",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 2276
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "queue data survives temporary failures, resumes on online and focus events, and never overlaps slow polls",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 5302
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "revoked course reviewers lose private candidate data without refreshing the page",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1264
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "offer and clearance changes arrive automatically while the applicant still chooses whether to accept",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 2125
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "qualification edits survive workflow updates and remote content conflicts require an explicit discard",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 2283
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "private administrative edits remain local across polling and preserve remote corrections until discarded",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 1673
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "recruitment schedules and opportunity drafts retain unsaved inputs when another reviewer changes their source",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 2694
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "queue data survives temporary failures, resumes on online and focus events, and never overlaps slow polls",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 5515
+      },
+      {
+        "file": "silent-refresh-browser.spec.ts",
+        "title": "revoked course reviewers lose private candidate data without refreshing the page",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 1312
+      },
+      {
+        "file": "staffing-audit-regressions.spec.ts",
+        "title": "course aliases persist one canonical appointment scope and cannot bypass deletion guards",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 889
+      },
+      {
+        "file": "staffing-audit-regressions.spec.ts",
+        "title": "submitting requires the exact reviewed application revision",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 726
+      },
+      {
+        "file": "staffing-audit-regressions.spec.ts",
+        "title": "recruitment must close strictly before semester end and rejects without changing the cycle",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 315
+      },
+      {
+        "file": "staffing-audit-regressions.spec.ts",
+        "title": "only site administrators can correct cleared details with a private before and after audit",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1105
+      },
+      {
+        "file": "staffing-audit-regressions.spec.ts",
+        "title": "reports distinguish requested plans, published approved plans, commitments and settled costs",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 912
+      },
+      {
+        "file": "staffing-audit-regressions.spec.ts",
+        "title": "a course restriction prevents selection and future automatic TA activation until restored",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1086
+      },
+      {
+        "file": "staffing-audit-regressions.spec.ts",
+        "title": "position end closes new applications and all qualification writes even while the shared cycle remains open",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 760
+      },
+      {
+        "file": "staffing-audit-regressions.spec.ts",
+        "title": "historical applications retain their authorized position title outside the public catalog",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 687
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "course creation rejects reserved identifiers before storing an unreachable course",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 261
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "term policy prevents an instructor from bypassing department publication approval",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 592
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "parallel edits reject stale versions and post-offer administrative data stays separate",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 610
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "ordinary review lists do not disclose restricted clearance reasons",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 707
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "clearance rejection keeps its reason private and reports the final clearance state consistently",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 818
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "workload commands are idempotent, bounds checked and reflected in complete term aggregates",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 835
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "lifecycle outbox delivers an offer notification once and only the recipient can mark it read",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 752
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "course deletion preserves the settlement path until an activated appointment is financially closed",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 854
+      },
+      {
+        "file": "staffing-boundaries.spec.ts",
+        "title": "a TA cannot manufacture a helped session by claiming their own queue entry",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 439
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "application observes a reopened cycle automatically without refresh controls",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 6739
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "successful submit, save, upload, withdrawal and resubmission retain the current local revision",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 2351
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "a dirty recruitment schedule keeps its loaded version when another administrator saves",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 5662
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "RA appointments carrying course metadata expose no TA queue links",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1263
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "the Duke Computer Science PNG is served intact with the expected image type",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 20
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "browser users publish, apply, upload, select, accept, clear, operate and end an appointment",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 18261
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "recruitment shortcuts belong to the home page and follow server role capabilities",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 4246
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "administrators set the shared recruitment window while closed-cycle applicants keep their history",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 2186
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "keyboard dialogs trap focus, close with Escape and restore the initiating control",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 3017
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "RA applicants receive an offer and appointment without project or course staff access",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 7651
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "current-semester course review keeps complete aggregates when loading scenario details",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 10948
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "desktop and mobile staffing and queue screens pass automated accessibility checks",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 59494
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "application observes a reopened cycle automatically without refresh controls",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 6880
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "successful submit, save, upload, withdrawal and resubmission retain the current local revision",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 3497
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "a dirty recruitment schedule keeps its loaded version when another administrator saves",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 6344
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "RA appointments carrying course metadata expose no TA queue links",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 2213
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "the Duke Computer Science PNG is served intact with the expected image type",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 22
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "browser users publish, apply, upload, select, accept, clear, operate and end an appointment",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 22352
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "recruitment shortcuts belong to the home page and follow server role capabilities",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 7848
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "administrators set the shared recruitment window while closed-cycle applicants keep their history",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 3847
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "keyboard dialogs trap focus, close with Escape and restore the initiating control",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 3579
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "RA applicants receive an offer and appointment without project or course staff access",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 9453
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "current-semester course review keeps complete aggregates when loading scenario details",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 11352
+      },
+      {
+        "file": "staffing-browser.spec.ts",
+        "title": "desktop and mobile staffing and queue screens pass automated accessibility checks",
+        "browser": "firefox",
+        "status": "passed",
+        "durationMs": 80095
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "accepted and cleared TA appointments open only the correct existing queue and revoke promptly",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1070
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "competing instructors cannot reserve the same candidate across course offerings",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 966
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "last vacancy and approved budget cannot be oversubscribed by concurrent selections",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 785
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "selection replay is idempotent and a declined offer frees the candidate and vacancy",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 788
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "withdrawal and selection resolve to a coherent ordered state",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 602
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "private drafts, current CVs and administrative fields cannot be read by unauthorized users",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 847
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "invalid CVs, stale versions, malformed question IDs and absent required answers fail explicitly",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 541
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "offer expiry releases capacity and stale cleanup cannot revoke an accepted appointment",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 820
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "future, suspended and ended appointment dates cannot grant queue authority",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 897
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "ending a TA appointment preserves independently granted instructor authority",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 753
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "RA appointments retain application history without creating course privileges or a project workspace",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 783
+      },
+      {
+        "file": "staffing-lifecycle.spec.ts",
+        "title": "AI assistance reports missing configuration without fake results or private data disclosure",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 578
+      },
+      {
+        "file": "staffing-maintenance.spec.ts",
+        "title": "provider-independent maintenance expires an unanswered offer and delivers its event once without page or API reconciliation",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 1481
+      },
+      {
+        "file": "staffing-maintenance.spec.ts",
+        "title": "due cleared appointments activate automatically while restricted candidates suspend and uncleared candidates remain pending",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 5279
+      },
+      {
+        "file": "staffing-maintenance.spec.ts",
+        "title": "bounded maintenance advances beyond one hundred resources and drains both appointment and notification work without sessions",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 9213
+      },
+      {
+        "file": "transaction-cursors.spec.ts",
+        "title": "transactional course cursors read beyond the first batch and roll back after a getMore failure",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 372
+      },
+      {
+        "file": "transaction-cursors.spec.ts",
+        "title": "approval outbox delivers once to more than 101 active administrators and excludes revoked or bound identities",
+        "browser": "chromium",
+        "status": "passed",
+        "durationMs": 642
+      }
+    ],
+    "accessibility": [
+      {
+        "browser": "chromium",
+        "test": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+        "synthetic": true,
+        "checkedScreens": 7,
+        "widths": [
+          1440,
+          768,
+          390,
+          320
+        ],
+        "violations": [],
+        "screens": [
+          {
+            "screen": "login",
+            "width": 390
+          },
+          {
+            "screen": "draft",
+            "width": 390
+          },
+          {
+            "screen": "clearance",
+            "width": 390
+          },
+          {
+            "screen": "ta-queue",
+            "width": 390
+          },
+          {
+            "screen": "course-admin",
+            "width": 390
+          },
+          {
+            "screen": "join-dialog",
+            "width": 390
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 390
+          }
+        ],
+        "branding": {
+          "logo": "/duke-cs-logo.png",
+          "header": "#012169"
+        }
+      },
+      {
+        "browser": "firefox",
+        "test": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+        "synthetic": true,
+        "checkedScreens": 7,
+        "widths": [
+          1440,
+          768,
+          390,
+          320
+        ],
+        "violations": [],
+        "screens": [
+          {
+            "screen": "login",
+            "width": 390
+          },
+          {
+            "screen": "draft",
+            "width": 390
+          },
+          {
+            "screen": "clearance",
+            "width": 390
+          },
+          {
+            "screen": "ta-queue",
+            "width": 390
+          },
+          {
+            "screen": "course-admin",
+            "width": 390
+          },
+          {
+            "screen": "join-dialog",
+            "width": 390
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 390
+          }
+        ],
+        "branding": {
+          "logo": "/duke-cs-logo.png",
+          "header": "#012169"
+        }
+      },
+      {
+        "browser": "chromium",
+        "test": "real help-session feedback updates one helper and responsive dashboards retain complete readable queue actions",
+        "checkedScreens": 9,
+        "screens": [
+          {
+            "screen": "specific-helper-feedback",
+            "width": 1440
+          },
+          {
+            "screen": "department-insights",
+            "width": 1440
+          },
+          {
+            "screen": "department-insights",
+            "width": 768
+          },
+          {
+            "screen": "department-insights",
+            "width": 390
+          },
+          {
+            "screen": "department-insights",
+            "width": 320
+          },
+          {
+            "screen": "embedded-course-insights",
+            "width": 1440
+          },
+          {
+            "screen": "embedded-course-insights",
+            "width": 768
+          },
+          {
+            "screen": "embedded-course-insights",
+            "width": 390
+          },
+          {
+            "screen": "embedded-course-insights",
+            "width": 320
+          }
+        ],
+        "violations": [],
+        "synthetic": true,
+        "scope": "Real help-session feedback and department/course dashboards"
+      },
+      {
+        "browser": "firefox",
+        "test": "real help-session feedback updates one helper and responsive dashboards retain complete readable queue actions",
+        "checkedScreens": 9,
+        "screens": [
+          {
+            "screen": "specific-helper-feedback",
+            "width": 1440
+          },
+          {
+            "screen": "department-insights",
+            "width": 1440
+          },
+          {
+            "screen": "department-insights",
+            "width": 768
+          },
+          {
+            "screen": "department-insights",
+            "width": 390
+          },
+          {
+            "screen": "department-insights",
+            "width": 320
+          },
+          {
+            "screen": "embedded-course-insights",
+            "width": 1440
+          },
+          {
+            "screen": "embedded-course-insights",
+            "width": 768
+          },
+          {
+            "screen": "embedded-course-insights",
+            "width": 390
+          },
+          {
+            "screen": "embedded-course-insights",
+            "width": 320
+          }
+        ],
+        "violations": [],
+        "synthetic": true,
+        "scope": "Real help-session feedback and department/course dashboards"
+      },
+      {
+        "browser": "chromium",
+        "test": "populated four-role screens show complete real records and retain accessible Duke blue layouts",
+        "checkedScreens": 36,
+        "widths": [
+          1440,
+          768,
+          390,
+          320
+        ],
+        "branding": {
+          "logo": "/duke-cs-logo.png",
+          "header": "#012169"
+        },
+        "violations": [],
+        "screens": [
+          {
+            "screen": "recruitment",
+            "width": 1440
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 1440
+          },
+          {
+            "screen": "applicant-applications",
+            "width": 1440
+          },
+          {
+            "screen": "clearance",
+            "width": 1440
+          },
+          {
+            "screen": "ta-queue",
+            "width": 1440
+          },
+          {
+            "screen": "course-report",
+            "width": 1440
+          },
+          {
+            "screen": "position-catalog",
+            "width": 1440
+          },
+          {
+            "screen": "applicant-offer",
+            "width": 1440
+          },
+          {
+            "screen": "faculty-inbox",
+            "width": 1440
+          },
+          {
+            "screen": "recruitment",
+            "width": 768
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 768
+          },
+          {
+            "screen": "applicant-applications",
+            "width": 768
+          },
+          {
+            "screen": "clearance",
+            "width": 768
+          },
+          {
+            "screen": "ta-queue",
+            "width": 768
+          },
+          {
+            "screen": "course-report",
+            "width": 768
+          },
+          {
+            "screen": "position-catalog",
+            "width": 768
+          },
+          {
+            "screen": "applicant-offer",
+            "width": 768
+          },
+          {
+            "screen": "faculty-inbox",
+            "width": 768
+          },
+          {
+            "screen": "recruitment",
+            "width": 390
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 390
+          },
+          {
+            "screen": "applicant-applications",
+            "width": 390
+          },
+          {
+            "screen": "clearance",
+            "width": 390
+          },
+          {
+            "screen": "ta-queue",
+            "width": 390
+          },
+          {
+            "screen": "course-report",
+            "width": 390
+          },
+          {
+            "screen": "position-catalog",
+            "width": 390
+          },
+          {
+            "screen": "applicant-offer",
+            "width": 390
+          },
+          {
+            "screen": "faculty-inbox",
+            "width": 390
+          },
+          {
+            "screen": "recruitment",
+            "width": 320
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 320
+          },
+          {
+            "screen": "applicant-applications",
+            "width": 320
+          },
+          {
+            "screen": "clearance",
+            "width": 320
+          },
+          {
+            "screen": "ta-queue",
+            "width": 320
+          },
+          {
+            "screen": "course-report",
+            "width": 320
+          },
+          {
+            "screen": "position-catalog",
+            "width": 320
+          },
+          {
+            "screen": "applicant-offer",
+            "width": 320
+          },
+          {
+            "screen": "faculty-inbox",
+            "width": 320
+          }
+        ],
+        "synthetic": true
+      },
+      {
+        "browser": "firefox",
+        "test": "populated four-role screens show complete real records and retain accessible Duke blue layouts",
+        "checkedScreens": 36,
+        "widths": [
+          1440,
+          768,
+          390,
+          320
+        ],
+        "branding": {
+          "logo": "/duke-cs-logo.png",
+          "header": "#012169"
+        },
+        "violations": [],
+        "screens": [
+          {
+            "screen": "recruitment",
+            "width": 1440
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 1440
+          },
+          {
+            "screen": "applicant-applications",
+            "width": 1440
+          },
+          {
+            "screen": "clearance",
+            "width": 1440
+          },
+          {
+            "screen": "ta-queue",
+            "width": 1440
+          },
+          {
+            "screen": "course-report",
+            "width": 1440
+          },
+          {
+            "screen": "position-catalog",
+            "width": 1440
+          },
+          {
+            "screen": "applicant-offer",
+            "width": 1440
+          },
+          {
+            "screen": "faculty-inbox",
+            "width": 1440
+          },
+          {
+            "screen": "recruitment",
+            "width": 768
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 768
+          },
+          {
+            "screen": "applicant-applications",
+            "width": 768
+          },
+          {
+            "screen": "clearance",
+            "width": 768
+          },
+          {
+            "screen": "ta-queue",
+            "width": 768
+          },
+          {
+            "screen": "course-report",
+            "width": 768
+          },
+          {
+            "screen": "position-catalog",
+            "width": 768
+          },
+          {
+            "screen": "applicant-offer",
+            "width": 768
+          },
+          {
+            "screen": "faculty-inbox",
+            "width": 768
+          },
+          {
+            "screen": "recruitment",
+            "width": 390
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 390
+          },
+          {
+            "screen": "applicant-applications",
+            "width": 390
+          },
+          {
+            "screen": "clearance",
+            "width": 390
+          },
+          {
+            "screen": "ta-queue",
+            "width": 390
+          },
+          {
+            "screen": "course-report",
+            "width": 390
+          },
+          {
+            "screen": "position-catalog",
+            "width": 390
+          },
+          {
+            "screen": "applicant-offer",
+            "width": 390
+          },
+          {
+            "screen": "faculty-inbox",
+            "width": 390
+          },
+          {
+            "screen": "recruitment",
+            "width": 320
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 320
+          },
+          {
+            "screen": "applicant-applications",
+            "width": 320
+          },
+          {
+            "screen": "clearance",
+            "width": 320
+          },
+          {
+            "screen": "ta-queue",
+            "width": 320
+          },
+          {
+            "screen": "course-report",
+            "width": 320
+          },
+          {
+            "screen": "position-catalog",
+            "width": 320
+          },
+          {
+            "screen": "applicant-offer",
+            "width": 320
+          },
+          {
+            "screen": "faculty-inbox",
+            "width": 320
+          }
+        ],
+        "synthetic": true
+      },
+      {
+        "browser": "chromium",
+        "test": "desktop and mobile staffing and queue screens pass automated accessibility checks",
+        "checkedScreens": 76,
+        "widths": [
+          1440,
+          768,
+          390,
+          320
+        ],
+        "branding": {
+          "logo": "/duke-cs-logo.png",
+          "header": "#012169"
+        },
+        "violations": []
+      },
+      {
+        "browser": "firefox",
+        "test": "desktop and mobile staffing and queue screens pass automated accessibility checks",
+        "checkedScreens": 76,
+        "widths": [
+          1440,
+          768,
+          390,
+          320
+        ],
+        "branding": {
+          "logo": "/duke-cs-logo.png",
+          "header": "#012169"
+        },
+        "violations": []
+      }
+    ],
+    "controlGeometry": [
+      {
+        "browser": "chromium",
+        "test": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+        "synthetic": true,
+        "widths": [
+          1440,
+          768,
+          390,
+          320
+        ],
+        "checks": [
+          {
+            "screen": "login",
+            "width": 1440,
+            "controls": 11,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "login",
+            "width": 768,
+            "controls": 11,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "login",
+            "width": 390,
+            "controls": 11,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "login",
+            "width": 320,
+            "controls": 11,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-student-main",
+            "width": 1440,
+            "controls": 34,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-student-main",
+            "width": 768,
+            "controls": 34,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-student-main",
+            "width": 390,
+            "controls": 34,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-student-main",
+            "width": 320,
+            "controls": 34,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-ta-main",
+            "width": 1440,
+            "controls": 24,
+            "actionGroups": 13,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-ta-main",
+            "width": 768,
+            "controls": 24,
+            "actionGroups": 13,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-ta-main",
+            "width": 390,
+            "controls": 24,
+            "actionGroups": 13,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-ta-main",
+            "width": 320,
+            "controls": 24,
+            "actionGroups": 13,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-faculty-main",
+            "width": 1440,
+            "controls": 24,
+            "actionGroups": 12,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-faculty-main",
+            "width": 768,
+            "controls": 24,
+            "actionGroups": 12,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-faculty-main",
+            "width": 390,
+            "controls": 24,
+            "actionGroups": 12,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-faculty-main",
+            "width": 320,
+            "controls": 24,
+            "actionGroups": 12,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-admin",
+            "width": 1440,
+            "controls": 26,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-admin",
+            "width": 768,
+            "controls": 26,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-admin",
+            "width": 390,
+            "controls": 26,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-admin",
+            "width": 320,
+            "controls": 26,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "help",
+            "width": 1440,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "help",
+            "width": 768,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "help",
+            "width": 390,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "help",
+            "width": 320,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-administration",
+            "width": 1440,
+            "controls": 24,
+            "actionGroups": 10,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-administration",
+            "width": 768,
+            "controls": 24,
+            "actionGroups": 10,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-administration",
+            "width": 390,
+            "controls": 24,
+            "actionGroups": 10,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-administration",
+            "width": 320,
+            "controls": 24,
+            "actionGroups": 10,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "positions",
+            "width": 1440,
+            "controls": 15,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "positions",
+            "width": 768,
+            "controls": 15,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "positions",
+            "width": 390,
+            "controls": 15,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "positions",
+            "width": 320,
+            "controls": 15,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ta",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ta",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ta",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ta",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ra",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ra",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ra",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ra",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "applications",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "applications",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "applications",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "applications",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "draft",
+            "width": 1440,
+            "controls": 6,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "draft",
+            "width": 768,
+            "controls": 6,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "draft",
+            "width": 390,
+            "controls": 6,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "draft",
+            "width": 320,
+            "controls": 6,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "offer",
+            "width": 1440,
+            "controls": 7,
+            "actionGroups": 4,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "offer",
+            "width": 768,
+            "controls": 7,
+            "actionGroups": 4,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "offer",
+            "width": 390,
+            "controls": 7,
+            "actionGroups": 4,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "offer",
+            "width": 320,
+            "controls": 7,
+            "actionGroups": 4,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-review",
+            "width": 1440,
+            "controls": 3,
+            "actionGroups": 1,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-review",
+            "width": 768,
+            "controls": 3,
+            "actionGroups": 1,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-review",
+            "width": 390,
+            "controls": 3,
+            "actionGroups": 1,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-review",
+            "width": 320,
+            "controls": 3,
+            "actionGroups": 1,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-administration",
+            "width": 1440,
+            "controls": 4,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-administration",
+            "width": 768,
+            "controls": 4,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-administration",
+            "width": 390,
+            "controls": 4,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-administration",
+            "width": 320,
+            "controls": 4,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "active-workload",
+            "width": 1440,
+            "controls": 5,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "active-workload",
+            "width": 768,
+            "controls": 5,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "active-workload",
+            "width": 390,
+            "controls": 5,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "active-workload",
+            "width": 320,
+            "controls": 5,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "ra-appointment",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "ra-appointment",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "ra-appointment",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "ra-appointment",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "recruitment",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "recruitment",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "recruitment",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "recruitment",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 1440,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 768,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 390,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 320,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 1280,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 1024,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 900,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "edit-position",
+            "width": 1440,
+            "controls": 12,
+            "actionGroups": 4,
+            "fieldGroups": 7,
+            "issues": []
+          },
+          {
+            "screen": "edit-position",
+            "width": 768,
+            "controls": 12,
+            "actionGroups": 4,
+            "fieldGroups": 7,
+            "issues": []
+          },
+          {
+            "screen": "edit-position",
+            "width": 390,
+            "controls": 12,
+            "actionGroups": 4,
+            "fieldGroups": 7,
+            "issues": []
+          },
+          {
+            "screen": "edit-position",
+            "width": 320,
+            "controls": 12,
+            "actionGroups": 4,
+            "fieldGroups": 7,
+            "issues": []
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 1440,
+            "controls": 32,
+            "actionGroups": 15,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 768,
+            "controls": 32,
+            "actionGroups": 15,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 390,
+            "controls": 32,
+            "actionGroups": 15,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 320,
+            "controls": 32,
+            "actionGroups": 15,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "clearance",
+            "width": 1440,
+            "controls": 14,
+            "actionGroups": 4,
+            "fieldGroups": 5,
+            "issues": []
+          },
+          {
+            "screen": "clearance",
+            "width": 768,
+            "controls": 14,
+            "actionGroups": 4,
+            "fieldGroups": 5,
+            "issues": []
+          },
+          {
+            "screen": "clearance",
+            "width": 390,
+            "controls": 14,
+            "actionGroups": 4,
+            "fieldGroups": 5,
+            "issues": []
+          },
+          {
+            "screen": "clearance",
+            "width": 320,
+            "controls": 14,
+            "actionGroups": 4,
+            "fieldGroups": 5,
+            "issues": []
+          },
+          {
+            "screen": "student-queue",
+            "width": 1440,
+            "controls": 7,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "student-queue",
+            "width": 768,
+            "controls": 7,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "student-queue",
+            "width": 390,
+            "controls": 7,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "student-queue",
+            "width": 320,
+            "controls": 7,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "ta-queue",
+            "width": 1440,
+            "controls": 40,
+            "actionGroups": 6,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "ta-queue",
+            "width": 768,
+            "controls": 40,
+            "actionGroups": 6,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "ta-queue",
+            "width": 390,
+            "controls": 40,
+            "actionGroups": 6,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "ta-queue",
+            "width": 320,
+            "controls": 40,
+            "actionGroups": 6,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-admin",
+            "width": 1440,
+            "controls": 90,
+            "actionGroups": 59,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-admin",
+            "width": 768,
+            "controls": 90,
+            "actionGroups": 59,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-admin",
+            "width": 390,
+            "controls": 90,
+            "actionGroups": 59,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-admin",
+            "width": 320,
+            "controls": 90,
+            "actionGroups": 59,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-review",
+            "width": 1440,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-review",
+            "width": 768,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-review",
+            "width": 390,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-review",
+            "width": 320,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "join-dialog",
+            "width": 1440,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 1440,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "join-dialog",
+            "width": 768,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 768,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "join-dialog",
+            "width": 390,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 390,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "join-dialog",
+            "width": 320,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 320,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          }
+        ],
+        "screenshots": [
+          "controls-draft-desktop.png",
+          "controls-draft-mobile.png",
+          "controls-clearance-mobile.png",
+          "controls-ta-queue-desktop.png",
+          "controls-course-admin-mobile.png",
+          "controls-join-dialog-mobile.png",
+          "controls-feedback-dialog-mobile.png"
+        ]
+      },
+      {
+        "browser": "firefox",
+        "test": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+        "synthetic": true,
+        "widths": [
+          1440,
+          768,
+          390,
+          320
+        ],
+        "checks": [
+          {
+            "screen": "login",
+            "width": 1440,
+            "controls": 11,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "login",
+            "width": 768,
+            "controls": 11,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "login",
+            "width": 390,
+            "controls": 11,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "login",
+            "width": 320,
+            "controls": 11,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-student-main",
+            "width": 1440,
+            "controls": 34,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-student-main",
+            "width": 768,
+            "controls": 34,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-student-main",
+            "width": 390,
+            "controls": 34,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-student-main",
+            "width": 320,
+            "controls": 34,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-ta-main",
+            "width": 1440,
+            "controls": 24,
+            "actionGroups": 13,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-ta-main",
+            "width": 768,
+            "controls": 24,
+            "actionGroups": 13,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-ta-main",
+            "width": 390,
+            "controls": 24,
+            "actionGroups": 13,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-ta-main",
+            "width": 320,
+            "controls": 24,
+            "actionGroups": 13,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-faculty-main",
+            "width": 1440,
+            "controls": 24,
+            "actionGroups": 12,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-faculty-main",
+            "width": 768,
+            "controls": 24,
+            "actionGroups": 12,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-faculty-main",
+            "width": 390,
+            "controls": 24,
+            "actionGroups": 12,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-faculty-main",
+            "width": 320,
+            "controls": 24,
+            "actionGroups": 12,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-admin",
+            "width": 1440,
+            "controls": 26,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-admin",
+            "width": 768,
+            "controls": 26,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-admin",
+            "width": 390,
+            "controls": 26,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "home-admin",
+            "width": 320,
+            "controls": 26,
+            "actionGroups": 21,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "help",
+            "width": 1440,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "help",
+            "width": 768,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "help",
+            "width": 390,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "help",
+            "width": 320,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-administration",
+            "width": 1440,
+            "controls": 24,
+            "actionGroups": 10,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-administration",
+            "width": 768,
+            "controls": 24,
+            "actionGroups": 10,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-administration",
+            "width": 390,
+            "controls": 24,
+            "actionGroups": 10,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-administration",
+            "width": 320,
+            "controls": 24,
+            "actionGroups": 10,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "positions",
+            "width": 1440,
+            "controls": 15,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "positions",
+            "width": 768,
+            "controls": 15,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "positions",
+            "width": 390,
+            "controls": 15,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "positions",
+            "width": 320,
+            "controls": 15,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ta",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ta",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ta",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ta",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ra",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ra",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ra",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "position-ra",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "applications",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "applications",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "applications",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "applications",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "draft",
+            "width": 1440,
+            "controls": 6,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "draft",
+            "width": 768,
+            "controls": 6,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "draft",
+            "width": 390,
+            "controls": 6,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "draft",
+            "width": 320,
+            "controls": 6,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "offer",
+            "width": 1440,
+            "controls": 7,
+            "actionGroups": 4,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "offer",
+            "width": 768,
+            "controls": 7,
+            "actionGroups": 4,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "offer",
+            "width": 390,
+            "controls": 7,
+            "actionGroups": 4,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "offer",
+            "width": 320,
+            "controls": 7,
+            "actionGroups": 4,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-review",
+            "width": 1440,
+            "controls": 3,
+            "actionGroups": 1,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-review",
+            "width": 768,
+            "controls": 3,
+            "actionGroups": 1,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-review",
+            "width": 390,
+            "controls": 3,
+            "actionGroups": 1,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-review",
+            "width": 320,
+            "controls": 3,
+            "actionGroups": 1,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-administration",
+            "width": 1440,
+            "controls": 4,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-administration",
+            "width": 768,
+            "controls": 4,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-administration",
+            "width": 390,
+            "controls": 4,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "application-administration",
+            "width": 320,
+            "controls": 4,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "active-workload",
+            "width": 1440,
+            "controls": 5,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "active-workload",
+            "width": 768,
+            "controls": 5,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "active-workload",
+            "width": 390,
+            "controls": 5,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "active-workload",
+            "width": 320,
+            "controls": 5,
+            "actionGroups": 2,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "ra-appointment",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "ra-appointment",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "ra-appointment",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "ra-appointment",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 0,
+            "fieldGroups": 1,
+            "issues": []
+          },
+          {
+            "screen": "recruitment",
+            "width": 1440,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "recruitment",
+            "width": 768,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "recruitment",
+            "width": 390,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "recruitment",
+            "width": 320,
+            "controls": 2,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 1440,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 768,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 390,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 320,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 1280,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 1024,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "new-position",
+            "width": 900,
+            "controls": 9,
+            "actionGroups": 4,
+            "fieldGroups": 3,
+            "issues": []
+          },
+          {
+            "screen": "edit-position",
+            "width": 1440,
+            "controls": 12,
+            "actionGroups": 4,
+            "fieldGroups": 7,
+            "issues": []
+          },
+          {
+            "screen": "edit-position",
+            "width": 768,
+            "controls": 12,
+            "actionGroups": 4,
+            "fieldGroups": 7,
+            "issues": []
+          },
+          {
+            "screen": "edit-position",
+            "width": 390,
+            "controls": 12,
+            "actionGroups": 4,
+            "fieldGroups": 7,
+            "issues": []
+          },
+          {
+            "screen": "edit-position",
+            "width": 320,
+            "controls": 12,
+            "actionGroups": 4,
+            "fieldGroups": 7,
+            "issues": []
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 1440,
+            "controls": 32,
+            "actionGroups": 15,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 768,
+            "controls": 32,
+            "actionGroups": 15,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 390,
+            "controls": 32,
+            "actionGroups": 15,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "candidate-pool",
+            "width": 320,
+            "controls": 32,
+            "actionGroups": 15,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "clearance",
+            "width": 1440,
+            "controls": 14,
+            "actionGroups": 4,
+            "fieldGroups": 5,
+            "issues": []
+          },
+          {
+            "screen": "clearance",
+            "width": 768,
+            "controls": 14,
+            "actionGroups": 4,
+            "fieldGroups": 5,
+            "issues": []
+          },
+          {
+            "screen": "clearance",
+            "width": 390,
+            "controls": 14,
+            "actionGroups": 4,
+            "fieldGroups": 5,
+            "issues": []
+          },
+          {
+            "screen": "clearance",
+            "width": 320,
+            "controls": 14,
+            "actionGroups": 4,
+            "fieldGroups": 5,
+            "issues": []
+          },
+          {
+            "screen": "student-queue",
+            "width": 1440,
+            "controls": 7,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "student-queue",
+            "width": 768,
+            "controls": 7,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "student-queue",
+            "width": 390,
+            "controls": 7,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "student-queue",
+            "width": 320,
+            "controls": 7,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "ta-queue",
+            "width": 1440,
+            "controls": 40,
+            "actionGroups": 6,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "ta-queue",
+            "width": 768,
+            "controls": 40,
+            "actionGroups": 6,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "ta-queue",
+            "width": 390,
+            "controls": 40,
+            "actionGroups": 6,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "ta-queue",
+            "width": 320,
+            "controls": 40,
+            "actionGroups": 6,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-admin",
+            "width": 1440,
+            "controls": 90,
+            "actionGroups": 59,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-admin",
+            "width": 768,
+            "controls": 90,
+            "actionGroups": 59,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-admin",
+            "width": 390,
+            "controls": 90,
+            "actionGroups": 59,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-admin",
+            "width": 320,
+            "controls": 90,
+            "actionGroups": 59,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-review",
+            "width": 1440,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-review",
+            "width": 768,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-review",
+            "width": 390,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "course-review",
+            "width": 320,
+            "controls": 1,
+            "actionGroups": 0,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "join-dialog",
+            "width": 1440,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 1440,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "join-dialog",
+            "width": 768,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 768,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "join-dialog",
+            "width": 390,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 390,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "join-dialog",
+            "width": 320,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          },
+          {
+            "screen": "feedback-dialog",
+            "width": 320,
+            "controls": 7,
+            "actionGroups": 1,
+            "fieldGroups": 0,
+            "issues": []
+          }
+        ],
+        "screenshots": []
+      }
+    ],
+    "insightsQueueGeometry": [
+      {
+        "browser": "chromium",
+        "test": "real help-session feedback updates one helper and responsive dashboards retain complete readable queue actions",
+        "checks": [
+          {
+            "width": 1440,
+            "cellWidth": 330,
+            "cellRight": 1352,
+            "buttons": [
+              {
+                "top": 628,
+                "right": 1101.078125,
+                "width": 65.078125,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1168.6875,
+                "width": 61.609375,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1206.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1244.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1282.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1320.6875,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 962,
+            "paneScrollWidth": 962,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          },
+          {
+            "width": 1280,
+            "cellWidth": 330,
+            "cellRight": 1230,
+            "buttons": [
+              {
+                "top": 682,
+                "right": 979.078125,
+                "width": 65.078125,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1046.6875,
+                "width": 61.609375,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1084.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1122.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1160.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1198.6875,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 878,
+            "paneScrollWidth": 878,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          },
+          {
+            "width": 1024,
+            "cellWidth": 330,
+            "cellRight": 974,
+            "buttons": [
+              {
+                "top": 1059,
+                "right": 723.078125,
+                "width": 65.078125,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 790.6875,
+                "width": 61.609375,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 828.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 866.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 904.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 942.6875,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 960,
+            "paneScrollWidth": 960,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          },
+          {
+            "width": 390,
+            "cellWidth": 330,
+            "cellRight": 872,
+            "buttons": [
+              {
+                "top": 1227,
+                "right": 621.078125,
+                "width": 65.078125,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 688.6875,
+                "width": 61.609375,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 726.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 764.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 802.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 840.6875,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 350,
+            "paneScrollWidth": 864,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          },
+          {
+            "width": 320,
+            "cellWidth": 330,
+            "cellRight": 872,
+            "buttons": [
+              {
+                "top": 1273,
+                "right": 621.078125,
+                "width": 65.078125,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 688.6875,
+                "width": 61.609375,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 726.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 764.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 802.6875,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 840.6875,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 280,
+            "paneScrollWidth": 864,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          }
+        ],
+        "synthetic": true
+      },
+      {
+        "browser": "firefox",
+        "test": "real help-session feedback updates one helper and responsive dashboards retain complete readable queue actions",
+        "checks": [
+          {
+            "width": 1440,
+            "cellWidth": 330,
+            "cellRight": 1352,
+            "buttons": [
+              {
+                "top": 628,
+                "right": 1099.6499938964844,
+                "width": 63.649993896484375,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1166.8333587646484,
+                "width": 61.18333435058594,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1204.8333740234375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1242.8333740234375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1280.8333740234375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 629,
+                "right": 1318.8333740234375,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 962,
+            "paneScrollWidth": 962,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          },
+          {
+            "width": 1280,
+            "cellWidth": 330,
+            "cellRight": 1230,
+            "buttons": [
+              {
+                "top": 683,
+                "right": 977.6499938964844,
+                "width": 63.649993896484375,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1044.8333587646484,
+                "width": 61.18333435058594,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1082.8333740234375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1120.8333740234375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1158.8333740234375,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 683,
+                "right": 1196.8333740234375,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 878,
+            "paneScrollWidth": 878,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          },
+          {
+            "width": 1024,
+            "cellWidth": 330,
+            "cellRight": 974,
+            "buttons": [
+              {
+                "top": 1059,
+                "right": 721.6499938964844,
+                "width": 63.649993896484375,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 788.8333587646484,
+                "width": 61.18333435058594,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 826.8333129882812,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 864.8333129882812,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 902.8333129882812,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1059,
+                "right": 940.8333129882812,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 960,
+            "paneScrollWidth": 960,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          },
+          {
+            "width": 390,
+            "cellWidth": 330,
+            "cellRight": 872,
+            "buttons": [
+              {
+                "top": 1227,
+                "right": 619.6499938964844,
+                "width": 63.649993896484375,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 686.8333587646484,
+                "width": 61.18333435058594,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 724.8333129882812,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 762.8333129882812,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 800.8333129882812,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1227,
+                "right": 838.8333129882812,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 350,
+            "paneScrollWidth": 864,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          },
+          {
+            "width": 320,
+            "cellWidth": 330,
+            "cellRight": 872,
+            "buttons": [
+              {
+                "top": 1273,
+                "right": 619.6499938964844,
+                "width": 63.649993896484375,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 686.8333587646484,
+                "width": 61.18333435058594,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 724.8333129882812,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 762.8333129882812,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 800.8333129882812,
+                "width": 32,
+                "height": 32
+              },
+              {
+                "top": 1273,
+                "right": 838.8333129882812,
+                "width": 32,
+                "height": 32
+              }
+            ],
+            "paneWidth": 280,
+            "paneScrollWidth": 864,
+            "studentWhitespace": "nowrap",
+            "helperWhitespace": "nowrap"
+          }
+        ],
+        "synthetic": true
+      }
+    ],
+    "summary": {
+      "passingCases": 204,
+      "failures": 0,
+      "skipped": 0,
+      "flaky": 0,
+      "runnerErrors": 0,
+      "accessibilityScans": 256,
+      "accessibilityViolations": 0,
+      "controlGeometryStates": 230,
+      "controlGeometryIssues": 0,
+      "insightsQueueWidthChecks": 10,
+      "insightsQueueGeometryIssues": 0
+    }
+  },
+  "unit": {
+    "path": ".cache/insights-full.log",
+    "bytes": 178944,
+    "sha256": "971595fd96cd541fa4d1a225368b69332e4965fc7d4cd4f23a0c53a63e667e6b",
+    "counts": {
+      "tests": 100,
+      "pass": 100,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    }
+  },
+  "typecheck": {
+    "path": ".cache/insights-full.log",
+    "bytes": 178944,
+    "sha256": "971595fd96cd541fa4d1a225368b69332e4965fc7d4cd4f23a0c53a63e667e6b",
+    "logChecksPassed": true,
+    "scope": "typecheck",
+    "boundary": "Log content and hash retained. This parser does not infer a subprocess exit code from a log; the invoking local runner determines process success."
+  },
+  "productionBuild": {
+    "path": ".cache/insights-full.log",
+    "bytes": 178944,
+    "sha256": "971595fd96cd541fa4d1a225368b69332e4965fc7d4cd4f23a0c53a63e667e6b",
+    "logChecksPassed": true,
+    "scope": "build",
+    "boundary": "Log content and hash retained. This parser does not infer a subprocess exit code from a log; the invoking local runner determines process success."
+  },
+  "completedRunnerLog": {
+    "path": ".cache/insights-full.log",
+    "bytes": 178944,
+    "sha256": "971595fd96cd541fa4d1a225368b69332e4965fc7d4cd4f23a0c53a63e667e6b"
+  },
+  "screenshots": [
+    {
+      "path": "test-results/ai-refresh-the-reviewer-br-f5254-ut-another-analysis-request-chromium/automatic-candidate-refresh.png",
+      "bytes": 133395,
+      "sha256": "93fbd25c7bf96b6833829f8660c7952fec6139b1fd16256637cae03833c1b97d",
+      "width": 1440,
+      "height": 1896,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/control-alignment-four-rol-8a007-logs-across-the-application-chromium/controls-clearance-mobile.png",
+      "bytes": 283064,
+      "sha256": "99efbdfc966be0a6cb4dd063e7ede9e00e9e61c5ce68118e0da0c74fa23be5b0",
+      "width": 390,
+      "height": 7419,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/control-alignment-four-rol-8a007-logs-across-the-application-chromium/controls-course-admin-mobile.png",
+      "bytes": 370507,
+      "sha256": "90c8aea8970f736dbf4a958c03395a8c5d8e7c37584977f61d98a18df89a4c00",
+      "width": 390,
+      "height": 7984,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/control-alignment-four-rol-8a007-logs-across-the-application-chromium/controls-draft-desktop.png",
+      "bytes": 108889,
+      "sha256": "6c3ffe142a5adae6e4d9b4184d129b69ed51b45309fba4bd404c5e2ac2bd1345",
+      "width": 1440,
+      "height": 2138,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/control-alignment-four-rol-8a007-logs-across-the-application-chromium/controls-draft-mobile.png",
+      "bytes": 103307,
+      "sha256": "72808ab7f59653e4a924129a69af064f615ad5a5f5c2dade2c6ecdd623cf435d",
+      "width": 390,
+      "height": 2912,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/control-alignment-four-rol-8a007-logs-across-the-application-chromium/controls-feedback-dialog-mobile.png",
+      "bytes": 71056,
+      "sha256": "8c7e4c252a3c2c1efc00f143c6545823ab02d9f702a805e7895a093cc64e2e8b",
+      "width": 390,
+      "height": 1427,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/control-alignment-four-rol-8a007-logs-across-the-application-chromium/controls-join-dialog-mobile.png",
+      "bytes": 70323,
+      "sha256": "c862686e464534cf09129f7df1fea52848f103afdb1331bd1c6411e654cf1b85",
+      "width": 390,
+      "height": 1427,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/control-alignment-four-rol-8a007-logs-across-the-application-chromium/controls-ta-queue-desktop.png",
+      "bytes": 122125,
+      "sha256": "04bebe2705048a815a28369f17b83cd334edfcceb94a4570f6b81f4571826a04",
+      "width": 1440,
+      "height": 1285,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-all-four-rol-3edb7-screens-at-a-390px-viewport-chromium/mobile-admin.png",
+      "bytes": 28334,
+      "sha256": "4afe35e1c80e2f025cd9a8917c42f2ff473f496d47ed5f090dd04f3c7a67fbb8",
+      "width": 390,
+      "height": 860,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-all-four-rol-3edb7-screens-at-a-390px-viewport-chromium/mobile-instructor.png",
+      "bytes": 110310,
+      "sha256": "3edfb69c7bb45306b792b0d40345df4978920a8464b14a2ff467739e389e733f",
+      "width": 390,
+      "height": 2396,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-all-four-rol-3edb7-screens-at-a-390px-viewport-chromium/mobile-student.png",
+      "bytes": 55019,
+      "sha256": "17c4615a71b3892be63cceef872ea34043aeac984da42c5001d22de61cefddf3",
+      "width": 390,
+      "height": 1120,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-all-four-rol-3edb7-screens-at-a-390px-viewport-chromium/mobile-ta.png",
+      "bytes": 56258,
+      "sha256": "c2ee6b21700dce04c8cb87ed1aafa821df5f1b9cf406f1c1c7ba57dd23c8328c",
+      "width": 390,
+      "height": 1364,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-all-four-rol-3edb7-screens-at-a-390px-viewport-firefox/mobile-admin.png",
+      "bytes": 44840,
+      "sha256": "83f5bd041d85135c23376f2c7448f066de39b3c7885f41b154be14ac537d60e4",
+      "width": 390,
+      "height": 860,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-all-four-rol-3edb7-screens-at-a-390px-viewport-firefox/mobile-instructor.png",
+      "bytes": 121715,
+      "sha256": "fb3d804f055c3a9e6af6e56e87ee0f75708804ad3395dc1a0d0283da2186798c",
+      "width": 390,
+      "height": 2396,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-all-four-rol-3edb7-screens-at-a-390px-viewport-firefox/mobile-student.png",
+      "bytes": 63408,
+      "sha256": "7ec61cc43e5ca1163b67132211e750510e57023792367efb317b314b17a074b8",
+      "width": 390,
+      "height": 1120,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-all-four-rol-3edb7-screens-at-a-390px-viewport-firefox/mobile-ta.png",
+      "bytes": 66935,
+      "sha256": "0fbe0a3207fb0f08f2ea412d0f25428b99ca49756da4510261ec9cfdf9a6324b",
+      "width": 390,
+      "height": 1454,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-chromium/desktop-admin.png",
+      "bytes": 43613,
+      "sha256": "6c59c01ee1ec1e8fe168b184023df9dcaa7a17f196cb0714dae7d17ce9bb6062",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-chromium/desktop-directory.png",
+      "bytes": 63409,
+      "sha256": "2160351ffc5a6c8071a8b5f24d8b8f232eccb7cb5891cc061a4ae836113efee3",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-chromium/desktop-help.png",
+      "bytes": 143675,
+      "sha256": "f98e490e6dae55c5d68cc254bdfefb298f0d1951367fcbbeb7a625bb3fec7cc5",
+      "width": 1440,
+      "height": 1312,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-chromium/desktop-instructor.png",
+      "bytes": 137542,
+      "sha256": "963a236291a7666350947e2c95b1993bbb4ce4b19f5035f72c367f2e608e89fa",
+      "width": 1440,
+      "height": 1968,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-chromium/desktop-login.png",
+      "bytes": 70550,
+      "sha256": "bf86213577a1791ab58340d2b1b90a89e61bda4603ea961fcea859a828e15809",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-chromium/desktop-student.png",
+      "bytes": 71816,
+      "sha256": "9c39bab8a0f073c18e182024057f0ff9d0fd37bd8573940b744924ed3c86a905",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-chromium/desktop-ta.png",
+      "bytes": 75298,
+      "sha256": "e00c54da81ec3765acffd4da699fd8c0eedeee6dc890e4656e3042a25a5d9c7e",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-firefox/desktop-admin.png",
+      "bytes": 86608,
+      "sha256": "90fc8a6e53e61cca7da185d580e91f9bba2a14be9e393d45f429045be6eef941",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-firefox/desktop-directory.png",
+      "bytes": 106969,
+      "sha256": "0f263d0326169f4e81b4e6e39f2c6b1af83be7e71e01926083a305638fa19bc2",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-firefox/desktop-help.png",
+      "bytes": 174809,
+      "sha256": "b656de705b99b14d5ec55b5049b4b1e8b7ecd2ad75dc26b42e65cea7975e95b6",
+      "width": 1440,
+      "height": 1312,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-firefox/desktop-instructor.png",
+      "bytes": 184109,
+      "sha256": "dc383c637b4d4b835f699d51d321ef2e9394240db7baa2b877b7c6d445394085",
+      "width": 1440,
+      "height": 1968,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-firefox/desktop-login.png",
+      "bytes": 105615,
+      "sha256": "caf719f4c5c74c9027dee9147f22a125405ec1fd10c04dfbbdb963e2e7e9e09d",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-firefox/desktop-student.png",
+      "bytes": 97211,
+      "sha256": "49a16cad6b6737ca56196baf50634f077c473994d80ec00e818f3d134d4fc631",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-desktop-navi-45e27-tain-their-visual-contracts-firefox/desktop-ta.png",
+      "bytes": 99857,
+      "sha256": "0198c9997bf7e97799d8097b8cbc6053b8f8d3dd1a8d122b6d26a722cb9cc694",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-synthetic-an-ea6f9-0-and-a-full-single-TA-ring-chromium/synthetic-single-ta-analytics.png",
+      "bytes": 132866,
+      "sha256": "5d8fa6afaa7bf73ac2886edf6af174d7e12ec0dea8f8fb029efc6be5f475c130",
+      "width": 1280,
+      "height": 1841,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/extended-flow-synthetic-an-ea6f9-0-and-a-full-single-TA-ring-firefox/synthetic-single-ta-analytics.png",
+      "bytes": 166278,
+      "sha256": "f005f03ec7867e245213e2fb1f59a1dfec4d42c59bb79fff6258987dda7356f0",
+      "width": 1280,
+      "height": 1841,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "docs/verification/screenshots/insights-course-desktop.png",
+      "bytes": 544569,
+      "sha256": "03f7b4b76c02880d1a772341f134645b8364637dbd67c9828de7db91a56a3edd",
+      "width": 1440,
+      "height": 6110,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records.",
+      "sourcePath": "test-results/insights-real-help-session-9e632-lete-readable-queue-actions-chromium/insights-course-desktop.png",
+      "sourceSha256": "03f7b4b76c02880d1a772341f134645b8364637dbd67c9828de7db91a56a3edd",
+      "deliveryCopy": "Byte-identical PNG copied from the completed passing full local run; no image editing or resampling."
+    },
+    {
+      "path": "docs/verification/screenshots/insights-department-desktop.png",
+      "bytes": 469820,
+      "sha256": "7dd0fdf781d42caef53c1ec14a3c4e38329fbcdd26f4e1771cf068812fe2c053",
+      "width": 1440,
+      "height": 5057,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records.",
+      "sourcePath": "test-results/insights-real-help-session-9e632-lete-readable-queue-actions-chromium/insights-department-desktop.png",
+      "sourceSha256": "7dd0fdf781d42caef53c1ec14a3c4e38329fbcdd26f4e1771cf068812fe2c053",
+      "deliveryCopy": "Byte-identical PNG copied from the completed passing full local run; no image editing or resampling."
+    },
+    {
+      "path": "docs/verification/screenshots/insights-helper-feedback-mobile.png",
+      "bytes": 206886,
+      "sha256": "232bb5fa98d656dc9e1bd916f699913cc82465fed35d4cf2bb5d0c4bc26d37a8",
+      "width": 390,
+      "height": 4829,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records.",
+      "sourcePath": "test-results/insights-real-help-session-9e632-lete-readable-queue-actions-chromium/insights-helper-feedback-mobile.png",
+      "sourceSha256": "232bb5fa98d656dc9e1bd916f699913cc82465fed35d4cf2bb5d0c4bc26d37a8",
+      "deliveryCopy": "Byte-identical PNG copied from the completed passing full local run; no image editing or resampling."
+    },
+    {
+      "path": "docs/verification/screenshots/insights-queue-nowrap-desktop.png",
+      "bytes": 83708,
+      "sha256": "639e627e44d20380363b0914bec266016bdd4ada532ec3cd627b2b313d8d94ba",
+      "width": 1440,
+      "height": 1040,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records.",
+      "sourcePath": "test-results/insights-real-help-session-9e632-lete-readable-queue-actions-chromium/insights-queue-nowrap-desktop.png",
+      "sourceSha256": "639e627e44d20380363b0914bec266016bdd4ada532ec3cd627b2b313d8d94ba",
+      "deliveryCopy": "Byte-identical PNG copied from the completed passing full local run; no image editing or resampling."
+    },
+    {
+      "path": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-applicant-applications-desktop.png",
+      "bytes": 92924,
+      "sha256": "3647d85512f1d9ee3018f9e38f0102091e7a2a9f155960c713c68fea6d77953f",
+      "width": 1440,
+      "height": 1352,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-applicant-offer-mobile.png",
+      "bytes": 145559,
+      "sha256": "0a905b96a734bcdfbc43014c1125835d334fc71f782839517dcc773c25ff3657",
+      "width": 390,
+      "height": 3929,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-candidate-pool-desktop.png",
+      "bytes": 223156,
+      "sha256": "ddfdb2a931b11fa55c683b430e5d58e1b3b044a24fc9540dfde805271034a052",
+      "width": 1440,
+      "height": 2898,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-clearance-desktop.png",
+      "bytes": 315466,
+      "sha256": "407b74af0e44b87b489eb854b07bfb90dc5263e547e83b1942a16d4eb3a382c6",
+      "width": 1440,
+      "height": 5290,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-course-report-desktop.png",
+      "bytes": 109723,
+      "sha256": "eb1e5739b0d492c093938738be21af42418540dee373fefe2d453e80f5fbd337",
+      "width": 1440,
+      "height": 2015,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-position-catalog-mobile.png",
+      "bytes": 292268,
+      "sha256": "f86bbfd3567d2cf9c5c40dc9a355d1ab22e26bc0cd557d5f49966fa830e5d02e",
+      "width": 390,
+      "height": 6469,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-recruitment-desktop.png",
+      "bytes": 161265,
+      "sha256": "6f7bdb675e69138ce7d9a3220e4437a8885fb97dcb06e9568d7c4de076880cac",
+      "width": 1440,
+      "height": 2104,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/showcase-visual-populated--dca44-ccessible-Duke-blue-layouts-chromium/showcase-ta-queue-desktop.png",
+      "bytes": 122297,
+      "sha256": "10504e37f72dee053891b3f67cbc5dc08a01efc4777d767bd5da55ad72f40fc7",
+      "width": 1440,
+      "height": 1285,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-browser-u-20767-rate-and-end-an-appointment-chromium/active-ta-application.png",
+      "bytes": 143591,
+      "sha256": "9b2c68a988b27d5a5b62b3cdbeed788508405093e669e3298548db4f041d15f9",
+      "width": 1440,
+      "height": 2818,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-browser-u-20767-rate-and-end-an-appointment-chromium/appointed-ta-queue.png",
+      "bytes": 68576,
+      "sha256": "a8929364fa77291a86fac1af196fbf0c50dade93ed1e22625476829fa5468f20",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-browser-u-20767-rate-and-end-an-appointment-firefox/active-ta-application.png",
+      "bytes": 226430,
+      "sha256": "de85559300087813473670f8c01b1f346d6e189396aad66b6c9c8c7b226240e8",
+      "width": 1440,
+      "height": 2831,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-browser-u-20767-rate-and-end-an-appointment-firefox/appointed-ta-queue.png",
+      "bytes": 94273,
+      "sha256": "54ff7f438e59ed5050f8831df0cb2907efbc2991cec768d3dfe305ec63c47bf2",
+      "width": 1440,
+      "height": 1016,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-desktop-a-fe843-omated-accessibility-checks-chromium/mobile-application.png",
+      "bytes": 72753,
+      "sha256": "2ed7ecd32e2c2eaa2342b741dd717a3c7569cc0288a8abfe1259477195694344",
+      "width": 390,
+      "height": 2344,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-desktop-a-fe843-omated-accessibility-checks-chromium/mobile-reviewer.png",
+      "bytes": 75896,
+      "sha256": "a10c1fc6a659bbbd72c7921db517dbad6ba80a6f1a43f4aae8c6764644f5e349",
+      "width": 390,
+      "height": 1580,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-desktop-a-fe843-omated-accessibility-checks-chromium/mobile-staffing-admin.png",
+      "bytes": 108271,
+      "sha256": "4eb55efc8dcd309891004adb2faa777746a21d80986895bd598151ff4fbf764b",
+      "width": 390,
+      "height": 2643,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-desktop-a-fe843-omated-accessibility-checks-firefox/mobile-application.png",
+      "bytes": 89980,
+      "sha256": "6b1bec58017d21389eb5ec92757b63664bbf5d2842bbc9e2e0657a474855a0df",
+      "width": 390,
+      "height": 2356,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-desktop-a-fe843-omated-accessibility-checks-firefox/mobile-reviewer.png",
+      "bytes": 81669,
+      "sha256": "b636d66c53cd4ab9e7620c6dd1ea3b37747f8ccfd345398e916ca81378b89eb9",
+      "width": 390,
+      "height": 1581,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-desktop-a-fe843-omated-accessibility-checks-firefox/mobile-staffing-admin.png",
+      "bytes": 146009,
+      "sha256": "9ab9fd233e687ff270441816698ac563557120aa6f93cfe3ef8abf069b84b8f7",
+      "width": 390,
+      "height": 3171,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-RA-applic-7e776-ject-or-course-staff-access-chromium/active-ra-appointment.png",
+      "bytes": 120404,
+      "sha256": "af3a339bd2034b54cb7cd9b0b6cdba4de58b2d27e3357ac76e8da58f9c0647b0",
+      "width": 1440,
+      "height": 2194,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    },
+    {
+      "path": "test-results/staffing-browser-RA-applic-7e776-ject-or-course-staff-access-firefox/active-ra-appointment.png",
+      "bytes": 185004,
+      "sha256": "04c935c72d58697706690c3b65381f72109f51ac9a1d281b165e6727c5f382b9",
+      "width": 1440,
+      "height": 2205,
+      "source": "Original PNG retained in the completed passing full local browser run; synthetic records."
+    }
+  ],
+  "provider": {
+    "realProviderCallsThisScope": 0,
+    "savedProviderKeyLoadedThisScope": false,
+    "evidenceBoundary": "The local runner clears provider configuration and controlled tests use loopback synthetic providers/credentials. This is not a packet-capture audit or a current real-provider test.",
+    "runnerSource": {
+      "path": "scripts/local-test.mjs",
+      "bytes": 6191,
+      "sha256": "bedf4bf919da1bc20462a4a171e0d469c8c09eee299ba7fc4c95dd5acaabac45"
+    },
+    "historicalReceipts": [
+      {
+        "path": "docs/verification/ai-provider-proof.json",
+        "bytes": 716,
+        "sha256": "a724a7d5cabe32d47c957a39ef046f7799f0a45ed2d6db48ff17609b0f1b990d",
+        "historical": true,
+        "validatedCurrentApplication": false,
+        "originalRecordedAt": null,
+        "originalFinishedAt": null,
+        "originalStatus": "passed",
+        "originalApplicationSha256": null,
+        "boundary": "Retained dated evidence of an earlier real-provider run; not repeated, rewritten or promoted to current-source validation by this receipt.",
+        "dateBoundary": "Use the original run timestamps above and the linked constituent receipts; filesystem modification times are not substituted for provider execution dates."
+      },
+      {
+        "path": "docs/verification/ai-browser-proof.json",
+        "bytes": 3164,
+        "sha256": "f9ad8f92dda32d65a554a76b740d606f255f075f9ed1d22bd2861a43e06b0316",
+        "historical": true,
+        "validatedCurrentApplication": false,
+        "originalRecordedAt": "2026-11-07T21:33:48.892Z",
+        "originalFinishedAt": null,
+        "originalStatus": "passed",
+        "originalApplicationSha256": "21c3704a6da36a05953fe24fbfd25f3784f7bb109d1851aaa865933f7357c8fe",
+        "boundary": "Retained dated evidence of an earlier real-provider run; not repeated, rewritten or promoted to current-source validation by this receipt.",
+        "dateBoundary": "Use the original run timestamps above and the linked constituent receipts; filesystem modification times are not substituted for provider execution dates."
+      },
+      {
+        "path": "docs/verification/showcase-provider-proof.json",
+        "bytes": 2251,
+        "sha256": "fd30c52eb05b0debe7b9e3ff665297a80577fd17d1ddca901f6804f1af8e89a5",
+        "historical": true,
+        "validatedCurrentApplication": false,
+        "originalRecordedAt": "2026-11-07T21:38:31.637Z",
+        "originalFinishedAt": "2026-11-07T21:38:46.764Z",
+        "originalStatus": "passed",
+        "originalApplicationSha256": "21c3704a6da36a05953fe24fbfd25f3784f7bb109d1851aaa865933f7357c8fe",
+        "boundary": "Retained dated evidence of an earlier real-provider run; not repeated, rewritten or promoted to current-source validation by this receipt.",
+        "dateBoundary": "Use the original run timestamps above and the linked constituent receipts; filesystem modification times are not substituted for provider execution dates."
+      },
+      {
+        "path": "docs/verification/provider-activity.json",
+        "bytes": 2090,
+        "sha256": "83b562eb82f038a6a5680712841ac1ea99c3e7b744334a2ec597d32631edfce8",
+        "historical": true,
+        "validatedCurrentApplication": false,
+        "originalRecordedAt": null,
+        "originalFinishedAt": null,
+        "originalStatus": null,
+        "originalApplicationSha256": null,
+        "boundary": "Retained dated evidence of an earlier real-provider run; not repeated, rewritten or promoted to current-source validation by this receipt.",
+        "dateBoundary": "Use the original run timestamps above and the linked constituent receipts; filesystem modification times are not substituted for provider execution dates."
+      }
+    ]
+  },
+  "boundaries": [
+    "All application queries and tests use local synthetic evidence; institutional SSO, real applicant data, production scale, actual hiring quality and payroll are not established.",
+    "The request cohort is selected by Eastern join dates; full known outcomes/contact for that cohort are observed through the generated timestamp. Feedback submission dates, UTC work dates and current semester staffing remain separate measures.",
+    "Only explicit, student-owned helper/session-linked feedback contributes to a helper rating. Counts, sample diversity and durations are evidence, not a universal quality rank.",
+    "Approved plans and conditional +/-1 position costs do not establish required staffing, observation coverage, attendance, remaining spend authority or savings.",
+    "Automated WCAG and geometry checks cover exercised states, not universal accessibility or physical-device behavior.",
+    "Older real-provider receipts retain their own dates and application digests. No new provider result is implied."
+  ]
+}

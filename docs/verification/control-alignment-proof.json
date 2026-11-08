@@ -1,0 +1,2146 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-08T00:20:40.167610+00:00",
+  "synthetic": true,
+  "headless": true,
+  "source": {
+    "applicationSha256": "91ae31b483e2410b2dc873463091aa311d7d26b127a64a39551744ec1ca36299",
+    "digestAlgorithm": "SHA-256 of sorted tracked app/server/package.json/package-lock.json/nuxt.config.ts paths, each path and file content followed by a NUL byte.",
+    "applicationFiles": 91,
+    "baseline": {
+      "commit": "68310e6",
+      "applicationSha256": "a94032375fdceed012e8466751383dd30201a764858c3ba99eabbe0c71f1beb3",
+      "byteScope": "Git object bytes; working-tree line endings may differ. The changed-file inventory uses Git changes rather than line-ending-only byte differences."
+    },
+    "changedApplicationFiles": [
+      {
+        "path": "app/app.vue",
+        "sha256": "0056150693bebdea8ab5d63c3cfae2cfc69cfe19582c356d4367924e0216a324",
+        "baselineSha256": "c0d98a75666d5ffdb49b94396c7bc3cfc8804c0836d80fd8adc626404577c1c1"
+      },
+      {
+        "path": "app/components/OpportunityEditor.vue",
+        "sha256": "cdf933008eb5939545773a85385a2067e9bd77902e6f29dba1aaaa16774b5aa6",
+        "baselineSha256": "4f7c6c822536aff3d02c73f5b6f14296dae26ea95dd51740dccc4c111231b78c"
+      },
+      {
+        "path": "app/components/StaffingNavigation.vue",
+        "sha256": "c2664a797c4f3801a1fcd411548782d1a578c59c95bd1c465e2573e9b0fd06b4",
+        "baselineSha256": "9055e312243a0c9dc8fe892cac9e5519500abb219fc8a88c2ca03c71f33130a7"
+      },
+      {
+        "path": "app/components/StaffingSettlement.vue",
+        "sha256": "4b5691f5815ac6d64988782935021286eae8f8ddd09ab7ec8539eba382a09884",
+        "baselineSha256": "9182bb43343202b600a8910b2ab5cab01bf9b44107bf02d0f79ecadbfe31bbeb"
+      },
+      {
+        "path": "app/components/StaffingShell.vue",
+        "sha256": "5712cee1f05f29cc404f4d2a14c600a7f41d9b2cbc86ab8f504d6c91efba1826",
+        "baselineSha256": "0fd5db5a8b1869d9f74f17f881905e232c8ace39f049f0bfa30504c8f93a9571"
+      },
+      {
+        "path": "app/components/WorkloadRecorder.vue",
+        "sha256": "9f80969feeda8a2942a2f46d89198c9386ad6537194a231a7cac5d5561f4e100",
+        "baselineSha256": "c385129b297476fb3e369bb47e3ed45b745a0fea2b1260fb9a9e98eb813fd4e9"
+      },
+      {
+        "path": "app/pages/admin/courses.vue",
+        "sha256": "0b53c5428d50f526deda15eb99f3ff177d15867da1ba93f13bcc756aded69862",
+        "baselineSha256": "4c33eb6c7be2794e2ec68c426ff3a413cb1c6471de8fceaa8e256eaf00fd09e1"
+      },
+      {
+        "path": "app/pages/admin/staffing.vue",
+        "sha256": "3c867bf26b93b868b40a3db5ed0ac2594aa826fb48f6ceebcec6789ef6112dd5",
+        "baselineSha256": "4e90e588f07bca411c567ec7923405a9b7ae9e297b5246fa6a4d0bab4d424f44"
+      },
+      {
+        "path": "app/pages/applications/[id].vue",
+        "sha256": "2b18745cf5b4c25e1a73454790fbd5b700f3f8a70916ee242b75a4f757f96581",
+        "baselineSha256": "ff759db47be9b8dceff1b20f249a55437372bb8b8613bea628a8fecc3167e2f5"
+      },
+      {
+        "path": "app/pages/courses/[id]/admin.vue",
+        "sha256": "a485c7ea9645f3cece13d919eff756470f19708a595e360c5eb51cfdb582d2fd",
+        "baselineSha256": "14e248de3a2b630d4876026eca1730541c48bd0805541d0132e870c4ad01be60"
+      },
+      {
+        "path": "app/pages/courses/[id]/student.vue",
+        "sha256": "341f6d4946bb717e86937c2eddef99e5405e6de1685ab6213c37e5f29602fe32",
+        "baselineSha256": "ca441e3312a94e9b75e2a61870719487401ad8770496dee4e55c947411a3fabc"
+      },
+      {
+        "path": "app/pages/courses/[id]/ta.vue",
+        "sha256": "35e2d09c0fb5b5c9f36e5e15137e434938652f47e6f15e21d67541dd1722b2bb",
+        "baselineSha256": "ba8cc551b0e636ccfc97319e9b11ec9cd4c650a5de454348c791d5ea13c6a71c"
+      },
+      {
+        "path": "app/pages/courses/index.vue",
+        "sha256": "25e64cba4d509a8e863958144b62867e73cacefea6c27aba7d012793c0b3ecd7",
+        "baselineSha256": "01ad7fa31cfbed5ca114b6a73d29b11b7aabf80d412cfb209f34219916761076"
+      },
+      {
+        "path": "app/pages/help.vue",
+        "sha256": "4e0e6e0ae53708db16e9eff24cd7e51436b3624f9859a86a7b576c774f226281",
+        "baselineSha256": "4105a585644c6bdf6b5306bd34176e33d7fe64fda71df1af496634a27173d901"
+      },
+      {
+        "path": "app/pages/login.vue",
+        "sha256": "bf35566b059b0a46b127a627857f1ffbfa45c5b4d1d8a45e949986ce1b313f9d",
+        "baselineSha256": "8bfdd426f15e64177565e1f9d70660d238548a29fe821e5c479ec5a78b3ad919"
+      },
+      {
+        "path": "app/pages/staffing/[id].vue",
+        "sha256": "569f63f1a762bbe01c1f374e5768b2483488d91430cc86afd9646f03a4611927",
+        "baselineSha256": "aab047a930542fc33706ddd8bd930cc083be87297cb7a243e7bb9b6e3e6a3a44"
+      }
+    ],
+    "serverGitChangesFromBaseline": [],
+    "uiScriptBoundaryReceipt": "docs/verification/ui-script-boundary-proof.json",
+    "priorRealProviderApplicationSha256": "21c3704a6da36a05953fe24fbfd25f3784f7bb109d1851aaa865933f7357c8fe",
+    "sameApplicationBytesAsPriorRealProviderRun": false,
+    "providerBoundary": "The current UI browser runs did not repeat real-provider checks; prior real OpenAI evidence retains its own application digest.",
+    "geometryTest": {
+      "path": "playwright/e2e/control-alignment.spec.ts",
+      "sha256": "3717651657a63c197bb695e1b5966ea5f346e5902084d7e7925106e84771fbb0"
+    },
+    "browserConfiguration": {
+      "path": "playwright.config.ts",
+      "sha256": "56074e5f94402579bb879f08e54a09e9376f58a32a70995d98819f4fd403ba6d"
+    }
+  },
+  "boundaries": [
+    "These are finite local browser and geometric checks, not universal accessibility or production validation.",
+    "No institutional SSO, real applicant data, payroll, hosted deployment or physical-device validation is established.",
+    "The UI boundary checks unchanged Vue script ASTs and button counts separately from browser behavior and geometry."
+  ],
+  "scope": "Focused four-role control alignment and responsive dialog regression.",
+  "input": {
+    "path": ".cache/ui-geometry-results.json",
+    "sha256": "a97a1fc600d4629e270a89c4134d439a33f4a10b52e8191b9210cca28e35335e"
+  },
+  "stats": {
+    "startTime": "2026-11-07T23:57:11.583Z",
+    "duration": 147509.641,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "playwrightVersion": "1.56.1",
+  "tests": [
+    {
+      "file": "control-alignment.spec.ts",
+      "title": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+      "browser": "chromium",
+      "status": "expected",
+      "durationMs": 12761
+    },
+    {
+      "file": "control-alignment.spec.ts",
+      "title": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+      "browser": "firefox",
+      "status": "expected",
+      "durationMs": 20201
+    }
+  ],
+  "accessibility": [
+    {
+      "browser": "chromium",
+      "test": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+      "synthetic": true,
+      "checkedScreens": 7,
+      "widths": [
+        1440,
+        768,
+        390,
+        320
+      ],
+      "violations": [],
+      "screens": [
+        {
+          "screen": "login",
+          "width": 390
+        },
+        {
+          "screen": "draft",
+          "width": 390
+        },
+        {
+          "screen": "clearance",
+          "width": 390
+        },
+        {
+          "screen": "ta-queue",
+          "width": 390
+        },
+        {
+          "screen": "course-admin",
+          "width": 390
+        },
+        {
+          "screen": "join-dialog",
+          "width": 390
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 390
+        }
+      ],
+      "branding": {
+        "logo": "/duke-cs-logo.png",
+        "header": "#012169"
+      }
+    },
+    {
+      "browser": "firefox",
+      "test": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+      "synthetic": true,
+      "checkedScreens": 7,
+      "widths": [
+        1440,
+        768,
+        390,
+        320
+      ],
+      "violations": [],
+      "screens": [
+        {
+          "screen": "login",
+          "width": 390
+        },
+        {
+          "screen": "draft",
+          "width": 390
+        },
+        {
+          "screen": "clearance",
+          "width": 390
+        },
+        {
+          "screen": "ta-queue",
+          "width": 390
+        },
+        {
+          "screen": "course-admin",
+          "width": 390
+        },
+        {
+          "screen": "join-dialog",
+          "width": 390
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 390
+        }
+      ],
+      "branding": {
+        "logo": "/duke-cs-logo.png",
+        "header": "#012169"
+      }
+    }
+  ],
+  "geometry": [
+    {
+      "browser": "chromium",
+      "test": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+      "synthetic": true,
+      "widths": [
+        1440,
+        768,
+        390,
+        320
+      ],
+      "checks": [
+        {
+          "screen": "login",
+          "width": 1440,
+          "controls": 11,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "login",
+          "width": 768,
+          "controls": 11,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "login",
+          "width": 390,
+          "controls": 11,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "login",
+          "width": 320,
+          "controls": 11,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-student-main",
+          "width": 1440,
+          "controls": 34,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-student-main",
+          "width": 768,
+          "controls": 34,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-student-main",
+          "width": 390,
+          "controls": 34,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-student-main",
+          "width": 320,
+          "controls": 34,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-ta-main",
+          "width": 1440,
+          "controls": 24,
+          "actionGroups": 13,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-ta-main",
+          "width": 768,
+          "controls": 24,
+          "actionGroups": 13,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-ta-main",
+          "width": 390,
+          "controls": 24,
+          "actionGroups": 13,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-ta-main",
+          "width": 320,
+          "controls": 24,
+          "actionGroups": 13,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-faculty-main",
+          "width": 1440,
+          "controls": 23,
+          "actionGroups": 12,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-faculty-main",
+          "width": 768,
+          "controls": 23,
+          "actionGroups": 12,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-faculty-main",
+          "width": 390,
+          "controls": 23,
+          "actionGroups": 12,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-faculty-main",
+          "width": 320,
+          "controls": 23,
+          "actionGroups": 12,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-admin",
+          "width": 1440,
+          "controls": 25,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-admin",
+          "width": 768,
+          "controls": 25,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-admin",
+          "width": 390,
+          "controls": 25,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-admin",
+          "width": 320,
+          "controls": 25,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "help",
+          "width": 1440,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "help",
+          "width": 768,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "help",
+          "width": 390,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "help",
+          "width": 320,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-administration",
+          "width": 1440,
+          "controls": 24,
+          "actionGroups": 10,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-administration",
+          "width": 768,
+          "controls": 24,
+          "actionGroups": 10,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-administration",
+          "width": 390,
+          "controls": 24,
+          "actionGroups": 10,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-administration",
+          "width": 320,
+          "controls": 24,
+          "actionGroups": 10,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "positions",
+          "width": 1440,
+          "controls": 15,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "positions",
+          "width": 768,
+          "controls": 15,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "positions",
+          "width": 390,
+          "controls": 15,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "positions",
+          "width": 320,
+          "controls": 15,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ta",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ta",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ta",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ta",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ra",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ra",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ra",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ra",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "applications",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "applications",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "applications",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "applications",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "draft",
+          "width": 1440,
+          "controls": 6,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "draft",
+          "width": 768,
+          "controls": 6,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "draft",
+          "width": 390,
+          "controls": 6,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "draft",
+          "width": 320,
+          "controls": 6,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "offer",
+          "width": 1440,
+          "controls": 7,
+          "actionGroups": 4,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "offer",
+          "width": 768,
+          "controls": 7,
+          "actionGroups": 4,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "offer",
+          "width": 390,
+          "controls": 7,
+          "actionGroups": 4,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "offer",
+          "width": 320,
+          "controls": 7,
+          "actionGroups": 4,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-review",
+          "width": 1440,
+          "controls": 3,
+          "actionGroups": 1,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-review",
+          "width": 768,
+          "controls": 3,
+          "actionGroups": 1,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-review",
+          "width": 390,
+          "controls": 3,
+          "actionGroups": 1,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-review",
+          "width": 320,
+          "controls": 3,
+          "actionGroups": 1,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-administration",
+          "width": 1440,
+          "controls": 4,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-administration",
+          "width": 768,
+          "controls": 4,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-administration",
+          "width": 390,
+          "controls": 4,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-administration",
+          "width": 320,
+          "controls": 4,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "active-workload",
+          "width": 1440,
+          "controls": 5,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "active-workload",
+          "width": 768,
+          "controls": 5,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "active-workload",
+          "width": 390,
+          "controls": 5,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "active-workload",
+          "width": 320,
+          "controls": 5,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "ra-appointment",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "ra-appointment",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "ra-appointment",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "ra-appointment",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "recruitment",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "recruitment",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "recruitment",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "recruitment",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "new-position",
+          "width": 1440,
+          "controls": 9,
+          "actionGroups": 4,
+          "fieldGroups": 3,
+          "issues": []
+        },
+        {
+          "screen": "new-position",
+          "width": 768,
+          "controls": 9,
+          "actionGroups": 4,
+          "fieldGroups": 3,
+          "issues": []
+        },
+        {
+          "screen": "new-position",
+          "width": 390,
+          "controls": 9,
+          "actionGroups": 4,
+          "fieldGroups": 3,
+          "issues": []
+        },
+        {
+          "screen": "new-position",
+          "width": 320,
+          "controls": 9,
+          "actionGroups": 4,
+          "fieldGroups": 3,
+          "issues": []
+        },
+        {
+          "screen": "edit-position",
+          "width": 1440,
+          "controls": 12,
+          "actionGroups": 4,
+          "fieldGroups": 7,
+          "issues": []
+        },
+        {
+          "screen": "edit-position",
+          "width": 768,
+          "controls": 12,
+          "actionGroups": 4,
+          "fieldGroups": 7,
+          "issues": []
+        },
+        {
+          "screen": "edit-position",
+          "width": 390,
+          "controls": 12,
+          "actionGroups": 4,
+          "fieldGroups": 7,
+          "issues": []
+        },
+        {
+          "screen": "edit-position",
+          "width": 320,
+          "controls": 12,
+          "actionGroups": 4,
+          "fieldGroups": 7,
+          "issues": []
+        },
+        {
+          "screen": "candidate-pool",
+          "width": 1440,
+          "controls": 32,
+          "actionGroups": 15,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "candidate-pool",
+          "width": 768,
+          "controls": 32,
+          "actionGroups": 15,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "candidate-pool",
+          "width": 390,
+          "controls": 32,
+          "actionGroups": 15,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "candidate-pool",
+          "width": 320,
+          "controls": 32,
+          "actionGroups": 15,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "clearance",
+          "width": 1440,
+          "controls": 14,
+          "actionGroups": 4,
+          "fieldGroups": 5,
+          "issues": []
+        },
+        {
+          "screen": "clearance",
+          "width": 768,
+          "controls": 14,
+          "actionGroups": 4,
+          "fieldGroups": 5,
+          "issues": []
+        },
+        {
+          "screen": "clearance",
+          "width": 390,
+          "controls": 14,
+          "actionGroups": 4,
+          "fieldGroups": 5,
+          "issues": []
+        },
+        {
+          "screen": "clearance",
+          "width": 320,
+          "controls": 14,
+          "actionGroups": 4,
+          "fieldGroups": 5,
+          "issues": []
+        },
+        {
+          "screen": "student-queue",
+          "width": 1440,
+          "controls": 7,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "student-queue",
+          "width": 768,
+          "controls": 7,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "student-queue",
+          "width": 390,
+          "controls": 7,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "student-queue",
+          "width": 320,
+          "controls": 7,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "ta-queue",
+          "width": 1440,
+          "controls": 40,
+          "actionGroups": 6,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "ta-queue",
+          "width": 768,
+          "controls": 40,
+          "actionGroups": 6,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "ta-queue",
+          "width": 390,
+          "controls": 40,
+          "actionGroups": 6,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "ta-queue",
+          "width": 320,
+          "controls": 40,
+          "actionGroups": 6,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-admin",
+          "width": 1440,
+          "controls": 90,
+          "actionGroups": 59,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-admin",
+          "width": 768,
+          "controls": 90,
+          "actionGroups": 59,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-admin",
+          "width": 390,
+          "controls": 90,
+          "actionGroups": 59,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-admin",
+          "width": 320,
+          "controls": 90,
+          "actionGroups": 59,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-review",
+          "width": 1440,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-review",
+          "width": 768,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-review",
+          "width": 390,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-review",
+          "width": 320,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "join-dialog",
+          "width": 1440,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 1440,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "join-dialog",
+          "width": 768,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 768,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "join-dialog",
+          "width": 390,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 390,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "join-dialog",
+          "width": 320,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 320,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        }
+      ],
+      "screenshots": [
+        "controls-draft-desktop.png",
+        "controls-draft-mobile.png",
+        "controls-clearance-mobile.png",
+        "controls-ta-queue-desktop.png",
+        "controls-course-admin-mobile.png",
+        "controls-join-dialog-mobile.png",
+        "controls-feedback-dialog-mobile.png"
+      ]
+    },
+    {
+      "browser": "firefox",
+      "test": "four-role controls retain aligned actions, complete fields and mobile dialogs across the application",
+      "synthetic": true,
+      "widths": [
+        1440,
+        768,
+        390,
+        320
+      ],
+      "checks": [
+        {
+          "screen": "login",
+          "width": 1440,
+          "controls": 11,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "login",
+          "width": 768,
+          "controls": 11,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "login",
+          "width": 390,
+          "controls": 11,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "login",
+          "width": 320,
+          "controls": 11,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-student-main",
+          "width": 1440,
+          "controls": 34,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-student-main",
+          "width": 768,
+          "controls": 34,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-student-main",
+          "width": 390,
+          "controls": 34,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-student-main",
+          "width": 320,
+          "controls": 34,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-ta-main",
+          "width": 1440,
+          "controls": 24,
+          "actionGroups": 13,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-ta-main",
+          "width": 768,
+          "controls": 24,
+          "actionGroups": 13,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-ta-main",
+          "width": 390,
+          "controls": 24,
+          "actionGroups": 13,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-ta-main",
+          "width": 320,
+          "controls": 24,
+          "actionGroups": 13,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-faculty-main",
+          "width": 1440,
+          "controls": 23,
+          "actionGroups": 12,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-faculty-main",
+          "width": 768,
+          "controls": 23,
+          "actionGroups": 12,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-faculty-main",
+          "width": 390,
+          "controls": 23,
+          "actionGroups": 12,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-faculty-main",
+          "width": 320,
+          "controls": 23,
+          "actionGroups": 12,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-admin",
+          "width": 1440,
+          "controls": 25,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-admin",
+          "width": 768,
+          "controls": 25,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-admin",
+          "width": 390,
+          "controls": 25,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "home-admin",
+          "width": 320,
+          "controls": 25,
+          "actionGroups": 21,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "help",
+          "width": 1440,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "help",
+          "width": 768,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "help",
+          "width": 390,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "help",
+          "width": 320,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-administration",
+          "width": 1440,
+          "controls": 24,
+          "actionGroups": 10,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-administration",
+          "width": 768,
+          "controls": 24,
+          "actionGroups": 10,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-administration",
+          "width": 390,
+          "controls": 24,
+          "actionGroups": 10,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-administration",
+          "width": 320,
+          "controls": 24,
+          "actionGroups": 10,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "positions",
+          "width": 1440,
+          "controls": 15,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "positions",
+          "width": 768,
+          "controls": 15,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "positions",
+          "width": 390,
+          "controls": 15,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "positions",
+          "width": 320,
+          "controls": 15,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ta",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ta",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ta",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ta",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ra",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ra",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ra",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "position-ra",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "applications",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "applications",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "applications",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "applications",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "draft",
+          "width": 1440,
+          "controls": 6,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "draft",
+          "width": 768,
+          "controls": 6,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "draft",
+          "width": 390,
+          "controls": 6,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "draft",
+          "width": 320,
+          "controls": 6,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "offer",
+          "width": 1440,
+          "controls": 7,
+          "actionGroups": 4,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "offer",
+          "width": 768,
+          "controls": 7,
+          "actionGroups": 4,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "offer",
+          "width": 390,
+          "controls": 7,
+          "actionGroups": 4,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "offer",
+          "width": 320,
+          "controls": 7,
+          "actionGroups": 4,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-review",
+          "width": 1440,
+          "controls": 3,
+          "actionGroups": 1,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-review",
+          "width": 768,
+          "controls": 3,
+          "actionGroups": 1,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-review",
+          "width": 390,
+          "controls": 3,
+          "actionGroups": 1,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-review",
+          "width": 320,
+          "controls": 3,
+          "actionGroups": 1,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-administration",
+          "width": 1440,
+          "controls": 4,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-administration",
+          "width": 768,
+          "controls": 4,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-administration",
+          "width": 390,
+          "controls": 4,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "application-administration",
+          "width": 320,
+          "controls": 4,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "active-workload",
+          "width": 1440,
+          "controls": 5,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "active-workload",
+          "width": 768,
+          "controls": 5,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "active-workload",
+          "width": 390,
+          "controls": 5,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "active-workload",
+          "width": 320,
+          "controls": 5,
+          "actionGroups": 2,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "ra-appointment",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "ra-appointment",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "ra-appointment",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "ra-appointment",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 0,
+          "fieldGroups": 1,
+          "issues": []
+        },
+        {
+          "screen": "recruitment",
+          "width": 1440,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "recruitment",
+          "width": 768,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "recruitment",
+          "width": 390,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "recruitment",
+          "width": 320,
+          "controls": 2,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "new-position",
+          "width": 1440,
+          "controls": 9,
+          "actionGroups": 4,
+          "fieldGroups": 3,
+          "issues": []
+        },
+        {
+          "screen": "new-position",
+          "width": 768,
+          "controls": 9,
+          "actionGroups": 4,
+          "fieldGroups": 3,
+          "issues": []
+        },
+        {
+          "screen": "new-position",
+          "width": 390,
+          "controls": 9,
+          "actionGroups": 4,
+          "fieldGroups": 3,
+          "issues": []
+        },
+        {
+          "screen": "new-position",
+          "width": 320,
+          "controls": 9,
+          "actionGroups": 4,
+          "fieldGroups": 3,
+          "issues": []
+        },
+        {
+          "screen": "edit-position",
+          "width": 1440,
+          "controls": 12,
+          "actionGroups": 4,
+          "fieldGroups": 7,
+          "issues": []
+        },
+        {
+          "screen": "edit-position",
+          "width": 768,
+          "controls": 12,
+          "actionGroups": 4,
+          "fieldGroups": 7,
+          "issues": []
+        },
+        {
+          "screen": "edit-position",
+          "width": 390,
+          "controls": 12,
+          "actionGroups": 4,
+          "fieldGroups": 7,
+          "issues": []
+        },
+        {
+          "screen": "edit-position",
+          "width": 320,
+          "controls": 12,
+          "actionGroups": 4,
+          "fieldGroups": 7,
+          "issues": []
+        },
+        {
+          "screen": "candidate-pool",
+          "width": 1440,
+          "controls": 32,
+          "actionGroups": 15,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "candidate-pool",
+          "width": 768,
+          "controls": 32,
+          "actionGroups": 15,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "candidate-pool",
+          "width": 390,
+          "controls": 32,
+          "actionGroups": 15,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "candidate-pool",
+          "width": 320,
+          "controls": 32,
+          "actionGroups": 15,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "clearance",
+          "width": 1440,
+          "controls": 14,
+          "actionGroups": 4,
+          "fieldGroups": 5,
+          "issues": []
+        },
+        {
+          "screen": "clearance",
+          "width": 768,
+          "controls": 14,
+          "actionGroups": 4,
+          "fieldGroups": 5,
+          "issues": []
+        },
+        {
+          "screen": "clearance",
+          "width": 390,
+          "controls": 14,
+          "actionGroups": 4,
+          "fieldGroups": 5,
+          "issues": []
+        },
+        {
+          "screen": "clearance",
+          "width": 320,
+          "controls": 14,
+          "actionGroups": 4,
+          "fieldGroups": 5,
+          "issues": []
+        },
+        {
+          "screen": "student-queue",
+          "width": 1440,
+          "controls": 7,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "student-queue",
+          "width": 768,
+          "controls": 7,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "student-queue",
+          "width": 390,
+          "controls": 7,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "student-queue",
+          "width": 320,
+          "controls": 7,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "ta-queue",
+          "width": 1440,
+          "controls": 40,
+          "actionGroups": 6,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "ta-queue",
+          "width": 768,
+          "controls": 40,
+          "actionGroups": 6,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "ta-queue",
+          "width": 390,
+          "controls": 40,
+          "actionGroups": 6,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "ta-queue",
+          "width": 320,
+          "controls": 40,
+          "actionGroups": 6,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-admin",
+          "width": 1440,
+          "controls": 90,
+          "actionGroups": 59,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-admin",
+          "width": 768,
+          "controls": 90,
+          "actionGroups": 59,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-admin",
+          "width": 390,
+          "controls": 90,
+          "actionGroups": 59,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-admin",
+          "width": 320,
+          "controls": 90,
+          "actionGroups": 59,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-review",
+          "width": 1440,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-review",
+          "width": 768,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-review",
+          "width": 390,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "course-review",
+          "width": 320,
+          "controls": 1,
+          "actionGroups": 0,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "join-dialog",
+          "width": 1440,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 1440,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "join-dialog",
+          "width": 768,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 768,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "join-dialog",
+          "width": 390,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 390,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "join-dialog",
+          "width": 320,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        },
+        {
+          "screen": "feedback-dialog",
+          "width": 320,
+          "controls": 7,
+          "actionGroups": 1,
+          "fieldGroups": 0,
+          "issues": []
+        }
+      ],
+      "screenshots": []
+    }
+  ],
+  "accessibilityScans": 14,
+  "geometryStates": 224,
+  "screenshots": [
+    {
+      "path": "docs/verification/screenshots/controls-clearance-mobile.png",
+      "name": "controls-clearance-mobile.png",
+      "bytes": 280846,
+      "sha256": "d2eaf44fcb1df22f04430314cb2721af152b700aff3daa1f93338ff34c613dfc",
+      "width": 390,
+      "height": 7419,
+      "source": "Passing focused Chromium geometry run; original PNG copied byte-for-byte before the broad run."
+    },
+    {
+      "path": "docs/verification/screenshots/controls-course-admin-mobile.png",
+      "name": "controls-course-admin-mobile.png",
+      "bytes": 192776,
+      "sha256": "8c1005770ee894b0ccf7ee907599ec3b85c54b8015fc084371221c1443810fdd",
+      "width": 390,
+      "height": 5713,
+      "source": "Passing focused Chromium geometry run; original PNG copied byte-for-byte before the broad run."
+    },
+    {
+      "path": "docs/verification/screenshots/controls-draft-desktop.png",
+      "name": "controls-draft-desktop.png",
+      "bytes": 108889,
+      "sha256": "6c3ffe142a5adae6e4d9b4184d129b69ed51b45309fba4bd404c5e2ac2bd1345",
+      "width": 1440,
+      "height": 2138,
+      "source": "Passing focused Chromium geometry run; original PNG copied byte-for-byte before the broad run."
+    },
+    {
+      "path": "docs/verification/screenshots/controls-draft-mobile.png",
+      "name": "controls-draft-mobile.png",
+      "bytes": 103307,
+      "sha256": "72808ab7f59653e4a924129a69af064f615ad5a5f5c2dade2c6ecdd623cf435d",
+      "width": 390,
+      "height": 2912,
+      "source": "Passing focused Chromium geometry run; original PNG copied byte-for-byte before the broad run."
+    },
+    {
+      "path": "docs/verification/screenshots/controls-feedback-dialog-mobile.png",
+      "name": "controls-feedback-dialog-mobile.png",
+      "bytes": 80394,
+      "sha256": "0b0acd4160b4828eacdb8f28c170f72b773a0a2ee61ad57eae329fbed4a0701c",
+      "width": 390,
+      "height": 1607,
+      "source": "Passing focused Chromium geometry run; original PNG copied byte-for-byte before the broad run."
+    },
+    {
+      "path": "docs/verification/screenshots/controls-join-dialog-mobile.png",
+      "name": "controls-join-dialog-mobile.png",
+      "bytes": 79627,
+      "sha256": "3ae69b1e04499639e3139c30933b34de83474594c3dd55211cef5f7c810b42b8",
+      "width": 390,
+      "height": 1607,
+      "source": "Passing focused Chromium geometry run; original PNG copied byte-for-byte before the broad run."
+    },
+    {
+      "path": "docs/verification/screenshots/controls-ta-queue-desktop.png",
+      "name": "controls-ta-queue-desktop.png",
+      "bytes": 116738,
+      "sha256": "a178216dff57e7325500d0d5c6914ce23f6dee0b62ea003f4456323352fc0ab4",
+      "width": 1440,
+      "height": 1103,
+      "source": "Passing focused Chromium geometry run; original PNG copied byte-for-byte before the broad run."
+    }
+  ],
+  "summary": {
+    "cases": 2,
+    "geometryStates": 224,
+    "accessibilityScans": 14,
+    "geometryIssues": 0,
+    "accessibilityViolations": 0
+  }
+}

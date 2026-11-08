@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-08T01:44:47.688Z",
+  "applicationSourceSha256": "207429869c5cf98f9093d35b438d41b98196121707d4361a033a86d5a9a40d4e",
+  "closedEndpoints": [
+    {
+      "url": "http://127.0.0.1:53816/api/health",
+      "closed": true
+    },
+    {
+      "url": "http://127.0.0.1:53817/api/health",
+      "closed": true
+    }
+  ],
+  "ownedContainerId": "fdb81236e403cf470b2566277bc9b5d3b8512e7700c9adc37c80aa042580d37f",
+  "ownedContainerAbsent": true,
+  "runnerTranscriptSha256": "971595fd96cd541fa4d1a225368b69332e4965fc7d4cd4f23a0c53a63e667e6b",
+  "scope": "Only the two completed full-suite endpoints and its uniquely recorded disposable container; presentation services have separate lifecycle receipts."
+}

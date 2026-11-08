@@ -1,7 +1,7 @@
 {
-  "recordedAt": "2026-11-07T22:41:08.913006+00:00",
-  "count": 237,
-  "coverage": "Delivered local working-tree bytes excluding self-referential inventory/result/review receipts. Git may normalize line endings on checkout; inventory alone is not semantic review.",
+  "recordedAt": "2026-11-08T01:47:41.743244+00:00",
+  "count": 280,
+  "coverage": "Delivered working-tree file bytes excluding the three self-referential inventory, results and reading receipts. Inventory is not semantic review; prior phase receipts retain their own source digests.",
   "files": [
     {
       "path": ".dockerignore",
@@ -41,15 +41,15 @@
     },
     {
       "path": "README.md",
-      "bytes": 16015,
-      "sha256": "a6ab5b5ffd2b90f5dd4b40f38f5414ffc48c454106c5dc8a5912c9237c0e359a",
-      "physicalLines": 151
+      "bytes": 16870,
+      "sha256": "6a301fa9796a8a9a22b2fd2384aaefcaced2f3c8667eddc5c7148458f8c39406",
+      "physicalLines": 156
     },
     {
       "path": "app/app.vue",
-      "bytes": 1712,
-      "sha256": "c0d98a75666d5ffdb49b94396c7bc3cfc8804c0836d80fd8adc626404577c1c1",
-      "physicalLines": 82
+      "bytes": 1947,
+      "sha256": "0056150693bebdea8ab5d63c3cfae2cfc69cfe19582c356d4367924e0216a324",
+      "physicalLines": 95
     },
     {
       "path": "app/components/AiAssistance.vue",
@@ -58,16 +58,22 @@
       "physicalLines": 324
     },
     {
+      "path": "app/components/CourseInsights.vue",
+      "bytes": 53451,
+      "sha256": "168aa8a3801b3dd209d575a8a80aaa6f8b3eabb9cf1aba5d903c0144f97914e1",
+      "physicalLines": 1865
+    },
+    {
       "path": "app/components/OpportunityEditor.vue",
-      "bytes": 17233,
-      "sha256": "4f7c6c822536aff3d02c73f5b6f14296dae26ea95dd51740dccc4c111231b78c",
-      "physicalLines": 545
+      "bytes": 17796,
+      "sha256": "d3e2a4bd61c0dcbdaf334cf62267059d8d14fdb26e514a9771d3c9bcb45ad744",
+      "physicalLines": 564
     },
     {
       "path": "app/components/StaffingNavigation.vue",
-      "bytes": 1685,
-      "sha256": "9055e312243a0c9dc8fe892cac9e5519500abb219fc8a88c2ca03c71f33130a7",
-      "physicalLines": 83
+      "bytes": 3172,
+      "sha256": "73d66d81c483579d056f7046355c778ca13cbd8f8f509148ea3c6d5eee725877",
+      "physicalLines": 135
     },
     {
       "path": "app/components/StaffingPaging.vue",
@@ -77,15 +83,15 @@
     },
     {
       "path": "app/components/StaffingSettlement.vue",
-      "bytes": 1208,
-      "sha256": "9182bb43343202b600a8910b2ab5cab01bf9b44107bf02d0f79ecadbfe31bbeb",
-      "physicalLines": 44
+      "bytes": 1283,
+      "sha256": "4b5691f5815ac6d64988782935021286eae8f8ddd09ab7ec8539eba382a09884",
+      "physicalLines": 46
     },
     {
       "path": "app/components/StaffingShell.vue",
-      "bytes": 10345,
-      "sha256": "0fd5db5a8b1869d9f74f17f881905e232c8ace39f049f0bfa30504c8f93a9571",
-      "physicalLines": 518
+      "bytes": 12546,
+      "sha256": "cde7c6b1d6cce7d1951a2007e366798a87fde5e117e0eb114c42b345a73fea51",
+      "physicalLines": 609
     },
     {
       "path": "app/components/StaffingStatus.vue",
@@ -101,9 +107,9 @@
     },
     {
       "path": "app/components/WorkloadRecorder.vue",
-      "bytes": 2395,
-      "sha256": "c385129b297476fb3e369bb47e3ed45b745a0fea2b1260fb9a9e98eb813fd4e9",
-      "physicalLines": 83
+      "bytes": 2462,
+      "sha256": "9f80969feeda8a2942a2f46d89198c9386ad6537194a231a7cac5d5561f4e100",
+      "physicalLines": 86
     },
     {
       "path": "app/composables/useAuth.ts",
@@ -116,6 +122,12 @@
       "bytes": 1692,
       "sha256": "578790d0849cca07c1f68dc752ed041a9bf20ff16454f797fbf19aeadfdbf385",
       "physicalLines": 51
+    },
+    {
+      "path": "app/composables/useCourseInsights.ts",
+      "bytes": 7057,
+      "sha256": "db118c8107d37747e027f133709cf72e576790023d09a93284dfef6fcf1fa904",
+      "physicalLines": 236
     },
     {
       "path": "app/composables/useIntervalRefresh.ts",
@@ -143,21 +155,21 @@
     },
     {
       "path": "app/pages/admin/courses.vue",
-      "bytes": 11659,
-      "sha256": "f512cf4188ba8ac37a21b51ce38eea613421ffe8cde9a0936e8d438770e21742",
-      "physicalLines": 537
+      "bytes": 12473,
+      "sha256": "2b4662db2fa600cbd0705505eb50eb88f706b530af549804dec3a28dee02a55f",
+      "physicalLines": 587
     },
     {
       "path": "app/pages/admin/staffing.vue",
-      "bytes": 12977,
-      "sha256": "4e90e588f07bca411c567ec7923405a9b7ae9e297b5246fa6a4d0bab4d424f44",
-      "physicalLines": 397
+      "bytes": 13169,
+      "sha256": "3c867bf26b93b868b40a3db5ed0ac2594aa826fb48f6ceebcec6789ef6112dd5",
+      "physicalLines": 401
     },
     {
       "path": "app/pages/applications/[id].vue",
-      "bytes": 26817,
-      "sha256": "ff759db47be9b8dceff1b20f249a55437372bb8b8613bea628a8fecc3167e2f5",
-      "physicalLines": 804
+      "bytes": 27185,
+      "sha256": "2b18745cf5b4c25e1a73454790fbd5b700f3f8a70916ee242b75a4f757f96581",
+      "physicalLines": 814
     },
     {
       "path": "app/pages/applications/index.vue",
@@ -173,9 +185,9 @@
     },
     {
       "path": "app/pages/courses/[id]/admin.vue",
-      "bytes": 66507,
-      "sha256": "111e5bf4882c8e083ae0c0a0eadf8ee08795e4616ca01c92ef4e5f9c58d2188a",
-      "physicalLines": 2544
+      "bytes": 68415,
+      "sha256": "cbb6a10c75424936d567e646d830d2202ce2605fffed33d216a27cf0d8f3cbf3",
+      "physicalLines": 2620
     },
     {
       "path": "app/pages/courses/[id]/review.vue",
@@ -185,27 +197,27 @@
     },
     {
       "path": "app/pages/courses/[id]/student.vue",
-      "bytes": 36329,
-      "sha256": "6762f2695403dfb5e6000b3a891e8550f217134c8581884a7c9615b15bbb809d",
-      "physicalLines": 1523
+      "bytes": 41373,
+      "sha256": "31b6200187d0cd96fcb122939245139eab759721093ca945f89fe72160275835",
+      "physicalLines": 1649
     },
     {
       "path": "app/pages/courses/[id]/ta.vue",
-      "bytes": 36492,
-      "sha256": "ff8cf9fbabc587154cdb8871c2ba20c72ff12cab3b93d764a5f8189b24b5d89d",
-      "physicalLines": 1513
+      "bytes": 38237,
+      "sha256": "134196cc86d408bf9ea95b569d950ea7adba85fb90e8f2cc9ea7132e33d4b187",
+      "physicalLines": 1585
     },
     {
       "path": "app/pages/courses/index.vue",
-      "bytes": 16016,
-      "sha256": "e9280482f7d006d1f619e0f9309f9f86cece55a211d71322a6c7abd08faa9ec3",
-      "physicalLines": 709
+      "bytes": 17272,
+      "sha256": "25e64cba4d509a8e863958144b62867e73cacefea6c27aba7d012793c0b3ecd7",
+      "physicalLines": 768
     },
     {
       "path": "app/pages/help.vue",
-      "bytes": 8300,
-      "sha256": "4105a585644c6bdf6b5306bd34176e33d7fe64fda71df1af496634a27173d901",
-      "physicalLines": 348
+      "bytes": 8466,
+      "sha256": "4e0e6e0ae53708db16e9eff24cd7e51436b3624f9859a86a7b576c774f226281",
+      "physicalLines": 354
     },
     {
       "path": "app/pages/index.vue",
@@ -214,10 +226,16 @@
       "physicalLines": 7
     },
     {
+      "path": "app/pages/insights.vue",
+      "bytes": 480,
+      "sha256": "84750b923a9807705644e12558178af1faf6438cabce4c20e4fb71609a22fc80",
+      "physicalLines": 15
+    },
+    {
       "path": "app/pages/login.vue",
-      "bytes": 11795,
-      "sha256": "8bfdd426f15e64177565e1f9d70660d238548a29fe821e5c479ec5a78b3ad919",
-      "physicalLines": 556
+      "bytes": 12044,
+      "sha256": "bf35566b059b0a46b127a627857f1ffbfa45c5b4d1d8a45e949986ce1b313f9d",
+      "physicalLines": 566
     },
     {
       "path": "app/pages/opportunities/[id].vue",
@@ -233,9 +251,9 @@
     },
     {
       "path": "app/pages/staffing/[id].vue",
-      "bytes": 16612,
-      "sha256": "aab047a930542fc33706ddd8bd930cc083be87297cb7a243e7bb9b6e3e6a3a44",
-      "physicalLines": 476
+      "bytes": 16706,
+      "sha256": "569f63f1a762bbe01c1f374e5768b2483488d91430cc86afd9646f03a4611927",
+      "physicalLines": 477
     },
     {
       "path": "app/pages/staffing/edit.vue",
@@ -268,16 +286,28 @@
       "physicalLines": 44
     },
     {
+      "path": "docs/AUTOMATED_DEMO.md",
+      "bytes": 8768,
+      "sha256": "f572efd4d8d349eebb233c7bfda85ff46bf701e498b18c8f2d41f3a81e7925d1",
+      "physicalLines": 73
+    },
+    {
       "path": "docs/BUSINESS_REVIEW.md",
       "bytes": 9303,
       "sha256": "f6e270c6be9ea874a3682e5892a12eae958a956cfef3b00eb5af1dae45942c69",
       "physicalLines": 61
     },
     {
+      "path": "docs/COURSE_INSIGHTS.md",
+      "bytes": 4790,
+      "sha256": "e1fab7a697242a544406de45af6594479c838981e3e858022850aea767e0be08",
+      "physicalLines": 43
+    },
+    {
       "path": "docs/DEMO_GUIDE.md",
-      "bytes": 9767,
-      "sha256": "240af2f4a8771656c87d68f4f5f7067fc020461952d2ce334ae020344240ded8",
-      "physicalLines": 91
+      "bytes": 11509,
+      "sha256": "375a0d20823a2c935d393c2afd4d2c3f80a96411faeebe89e5501762b8ec35b6",
+      "physicalLines": 100
     },
     {
       "path": "docs/IMPLEMENTATION_PLAN.md",
@@ -293,15 +323,15 @@
     },
     {
       "path": "docs/PRODUCT_READINESS.md",
-      "bytes": 13131,
-      "sha256": "785ad84d7e9ab4082d4b188ddb4f0cd7734126f23c18bc51dc1020b1e57050d4",
-      "physicalLines": 87
+      "bytes": 13639,
+      "sha256": "5361d34fee932ce685f8eaa9bbf9c2be15560643606933eb99075abd5937a820",
+      "physicalLines": 88
     },
     {
       "path": "docs/ROADSHOW.md",
-      "bytes": 12382,
-      "sha256": "8340a689f51b1b699a65b3799b1c05beb1430d41f2410503ae97d3fd73642c34",
-      "physicalLines": 92
+      "bytes": 13972,
+      "sha256": "b72d4ee9c23322199469c4e1c68c82e2ce827df3a6af7fd87da297f3d2a39585",
+      "physicalLines": 97
     },
     {
       "path": "docs/STAFFING_DESIGN.md",
@@ -317,9 +347,9 @@
     },
     {
       "path": "docs/VERIFICATION.md",
-      "bytes": 14247,
-      "sha256": "12ce6272405333e441473bf7d543a71a2102aede1d9617ce8c0d47e0905404f0",
-      "physicalLines": 70
+      "bytes": 7944,
+      "sha256": "a401b5636e6ba7afc50d0c08dc78da8ca6f579485e7037d3ca16e043dbd46593",
+      "physicalLines": 47
     },
     {
       "path": "docs/WORK_PLAN.md",
@@ -329,9 +359,9 @@
     },
     {
       "path": "docs/demo/index.html",
-      "bytes": 43241,
-      "sha256": "bcb0c865a78282cdaf6cd3872bae1cc6f21114bb69a63a805234a0255d9cacc5",
-      "physicalLines": 1357
+      "bytes": 46521,
+      "sha256": "ca8f9115636e5713f4db1d4ced3e06687cbc4fd72b5b7c4f4a7048b99cb061fe",
+      "physicalLines": 1405
     },
     {
       "path": "docs/demo/materials/sample-cv.txt",
@@ -353,62 +383,68 @@
     },
     {
       "path": "docs/demo/screenshots/showcase-applicant-applications-desktop.png",
-      "bytes": 93172,
-      "sha256": "188ab5f05f7eda1f06d5735f0c5226a9bb36bb56f96d4a76c80872857bd52621",
+      "bytes": 92924,
+      "sha256": "3647d85512f1d9ee3018f9e38f0102091e7a2a9f155960c713c68fea6d77953f",
       "physicalLines": null
     },
     {
       "path": "docs/demo/screenshots/showcase-applicant-offer-mobile.png",
-      "bytes": 144454,
-      "sha256": "43fd919b0e275346f7b5769bd12c524bc5a9af6a718b40950e95f4d0d1b43f7f",
+      "bytes": 145559,
+      "sha256": "0a905b96a734bcdfbc43014c1125835d334fc71f782839517dcc773c25ff3657",
       "physicalLines": null
     },
     {
       "path": "docs/demo/screenshots/showcase-avery-active-application.png",
-      "bytes": 67214,
-      "sha256": "6cf67fd68d18cdf1491aa8c7724d0d3a26512f87acce1a67f3cc5e0330dfed74",
+      "bytes": 67277,
+      "sha256": "3bf00e142b8ad70ad80fe944f4ab7bcf20e88853d3493c32058c242e4c4d1dfd",
       "physicalLines": null
     },
     {
       "path": "docs/demo/screenshots/showcase-avery-ta-queue.png",
-      "bytes": 98528,
-      "sha256": "ce06462e4b91b76f7d51e8611e4ef340fd868584bfa09a3c5b975b3775fd76e3",
+      "bytes": 100483,
+      "sha256": "d52d3c4f24718435cc598848a50b295ba8d590ef656ce91609c954a10371eb92",
       "physicalLines": null
     },
     {
       "path": "docs/demo/screenshots/showcase-candidate-pool-desktop.png",
-      "bytes": 220601,
-      "sha256": "dd7defdbdc91815122fe263f25f9aee77395ec97da65852113ca1e82c9dee82c",
+      "bytes": 223156,
+      "sha256": "ddfdb2a931b11fa55c683b430e5d58e1b3b044a24fc9540dfde805271034a052",
       "physicalLines": null
     },
     {
       "path": "docs/demo/screenshots/showcase-clearance-desktop.png",
-      "bytes": 311603,
-      "sha256": "f5c42e7cc0b28392647e70d10efb064a460ceac3e79422e183b1bf7313346964",
+      "bytes": 315466,
+      "sha256": "407b74af0e44b87b489eb854b07bfb90dc5263e547e83b1942a16d4eb3a382c6",
       "physicalLines": null
     },
     {
       "path": "docs/demo/screenshots/showcase-course-report-desktop.png",
-      "bytes": 109539,
-      "sha256": "1b38742cf247d19f79fc5bcbca3b999ed66e7983a409b48ae6521567419685cb",
+      "bytes": 109723,
+      "sha256": "eb1e5739b0d492c093938738be21af42418540dee373fefe2d453e80f5fbd337",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-department-insights-desktop.png",
+      "bytes": 469820,
+      "sha256": "7dd0fdf781d42caef53c1ec14a3c4e38329fbcdd26f4e1771cf068812fe2c053",
       "physicalLines": null
     },
     {
       "path": "docs/demo/screenshots/showcase-position-catalog-mobile.png",
-      "bytes": 290380,
-      "sha256": "f04fc980ab786c6be24870f12023f3748dde59178666f99f9744468b5001821a",
+      "bytes": 292268,
+      "sha256": "f86bbfd3567d2cf9c5c40dc9a355d1ab22e26bc0cd557d5f49966fa830e5d02e",
       "physicalLines": null
     },
     {
       "path": "docs/demo/screenshots/showcase-recruitment-desktop.png",
-      "bytes": 158651,
-      "sha256": "0599ca4b3ceba98a985b71f569b2a45fe1eb7f96594e205ebb12b4a79dc781e4",
+      "bytes": 161265,
+      "sha256": "6f7bdb675e69138ce7d9a3220e4437a8885fb97dcb06e9568d7c4de076880cac",
       "physicalLines": null
     },
     {
       "path": "docs/demo/screenshots/showcase-ta-queue-desktop.png",
-      "bytes": 115461,
-      "sha256": "ceb022ce8e14caae1bcae32cf7a93ebbf1f6b0919faebe4d7403951194d66069",
+      "bytes": 122297,
+      "sha256": "10504e37f72dee053891b3f67cbc5dc08a01efc4777d767bd5da55ad72f40fc7",
       "physicalLines": null
     },
     {
@@ -466,10 +502,58 @@
       "physicalLines": 38
     },
     {
+      "path": "docs/verification/aligned-story-proof.json",
+      "bytes": 4124,
+      "sha256": "a0267ba32b62bc47dc10dc8a4872ca3ebbf4666680644194eb1241fceda8a6eb",
+      "physicalLines": 123
+    },
+    {
+      "path": "docs/verification/control-alignment-proof.json",
+      "bytes": 54681,
+      "sha256": "c91411a7b3fe41f4d04f72b1fead70de002667227139a5093f47d22e5202a8ff",
+      "physicalLines": 2146
+    },
+    {
+      "path": "docs/verification/control-gallery-proof.json",
+      "bytes": 8851,
+      "sha256": "98f916ec3fdef2c382aedf3dcdd7a7d9f5d0ee91fae8e0a97d10ab862c2873bd",
+      "physicalLines": 292
+    },
+    {
       "path": "docs/verification/gallery-proof.json",
       "bytes": 8036,
       "sha256": "b24d1967fe359e432be4f1b90d470aaeb84b7b9e2cc8fc34ff2173a6f7805b08",
       "physicalLines": 226
+    },
+    {
+      "path": "docs/verification/insights-gallery-proof.json",
+      "bytes": 9188,
+      "sha256": "8e1d9de9427d87e34d78ebb50994126b81abc3ff9553b61de3418dce217d2e5d",
+      "physicalLines": 301
+    },
+    {
+      "path": "docs/verification/insights-lifecycle-headed-proof.json",
+      "bytes": 50782,
+      "sha256": "130b8e1e261b97bd295c6f406e0622e44e5ddadd3c9987e9525281b54d29ea78",
+      "physicalLines": 1749
+    },
+    {
+      "path": "docs/verification/insights-lifecycle-headless-proof.json",
+      "bytes": 93666,
+      "sha256": "09d6309901967a1eac1bd648972eccf362f549c0d9e7af254d8317008717a1ae",
+      "physicalLines": 3526
+    },
+    {
+      "path": "docs/verification/insights-proof.json",
+      "bytes": 184040,
+      "sha256": "d2f6c78848d40260783bb88c80ef40f9556682521d2fec10187250067f844d39",
+      "physicalLines": 5603
+    },
+    {
+      "path": "docs/verification/insights-service-cleanup.json",
+      "bytes": 741,
+      "sha256": "4deaec86d739fc9ab8e0a6ca33d302f5c2ffab87ba12df5e53389a428a130c03",
+      "physicalLines": 19
     },
     {
       "path": "docs/verification/prepared-windows-proof.json",
@@ -520,6 +604,48 @@
       "physicalLines": null
     },
     {
+      "path": "docs/verification/screenshots/controls-clearance-mobile.png",
+      "bytes": 280846,
+      "sha256": "d2eaf44fcb1df22f04430314cb2721af152b700aff3daa1f93338ff34c613dfc",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-course-admin-mobile.png",
+      "bytes": 192776,
+      "sha256": "8c1005770ee894b0ccf7ee907599ec3b85c54b8015fc084371221c1443810fdd",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-draft-desktop.png",
+      "bytes": 108889,
+      "sha256": "6c3ffe142a5adae6e4d9b4184d129b69ed51b45309fba4bd404c5e2ac2bd1345",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-draft-mobile.png",
+      "bytes": 103307,
+      "sha256": "72808ab7f59653e4a924129a69af064f615ad5a5f5c2dade2c6ecdd623cf435d",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-feedback-dialog-mobile.png",
+      "bytes": 80394,
+      "sha256": "0b0acd4160b4828eacdb8f28c170f72b773a0a2ee61ad57eae329fbed4a0701c",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-join-dialog-mobile.png",
+      "bytes": 79627,
+      "sha256": "3ae69b1e04499639e3139c30933b34de83474594c3dd55211cef5f7c810b42b8",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/controls-ta-queue-desktop.png",
+      "bytes": 116738,
+      "sha256": "a178216dff57e7325500d0d5c6914ce23f6dee0b62ea003f4456323352fc0ab4",
+      "physicalLines": null
+    },
+    {
       "path": "docs/verification/screenshots/desktop-admin.png",
       "bytes": 42635,
       "sha256": "e4016f05d938ae976b2aa7b8d85a98adccb7651df515a16c2d8eddec7b733a7a",
@@ -559,6 +685,30 @@
       "path": "docs/verification/screenshots/desktop-ta.png",
       "bytes": 74737,
       "sha256": "43821433465e5b18785a0d2f2564597fee38d03e4cf35f9d375dd75e04ddb3e5",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/insights-course-desktop.png",
+      "bytes": 544569,
+      "sha256": "03f7b4b76c02880d1a772341f134645b8364637dbd67c9828de7db91a56a3edd",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/insights-department-desktop.png",
+      "bytes": 469820,
+      "sha256": "7dd0fdf781d42caef53c1ec14a3c4e38329fbcdd26f4e1771cf068812fe2c053",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/insights-helper-feedback-mobile.png",
+      "bytes": 206886,
+      "sha256": "232bb5fa98d656dc9e1bd916f699913cc82465fed35d4cf2bb5d0c4bc26d37a8",
+      "physicalLines": null
+    },
+    {
+      "path": "docs/verification/screenshots/insights-queue-nowrap-desktop.png",
+      "bytes": 83708,
+      "sha256": "639e627e44d20380363b0914bec266016bdd4ada532ec3cd627b2b313d8d94ba",
       "physicalLines": null
     },
     {
@@ -664,6 +814,18 @@
       "physicalLines": 89
     },
     {
+      "path": "docs/verification/ui-browser-proof.json",
+      "bytes": 39458,
+      "sha256": "c6b9a798a7ebeb95ae8402d8a69152ff64cd7e673ef2e45af41831be384bf165",
+      "physicalLines": 1204
+    },
+    {
+      "path": "docs/verification/ui-script-boundary-proof.json",
+      "bytes": 4039,
+      "sha256": "40100791b07fbfbb2a93fdda96197ec534e9b79fc8f8e6271ca2b1941c587710",
+      "physicalLines": 120
+    },
+    {
       "path": "k8s/README.md",
       "bytes": 1865,
       "sha256": "5658e1ab22b40e80c75b147f717279e826d49d1786e897d35e85c8c1ef7d8eb0",
@@ -719,8 +881,8 @@
     },
     {
       "path": "playwright.config.ts",
-      "bytes": 1048,
-      "sha256": "d8fcbfcb957e6911220dddc4fae91ec4ac88038cd1fe020f3600c45b33f430d9",
+      "bytes": 1075,
+      "sha256": "90176bcbc68f676fb1e4909e0152a8e8b3d88c04129810535e73f82fb12bd4fa",
       "physicalLines": 37
     },
     {
@@ -766,6 +928,12 @@
       "physicalLines": 97
     },
     {
+      "path": "playwright/e2e/control-alignment.spec.ts",
+      "bytes": 20492,
+      "sha256": "8ba3d4af6822ad11836ad51ee6e57050246ccee8d756ef9f6a6d5b5481232e06",
+      "physicalLines": 580
+    },
+    {
       "path": "playwright/e2e/demo-workspaces.spec.ts",
       "bytes": 2127,
       "sha256": "716539d9535433de6076b542b32af61ed46baf287bbbcc0fbc0faf74b95d2afa",
@@ -776,6 +944,12 @@
       "bytes": 24264,
       "sha256": "33ed5c44008e565cbf80ac8ef5bfa296b2dc9d2dc2c2d18ebad4e729dee5a04e",
       "physicalLines": 402
+    },
+    {
+      "path": "playwright/e2e/insights.spec.ts",
+      "bytes": 26842,
+      "sha256": "903d8349c058150a5b50395896aa6d9fc0de45ba27e1c586df2b5dff5265d5ed",
+      "physicalLines": 708
     },
     {
       "path": "playwright/e2e/institutional-identity.spec.ts",
@@ -947,9 +1121,33 @@
     },
     {
       "path": "scripts/demo-catalog.mjs",
-      "bytes": 25954,
-      "sha256": "00838173c37c6041016316a48754b9862025e2e66128b76c4d5ea5e73e10ccc6",
-      "physicalLines": 295
+      "bytes": 29582,
+      "sha256": "2938aa02c1acca8c81beed96a68053b3af3b110e288a92dba0bb92a23b21a016",
+      "physicalLines": 347
+    },
+    {
+      "path": "scripts/demo-foreground.ps1",
+      "bytes": 4402,
+      "sha256": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424",
+      "physicalLines": 93
+    },
+    {
+      "path": "scripts/demo-loop-flow.mjs",
+      "bytes": 26945,
+      "sha256": "7515c66d940c2d9364f10c26b6a9a7b754b4c8d6bad3028002c2105d250a94a9",
+      "physicalLines": 763
+    },
+    {
+      "path": "scripts/demo-loop-service.mjs",
+      "bytes": 15908,
+      "sha256": "32672b10f1ba35450b03e232a5fc0bfeb7a87dac998f7b9ed68cd2d6ece41abd",
+      "physicalLines": 508
+    },
+    {
+      "path": "scripts/demo-loop.mjs",
+      "bytes": 11320,
+      "sha256": "ab656d2e36699411b007f917f5fdfd9d325751baae89e53662570217adf89c95",
+      "physicalLines": 346
     },
     {
       "path": "scripts/demo-showcase-api.mjs",
@@ -959,9 +1157,9 @@
     },
     {
       "path": "scripts/demo-showcase-data.mjs",
-      "bytes": 9706,
-      "sha256": "43c2fa5cb329fb78f9d2afeeaa57a5339453bb72fa2c4bc6c4d71e17a2419db4",
-      "physicalLines": 129
+      "bytes": 14183,
+      "sha256": "606a767610c5aa40651798136100960020b7631e51b041c992d8651ed0f7a534",
+      "physicalLines": 166
     },
     {
       "path": "scripts/demo-showcase.mjs",
@@ -974,6 +1172,12 @@
       "bytes": 7666,
       "sha256": "5712a9410b0c7edea6b5756c085c801fd3c642b505a60e37a476ebb16763c37f",
       "physicalLines": 90
+    },
+    {
+      "path": "scripts/demo-stage.mjs",
+      "bytes": 23902,
+      "sha256": "b0ddd52cba90c3b4c0d19b444e2344737c533db2a69e38f56051452f37ad7ede",
+      "physicalLines": 697
     },
     {
       "path": "scripts/demo-windows.mjs",
@@ -1096,10 +1300,16 @@
       "physicalLines": 23
     },
     {
+      "path": "server/api/courses/[id]/feedback-context.get.ts",
+      "bytes": 3178,
+      "sha256": "964900e1699b2b763565c821d136c630cd129a2fc1297021ef2ec1e0ca002a14",
+      "physicalLines": 116
+    },
+    {
       "path": "server/api/courses/[id]/feedback.post.ts",
-      "bytes": 1208,
-      "sha256": "91df10bc221be5e89002ef41f8e1f4b67094f899b43f3dd844365658aa811288",
-      "physicalLines": 16
+      "bytes": 3200,
+      "sha256": "6eb7b0274f8806a8d1f7171973384a65555dd7da5e73db879ee1e1370214ef34",
+      "physicalLines": 35
     },
     {
       "path": "server/api/courses/[id]/queue/assign.post.ts",
@@ -1109,8 +1319,8 @@
     },
     {
       "path": "server/api/courses/[id]/queue/join.post.ts",
-      "bytes": 2524,
-      "sha256": "f2f7e60337877f2a47b8721acd892e90b9a4a0bfc0dbda581b7dc6e70f0058fe",
+      "bytes": 2544,
+      "sha256": "3373974e04270e7f264de5dd34178f2741de265831a6c2481f3657dda81fa779",
       "physicalLines": 32
     },
     {
@@ -1172,6 +1382,18 @@
       "bytes": 484,
       "sha256": "316c4777ecf0b37009a080bcabe5c7c8b637e3b5eb8677bcfe7983943db7c228",
       "physicalLines": 12
+    },
+    {
+      "path": "server/api/insights/access.get.ts",
+      "bytes": 362,
+      "sha256": "90a82ba73c55f6597db3bdf383fb5537b6d4db31ca82a0f7d6690895a5354fcc",
+      "physicalLines": 9
+    },
+    {
+      "path": "server/api/insights/index.get.ts",
+      "bytes": 385,
+      "sha256": "b119ffa1b93b5e2251fb2874b9b0b2fdb2e753d44fc960384b0ae8d6ee030d9a",
+      "physicalLines": 9
     },
     {
       "path": "server/api/staffing/[...path].ts",
@@ -1240,6 +1462,12 @@
       "physicalLines": 60
     },
     {
+      "path": "server/utils/course-insights.ts",
+      "bytes": 45338,
+      "sha256": "916dccd39d97c4995ec1bbbbc5542f9d8c0f8ffeacc456efae112abd77bcf7d9",
+      "physicalLines": 1373
+    },
+    {
       "path": "server/utils/courses.ts",
       "bytes": 9316,
       "sha256": "83e0b66b486a61296b3d7572c56699f457d56bf2234cfd32227d0a228cadf106",
@@ -1247,9 +1475,15 @@
     },
     {
       "path": "server/utils/db.ts",
-      "bytes": 6044,
-      "sha256": "806ac3a19f1ab21204f6425427a6c8466ea6718e66e073273084363f8f19f9d6",
-      "physicalLines": 114
+      "bytes": 6373,
+      "sha256": "66867ba4528faa8dc5369aae1a8afc16631c32b955c3ba668f1e9d07aeea2660",
+      "physicalLines": 118
+    },
+    {
+      "path": "server/utils/help-feedback.ts",
+      "bytes": 2146,
+      "sha256": "2ba942b7945c14db2f749cd7561553147b43a6fffdc305275ce2e042b097e28b",
+      "physicalLines": 36
     },
     {
       "path": "server/utils/qualification-questions.ts",
@@ -1259,9 +1493,9 @@
     },
     {
       "path": "server/utils/queue.ts",
-      "bytes": 5816,
-      "sha256": "269a716bd553413352b2e529e8738a35084c5aa53e6fbe78311c13c6c5877e59",
-      "physicalLines": 87
+      "bytes": 5880,
+      "sha256": "8ec3b349afe1af2e1239c8f5dd532b44ab0050a1e3fe2bb68311f6116a83ca74",
+      "physicalLines": 88
     },
     {
       "path": "server/utils/seed.ts",
@@ -1313,9 +1547,15 @@
     },
     {
       "path": "server/utils/staffing.ts",
-      "bytes": 14396,
-      "sha256": "c71fa48bd9ff0fc7c78135290d5d340e9163fffc775c67811b2f263c9dfe0641",
+      "bytes": 14534,
+      "sha256": "c6588335a00eadcae9608d8aee04a4be8a55b52bcdb796d4d37fc63b828e6589",
       "physicalLines": 203
+    },
+    {
+      "path": "shared/course-insights.ts",
+      "bytes": 3445,
+      "sha256": "905cd186516c7d3a05a6d0fcc5088c4e2c0ba473789de48090a09322617866d4",
+      "physicalLines": 140
     },
     {
       "path": "tests/ai-automatic-fairness.test.mjs",
@@ -1360,6 +1600,12 @@
       "physicalLines": 186
     },
     {
+      "path": "tests/course-insights.test.mjs",
+      "bytes": 22511,
+      "sha256": "e4a2009801f9e266711f2f882d7c422375fb6e15d5e9dddadfb8f7be7cfb426d",
+      "physicalLines": 766
+    },
+    {
       "path": "tests/course-report-stability.test.mjs",
       "bytes": 1935,
       "sha256": "1da8c9e99750dfb9a8123bc3a1a82504d42301c882434315e440f7735915f6db",
@@ -1367,21 +1613,33 @@
     },
     {
       "path": "tests/demo-catalog.test.mjs",
-      "bytes": 9418,
-      "sha256": "f32b043b3ee35396a8b46da128714355612acea1a50b8a9697258acde6190119",
-      "physicalLines": 128
+      "bytes": 15803,
+      "sha256": "f06881d7638b7dfb2bcaf45e91001776194d600ef5a83d651d9c80f521dc0b50",
+      "physicalLines": 229
     },
     {
       "path": "tests/demo-showcase-data.test.mjs",
-      "bytes": 4677,
-      "sha256": "9f6a4e25dae164ea2cd1a39552fdd95e0ac08cb519407a487b72eac3faa2d5a6",
-      "physicalLines": 70
+      "bytes": 11578,
+      "sha256": "cac369690b13723d111c65e8185655a52ad89969429eb05697f8c8cb9887ccb8",
+      "physicalLines": 187
     },
     {
       "path": "tests/dependency-security.test.mjs",
       "bytes": 1887,
       "sha256": "c6e8565c82e67d4fbe99a46826938a3348809d71e8cf882a6ebc3af9dbbef630",
       "physicalLines": 40
+    },
+    {
+      "path": "tests/feedback-context.test.mjs",
+      "bytes": 6487,
+      "sha256": "4420220aa0bb3164ea6f393127949097e7f3bf059e125ab83e635b1466aa5e01",
+      "physicalLines": 216
+    },
+    {
+      "path": "tests/help-feedback.test.mjs",
+      "bytes": 3085,
+      "sha256": "7dc1d8e0eb174449bc31d1f14741a5c0f03fdb267dd9d3507474fbf2a6ff9e3b",
+      "physicalLines": 41
     },
     {
       "path": "tests/staffing-duty-types.test.mjs",
