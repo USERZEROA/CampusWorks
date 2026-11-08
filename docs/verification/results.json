@@ -3088,6 +3088,24 @@
         "meaning": "All root fields other than currentDelivery, including historical local/container/provider results, dates, counts and wording, retain their original baseline meaning. They are not current-source real-provider or container validation."
       }
     },
-    "baselineBoundary": "Every root field outside currentDelivery retains its historical content. The preceding 204-case/100-unit delivery is retained within previousDelivery; current evidence has separate receipt paths."
+    "baselineBoundary": "Every root field outside currentDelivery retains its historical content. The preceding 204-case/100-unit delivery is retained within previousDelivery; current evidence has separate receipt paths.",
+    "presentationControls": {
+      "status": "passed",
+      "recordedAt": "2026-11-08T03:30:53.963Z",
+      "receipt": {
+        "path": "docs/verification/demo-presentation-proof.json",
+        "sha256": "dbd5545d9e0a2736231edd8d33fdbb85aca56790e31109dc16280c7d038aca5f"
+      },
+      "unitTests": 136,
+      "presenterBrowserChecks": [
+        9,
+        9
+      ],
+      "nativeForegroundChecks": 12,
+      "providerDisabledLifecycleSteps": 33,
+      "targetActiveCycleMs": 300000,
+      "normalFiveMinuteCycleMeasured": false,
+      "boundary": "Presentation-only follow-up; business application bytes/build unchanged. Earlier acceptance and real-provider records keep their own dates/script hashes."
+    }
   }
 }

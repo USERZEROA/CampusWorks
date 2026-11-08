@@ -1,0 +1,3235 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-08T03:30:53.963Z",
+  "scope": "Weighted presentation timing, toggle pause, and read-only visited-page keyboard navigation. Business application files and the existing production build remain unchanged.",
+  "applicationSha256": "e5fce9e34ae59cf0269922a77102c8103e3df8d8be0a429bd3218174639a599f",
+  "source": [
+    {
+      "path": "scripts/demo-stage.mjs",
+      "bytes": 31883,
+      "sha256": "6c023c3c420203915f21efac36b6c29015163681029c646cf6d1fa238cb04f4a"
+    },
+    {
+      "path": "scripts/demo-pacing.mjs",
+      "bytes": 4051,
+      "sha256": "0be83c7381821e029cbf589e36b9261b7c04248c437a2465f76c622f2b35e7b7"
+    },
+    {
+      "path": "scripts/demo-loop.mjs",
+      "bytes": 13083,
+      "sha256": "75f673c72bfe177ffcbcc19696f8df99a69f3ddffd2ab4f82bf06997ec04fad8"
+    },
+    {
+      "path": "scripts/demo-loop-flow.mjs",
+      "bytes": 34847,
+      "sha256": "38829fb42e19d283916e6cb0a6c6d7614c315232ace771c0f40fd9b6fb1c62b1"
+    },
+    {
+      "path": "scripts/check-demo-presenter.mjs",
+      "bytes": 10858,
+      "sha256": "f9bba5e27329502ab3b6b8a512aaf3139b2a00598cb22dc0635a02aad4952e97"
+    },
+    {
+      "path": "tests/demo-pacing.test.mjs",
+      "bytes": 4139,
+      "sha256": "efd4de855b6b6492c4c957b806fee07b8d900dcb26a650ca8fa5bf6c4df27634"
+    },
+    {
+      "path": "tests/demo-pause-clock.test.mjs",
+      "bytes": 1056,
+      "sha256": "0b940d280fe173a9408aadbe65d909e5a412d918aa321415344fd00d0c393fd2"
+    },
+    {
+      "path": "docs/AUTOMATED_DEMO.md",
+      "bytes": 12772,
+      "sha256": "b49ace8cee5bab4388cd3a4566fac673cb81205a9880aa2930a4b0f7c2363e9c"
+    }
+  ],
+  "unit": {
+    "path": ".cache/demo-presentation-unit.log",
+    "bytes": 28436,
+    "sha256": "c00741c7b1797c0c1071a7b7ad5a4d8dd1c39549b566570d20f3ff35659d22bc",
+    "tests": 136,
+    "passed": 136,
+    "failed": 0
+  },
+  "timing": {
+    "targetActiveMs": 300000,
+    "liveSteps": [
+      {
+        "title": "Open the shared recruitment cycle",
+        "actor": "admin",
+        "category": "transition",
+        "durationMs": 2083,
+        "minViewMs": 800
+      },
+      {
+        "title": "Define the course position",
+        "actor": "instructor",
+        "category": "transition",
+        "durationMs": 7291,
+        "minViewMs": 800
+      },
+      {
+        "title": "Set qualifications and publish for approval",
+        "actor": "instructor",
+        "category": "transition",
+        "durationMs": 6250,
+        "minViewMs": 800
+      },
+      {
+        "title": "Approve the course opening",
+        "actor": "admin",
+        "category": "transition",
+        "durationMs": 2083,
+        "minViewMs": 800
+      },
+      {
+        "title": "Requirement Draft Assistance",
+        "actor": "instructor",
+        "category": "ai",
+        "durationMs": 22916,
+        "minViewMs": 15000
+      },
+      {
+        "title": "Discover the opportunity",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 3125,
+        "minViewMs": 800
+      },
+      {
+        "title": "Answer the qualification questions",
+        "actor": "applicant",
+        "category": "application",
+        "durationMs": 9375,
+        "minViewMs": 7000
+      },
+      {
+        "title": "Attach a CV and submit",
+        "actor": "applicant",
+        "category": "document",
+        "durationMs": 5208,
+        "minViewMs": 4000
+      },
+      {
+        "title": "Apply to another course as well",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 2083,
+        "minViewMs": 800
+      },
+      {
+        "title": "A second instructor reviews the same applicant",
+        "actor": "peer",
+        "category": "transition",
+        "durationMs": 3125,
+        "minViewMs": 800
+      },
+      {
+        "title": "Review Alex for CS201",
+        "actor": "instructor",
+        "category": "review",
+        "durationMs": 7291,
+        "minViewMs": 6000
+      },
+      {
+        "title": "Qualification Summary Assistance",
+        "actor": "instructor",
+        "category": "ai",
+        "durationMs": 22916,
+        "minViewMs": 15000
+      },
+      {
+        "title": "Candidate Review Assistance",
+        "actor": "instructor",
+        "category": "ai",
+        "durationMs": 22916,
+        "minViewMs": 15000
+      },
+      {
+        "title": "Shortlist and issue the offer",
+        "actor": "instructor",
+        "category": "decision",
+        "durationMs": 6250,
+        "minViewMs": 3500
+      },
+      {
+        "title": "The other instructor sees availability update",
+        "actor": "peer",
+        "category": "transition",
+        "durationMs": 5208,
+        "minViewMs": 800
+      },
+      {
+        "title": "Candidate Review Assistance",
+        "actor": "peer",
+        "category": "comparison",
+        "durationMs": 27083,
+        "minViewMs": 18000
+      },
+      {
+        "title": "Accept the CS201 offer",
+        "actor": "applicant",
+        "category": "decision",
+        "durationMs": 6250,
+        "minViewMs": 3500
+      },
+      {
+        "title": "Record the appointment clearance",
+        "actor": "admin",
+        "category": "clearance",
+        "durationMs": 7291,
+        "minViewMs": 5500
+      },
+      {
+        "title": "Alex becomes the appointed course TA",
+        "actor": "applicant",
+        "category": "activation",
+        "durationMs": 11458,
+        "minViewMs": 8000
+      },
+      {
+        "title": "Start the office-hours shift",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 2083,
+        "minViewMs": 800
+      },
+      {
+        "title": "The existing TA coordinates the session",
+        "actor": "mentor",
+        "category": "document",
+        "durationMs": 5208,
+        "minViewMs": 4000
+      },
+      {
+        "title": "A student enrolls in the course",
+        "actor": "learner",
+        "category": "transition",
+        "durationMs": 2083,
+        "minViewMs": 800
+      },
+      {
+        "title": "Ask for help through the live queue",
+        "actor": "learner",
+        "category": "transition",
+        "durationMs": 4166,
+        "minViewMs": 800
+      },
+      {
+        "title": "Alex claims Sam’s request",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 5208,
+        "minViewMs": 800
+      },
+      {
+        "title": "The student sees who is helping",
+        "actor": "learner",
+        "category": "transition",
+        "durationMs": 3125,
+        "minViewMs": 800
+      },
+      {
+        "title": "Complete the help session",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 2083,
+        "minViewMs": 800
+      },
+      {
+        "title": "Give feedback on the support",
+        "actor": "learner",
+        "category": "review",
+        "durationMs": 7291,
+        "minViewMs": 6000
+      },
+      {
+        "title": "Record work beyond queue timing",
+        "actor": "applicant",
+        "category": "document",
+        "durationMs": 5208,
+        "minViewMs": 4000
+      },
+      {
+        "title": "Review course operations and feedback",
+        "actor": "instructor",
+        "category": "operations",
+        "durationMs": 9375,
+        "minViewMs": 8000
+      },
+      {
+        "title": "Close the course support queue",
+        "actor": "mentor",
+        "category": "transition",
+        "durationMs": 2083,
+        "minViewMs": 800
+      },
+      {
+        "title": "Return to the TA page before closeout",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 2083,
+        "minViewMs": 800
+      },
+      {
+        "title": "End the appointment with a reason",
+        "actor": "instructor",
+        "category": "transition",
+        "durationMs": 5208,
+        "minViewMs": 800
+      },
+      {
+        "title": "TA access disappears automatically",
+        "actor": "applicant",
+        "category": "decision",
+        "durationMs": 6250,
+        "minViewMs": 3500
+      },
+      {
+        "title": "See the evidence for the next cycle",
+        "actor": "instructor",
+        "category": "course",
+        "durationMs": 11458,
+        "minViewMs": 9000
+      },
+      {
+        "title": "Course Suggestions",
+        "actor": "instructor",
+        "category": "course-ai",
+        "durationMs": 25000,
+        "minViewMs": 18000
+      },
+      {
+        "title": "Compare department demand and support",
+        "actor": "admin",
+        "category": "department",
+        "durationMs": 15625,
+        "minViewMs": 12000
+      },
+      {
+        "title": "Archive the completed opening",
+        "actor": "instructor",
+        "category": "transition",
+        "durationMs": 2083,
+        "minViewMs": 800
+      },
+      {
+        "title": "One account, a complete lifecycle",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 4178,
+        "minViewMs": 800
+      }
+    ],
+    "deterministicSteps": [
+      {
+        "title": "Open the shared recruitment cycle",
+        "actor": "admin",
+        "category": "transition",
+        "durationMs": 3488,
+        "minViewMs": 800
+      },
+      {
+        "title": "Define the course position",
+        "actor": "instructor",
+        "category": "transition",
+        "durationMs": 12209,
+        "minViewMs": 800
+      },
+      {
+        "title": "Set qualifications and publish for approval",
+        "actor": "instructor",
+        "category": "transition",
+        "durationMs": 10465,
+        "minViewMs": 800
+      },
+      {
+        "title": "Approve the course opening",
+        "actor": "admin",
+        "category": "transition",
+        "durationMs": 3488,
+        "minViewMs": 800
+      },
+      {
+        "title": "Discover the opportunity",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 5232,
+        "minViewMs": 800
+      },
+      {
+        "title": "Answer the qualification questions",
+        "actor": "applicant",
+        "category": "application",
+        "durationMs": 15697,
+        "minViewMs": 7000
+      },
+      {
+        "title": "Attach a CV and submit",
+        "actor": "applicant",
+        "category": "document",
+        "durationMs": 8720,
+        "minViewMs": 4000
+      },
+      {
+        "title": "Apply to another course as well",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 3488,
+        "minViewMs": 800
+      },
+      {
+        "title": "A second instructor reviews the same applicant",
+        "actor": "peer",
+        "category": "transition",
+        "durationMs": 5232,
+        "minViewMs": 800
+      },
+      {
+        "title": "Review Alex for CS201",
+        "actor": "instructor",
+        "category": "review",
+        "durationMs": 12209,
+        "minViewMs": 6000
+      },
+      {
+        "title": "Shortlist and issue the offer",
+        "actor": "instructor",
+        "category": "decision",
+        "durationMs": 10465,
+        "minViewMs": 3500
+      },
+      {
+        "title": "The other instructor sees availability update",
+        "actor": "peer",
+        "category": "transition",
+        "durationMs": 8720,
+        "minViewMs": 800
+      },
+      {
+        "title": "Accept the CS201 offer",
+        "actor": "applicant",
+        "category": "decision",
+        "durationMs": 10465,
+        "minViewMs": 3500
+      },
+      {
+        "title": "Record the appointment clearance",
+        "actor": "admin",
+        "category": "clearance",
+        "durationMs": 12209,
+        "minViewMs": 5500
+      },
+      {
+        "title": "Alex becomes the appointed course TA",
+        "actor": "applicant",
+        "category": "activation",
+        "durationMs": 19186,
+        "minViewMs": 8000
+      },
+      {
+        "title": "Start the office-hours shift",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 3488,
+        "minViewMs": 800
+      },
+      {
+        "title": "The existing TA coordinates the session",
+        "actor": "mentor",
+        "category": "document",
+        "durationMs": 8720,
+        "minViewMs": 4000
+      },
+      {
+        "title": "A student enrolls in the course",
+        "actor": "learner",
+        "category": "transition",
+        "durationMs": 3488,
+        "minViewMs": 800
+      },
+      {
+        "title": "Ask for help through the live queue",
+        "actor": "learner",
+        "category": "transition",
+        "durationMs": 6976,
+        "minViewMs": 800
+      },
+      {
+        "title": "Alex claims Sam’s request",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 8720,
+        "minViewMs": 800
+      },
+      {
+        "title": "The student sees who is helping",
+        "actor": "learner",
+        "category": "transition",
+        "durationMs": 5232,
+        "minViewMs": 800
+      },
+      {
+        "title": "Complete the help session",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 3488,
+        "minViewMs": 800
+      },
+      {
+        "title": "Give feedback on the support",
+        "actor": "learner",
+        "category": "review",
+        "durationMs": 12209,
+        "minViewMs": 6000
+      },
+      {
+        "title": "Record work beyond queue timing",
+        "actor": "applicant",
+        "category": "document",
+        "durationMs": 8720,
+        "minViewMs": 4000
+      },
+      {
+        "title": "Review course operations and feedback",
+        "actor": "instructor",
+        "category": "operations",
+        "durationMs": 15697,
+        "minViewMs": 8000
+      },
+      {
+        "title": "Close the course support queue",
+        "actor": "mentor",
+        "category": "transition",
+        "durationMs": 3488,
+        "minViewMs": 800
+      },
+      {
+        "title": "Return to the TA page before closeout",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 3488,
+        "minViewMs": 800
+      },
+      {
+        "title": "End the appointment with a reason",
+        "actor": "instructor",
+        "category": "transition",
+        "durationMs": 8720,
+        "minViewMs": 800
+      },
+      {
+        "title": "TA access disappears automatically",
+        "actor": "applicant",
+        "category": "decision",
+        "durationMs": 10465,
+        "minViewMs": 3500
+      },
+      {
+        "title": "See the evidence for the next cycle",
+        "actor": "instructor",
+        "category": "course",
+        "durationMs": 19186,
+        "minViewMs": 9000
+      },
+      {
+        "title": "Compare department demand and support",
+        "actor": "admin",
+        "category": "department",
+        "durationMs": 26162,
+        "minViewMs": 12000
+      },
+      {
+        "title": "Archive the completed opening",
+        "actor": "instructor",
+        "category": "transition",
+        "durationMs": 3488,
+        "minViewMs": 800
+      },
+      {
+        "title": "One account, a complete lifecycle",
+        "actor": "applicant",
+        "category": "transition",
+        "durationMs": 6992,
+        "minViewMs": 800
+      }
+    ],
+    "normalFiveMinuteCycleMeasured": false,
+    "boundary": "The normal plan totals five active minutes. Short actual browser checks validate timing floors and pause exclusion; provider latency and preserved reading floors may extend the cycle. No final-page padding is used."
+  },
+  "controls": [
+    {
+      "input": {
+        "path": ".cache/demo-presenter-race-headless-proof.json",
+        "bytes": 5703,
+        "sha256": "c1111f63c5cfb523fafd12b139d12a877f3185a6383bd752b8d68730f1ad3e7d"
+      },
+      "proof": {
+        "scope": "Isolated local browser presenter controls only; no application database, saved Key, or model call.",
+        "startedAt": "2026-11-08T03:29:55.198Z",
+        "checks": [
+          "Independent browser identities",
+          "Pause blocks next action; same button in another window resumes; active clock excludes paused time",
+          "Space toggles; typed spaces and editing arrows do not change playback; modified arrows are ignored",
+          "Arrows pause and review only visited pages in independent actor tabs; prior Student and current TA roles preserved; latest Next does not run a business action",
+          "Resume returns to intact automation page without replay and preserves the remaining dwell interval",
+          "Rapid even pause toggles remain synchronized across identities",
+          "A slow result retains its minimum reading interval instead of consuming the planned view time",
+          "Concurrent previous-next-resume commands serialize without stale review focus, orphan tabs or action replay",
+          "Presentation control overlay has zero configured Axe violations"
+        ],
+        "steps": [
+          {
+            "actor": "student",
+            "title": "First completed page",
+            "detail": "",
+            "index": 1,
+            "totalSteps": 5,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:61201/visited-student",
+            "foreground": {
+              "method": "Playwright",
+              "headless": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 18.575500000000147,
+            "viewHoldMs": 129.4176,
+            "activeDurationMs": 154.6168
+          },
+          {
+            "actor": "teacher",
+            "title": "Second completed page",
+            "detail": "",
+            "index": 2,
+            "totalSteps": 5,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:61201/visited-teacher",
+            "foreground": {
+              "method": "Playwright",
+              "headless": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 9.35590000000002,
+            "viewHoldMs": 188.92540000000008,
+            "activeDurationMs": 213.74610000000018
+          },
+          {
+            "actor": "student",
+            "title": "Current completed TA page",
+            "detail": "",
+            "index": 3,
+            "totalSteps": 5,
+            "cycle": 1,
+            "role": "TA",
+            "url": "http://127.0.0.1:61201/visited-ta",
+            "foreground": {
+              "method": "Playwright",
+              "headless": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 10.06880000000001,
+            "viewHoldMs": 688.0073000000002,
+            "activeDurationMs": 707.4401000000001
+          },
+          {
+            "actor": "teacher",
+            "title": "Slow response still receives readable result time",
+            "detail": "",
+            "index": 4,
+            "totalSteps": 5,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:61201/visited-teacher",
+            "foreground": {
+              "method": "Playwright",
+              "headless": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 223.78520000000026,
+            "viewHoldMs": 130,
+            "activeDurationMs": 362.9154000000003
+          }
+        ],
+        "businessRequests": [
+          {
+            "method": "POST",
+            "identity": "demo_identity=presenter-student@example.com"
+          },
+          {
+            "method": "POST",
+            "identity": "demo_identity=presenter-teacher@example.com"
+          },
+          {
+            "method": "POST",
+            "identity": "demo_identity=presenter-student@example.com"
+          }
+        ],
+        "headless": true,
+        "foregroundChecks": [
+          {
+            "actor": "student",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:55.925Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:56.077Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:56.320Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:56.723Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:56.826Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:56.938Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:57.038Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:57.241Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:57.851Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:58.286Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:58.353Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:58.355Z",
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          }
+        ],
+        "status": "passed",
+        "cleanup": "complete",
+        "finishedAt": "2026-11-08T03:29:58.755Z"
+      }
+    },
+    {
+      "input": {
+        "path": ".cache/demo-presenter-race-headed-proof.json",
+        "bytes": 6067,
+        "sha256": "930ec18887e0e852001d435d5efdd65549a7317e630165bd8a5f25471e66022c"
+      },
+      "proof": {
+        "scope": "Isolated local browser presenter controls only; no application database, saved Key, or model call.",
+        "startedAt": "2026-11-08T03:29:55.302Z",
+        "checks": [
+          "Independent browser identities",
+          "Pause blocks next action; same button in another window resumes; active clock excludes paused time",
+          "Space toggles; typed spaces and editing arrows do not change playback; modified arrows are ignored",
+          "Arrows pause and review only visited pages in independent actor tabs; prior Student and current TA roles preserved; latest Next does not run a business action",
+          "Resume returns to intact automation page without replay and preserves the remaining dwell interval",
+          "Rapid even pause toggles remain synchronized across identities",
+          "A slow result retains its minimum reading interval instead of consuming the planned view time",
+          "Concurrent previous-next-resume commands serialize without stale review focus, orphan tabs or action replay",
+          "Presentation control overlay has zero configured Axe violations"
+        ],
+        "steps": [
+          {
+            "actor": "student",
+            "title": "First completed page",
+            "detail": "",
+            "index": 1,
+            "totalSteps": 5,
+            "cycle": 1,
+            "role": "Student",
+            "url": "http://127.0.0.1:61203/visited-student",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 356.9528999999999,
+            "viewHoldMs": 40,
+            "activeDurationMs": 405.2275999999998
+          },
+          {
+            "actor": "teacher",
+            "title": "Second completed page",
+            "detail": "",
+            "index": 2,
+            "totalSteps": 5,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:61203/visited-teacher",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 30.950599999999667,
+            "viewHoldMs": 166.12210000000005,
+            "activeDurationMs": 200.18939999999975
+          },
+          {
+            "actor": "student",
+            "title": "Current completed TA page",
+            "detail": "",
+            "index": 3,
+            "totalSteps": 5,
+            "cycle": 1,
+            "role": "TA",
+            "url": "http://127.0.0.1:61203/visited-ta",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 28.53829999999971,
+            "viewHoldMs": 669.5996,
+            "activeDurationMs": 708.6865000000003
+          },
+          {
+            "actor": "teacher",
+            "title": "Slow response still receives readable result time",
+            "detail": "",
+            "index": 4,
+            "totalSteps": 5,
+            "cycle": 1,
+            "role": "Instructor",
+            "url": "http://127.0.0.1:61203/visited-teacher",
+            "foreground": {
+              "method": "Windows foreground window handle",
+              "maximized": true,
+              "confirmed": true
+            },
+            "actionDurationMs": 236.61829999999964,
+            "viewHoldMs": 130,
+            "activeDurationMs": 376.8390999999997
+          }
+        ],
+        "businessRequests": [
+          {
+            "method": "POST",
+            "identity": "demo_identity=presenter-student@example.com"
+          },
+          {
+            "method": "POST",
+            "identity": "demo_identity=presenter-teacher@example.com"
+          },
+          {
+            "method": "POST",
+            "identity": "demo_identity=presenter-student@example.com"
+          }
+        ],
+        "headless": false,
+        "foregroundChecks": [
+          {
+            "actor": "student",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:56.604Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:56.679Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:56.910Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:57.557Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:57.862Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:58.161Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:58.472Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:58.632Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": false,
+            "checkedAt": "2026-11-08T03:29:59.241Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "student",
+            "review": true,
+            "checkedAt": "2026-11-08T03:29:59.907Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": true,
+            "checkedAt": "2026-11-08T03:30:00.214Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          },
+          {
+            "actor": "teacher",
+            "review": false,
+            "checkedAt": "2026-11-08T03:30:00.232Z",
+            "method": "Windows foreground window handle",
+            "maximized": true,
+            "confirmed": true
+          }
+        ],
+        "status": "passed",
+        "cleanup": "complete",
+        "finishedAt": "2026-11-08T03:30:00.794Z"
+      }
+    }
+  ],
+  "lifecycle": {
+    "input": {
+      "path": ".cache/demo-presentation-flow-proof.json",
+      "bytes": 59968,
+      "sha256": "170ff8527d59c1511fc39ec84ec6002670d9fd6367ad5a2d68056743df974d0c"
+    },
+    "proof": {
+      "startedAt": "2026-11-08T03:25:32.175Z",
+      "synthetic": true,
+      "headless": true,
+      "pace": "fast",
+      "requestedCycles": 1,
+      "providerCalls": 0,
+      "provider": "disabled",
+      "completedProviderResults": 0,
+      "totalSteps": 33,
+      "pacing": {
+        "targetActiveMs": 0,
+        "steps": [
+          {
+            "title": "Open the shared recruitment cycle",
+            "actor": "admin",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Define the course position",
+            "actor": "instructor",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Set qualifications and publish for approval",
+            "actor": "instructor",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Approve the course opening",
+            "actor": "admin",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Discover the opportunity",
+            "actor": "applicant",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Answer the qualification questions",
+            "actor": "applicant",
+            "category": "application",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Attach a CV and submit",
+            "actor": "applicant",
+            "category": "document",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Apply to another course as well",
+            "actor": "applicant",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "A second instructor reviews the same applicant",
+            "actor": "peer",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Review Alex for CS201",
+            "actor": "instructor",
+            "category": "review",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Shortlist and issue the offer",
+            "actor": "instructor",
+            "category": "decision",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "The other instructor sees availability update",
+            "actor": "peer",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Accept the CS201 offer",
+            "actor": "applicant",
+            "category": "decision",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Record the appointment clearance",
+            "actor": "admin",
+            "category": "clearance",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Alex becomes the appointed course TA",
+            "actor": "applicant",
+            "category": "activation",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Start the office-hours shift",
+            "actor": "applicant",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "The existing TA coordinates the session",
+            "actor": "mentor",
+            "category": "document",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "A student enrolls in the course",
+            "actor": "learner",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Ask for help through the live queue",
+            "actor": "learner",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Alex claims Sam’s request",
+            "actor": "applicant",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "The student sees who is helping",
+            "actor": "learner",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Complete the help session",
+            "actor": "applicant",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Give feedback on the support",
+            "actor": "learner",
+            "category": "review",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Record work beyond queue timing",
+            "actor": "applicant",
+            "category": "document",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Review course operations and feedback",
+            "actor": "instructor",
+            "category": "operations",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Close the course support queue",
+            "actor": "mentor",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Return to the TA page before closeout",
+            "actor": "applicant",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "End the appointment with a reason",
+            "actor": "instructor",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "TA access disappears automatically",
+            "actor": "applicant",
+            "category": "decision",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "See the evidence for the next cycle",
+            "actor": "instructor",
+            "category": "course",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Compare department demand and support",
+            "actor": "admin",
+            "category": "department",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "Archive the completed opening",
+            "actor": "instructor",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          },
+          {
+            "title": "One account, a complete lifecycle",
+            "actor": "applicant",
+            "category": "transition",
+            "holdMs": 150,
+            "minViewMs": 0
+          }
+        ],
+        "boundary": "Paused time is excluded. Slow actions may extend a cycle to preserve result-reading time; no remaining time is parked on the final page."
+      },
+      "providerUsageBoundary": "Shared protected request reservations, not billed usage; persistent daily limits survive database restoration and relaunches.",
+      "providerKeyLoaded": false,
+      "completedCycles": 1,
+      "cycles": [
+        {
+          "courseId": "cs201",
+          "cycle": 1,
+          "startedAt": "2026-11-08T03:26:26.173Z",
+          "ai": [],
+          "review": {
+            "reportedHours": 0.5,
+            "sessions": 28
+          },
+          "department": {
+            "courses": 10,
+            "personalFeedbackCount": 1,
+            "personalFeedbackAverage": 5,
+            "reviewers": 1
+          },
+          "positionId": "9b36c9ed-d7d1-40d6-b255-2323c2f96bab",
+          "applicationId": "21922ff8-b6e1-4696-b2c6-9533896db09f",
+          "peerApplicationId": "2d7f0530-20e6-4e0c-8f2c-248adf9df9e5",
+          "appointmentId": "3a373cc9-5c1a-44da-a68e-cc0c670218ea",
+          "steps": [
+            {
+              "actor": "admin",
+              "role": "Administrator",
+              "title": "Open the shared recruitment cycle",
+              "status": "passed",
+              "durationMs": 445
+            },
+            {
+              "actor": "instructor",
+              "role": "Instructor",
+              "title": "Define the course position",
+              "status": "passed",
+              "durationMs": 660
+            },
+            {
+              "actor": "instructor",
+              "role": "Instructor",
+              "title": "Set qualifications and publish for approval",
+              "status": "passed",
+              "durationMs": 538
+            },
+            {
+              "actor": "admin",
+              "role": "Administrator",
+              "title": "Approve the course opening",
+              "status": "passed",
+              "durationMs": 4166
+            },
+            {
+              "actor": "applicant",
+              "role": "Student",
+              "title": "Discover the opportunity",
+              "status": "passed",
+              "durationMs": 662
+            },
+            {
+              "actor": "applicant",
+              "role": "Student",
+              "title": "Answer the qualification questions",
+              "status": "passed",
+              "durationMs": 250
+            },
+            {
+              "actor": "applicant",
+              "role": "Student",
+              "title": "Attach a CV and submit",
+              "status": "passed",
+              "durationMs": 892
+            },
+            {
+              "actor": "applicant",
+              "role": "Student",
+              "title": "Apply to another course as well",
+              "status": "passed",
+              "durationMs": 1248
+            },
+            {
+              "actor": "peer",
+              "role": "Instructor",
+              "title": "A second instructor reviews the same applicant",
+              "status": "passed",
+              "durationMs": 463
+            },
+            {
+              "actor": "instructor",
+              "role": "Instructor",
+              "title": "Review Alex for CS201",
+              "status": "passed",
+              "durationMs": 3204
+            },
+            {
+              "actor": "instructor",
+              "role": "Instructor",
+              "title": "Shortlist and issue the offer",
+              "status": "passed",
+              "durationMs": 583
+            },
+            {
+              "actor": "peer",
+              "role": "Instructor",
+              "title": "The other instructor sees availability update",
+              "status": "passed",
+              "durationMs": 2040
+            },
+            {
+              "actor": "applicant",
+              "role": "Student",
+              "title": "Accept the CS201 offer",
+              "status": "passed",
+              "durationMs": 468
+            },
+            {
+              "actor": "admin",
+              "role": "Administrator",
+              "title": "Record the appointment clearance",
+              "status": "passed",
+              "durationMs": 5219
+            },
+            {
+              "actor": "applicant",
+              "role": "Student → TA",
+              "title": "Alex becomes the appointed course TA",
+              "status": "passed",
+              "durationMs": 5268
+            },
+            {
+              "actor": "applicant",
+              "role": "TA",
+              "title": "Start the office-hours shift",
+              "status": "passed",
+              "durationMs": 297
+            },
+            {
+              "actor": "mentor",
+              "role": "TA",
+              "title": "The existing TA coordinates the session",
+              "status": "passed",
+              "durationMs": 341
+            },
+            {
+              "actor": "learner",
+              "role": "Student",
+              "title": "A student enrolls in the course",
+              "status": "passed",
+              "durationMs": 416
+            },
+            {
+              "actor": "learner",
+              "role": "Student",
+              "title": "Ask for help through the live queue",
+              "status": "passed",
+              "durationMs": 369
+            },
+            {
+              "actor": "applicant",
+              "role": "TA",
+              "title": "Alex claims Sam’s request",
+              "status": "passed",
+              "durationMs": 2153
+            },
+            {
+              "actor": "learner",
+              "role": "Student",
+              "title": "The student sees who is helping",
+              "status": "passed",
+              "durationMs": 2043
+            },
+            {
+              "actor": "applicant",
+              "role": "TA",
+              "title": "Complete the help session",
+              "status": "passed",
+              "durationMs": 5297
+            },
+            {
+              "actor": "learner",
+              "role": "Student",
+              "title": "Give feedback on the support",
+              "status": "passed",
+              "durationMs": 645
+            },
+            {
+              "actor": "applicant",
+              "role": "TA",
+              "title": "Record work beyond queue timing",
+              "status": "passed",
+              "durationMs": 463
+            },
+            {
+              "actor": "instructor",
+              "role": "Instructor",
+              "title": "Review course operations and feedback",
+              "status": "passed",
+              "durationMs": 382
+            },
+            {
+              "actor": "mentor",
+              "role": "TA",
+              "title": "Close the course support queue",
+              "status": "passed",
+              "durationMs": 309
+            },
+            {
+              "actor": "applicant",
+              "role": "TA",
+              "title": "Return to the TA page before closeout",
+              "status": "passed",
+              "durationMs": 231
+            },
+            {
+              "actor": "instructor",
+              "role": "Instructor",
+              "title": "End the appointment with a reason",
+              "status": "passed",
+              "durationMs": 416
+            },
+            {
+              "actor": "applicant",
+              "role": "TA → Student",
+              "title": "TA access disappears automatically",
+              "status": "passed",
+              "durationMs": 3074
+            },
+            {
+              "actor": "instructor",
+              "role": "Instructor",
+              "title": "See the evidence for the next cycle",
+              "status": "passed",
+              "durationMs": 337
+            },
+            {
+              "actor": "admin",
+              "role": "Administrator",
+              "title": "Compare department demand and support",
+              "status": "passed",
+              "durationMs": 387
+            },
+            {
+              "actor": "instructor",
+              "role": "Instructor",
+              "title": "Archive the completed opening",
+              "status": "passed",
+              "durationMs": 419
+            },
+            {
+              "actor": "applicant",
+              "role": "Student",
+              "title": "One account, a complete lifecycle",
+              "status": "passed",
+              "durationMs": 255
+            }
+          ],
+          "durationMs": 43951,
+          "activeDurationMs": 43950.419200000004,
+          "pausedDurationMs": 0.5767000000050757,
+          "finishedAt": "2026-11-08T03:27:10.124Z",
+          "providerCalls": 0,
+          "completedProviderResults": 0,
+          "aiUsage": {
+            "before": {
+              "usageDatabase": null,
+              "reservedRequests": 0,
+              "reservedTokens": 0,
+              "daily": []
+            },
+            "after": {
+              "usageDatabase": null,
+              "reservedRequests": 0,
+              "reservedTokens": 0,
+              "daily": []
+            },
+            "reservedRequests": 0,
+            "boundary": "Shared protected request reservations; may include retries or another concurrent presentation and are not billed-token measurements."
+          },
+          "status": "passed"
+        }
+      ],
+      "resets": [],
+      "stage": [
+        {
+          "actor": "admin",
+          "title": "Pause verification",
+          "detail": "The next action waits until Resume.",
+          "index": 0,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Administrator",
+          "url": "http://127.0.0.1:53335/admin/staffing",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 4.486499999999069,
+          "viewHoldMs": 150,
+          "activeDurationMs": 170.66700000000128
+        },
+        {
+          "actor": "admin",
+          "title": "Open the shared recruitment cycle",
+          "detail": "One administrator sets the current semester and recruitment window for everyone.",
+          "index": 1,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Administrator",
+          "url": "http://127.0.0.1:53335/admin/staffing",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 291.01630000000296,
+          "viewHoldMs": 150,
+          "activeDurationMs": 443.9858000000022
+        },
+        {
+          "actor": "instructor",
+          "title": "Define the course position",
+          "detail": "CS201 needs a TA for attendance, labs, grading and office hours.",
+          "index": 2,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/staffing/new",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 497.6102000000028,
+          "viewHoldMs": 150,
+          "activeDurationMs": 659.0958000000028
+        },
+        {
+          "actor": "instructor",
+          "title": "Set qualifications and publish for approval",
+          "detail": "The instructor defines the evidence applicants must supply; publication requires administrator approval.",
+          "index": 3,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/staffing/9b36c9ed-d7d1-40d6-b255-2323c2f96bab",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 381.6209000000017,
+          "viewHoldMs": 150,
+          "activeDurationMs": 536.9372000000003
+        },
+        {
+          "actor": "admin",
+          "title": "Approve the course opening",
+          "detail": "The administrator confirms the posting before students can apply.",
+          "index": 4,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Administrator",
+          "url": "http://127.0.0.1:53335/admin/staffing",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 4009.0383999999976,
+          "viewHoldMs": 150,
+          "activeDurationMs": 4163.492299999998
+        },
+        {
+          "actor": "applicant",
+          "title": "Discover the opportunity",
+          "detail": "Alex begins as an ordinary student, with no TA role or existing offer.",
+          "index": 5,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/applications/21922ff8-b6e1-4696-b2c6-9533896db09f",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 505.4805999999953,
+          "viewHoldMs": 150,
+          "activeDurationMs": 660.7285999999949
+        },
+        {
+          "actor": "applicant",
+          "title": "Answer the qualification questions",
+          "detail": "Personal background, availability and technical answers remain private to the authorized reviewers.",
+          "index": 6,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/applications/21922ff8-b6e1-4696-b2c6-9533896db09f",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 82.98109999999724,
+          "viewHoldMs": 150,
+          "activeDurationMs": 249.78609999999753
+        },
+        {
+          "actor": "applicant",
+          "title": "Attach a CV and submit",
+          "detail": "The submitted application records a stable version of the answers and private attachment.",
+          "index": 7,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/applications/21922ff8-b6e1-4696-b2c6-9533896db09f",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 721.9058999999979,
+          "viewHoldMs": 150,
+          "activeDurationMs": 890.2436999999991
+        },
+        {
+          "actor": "applicant",
+          "title": "Apply to another course as well",
+          "detail": "Alex also applies to CS101, so the next selection will demonstrate coordination between two instructors.",
+          "index": 8,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/applications/2d7f0530-20e6-4e0c-8f2c-248adf9df9e5",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 1093.3041000000012,
+          "viewHoldMs": 150,
+          "activeDurationMs": 1246.9185999999972
+        },
+        {
+          "actor": "peer",
+          "title": "A second instructor reviews the same applicant",
+          "detail": "Before an offer, Alex is available to both courses. Neither instructor receives automatic hiring authority.",
+          "index": 9,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/staffing/bbff2c26-cb68-48db-84cf-1f48a11e45b3",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 294.97810000000027,
+          "viewHoldMs": 150,
+          "activeDurationMs": 462.2166999999972
+        },
+        {
+          "actor": "instructor",
+          "title": "Review Alex for CS201",
+          "detail": "The faculty reviewer can inspect the submitted profile, answers and private CV.",
+          "index": 10,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/applications/21922ff8-b6e1-4696-b2c6-9533896db09f",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 3048.1965999999957,
+          "viewHoldMs": 150,
+          "activeDurationMs": 3202.707699999999
+        },
+        {
+          "actor": "instructor",
+          "title": "Shortlist and issue the offer",
+          "detail": "The faculty decision reserves the candidate and position together.",
+          "index": 11,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/staffing/9b36c9ed-d7d1-40d6-b255-2323c2f96bab",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 421.9866000000038,
+          "viewHoldMs": 150,
+          "activeDurationMs": 581.9277000000002
+        },
+        {
+          "actor": "peer",
+          "title": "The other instructor sees availability update",
+          "detail": "Alex now has an overlapping offer. CS101 cannot select the same applicant again.",
+          "index": 12,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/staffing/bbff2c26-cb68-48db-84cf-1f48a11e45b3",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 1886.5699999999924,
+          "viewHoldMs": 150,
+          "activeDurationMs": 2039.3169999999955
+        },
+        {
+          "actor": "applicant",
+          "title": "Accept the CS201 offer",
+          "detail": "The candidate chooses. Acceptance alone does not grant TA course access.",
+          "index": 13,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/applications/21922ff8-b6e1-4696-b2c6-9533896db09f",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 303.4814000000042,
+          "viewHoldMs": 150,
+          "activeDurationMs": 467.5656000000017
+        },
+        {
+          "actor": "admin",
+          "title": "Record the appointment clearance",
+          "detail": "An administrator confirms clearance; no manual TA role grant is needed.",
+          "index": 14,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Administrator",
+          "url": "http://127.0.0.1:53335/admin/staffing",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 5062.968200000003,
+          "viewHoldMs": 150,
+          "activeDurationMs": 5217.572899999999
+        },
+        {
+          "actor": "applicant",
+          "title": "Alex becomes the appointed course TA",
+          "detail": "The same account updates silently from pending clearance to Active and gains the CS201 queue link.",
+          "index": 15,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student → TA",
+          "url": "http://127.0.0.1:53335/courses/cs201/ta",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 5113.549499999994,
+          "viewHoldMs": 150,
+          "activeDurationMs": 5266.951799999995
+        },
+        {
+          "actor": "applicant",
+          "title": "Start the office-hours shift",
+          "detail": "Alex is on duty for CS201, with appointment-derived authority for this course only.",
+          "index": 16,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "TA",
+          "url": "http://127.0.0.1:53335/courses/cs201/ta",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 139.38150000000314,
+          "viewHoldMs": 150,
+          "activeDurationMs": 295.2941000000137
+        },
+        {
+          "actor": "mentor",
+          "title": "The existing TA coordinates the session",
+          "detail": "A second TA sees the same live course and posts an announcement for students.",
+          "index": 17,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "TA",
+          "url": "http://127.0.0.1:53335/courses/cs201/ta",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 171.9444999999978,
+          "viewHoldMs": 150,
+          "activeDurationMs": 339.8902999999991
+        },
+        {
+          "actor": "learner",
+          "title": "A student enrolls in the course",
+          "detail": "Sam has a separate student session. The course requires enrollment before joining the queue.",
+          "index": 18,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/courses/cs201/student",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 261.27820000000065,
+          "viewHoldMs": 150,
+          "activeDurationMs": 415.3552000000054
+        },
+        {
+          "actor": "learner",
+          "title": "Ask for help through the live queue",
+          "detail": "Sam supplies a location and a concrete debugging question.",
+          "index": 19,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/courses/cs201/student",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 200.7676000000065,
+          "viewHoldMs": 150,
+          "activeDurationMs": 368.09550000001036
+        },
+        {
+          "actor": "applicant",
+          "title": "Alex claims Sam’s request",
+          "detail": "The queue assigns one helper to this request; the student sees the same claim automatically.",
+          "index": 20,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "TA",
+          "url": "http://127.0.0.1:53335/courses/cs201/ta",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 1986.0842999999877,
+          "viewHoldMs": 150,
+          "activeDurationMs": 2151.3350999999966
+        },
+        {
+          "actor": "learner",
+          "title": "The student sees who is helping",
+          "detail": "Sam’s queue state updates without refreshing the page.",
+          "index": 21,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/courses/cs201/student",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 1888.5130000000063,
+          "viewHoldMs": 150,
+          "activeDurationMs": 2042.1659000000072
+        },
+        {
+          "actor": "applicant",
+          "title": "Complete the help session",
+          "detail": "The completed session enters the course history. This is one synthetic help interaction, not a simulated semester.",
+          "index": 22,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "TA",
+          "url": "http://127.0.0.1:53335/courses/cs201/ta",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 5139.995800000004,
+          "viewHoldMs": 150,
+          "activeDurationMs": 5295.8966999999975
+        },
+        {
+          "actor": "learner",
+          "title": "Give feedback on the support",
+          "detail": "Sam rates Alex's recorded help session. Personal feedback stays separate from general course feedback.",
+          "index": 23,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/courses/cs201/student",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 479.6993999999977,
+          "viewHoldMs": 150,
+          "activeDurationMs": 643.4625999999989
+        },
+        {
+          "actor": "applicant",
+          "title": "Record work beyond queue timing",
+          "detail": "Alex reports office-hours work separately; queue duration does not represent all teaching work.",
+          "index": 24,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "TA",
+          "url": "http://127.0.0.1:53335/applications/21922ff8-b6e1-4696-b2c6-9533896db09f",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 309.2121999999945,
+          "viewHoldMs": 150,
+          "activeDurationMs": 461.94689999999537
+        },
+        {
+          "actor": "instructor",
+          "title": "Review course operations and feedback",
+          "detail": "The instructor sees the completed session and Sam’s feedback in the course management view.",
+          "index": 25,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/courses/cs201/admin",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 220.89169999999285,
+          "viewHoldMs": 150,
+          "activeDurationMs": 381.15699999999197
+        },
+        {
+          "actor": "mentor",
+          "title": "Close the course support queue",
+          "detail": "Course closeout clears remaining requests and duty. This is a queue closure, not calendar semester expiry.",
+          "index": 26,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "TA",
+          "url": "http://127.0.0.1:53335/courses/cs201/ta",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 154.0402999999933,
+          "viewHoldMs": 150,
+          "activeDurationMs": 307.4921999999933
+        },
+        {
+          "actor": "applicant",
+          "title": "Return to the TA page before closeout",
+          "detail": "Keep the appointed TA’s page open so automatic access removal will be visible.",
+          "index": 27,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "TA",
+          "url": "http://127.0.0.1:53335/courses/cs201/ta",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 74.52149999998801,
+          "viewHoldMs": 150,
+          "activeDurationMs": 229.2390999999916
+        },
+        {
+          "actor": "instructor",
+          "title": "End the appointment with a reason",
+          "detail": "The faculty member closes Alex’s appointment and its dated course authority ends.",
+          "index": 28,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/staffing/9b36c9ed-d7d1-40d6-b255-2323c2f96bab",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 260.3640000000014,
+          "viewHoldMs": 150,
+          "activeDurationMs": 414.9386999999988
+        },
+        {
+          "actor": "applicant",
+          "title": "TA access disappears automatically",
+          "detail": "The same person returns to the student course view; no administrator manually removes a role.",
+          "index": 29,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "TA → Student",
+          "url": "http://127.0.0.1:53335/courses/cs201/student",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 2919.8068000000058,
+          "viewHoldMs": 150,
+          "activeDurationMs": 3073.4043999999994
+        },
+        {
+          "actor": "instructor",
+          "title": "See the evidence for the next cycle",
+          "detail": "Course activity, reported work and staffing capacity inform the next support plan.",
+          "index": 30,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/courses/cs201/review",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 170.6073999999935,
+          "viewHoldMs": 150,
+          "activeDurationMs": 335.9744999999966
+        },
+        {
+          "actor": "admin",
+          "title": "Compare department demand and support",
+          "detail": "The administrator compares courses, busy hours and attributed feedback, with sample sizes and teaching workload visible.",
+          "index": 31,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Administrator",
+          "url": "http://127.0.0.1:53335/insights",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 223.62709999999788,
+          "viewHoldMs": 150,
+          "activeDurationMs": 384.88300000000163
+        },
+        {
+          "actor": "instructor",
+          "title": "Archive the completed opening",
+          "detail": "The instructor archives this position after the appointment has ended.",
+          "index": 32,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Instructor",
+          "url": "http://127.0.0.1:53335/staffing/9b36c9ed-d7d1-40d6-b255-2323c2f96bab",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 262.28169999999227,
+          "viewHoldMs": 150,
+          "activeDurationMs": 416.0578999999998
+        },
+        {
+          "actor": "applicant",
+          "title": "One account, a complete lifecycle",
+          "detail": "Alex retains the application and appointment history, with no remaining TA course authority. The next loop restores only this isolated demo.",
+          "index": 33,
+          "totalSteps": 33,
+          "cycle": 1,
+          "role": "Student",
+          "url": "http://127.0.0.1:53335/applications/21922ff8-b6e1-4696-b2c6-9533896db09f",
+          "foreground": {
+            "method": "Playwright",
+            "headless": true,
+            "confirmed": true
+          },
+          "actionDurationMs": 95.33600000001024,
+          "viewHoldMs": 150,
+          "activeDurationMs": 253.96410000001197
+        }
+      ],
+      "accessibility": [
+        {
+          "cycle": 1,
+          "actor": "applicant",
+          "tags": [
+            "wcag2a",
+            "wcag2aa",
+            "wcag21aa"
+          ],
+          "violations": []
+        },
+        {
+          "cycle": 1,
+          "actor": "admin",
+          "tags": [
+            "wcag2a",
+            "wcag2aa",
+            "wcag21aa"
+          ],
+          "violations": []
+        },
+        {
+          "cycle": 1,
+          "actor": "instructor",
+          "tags": [
+            "wcag2a",
+            "wcag2aa",
+            "wcag21aa"
+          ],
+          "violations": []
+        }
+      ],
+      "runtimeErrors": [],
+      "source": {
+        "scripts/demo-loop.mjs": "75f673c72bfe177ffcbcc19696f8df99a69f3ddffd2ab4f82bf06997ec04fad8",
+        "scripts/demo-loop-flow.mjs": "38829fb42e19d283916e6cb0a6c6d7614c315232ace771c0f40fd9b6fb1c62b1",
+        "scripts/demo-loop-service.mjs": "07c829fda0c1025f86fa4291973e0e5b86de10ac9bdee6bee5f75132a3508415",
+        "scripts/demo-pacing.mjs": "0be83c7381821e029cbf589e36b9261b7c04248c437a2465f76c622f2b35e7b7",
+        "scripts/demo-stage.mjs": "6c023c3c420203915f21efac36b6c29015163681029c646cf6d1fa238cb04f4a",
+        "scripts/demo-foreground.ps1": "894e6b62a85593396c615c9ae348c384112eebbaa7c58e85d5448c0c01dd4424"
+      },
+      "origin": "http://127.0.0.1:53335",
+      "database": "campusworks_showcase_loop_b93f69480821bd1cc9767295",
+      "ai": {
+        "enabled": false,
+        "provider": "disabled",
+        "model": null,
+        "keyLoaded": false,
+        "usageDatabase": null
+      },
+      "aiUsageBefore": {
+        "usageDatabase": null,
+        "reservedRequests": 0,
+        "reservedTokens": 0,
+        "daily": []
+      },
+      "pauseResume": "passed",
+      "aiUsageAfter": {
+        "usageDatabase": null,
+        "reservedRequests": 0,
+        "reservedTokens": 0,
+        "daily": []
+      },
+      "status": "passed",
+      "foregroundCheckCount": 126,
+      "foregroundChecks": [
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.001Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.177Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.305Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.315Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.623Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.737Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.768Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.881Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.970Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.976Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.982Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:26.989Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.033Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.065Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.098Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.104Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.110Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.282Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.283Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.291Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.333Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.340Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.476Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.820Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:27.821Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:31.986Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.103Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.137Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.226Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.267Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.647Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.648Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.660Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.670Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.677Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.683Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.689Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.694Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.701Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.709Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.718Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.898Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:32.898Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:33.049Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:33.057Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:33.217Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:33.789Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:33.902Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.047Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.059Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.066Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.072Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.078Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.083Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.089Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.094Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.103Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.110Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.117Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.123Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.131Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.166Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.307Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.317Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:34.462Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "peer",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:35.037Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "peer",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:35.174Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:35.500Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:38.390Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:38.704Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:38.806Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:38.961Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "peer",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:39.287Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:41.327Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:41.435Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:41.796Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:41.796Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:46.709Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:47.015Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:51.985Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:52.283Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:52.285Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "mentor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:52.580Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "mentor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:52.580Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "mentor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:52.591Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:52.920Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:53.036Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:53.336Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:53.337Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:53.374Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:53.382Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:53.388Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:53.706Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:53.707Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:55.858Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:26:57.901Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:02.901Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.199Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.304Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.337Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.504Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.512Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.518Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.524Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.530Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "learner",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.536Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.844Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.968Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.979Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.986Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:03.993Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:04.307Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:04.517Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "mentor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:04.690Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "mentor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:04.690Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:04.998Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:05.228Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:05.336Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:05.346Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:05.644Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:08.719Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:09.056Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "admin",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:09.272Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:09.442Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "instructor",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:09.551Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        },
+        {
+          "actor": "applicant",
+          "review": false,
+          "checkedAt": "2026-11-08T03:27:09.862Z",
+          "method": "Playwright",
+          "headless": true,
+          "confirmed": true
+        }
+      ],
+      "stageCleanupComplete": true,
+      "cleanupReceipt": {
+        "complete": true,
+        "applicationStopped": true,
+        "databaseDropped": true,
+        "reusedMongo": false,
+        "ownedMongoStopped": true
+      },
+      "cleanup": "complete",
+      "finishedAt": "2026-11-08T03:27:13.750Z"
+    }
+  },
+  "provider": {
+    "realCallsForTheseChecks": 0,
+    "savedKeyLoadedForTheseChecks": false,
+    "boundary": "Presentation fixtures and the deterministic lifecycle do not establish a new real-provider run. The live launcher still uses fresh OpenAI responses under the existing daily limits."
+  },
+  "boundaries": [
+    "Arrows inspect already visited URLs using current authorized data, not historical snapshots or a database rollback. Review tabs block API writes and do not replay business actions.",
+    "Resume restores the intact automation page before releasing the paused clock. Submitted requests and ordinary background updates may finish during pause.",
+    "The earlier combined 208-case application evidence and earlier real-provider lifecycle retain their own dates and exact script hashes; they have not been described as rerun by this presentation change.",
+    "Finite browser checks do not prove every race, universal keyboard/device behavior or production operation."
+  ]
+}
