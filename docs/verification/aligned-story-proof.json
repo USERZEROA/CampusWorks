@@ -1,0 +1,123 @@
+{
+  "synthetic": true,
+  "scenario": "Single protagonist Avery Chen: existing CS201 offer to active TA support",
+  "catalogVersion": 5,
+  "catalogMarker": "campusworks-showcase-v5",
+  "sameActor": {
+    "name": "Avery Chen",
+    "email": "student2@example.com",
+    "userId": "7a233608-d599-4fcc-8b80-3ecf798ce1ad"
+  },
+  "sameCourse": {
+    "code": "cs201",
+    "courseId": "cs201"
+  },
+  "applicationId": "c57eb095-c0c9-446b-8129-e67a0b14f1ba",
+  "appointmentId": "1b0b1c20-6f38-43cf-aca8-cd1e96f00ddb",
+  "initialRole": "student",
+  "providerCalls": 0,
+  "keyRead": false,
+  "aiConfigured": false,
+  "sourceBuildSha256": "444c92c4a9bd18740e5ba3138935d1266fcf7fd93ae9c2641c9eeab0130cdbc2",
+  "baseURL": "http://127.0.0.1:64546",
+  "databaseName": "campusworks_showcase_test_399146bb4d071e",
+  "steps": [
+    {
+      "action": "Avery clicks Accept offer",
+      "appointmentStatus": "pending_clearance",
+      "taAccess": false,
+      "userId": "7a233608-d599-4fcc-8b80-3ecf798ce1ad",
+      "courseId": "cs201"
+    },
+    {
+      "action": "Administrator clicks cleared; Avery page updates silently",
+      "appointmentStatus": "active",
+      "clearance": "cleared",
+      "taAccess": true,
+      "otherCourse": {
+        "code": "cs101",
+        "courseId": "cs101",
+        "taAccess": false
+      },
+      "userId": "7a233608-d599-4fcc-8b80-3ecf798ce1ad",
+      "courseId": "cs201"
+    },
+    {
+      "action": "Same Avery opens TA queue, begins duty and claims Noah",
+      "userId": "7a233608-d599-4fcc-8b80-3ecf798ce1ad",
+      "courseId": "cs201",
+      "onDuty": true,
+      "queueEntryId": "6aefcdecf052093435eba13a",
+      "student": {
+        "name": "Noah Brooks",
+        "email": "demo-noah-brooks@example.com",
+        "userId": "02c29676-f1d2-45c1-a520-75b794e4def9"
+      },
+      "claimedBy": {
+        "name": "Avery Chen",
+        "email": "student2@example.com"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "docs/demo/screenshots/showcase-avery-active-application.png",
+      "bytes": 67277,
+      "sha256": "3bf00e142b8ad70ad80fe944f4ab7bcf20e88853d3493c32058c242e4c4d1dfd",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "logos": [
+        {
+          "src": "/duke-cs-logo.png",
+          "alt": "Duke Department of Computer Science",
+          "width": 381,
+          "height": 70
+        }
+      ],
+      "userId": "7a233608-d599-4fcc-8b80-3ecf798ce1ad",
+      "courseId": "cs201",
+      "url": "http://127.0.0.1:64546/applications/c57eb095-c0c9-446b-8129-e67a0b14f1ba"
+    },
+    {
+      "path": "docs/demo/screenshots/showcase-avery-ta-queue.png",
+      "bytes": 100483,
+      "sha256": "d52d3c4f24718435cc598848a50b295ba8d590ef656ce91609c954a10371eb92",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "logos": [
+        {
+          "src": "/duke-cs-logo.png",
+          "alt": "Duke Department of Computer Science",
+          "width": 381,
+          "height": 70
+        }
+      ],
+      "userId": "7a233608-d599-4fcc-8b80-3ecf798ce1ad",
+      "courseId": "cs201",
+      "url": "http://127.0.0.1:64546/courses/cs201/ta"
+    }
+  ],
+  "startedAt": "2026-11-08T01:18:37.661Z",
+  "passed": true,
+  "lifecycleMethod": "Ordinary authenticated APIs prepare synthetic records; browser buttons accept, clear, begin duty and claim Noah.",
+  "apiFailures": [],
+  "applicationStopped": true,
+  "databaseDropped": true,
+  "finishedAt": "2026-11-08T01:18:44.639Z",
+  "cleanup": {
+    "synthetic": true,
+    "name": "campusworks-roadshow-story-c219f55e3d22",
+    "containerId": "b52bcc6b9d1f35780065fd1ebe5fe591c6460265238742c8148a1378e4db9f71",
+    "port": 57423,
+    "passed": true,
+    "containerCleaned": true,
+    "providerCalls": 0,
+    "startedAt": "2026-11-08T01:17:36.172Z",
+    "finishedAt": "2026-11-08T01:18:45.642Z"
+  },
+  "scope": "Current aligned application: actual acceptance, clearance, silent TA activation and student help claim in one isolated synthetic story; no provider calls."
+}

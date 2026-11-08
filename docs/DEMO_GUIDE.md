@@ -15,7 +15,7 @@ npm run demo:prepare
 npm run demo:showcase
 ```
 
-Preparation builds the current app, starts the existing local transaction-capable database, prepares a versioned dedicated database such as `campusworks_showcase_v4` and closes the temporary service. Later launches reuse the most recently prepared dataset for the current catalog version, including a fresh rehearsal. It opens no browser and makes no AI request. Existing `campusworks_interactive_demo` records are not changed.
+Preparation builds the current app, starts the existing local transaction-capable database, prepares a versioned dedicated database such as `campusworks_showcase_v5` and closes the temporary service. Later launches reuse the most recently prepared dataset for the current catalog version, including a fresh rehearsal. It opens no browser and makes no AI request. Existing `campusworks_interactive_demo` records are not changed. Earlier v4 datasets and their dated evidence are retained separately; new preparation does not change them to v5.
 
 The second command builds the current app, opens six independent, signed-in windows and enables automatic AI if the saved encrypted Windows Key exists. The Key remains in the app child environment. Missing AI configuration leaves the deterministic workflows usable. Closing every window or pressing Ctrl+C stops services owned by this launch, retaining data.
 
@@ -39,20 +39,27 @@ Dated states age normally. Use `--fresh` if the saved recruitment period or feat
 
 ## Prepared coverage
 
-| Area                    | Synthetic coverage                                                                                                                                     |
-| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| People                  | 41 accounts: four faculty, four manually granted TAs, 32 students/applicants and one administrator; appointments provide additional dated course roles |
-| Courses                 | Ten courses with open, paused and closed queues and relevant announcements                                                                             |
-| Positions               | 21 TA/RA records including drafts, approvals, published and closed applications, filled positions, cancellation and archive                            |
-| Applications            | 68 records, including missing CV/answers, submitted, reviewed, shortlisted, declined/rescinded offer histories, accepted and cleared appointments      |
-| Featured candidate pool | Twelve currently eligible people across two automatic comparison pages                                                                                 |
-| Featured applicant      | Seven applications and exactly one outstanding offer                                                                                                   |
-| Appointments            | Offered, clearance, future-start, active, suspended, ended, not-cleared and settled scenarios created through normal APIs                              |
-| Course evidence         | Thirty API-entered workload records, 380 dated help records, eighty identified feedback records and eleven live requests                               |
-| Notifications           | Genuine durable events delivered by the ordinary in-app outbox; no invented inbox messages                                                             |
-| AI                      | Real configured automatic jobs when enabled; no stored fake model output                                                                               |
+| Area                    | Synthetic coverage                                                                                                                                             |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| People                  | 41 accounts: four faculty, four manually granted TAs, 32 students/applicants and one administrator; appointments provide additional dated course roles         |
+| Courses                 | Ten courses with open, paused and closed queues and relevant announcements                                                                                     |
+| Positions               | 21 TA/RA records including drafts, approvals, published and closed applications, filled positions, cancellation and archive                                    |
+| Applications            | 68 records, including missing CV/answers, submitted, reviewed, shortlisted, declined/rescinded offer histories, accepted and cleared appointments              |
+| Featured candidate pool | Twelve currently eligible people across two automatic comparison pages                                                                                         |
+| Featured applicant      | Seven applications and exactly one outstanding offer                                                                                                           |
+| Appointments            | Offered, clearance, future-start, active, suspended, ended, not-cleared and settled scenarios created through normal APIs                                      |
+| Course evidence         | Thirty varied API-entered workload records, 380 dated help records with weekday office-hour peaks, eighty identified feedback records and eleven live requests |
+| Feedback attribution    | Sixty synthetic ratings explicitly linked to completed same-student requests and recorded helpers; twenty course-level records remain separate                 |
+| Notifications           | Genuine durable events delivered by the ordinary in-app outbox; no invented inbox messages                                                                     |
+| AI                      | Real configured automatic jobs when enabled; no stored fake model output                                                                                       |
 
 API-created decisions use the same transactions, capacity checks, private CV snapshots, clearance and dated course authority as the product. Dated queue/feedback observations are explicitly labelled fixture records because historical duration cannot be produced by waiting through a semester.
+
+## Course insights
+
+From Home, a site administrator opens **Course insights** for the department; instructors and course administrators see only their currently managed courses. Show daily demand, the Eastern weekday/hour heatmap, helper activity and attributed feedback beside reported work and conditional staffing costs. Date and course filters update silently. Course management embeds the same course-scoped view. Accounts with only TA or student authority have no dashboard entry.
+
+Specific-helper feedback is optional: the student chooses a completed request and its actual helper. Course-level comments stay separate. Always show the rating count, distinct students and feedback days beside an average; a single new rating is **Limited feedback**. See [Course insights](COURSE_INSIGHTS.md) for the metric definitions and visible observation bands. These deterministic views do not make new AI calls or establish staffing savings.
 
 ## Six windows
 
@@ -90,4 +97,4 @@ Prepare the whole dataset before enabling model work. This avoids purchasing ana
 
 AI summaries use typed qualifications and approved answers. Private CV bytes are not parsed. Suggestions do not select applicants, approve clearance or cut budgets. A demonstration of low recorded queue use must not be presented as proof that a course can safely lose a TA.
 
-Use the [synthetic CV](demo/materials/sample-cv.txt) when demonstrating an upload. The [offline gallery](demo/index.html) includes ten workflow views and two actual OpenAI result panels. [Verification](VERIFICATION.md) records the executed checks and their limits; [Product readiness](PRODUCT_READINESS.md) lists pilot decisions and institutional boundaries.
+Use the [synthetic CV](demo/materials/sample-cv.txt) when demonstrating an upload. The [offline gallery](demo/index.html) includes eleven workflow views and two actual OpenAI result panels. [Verification](VERIFICATION.md) records the executed checks and their limits; [Product readiness](PRODUCT_READINESS.md) lists pilot decisions and institutional boundaries.

@@ -6,7 +6,7 @@ Open **Course insights** from Home. Site administrators see the department; inst
 
 - Recorded requests, helped and active requests, first-help waiting-time samples and P90.
 - Daily demand and an Eastern Time weekday/hour heatmap, with a course filter and reporting dates.
-- Current TA coverage, on-duty helpers, open positions, pending clearance and unsettled appointments.
+- Current TA coverage, on-duty helpers, unfilled approved seats, pending clearance and unsettled appointments.
 - Helper activity, reported teaching work and explicitly attributed feedback, with sample counts.
 - Conditional position costs for a smaller, current or larger plan where valid. These are arithmetic scenarios, not approved staffing reductions.
 

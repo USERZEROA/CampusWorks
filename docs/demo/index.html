@@ -282,6 +282,12 @@
         border-radius: 11px;
         box-shadow: 0 10px 28px rgb(1 33 105 / 4%);
       }
+      .department-overview {
+        grid-column: 1 / -1;
+      }
+      .department-overview .preview {
+        height: 380px;
+      }
       .preview {
         display: block;
         width: 100%;
@@ -498,6 +504,9 @@
         }
       }
       @media (max-width: 600px) {
+        .department-overview .preview {
+          height: 230px;
+        }
         .masthead-inner {
           padding: 16px;
         }
@@ -667,8 +676,8 @@
         </ol>
       </nav>
       <aside class="disclosure" aria-label="Screenshot provenance">
-        All records are synthetic. Ten workflow captures come from actual local
-        browser tests with AI unconfigured. Two panels show real OpenAI
+        All records are synthetic. Eleven workflow captures come from actual
+        local browser tests with AI unconfigured. Two panels show real OpenAI
         responses to synthetic evidence. Avery’s appointment and queue journey
         is CS201; review examples use CS101.
       </aside>
@@ -703,7 +712,7 @@
                 src="screenshots/showcase-recruitment-desktop.png"
                 alt=""
                 width="1440"
-                height="2098"
+                height="2104"
                 decoding="async"
               />
             </button>
@@ -789,7 +798,7 @@
                 src="screenshots/showcase-candidate-pool-desktop.png"
                 alt=""
                 width="1440"
-                height="2884"
+                height="2898"
                 decoding="async"
               />
             </button>
@@ -887,7 +896,7 @@
                 src="screenshots/showcase-clearance-desktop.png"
                 alt=""
                 width="1440"
-                height="5204"
+                height="5290"
                 decoding="async"
               />
             </button>
@@ -1018,13 +1027,13 @@
                 src="screenshots/showcase-ta-queue-desktop.png"
                 alt=""
                 width="1440"
-                height="1040"
+                height="1285"
                 decoding="async"
               />
             </button>
             <div class="card-body">
               <div class="card-meta">
-                <span class="step">08</span><span>TA &middot; Desktop</span>
+                <span class="step">01</span><span>TA &middot; Desktop</span>
               </div>
               <h3>Live support in CS101</h3>
               <p>
@@ -1131,6 +1140,45 @@
               >
             </div>
           </article>
+          <article class="card department-overview">
+            <button
+              class="preview"
+              type="button"
+              aria-label="Enlarge Department overview"
+              aria-haspopup="dialog"
+              data-stage="learn"
+              data-image="screenshots/showcase-department-insights-desktop.png"
+              data-title="Department overview"
+              data-caption="Actual local browser capture. Synthetic records; AI unconfigured. Ten courses, staffing plans and observed helper feedback with sample counts."
+              data-alt="Administrator department dashboard showing ten synthetic courses, request demand, staffing coverage and observed helper feedback bands with sample counts."
+            >
+              <img
+                src="screenshots/showcase-department-insights-desktop.png"
+                alt=""
+                width="1440"
+                height="5057"
+                decoding="async"
+              />
+            </button>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="step">02</span
+                ><span>Administrator &middot; Desktop</span>
+              </div>
+              <h3>Department overview</h3>
+              <p>
+                Ten courses, staffing plans and observed helper feedback in one
+                view.
+              </p>
+              <a
+                class="original"
+                href="screenshots/showcase-department-insights-desktop.png"
+                target="_blank"
+                rel="noopener"
+                >Open original PNG</a
+              >
+            </div>
+          </article>
         </div>
       </section>
       <a class="cycle-link" href="#recruit"
@@ -1164,13 +1212,13 @@
                 src="screenshots/showcase-position-catalog-mobile.png"
                 alt=""
                 width="390"
-                height="6375"
+                height="6469"
                 decoding="async"
               />
             </button>
             <div class="card-body">
               <div class="card-meta">
-                <span class="step">11</span><span>Student &middot; Mobile</span>
+                <span class="step">03</span><span>Student &middot; Mobile</span>
               </div>
               <h3>Browse positions</h3>
               <p>
@@ -1202,13 +1250,13 @@
                 src="screenshots/showcase-applicant-offer-mobile.png"
                 alt=""
                 width="390"
-                height="3797"
+                height="3929"
                 decoding="async"
               />
             </button>
             <div class="card-body">
               <div class="card-meta">
-                <span class="step">12</span><span>Student &middot; Mobile</span>
+                <span class="step">04</span><span>Student &middot; Mobile</span>
               </div>
               <h3>Respond to an offer</h3>
               <p>The candidate confirms before clearance and activation.</p>
