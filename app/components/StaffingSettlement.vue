@@ -24,21 +24,23 @@ async function settle() {
     <p v-if="message" class="notice" :class="{ error: failure }" role="status">
       {{ message }}
     </p>
-    <label
-      >Final incurred cost<input
-        v-model.number="incurredCost"
-        type="number"
-        min="0"
-        :max="appointment.committedCost"
-        step="0.01"
-        required
-        :data-testid="`settlement-cost-${appointment.id}`"
-    /></label>
-    <button
-      :disabled="busy"
-      :data-testid="`appointment-settle-${appointment.id}`"
-    >
-      Settle costs
-    </button>
+    <div class="field-actions">
+      <label
+        >Final incurred cost<input
+          v-model.number="incurredCost"
+          type="number"
+          min="0"
+          :max="appointment.committedCost"
+          step="0.01"
+          required
+          :data-testid="`settlement-cost-${appointment.id}`"
+      /></label>
+      <button
+        :disabled="busy"
+        :data-testid="`appointment-settle-${appointment.id}`"
+      >
+        Settle costs
+      </button>
+    </div>
   </form>
 </template>

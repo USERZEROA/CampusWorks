@@ -349,11 +349,17 @@ const loginWithGitlab = async () => {
 }
 
 .role-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 40px;
   width: 100%;
-  padding: 10px 14px;
+  padding: 8px 14px;
   border-radius: 999px;
-  border: none;
+  border: 1px solid transparent;
   font-size: 14px;
+  line-height: 1.4;
   font-weight: 500;
   cursor: pointer;
   transition: transform 0.16s ease;
@@ -431,6 +437,9 @@ const loginWithGitlab = async () => {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 64px;
   gap: 2px;
   min-width: 0;
   padding: 8px 12px;
@@ -439,6 +448,7 @@ const loginWithGitlab = async () => {
   border-left-width: 4px;
   background: #ffffff;
   text-align: left;
+  line-height: 1.4;
   cursor: pointer;
   transition: transform 0.16s ease;
 }

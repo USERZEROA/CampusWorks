@@ -59,8 +59,14 @@ h2 {
   flex-wrap: wrap;
   gap: 10px;
   padding: 16px 20px;
+  align-items: stretch;
 }
 a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--control-height);
   padding: 8px 14px;
   border: 1px solid #17408b;
   border-radius: 6px;
@@ -68,6 +74,8 @@ a {
   color: #fff;
   font: 13px system-ui;
   text-decoration: none;
+  line-height: 1.25;
+  text-align: center;
 }
 a:hover {
   background: #012169;
@@ -78,6 +86,9 @@ a:hover {
   }
   .home-actions {
     padding: 14px;
+  }
+  a {
+    flex: 1 1 160px;
   }
 }
 </style>

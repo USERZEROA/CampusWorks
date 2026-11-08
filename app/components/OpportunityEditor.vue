@@ -349,7 +349,11 @@ function addQuestion() {
               office hours</label
             >
           </div>
-          <div v-for="(duty, index) in form.duties" :key="index" class="grid">
+          <div
+            v-for="(duty, index) in form.duties"
+            :key="index"
+            class="grid field-actions"
+          >
             <label
               >Duty {{ index + 1
               }}<select v-model="duty.kind">
@@ -392,24 +396,26 @@ function addQuestion() {
               Remove duty
             </button>
           </div>
-          <button
-            type="button"
-            class="secondary"
-            @click="
-              form.duties.push({
-                kind: 'preparation',
-                sessionsPerWeek: 1,
-                minutesPerSession: 60,
-              })
-            "
-          >
-            Add weekly duty
-          </button>
+          <div class="actions form-actions">
+            <button
+              type="button"
+              class="secondary"
+              @click="
+                form.duties.push({
+                  kind: 'preparation',
+                  sessionsPerWeek: 1,
+                  minutesPerSession: 60,
+                })
+              "
+            >
+              Add weekly duty
+            </button>
+          </div>
           <h3>Weekly schedule (Eastern Time)</h3>
           <div
             v-for="(slot, index) in form.requiredSlots"
             :key="index"
-            class="grid"
+            class="grid field-actions"
           >
             <label
               >Day<select v-model.number="slot.day">
@@ -444,15 +450,21 @@ function addQuestion() {
               Remove schedule slot
             </button>
           </div>
-          <button
-            type="button"
-            class="secondary"
-            @click="
-              form.requiredSlots.push({ day: 1, start: '09:00', end: '10:00' })
-            "
-          >
-            Add required schedule slot
-          </button>
+          <div class="actions form-actions">
+            <button
+              type="button"
+              class="secondary"
+              @click="
+                form.requiredSlots.push({
+                  day: 1,
+                  start: '09:00',
+                  end: '10:00',
+                })
+              "
+            >
+              Add required schedule slot
+            </button>
+          </div>
         </fieldset>
         <fieldset :disabled="busy || !draftEditable">
           <legend>Qualifications and application</legend>
@@ -472,7 +484,11 @@ function addQuestion() {
             ><input v-model="form.cvRequired" type="checkbox" />Require a
             CV</label
           >
-          <div v-for="(question, index) in form.questions" :key="question.id">
+          <div
+            v-for="(question, index) in form.questions"
+            :key="question.id"
+            class="field-actions"
+          >
             <label
               >Qualification question {{ index + 1
               }}<input
@@ -490,14 +506,16 @@ function addQuestion() {
               Remove question {{ index + 1 }}
             </button>
           </div>
-          <button
-            type="button"
-            class="secondary"
-            @click="addQuestion"
-            data-testid="opportunity-add-question"
-          >
-            Add qualification question
-          </button>
+          <div class="actions form-actions">
+            <button
+              type="button"
+              class="secondary"
+              @click="addQuestion"
+              data-testid="opportunity-add-question"
+            >
+              Add qualification question
+            </button>
+          </div>
         </fieldset>
         <fieldset :disabled="busy || !draftEditable">
           <legend>Budget and approval</legend>
@@ -521,20 +539,21 @@ function addQuestion() {
             /></label>
           </div>
         </fieldset>
-        <button
-          v-if="draftEditable"
-          type="submit"
-          :disabled="busy || editorConflict"
-          data-testid="opportunity-save"
-        >
-          {{
-            busy
-              ? "Saving…"
-              : props.opportunityId
-                ? "Save changes"
-                : "Save opportunity draft"
-          }}
-        </button>
+        <div v-if="draftEditable" class="actions form-actions">
+          <button
+            type="submit"
+            :disabled="busy || editorConflict"
+            data-testid="opportunity-save"
+          >
+            {{
+              busy
+                ? "Saving…"
+                : props.opportunityId
+                  ? "Save changes"
+                  : "Save opportunity draft"
+            }}
+          </button>
+        </div>
       </div>
     </form>
     <StaffingPaging

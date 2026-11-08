@@ -366,7 +366,10 @@ useIntervalRefresh((options) =>
             {{ opportunity?.type?.toUpperCase() }} appointment.
           </p>
 
-          <div v-if="offer.status === 'issued' && data.owner" class="actions">
+          <div
+            v-if="offer.status === 'issued' && data.owner"
+            class="actions form-actions"
+          >
             <button
               :disabled="busy"
               @click="
@@ -555,17 +558,19 @@ useIntervalRefresh((options) =>
                 }}
                 {{ slot.start }}–{{ slot.end }}
               </p>
-              <button
-                type="button"
-                class="secondary"
-                @click="
-                  profile.slots = opportunity.requiredSlots.map(
-                    (slot: any) => ({ ...slot }),
-                  )
-                "
-              >
-                Confirm availability
-              </button>
+              <div class="actions form-actions">
+                <button
+                  type="button"
+                  class="secondary"
+                  @click="
+                    profile.slots = opportunity.requiredSlots.map(
+                      (slot: any) => ({ ...slot }),
+                    )
+                  "
+                >
+                  Confirm availability
+                </button>
+              </div>
               <p v-if="profile.slots.length" role="status">
                 Schedule availability confirmed.
               </p>
@@ -590,21 +595,24 @@ useIntervalRefresh((options) =>
           <fieldset :disabled="!editable || busy">
             <legend>CV and qualification material</legend>
 
-            <label
-              >CV (PDF or TXT, up to 2 MiB)<input
-                type="file"
-                accept="application/pdf,text/plain,.pdf,.txt"
-                @change="fileChanged"
-                data-testid="application-cv" /></label
-            ><button
-              type="button"
-              class="secondary"
-              :disabled="!selectedCv || busy || qualificationConflict"
-              @click="upload"
-              data-testid="application-cv-upload"
-            >
-              Upload CV
-            </button>
+            <div class="field-actions">
+              <label
+                >CV (PDF or TXT, up to 2 MiB)<input
+                  type="file"
+                  accept="application/pdf,text/plain,.pdf,.txt"
+                  @change="fileChanged"
+                  data-testid="application-cv"
+              /></label>
+              <button
+                type="button"
+                class="secondary"
+                :disabled="!selectedCv || busy || qualificationConflict"
+                @click="upload"
+                data-testid="application-cv-upload"
+              >
+                Upload CV
+              </button>
+            </div>
 
             <label
               >Additional qualifications (optional)<textarea
@@ -628,14 +636,16 @@ useIntervalRefresh((options) =>
             >
           </p>
 
-          <div v-if="editable" class="actions">
+          <div v-if="editable || canWithdraw" class="actions form-actions">
             <button
+              v-if="editable"
               type="submit"
               :disabled="busy || qualificationConflict"
               data-testid="application-save"
             >
               Save draft</button
             ><button
+              v-if="editable"
               type="button"
               :disabled="busy || qualificationConflict"
               @click="submit"
@@ -643,9 +653,8 @@ useIntervalRefresh((options) =>
             >
               Submit application
             </button>
-          </div>
-          <div v-if="canWithdraw" class="actions">
             <button
+              v-if="canWithdraw"
               type="button"
               class="danger"
               :disabled="busy"
@@ -729,17 +738,18 @@ useIntervalRefresh((options) =>
                 maxlength="2000"
                 data-testid="administrative-correction-reason"
             /></label>
-            <button
-              v-if="canEditAdministrative"
-              :disabled="
-                busy ||
-                administrativeConflict ||
-                (clearedDetails && !correctionReason.trim())
-              "
-              data-testid="administrative-save"
-            >
-              Save administrative details
-            </button>
+            <div v-if="canEditAdministrative" class="actions form-actions">
+              <button
+                :disabled="
+                  busy ||
+                  administrativeConflict ||
+                  (clearedDetails && !correctionReason.trim())
+                "
+                data-testid="administrative-save"
+              >
+                Save administrative details
+              </button>
+            </div>
           </fieldset>
         </form>
         <details

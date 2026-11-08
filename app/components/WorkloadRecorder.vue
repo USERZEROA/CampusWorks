@@ -74,10 +74,13 @@ async function save() {
         /></label>
       </div>
       <label
-        >Notes<textarea v-model="observation.notes" maxlength="2000" /></label
-      ><button :disabled="busy" data-testid="workload-save">
-        Record workload
-      </button>
+        >Notes<textarea v-model="observation.notes" maxlength="2000" />
+      </label>
+      <div class="actions form-actions">
+        <button :disabled="busy" data-testid="workload-save">
+          Record workload
+        </button>
+      </div>
     </form>
   </section>
 </template>

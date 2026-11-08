@@ -288,7 +288,7 @@ useIntervalRefresh(refresh);
                     </p>
                   </td>
                   <td>
-                    <div v-if="canReview" class="actions">
+                    <div v-if="canReview" class="actions table-actions">
                       <button
                         class="secondary"
                         :disabled="
@@ -359,21 +359,22 @@ useIntervalRefresh(refresh);
               {{ staffingState(item.status) }} · Response deadline
               {{ staffingDate(item.expiresAt || item.responseDeadline) }}
             </p>
-            <button
-              v-if="item.status === 'issued'"
-              class="danger"
-              :disabled="busy || !reason.trim()"
-              @click="
-                command(
-                  `/api/staffing/offers/${item.id}/rescind`,
-                  { reason },
-                  'Offer rescinded and availability released.',
-                )
-              "
-              :data-testid="`rescind-offer-${item.id}`"
-            >
-              Rescind offer
-            </button>
+            <div v-if="item.status === 'issued'" class="actions form-actions">
+              <button
+                class="danger"
+                :disabled="busy || !reason.trim()"
+                @click="
+                  command(
+                    `/api/staffing/offers/${item.id}/rescind`,
+                    { reason },
+                    'Offer rescinded and availability released.',
+                  )
+                "
+                :data-testid="`rescind-offer-${item.id}`"
+              >
+                Rescind offer
+              </button>
+            </div>
           </article>
           <article
             v-for="item in data.appointments || []"

@@ -6,11 +6,7 @@ const navigateWithContext = (target: string, options?: any) =>
 const busyActions = ref(false);
 
 import { computed, ref, watch } from "vue";
-import {
-  useAsyncData,
-  useRouter,
-  navigateTo,
-} from "#app";
+import { useAsyncData, useRouter, navigateTo } from "#app";
 
 type CourseRow = {
   id: string;
@@ -52,7 +48,8 @@ if (error.value) {
   if (status === 401) {
     capturedUser.value = null;
     await navigateWithContext("/login");
-  } else if (status === 403 || status === 404) await navigateWithContext("/courses");
+  } else if (status === 403 || status === 404)
+    await navigateWithContext("/courses");
 }
 
 const user = computed(() => data.value?.user || null);
@@ -66,7 +63,9 @@ if (data.value && !isAdmin.value) {
 watch(data, (value) => {
   if (value && !value.user.isGlobalAdmin) navigateWithContext("/courses");
 });
-useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(options));
+useIntervalRefresh((options) =>
+  busyActions.value ? Promise.resolve() : refresh(options),
+);
 
 const courses = computed<CourseRow[]>(() => data.value?.courses || []);
 
@@ -337,6 +336,7 @@ const goHelp = () => {
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
+  align-items: center;
 }
 
 .user-email {
@@ -351,6 +351,16 @@ const goHelp = () => {
   color: #ffffff;
   font-size: 10px;
   cursor: pointer;
+}
+.help-link,
+.logout-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--compact-control-height);
+  line-height: 1.25;
+  text-align: center;
 }
 
 .content {
@@ -377,6 +387,8 @@ const goHelp = () => {
   display: flex;
   gap: 8px;
   padding: 12px 20px 14px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .create-input {
@@ -385,6 +397,10 @@ const goHelp = () => {
   border-radius: 6px;
   border: 1px solid #d1d5db;
   font-size: 13px;
+  min-width: 0;
+  min-height: var(--control-height);
+  box-sizing: border-box;
+  line-height: 20px;
 }
 
 .btn-create {
@@ -395,6 +411,12 @@ const goHelp = () => {
   color: #022c16;
   font-size: 13px;
   cursor: pointer;
+  min-height: var(--control-height);
+  border: 1px solid transparent;
+  line-height: 1.25;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-create:disabled {
@@ -413,12 +435,15 @@ const goHelp = () => {
   border-bottom: 1px solid #e5e7eb;
   font-size: 14px;
   text-align: left;
+  vertical-align: middle;
 }
 
 .actions {
   display: flex;
   justify-content: center;
   gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .btn-go,
@@ -428,7 +453,31 @@ const goHelp = () => {
   border-radius: 6px;
   font-size: 13px;
   cursor: pointer;
-  border: none;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  min-height: var(--compact-control-height);
+  line-height: 1.25;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.catalog-pagination {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.catalog-pagination button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  padding: 8px 14px;
+  border: 1px solid #17408b;
+  border-radius: 6px;
+  color: #17408b;
+  background: white;
+  font: 13px/1.25 system-ui;
 }
 
 .btn-go {
@@ -516,7 +565,7 @@ const goHelp = () => {
   .actions {
     flex-direction: column;
     align-items: stretch;
-    gap: 4px;
+    gap: 8px;
   }
 
   .btn-go,

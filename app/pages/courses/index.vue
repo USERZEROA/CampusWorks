@@ -263,7 +263,7 @@ const goAdminConsole = () => {
                 </span>
               </td>
               <td class="col-queue">
-                <div class="action-row">
+                <div class="action-row queue-actions">
                   <span class="state-tag" :class="c.state || 'closed'">
                     {{ stateLabel(c) }}
                   </span>
@@ -317,7 +317,7 @@ const goAdminConsole = () => {
                 </span>
               </td>
               <td class="col-queue">
-                <div class="action-row">
+                <div class="action-row enrollment-actions">
                   <button
                     class="btn-go"
                     @click="goToCourse(c)"
@@ -411,18 +411,26 @@ const goAdminConsole = () => {
 
 .app-right {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-end;
+  gap: 8px;
   font-size: 12px;
 }
 
 .help-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 4px 10px;
   border-radius: 999px;
   border: none;
   background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
   font-size: 11px;
+  line-height: 1.3;
   cursor: pointer;
 }
 
@@ -430,6 +438,8 @@ const goAdminConsole = () => {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 40px;
+  box-sizing: border-box;
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
@@ -440,12 +450,18 @@ const goAdminConsole = () => {
 }
 
 .logout-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 2px 8px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.7);
   background: transparent;
   color: #ffffff;
   font-size: 10px;
+  line-height: 1.3;
   cursor: pointer;
 }
 
@@ -487,6 +503,7 @@ const goAdminConsole = () => {
   padding: 8px 20px;
   border-bottom: 1px solid #e5e7eb;
   font-size: 14px;
+  vertical-align: middle;
 }
 
 .course-table thead {
@@ -552,11 +569,17 @@ const goAdminConsole = () => {
 
 .btn-go,
 .btn-enroll {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   min-width: 70px;
   padding: 6px 14px;
   border-radius: 6px;
-  border: none;
+  border: 1px solid transparent;
   font-size: 13px;
+  line-height: 1.3;
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -607,10 +630,50 @@ const goAdminConsole = () => {
 }
 
 .action-row {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  text-align: left;
+}
+
+.action-row .btn-go {
+  width: 70px;
+}
+
+.action-row .btn-enroll {
+  justify-self: start;
+}
+
+.queue-actions .state-tag {
+  justify-self: center;
+}
+
+.queue-actions .btn-go {
+  justify-self: start;
+}
+
+.catalog-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.catalog-pagination button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   justify-content: center;
+  min-height: 40px;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  border: 1px solid #17408b;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #17408b;
+  font-size: 13px;
+  line-height: 1.3;
 }
 
 @media (max-width: 900px) {
@@ -660,10 +723,6 @@ const goAdminConsole = () => {
   .col-role,
   .col-queue {
     width: 180px;
-  }
-
-  .action-row {
-    flex-wrap: wrap;
   }
 
   .panel .course-table {

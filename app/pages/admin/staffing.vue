@@ -214,22 +214,24 @@ useIntervalRefresh((options) =>
             data-testid="cycle-enabled"
           />Enable this cycle</label
         >
-        <button :disabled="busy || cycleConflict" data-testid="cycle-save">
-          Save schedule
-        </button>
-        <button
-          v-if="cycleDirty"
-          type="button"
-          class="secondary"
-          :disabled="busy"
-          @click="
-            cycleDirty = false;
-            loadCycle();
-          "
-          data-testid="cycle-reset"
-        >
-          Discard changes
-        </button>
+        <div class="actions form-actions">
+          <button :disabled="busy || cycleConflict" data-testid="cycle-save">
+            Save schedule
+          </button>
+          <button
+            v-if="cycleDirty"
+            type="button"
+            class="secondary"
+            :disabled="busy"
+            @click="
+              cycleDirty = false;
+              loadCycle();
+            "
+            data-testid="cycle-reset"
+          >
+            Discard changes
+          </button>
+        </div>
       </form>
     </section>
     <section v-if="!error" class="panel">
@@ -257,9 +259,11 @@ useIntervalRefresh((options) =>
                 data-testid="term-end"
             /></label>
           </div>
-          <button type="submit" :disabled="busy" data-testid="term-create">
-            Add semester
-          </button>
+          <div class="actions form-actions">
+            <button type="submit" :disabled="busy" data-testid="term-create">
+              Add semester
+            </button>
+          </div>
         </form>
         <ul class="semester-list">
           <li v-for="item in data?.terms || []" :key="item.id">
@@ -305,7 +309,7 @@ useIntervalRefresh((options) =>
             </p>
             <p>{{ item.description }}</p>
             <div class="actions">
-              <NuxtLink :to="`/staffing/${item.id}`"
+              <NuxtLink class="button secondary" :to="`/staffing/${item.id}`"
                 >Inspect requirements</NuxtLink
               ><button
                 :disabled="busy"
@@ -363,7 +367,7 @@ useIntervalRefresh((options) =>
                 item.status,
               ) && ['pending_clearance', 'pending_start'].includes(item.status)
             "
-            class="grid"
+            class="field-actions"
           >
             <label
               >Clearance decision<select

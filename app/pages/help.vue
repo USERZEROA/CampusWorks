@@ -241,6 +241,12 @@ const goBack = () => {
   color: #012169;
   font-size: 12px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--compact-control-height);
+  line-height: 1.25;
 }
 
 .content {

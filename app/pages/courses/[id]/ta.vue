@@ -876,18 +876,26 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 
 .app-right {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-end;
+  gap: 8px;
   font-size: 12px;
 }
 
 .help-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 4px 10px;
   border-radius: 999px;
   border: none;
   background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
   font-size: 11px;
+  line-height: 1.3;
   cursor: pointer;
 }
 
@@ -895,6 +903,8 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 40px;
+  box-sizing: border-box;
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
@@ -905,16 +915,23 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 }
 
 .logout-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 2px 8px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.7);
   background: transparent;
   color: #ffffff;
   font-size: 10px;
+  line-height: 1.3;
   cursor: pointer;
 }
 
 .outline-btn.top-analytics {
+  min-height: 32px;
   padding: 4px 12px;
   border-radius: 999px;
   border: 1px solid #ffffff;
@@ -931,13 +948,20 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 }
 
 .back-btn {
-  padding: 10px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 8px 24px;
   margin-bottom: 18px;
   border-radius: 999px;
   border: none;
   background: #e5ecff;
   color: #012169;
   font-weight: 500;
+  font-size: 13px;
+  line-height: 1.35;
   cursor: pointer;
 }
 
@@ -1062,9 +1086,15 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 .primary-btn,
 .outline-btn,
 .danger-btn {
-  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 8px 14px;
   border-radius: 8px;
   font-size: 14px;
+  line-height: 1.35;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1072,7 +1102,7 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 .primary-btn {
   background: #17408b;
   color: #ffffff;
-  border: none;
+  border: 1px solid transparent;
 }
 
 .primary-btn:hover {
@@ -1099,7 +1129,7 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 .danger-btn {
   background: #dc2626;
   color: #ffffff;
-  border: none;
+  border: 1px solid transparent;
 }
 
 .danger-btn:hover {
@@ -1189,12 +1219,19 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 }
 
 .ann-delete {
-  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
   border-radius: 6px;
   border: 1px solid #fecaca;
   background: #fef2f2;
   color: #b91c1c;
   font-size: 11px;
+  line-height: 1;
   cursor: pointer;
 }
 
@@ -1204,13 +1241,18 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 
 .announce-input-row {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   padding: 8px 14px 12px;
   border-top: 1px solid #e5e7eb;
 }
 
 .announce-input {
-  flex: 1;
+  flex: 1 1 180px;
+  min-width: 0;
+  min-height: 40px;
+  box-sizing: border-box;
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
@@ -1218,12 +1260,20 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 }
 
 .announce-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  margin-left: auto;
+  min-height: 40px;
   padding: 8px 14px;
   border-radius: 8px;
-  border: none;
+  border: 1px solid transparent;
   background: #17408b;
   color: #ffffff;
   font-size: 13px;
+  line-height: 1.35;
   cursor: pointer;
 }
 
@@ -1238,6 +1288,7 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
   padding: 9px 14px;
   border-bottom: 1px solid #e5e7eb;
   text-align: left;
+  vertical-align: middle;
 }
 
 .queue-table thead {
@@ -1294,18 +1345,25 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
 
 .actions-wrap {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   white-space: nowrap;
-  margin-left: 3px;
 }
 
 .action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
+  flex: 0 0 auto;
   padding: 6px 8px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
   background: #ffffff;
   font-size: 11px;
+  line-height: 1.3;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1372,9 +1430,12 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
   background: #fee2e2;
 }
 
+.action-btn.pause,
+.action-btn.danger,
 .action-btn.move {
-  min-width: 22px;
-  padding-inline: 6px;
+  width: 32px;
+  min-width: 32px;
+  padding-inline: 4px;
 }
 
 .empty-text {

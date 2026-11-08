@@ -5,7 +5,9 @@ const demoLabel = useRuntimeConfig().public.demoLabel;
 
 <template>
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <aside v-if="demoLabel" class="demo-context" aria-label="Demonstration data">{{ demoLabel }}</aside>
+  <aside v-if="demoLabel" class="demo-context" aria-label="Demonstration data">
+    {{ demoLabel }}
+  </aside>
   <p v-if="authError" class="global-auth-error" role="alert">{{ authError }}</p>
   <NuxtLayout>
     <NuxtPage />
@@ -13,6 +15,17 @@ const demoLabel = useRuntimeConfig().public.demoLabel;
 </template>
 
 <style>
+:root {
+  --control-height: 40px;
+  --compact-control-height: 32px;
+  --control-gap: 8px;
+}
+:where(button, input, select, textarea, a.button) {
+  box-sizing: border-box;
+}
+:where(button, a.button) {
+  vertical-align: middle;
+}
 .demo-context {
   padding: 5px 16px;
   color: #012169;

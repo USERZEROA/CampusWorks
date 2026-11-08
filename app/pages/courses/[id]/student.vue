@@ -947,18 +947,26 @@ const goHelp = () => {
 
 .app-right {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-end;
+  gap: 8px;
   font-size: 12px;
 }
 
 .help-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 4px 10px;
   border-radius: 999px;
   border: none;
   background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
   font-size: 11px;
+  line-height: 1.3;
   cursor: pointer;
 }
 
@@ -966,6 +974,8 @@ const goHelp = () => {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 40px;
+  box-sizing: border-box;
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
@@ -976,12 +986,18 @@ const goHelp = () => {
 }
 
 .logout-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 2px 8px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.7);
   background: transparent;
   color: #ffffff;
   font-size: 10px;
+  line-height: 1.3;
   cursor: pointer;
 }
 
@@ -992,13 +1008,20 @@ const goHelp = () => {
 }
 
 .back-btn {
-  padding: 10px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 8px 24px;
   margin-bottom: 18px;
   border-radius: 999px;
   border: none;
   background: #e5ecff;
   color: #012169;
   font-weight: 500;
+  font-size: 13px;
+  line-height: 1.35;
   cursor: pointer;
 }
 
@@ -1148,10 +1171,15 @@ const goHelp = () => {
 .primary-btn,
 .outline-btn,
 .danger-btn {
-  width: 100%;
-  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 8px 14px;
   border-radius: 8px;
   font-size: 14px;
+  line-height: 1.35;
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -1159,7 +1187,7 @@ const goHelp = () => {
 .primary-btn {
   background: #17408b;
   color: #ffffff;
-  border: none;
+  border: 1px solid transparent;
 }
 
 .primary-btn:hover {
@@ -1182,12 +1210,18 @@ const goHelp = () => {
 .danger-btn {
   background: #dc2626;
   color: #ffffff;
-  border: none;
+  border: 1px solid transparent;
 }
 
 .danger-btn:hover {
   background: #b91c1c;
   transform: translateY(-1px);
+}
+
+.controls-body > .primary-btn,
+.controls-body > .outline-btn,
+.controls-body > .danger-btn {
+  width: 100%;
 }
 
 .logged-as {
@@ -1268,6 +1302,7 @@ const goHelp = () => {
   padding: 9px 14px;
   border-bottom: 1px solid #e5e7eb;
   text-align: left;
+  vertical-align: middle;
 }
 
 .queue-table thead {
@@ -1394,8 +1429,15 @@ const goHelp = () => {
 .modal-footer {
   padding: 10px 18px 14px;
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
   gap: 8px;
+}
+
+.modal-footer > button {
+  flex: 0 1 auto;
+  min-width: 88px;
 }
 
 @media (max-width: 900px) {

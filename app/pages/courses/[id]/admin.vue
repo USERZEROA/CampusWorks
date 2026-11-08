@@ -1658,6 +1658,7 @@ useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(
                   </select>
                 </td>
                 <td class="actions">
+                  <div class="enrollment-actions">
                   <template
                     v-if="
                       enr.userEmail !== viewer?.email &&
@@ -1687,6 +1688,7 @@ useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(
                     </button>
                   </template>
                   <span v-else class="muted-text">—</span>
+                  </div>
                 </td>
               </tr>
               <tr v-if="!enrollments.length">
@@ -1789,17 +1791,25 @@ details > summary {
 
 .app-right {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .help-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 4px 10px;
   border-radius: 999px;
   border: none;
   background: rgba(255, 255, 255, 0.12);
   color: #ffffff;
   font-size: 11px;
+  line-height: 1.3;
   cursor: pointer;
 }
 
@@ -1807,6 +1817,8 @@ details > summary {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 40px;
+  box-sizing: border-box;
   padding: 4px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
@@ -1817,12 +1829,18 @@ details > summary {
 }
 
 .logout-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 2px 8px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.7);
   background: transparent;
   color: #ffffff;
   font-size: 10px;
+  line-height: 1.3;
   cursor: pointer;
 }
 
@@ -1833,12 +1851,18 @@ details > summary {
 }
 
 .back-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 40px;
   padding: 8px 18px;
   border-radius: 999px;
   border: none;
   background: #e5ecff;
   color: #012169;
   font-size: 13px;
+  line-height: 1.35;
   cursor: pointer;
   margin-bottom: 18px;
 }
@@ -1883,15 +1907,23 @@ details > summary {
 
 .queue-controls-inline {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
 }
 
 .qc-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 40px;
   min-width: 70px;
   padding: 6px 14px;
   border-radius: 999px;
-  border: none;
+  border: 1px solid transparent;
   font-size: 13px;
+  line-height: 1.35;
   cursor: pointer;
   font-weight: 500;
 }
@@ -1979,7 +2011,8 @@ details > summary {
 
 .analytics-filters {
   display: flex;
-  gap: 18px;
+  flex-wrap: wrap;
+  gap: 12px 16px;
   align-items: flex-end;
   margin-bottom: 4px;
 }
@@ -1994,10 +2027,13 @@ details > summary {
 
 .field input,
 .metric-select {
+  box-sizing: border-box;
+  min-height: 36px;
   padding: 6px 8px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
   font-size: 13px;
+  line-height: 1.35;
 }
 
 .analytics-layout {
@@ -2015,19 +2051,27 @@ details > summary {
 
 .sessions-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
   font-size: 13px;
   color: #374151;
 }
 
 .btn-export {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 4px 10px;
   border-radius: 8px;
   border: 1px solid #17408b;
   background: #ffffff;
   color: #17408b;
   font-size: 11px;
+  line-height: 1.3;
   cursor: pointer;
 }
 
@@ -2283,12 +2327,17 @@ details > summary {
 
 .add-ta-row {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   margin-bottom: 10px;
 }
 
 .ta-input {
-  flex: 1;
+  flex: 1 1 220px;
+  min-width: 0;
+  min-height: 40px;
+  box-sizing: border-box;
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
@@ -2296,12 +2345,19 @@ details > summary {
 }
 
 .btn-add-ta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-height: 40px;
   padding: 8px 16px;
   border-radius: 8px;
-  border: none;
+  border: 1px solid transparent;
   background: #17408b;
   color: #ffffff;
   font-size: 13px;
+  line-height: 1.35;
   cursor: pointer;
 }
 
@@ -2318,18 +2374,39 @@ details > summary {
   padding: 8px 10px;
   border-bottom: 1px solid #e5e7eb;
   text-align: left;
+  vertical-align: middle;
 }
 
 .enroll-table select {
+  box-sizing: border-box;
+  min-height: 32px;
   padding: 4px 8px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
   font-size: 13px;
+  line-height: 1.3;
 }
 
 .actions {
+  vertical-align: middle;
+}
+
+.enrollment-actions {
   display: flex;
-  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline,
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 32px;
+  flex: 0 0 auto;
+  line-height: 1.3;
 }
 
 .btn-outline {
@@ -2482,23 +2559,8 @@ details > summary {
     overflow-x: auto;
   }
 
-  .add-ta-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
   .btn-add-ta {
-    width: 100%;
-  }
-
-  .actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-outline,
-  .btn-danger {
-    width: 100%;
+    margin-left: auto;
   }
 
   .feedback-table {

@@ -79,12 +79,13 @@ const user = useAuthUser();
   align-items: center;
   font-size: 12px;
 }
-.staffing-user button {
+.staffing-root .staffing-user button {
   background: transparent !important;
   color: #fff !important;
   border-color: #fff !important;
   padding: 3px 10px !important;
   border-radius: 20px !important;
+  min-height: var(--compact-control-height);
 }
 .staffing-content {
   max-width: 1200px;
@@ -156,6 +157,11 @@ const user = useAuthUser();
   background: #fff;
   color: #172033;
 }
+.staffing-root input:not([type="checkbox"]),
+.staffing-root select {
+  min-height: var(--control-height);
+  line-height: 20px;
+}
 .staffing-root textarea {
   min-height: 90px;
   resize: vertical;
@@ -183,6 +189,12 @@ const user = useAuthUser();
   font: 13px system-ui;
   cursor: pointer;
   text-decoration: none;
+  box-sizing: border-box;
+  min-height: var(--control-height);
+  max-width: 100%;
+  line-height: 1.25;
+  text-align: center;
+  vertical-align: middle;
 }
 .staffing-root button.secondary,
 .staffing-root .button.secondary {
@@ -203,6 +215,48 @@ const user = useAuthUser();
   gap: 8px;
   flex-wrap: wrap;
   align-items: center;
+}
+.staffing-root .actions > button,
+.staffing-root .actions > .button {
+  margin: 0;
+  align-self: stretch;
+}
+.staffing-root .form-actions {
+  margin-top: 16px;
+  row-gap: 10px;
+}
+.staffing-root .actions + .actions {
+  margin-top: 10px;
+}
+.staffing-root .field-actions {
+  align-items: end;
+  gap: 12px;
+  margin-block: 14px;
+}
+.staffing-root .field-actions:not(.grid) {
+  display: flex;
+  flex-wrap: wrap;
+}
+.staffing-root .field-actions > label:not(.check) {
+  flex: 1 1 240px;
+  min-width: 0;
+  margin-bottom: 0;
+}
+.staffing-root .field-actions > .check {
+  flex: 0 0 auto;
+  align-self: center;
+  margin-bottom: 0;
+}
+.staffing-root .field-actions > button {
+  flex: 0 0 auto;
+  align-self: end;
+  justify-self: start;
+}
+.staffing-root .table-actions > button,
+.staffing-root .table-actions > .button,
+.staffing-root .notification-row button {
+  min-height: var(--compact-control-height);
+  padding-block: 6px;
 }
 .staffing-root .status {
   display: inline-flex;
@@ -244,7 +298,7 @@ const user = useAuthUser();
   text-align: left;
   padding: 12px;
   border-bottom: 1px solid #e0e6ef;
-  vertical-align: top;
+  vertical-align: middle;
 }
 .staffing-root th {
   background: #f8fafc;
@@ -513,6 +567,18 @@ const user = useAuthUser();
   }
   .staffing-root .notification-row button {
     justify-self: start;
+  }
+}
+@media (max-width: 520px) {
+  .staffing-root .form-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .staffing-root .form-actions > button,
+  .staffing-root .form-actions > .button,
+  .staffing-root .field-actions:not(.grid) > button {
+    width: 100%;
+    justify-self: stretch;
   }
 }
 </style>
