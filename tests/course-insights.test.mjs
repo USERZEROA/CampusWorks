@@ -19,6 +19,7 @@ function definitions(filename) {
 }
 const javascript = ts.transpileModule(
   [
+    definitions("shared/course-time.ts"),
     definitions("server/utils/help-feedback.ts"),
     definitions("server/utils/course-insights.ts"),
   ].join("\n"),
@@ -164,6 +165,25 @@ test("range defaults to 28 Eastern dates, clips to semester and now, and rejects
     now,
   );
   assert.equal(future.fromAt, future.toAt);
+});
+
+test("late-evening Eastern work is included in the default department window", () => {
+  const late = new Date("2026-11-08T04:33:00Z");
+  const selected = insightsRange(term, {}, late);
+  assert.equal(selected.to, "2026-11-07");
+  const result = buildCourseInsights(
+    evidence({
+      opportunities: [{ id: "posting", type: "ta", courseId: "course-a", termId: term.id }],
+      appointments: [{ id: "appointment", type: "ta", courseId: "course-a", termId: term.id, applicantId: "worker", applicantEmail: "alex@example.com" }],
+      workload: [{ appointmentId: "appointment", opportunityId: "posting", applicantId: "worker", courseId: "course-a", termId: term.id, date: easternDate(late), hours: 0.5, kind: "office_hours" }],
+    }),
+    selected,
+    term,
+    true,
+    late,
+  );
+  assert.equal(result.workload.totalHours, 0.5);
+  assert.equal(result.helpers.find((helper) => helper.email === "alex@example.com").reportedHours, 0.5);
 });
 
 test("scope comes from actual course manager memberships, not TA, student or RA ownership", () => {

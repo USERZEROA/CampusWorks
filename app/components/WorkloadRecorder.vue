@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { courseDate } from "#shared/course-time";
+
 const props = defineProps<{ appointmentId: string }>();
 const { busy, message, failure, run } = useStaffingMutation();
 const now = new Date();
 const observation = reactive({
   kind: "office_hours",
   hours: 1,
-  date: now.toISOString().slice(0, 10),
+  date: courseDate(now),
   notes: "",
 });
 let idempotencyKey = "";
@@ -66,7 +68,7 @@ async function save() {
             required
             data-testid="workload-hours" /></label
         ><label
-          >Work date (UTC)<input
+          >Work date (Eastern Time)<input
             v-model="observation.date"
             type="date"
             required

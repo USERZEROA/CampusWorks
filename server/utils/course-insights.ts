@@ -14,16 +14,11 @@ import { withTransaction } from "./db";
 import { getRecruitmentCycle } from "./staffing-cycle";
 import { feedbackHelpers, ownsHelpRecord } from "./help-feedback";
 import { getServerConfig } from "./config";
+import { courseDate, courseTimeZone } from "#shared/course-time";
 
-export const insightsTimezone = "America/New_York" as const;
+export const insightsTimezone = courseTimeZone;
 const dayMs = 86400000;
 const minimumWaitSamples = 5;
-const dateFormat = new Intl.DateTimeFormat("en-CA", {
-  timeZone: insightsTimezone,
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-});
 const clockFormat = new Intl.DateTimeFormat("en-US", {
   timeZone: insightsTimezone,
   year: "numeric",
@@ -104,12 +99,7 @@ export function insightPercentile(
     : null;
 }
 export function easternDate(value: Date | number | string): string {
-  const parts = Object.fromEntries(
-    dateFormat
-      .formatToParts(new Date(value))
-      .map((part) => [part.type, part.value]),
-  );
-  return `${parts.year}-${parts.month}-${parts.day}`;
+  return courseDate(value);
 }
 function validDay(value: unknown): value is string {
   return (
@@ -982,12 +972,12 @@ export function buildCourseInsights(
       ),
       reporters: reporters.size,
       source:
-        "Self-reported UTC work dates; not payroll or complete observation evidence.",
+        "Self-reported recorded work dates; new records use Eastern Time and historical dates remain unchanged. Not payroll or complete observation evidence.",
     },
     attention,
     coverage: {
       source:
-        "One authorized database snapshot. Request-start cohort: arrivals within the Eastern date range, with outcomes and full recorded help intervals observed through generatedAt. Feedback uses submission dates; workload uses UTC work dates. Staffing state is current for the selected semester.",
+        "One authorized database snapshot. Request-start cohort: arrivals within the Eastern date range, with outcomes and full recorded help intervals observed through generatedAt. Feedback uses submission dates; workload uses recorded work dates. New work dates use Eastern Time; historical dates are preserved as entered. Staffing state is current for the selected semester.",
       completeObservationEstablished: false,
       feedbackAttribution:
         "Only explicit helper-scoped feedback linked to the student and an actual recorded helper contributes to an individual rating. Unattributed feedback remains course-level.",

@@ -5,6 +5,7 @@ import { lockStaffingResource } from './staffing-catalog'
 import { actorId, canManageOpportunity, event, fail, findOpportunity, manualCourseManager, number, object, publicRecord, staffingCourseAliases, text, uid, type StaffingActor } from './staffing'
 import { getRecruitmentCycle } from './staffing-cycle'
 import { withTransaction } from './db'
+import { courseDate } from '#shared/course-time'
 
 export async function recordWorkload(db: Db, session: ClientSession, user: StaffingActor, raw: unknown) {
   const body = object(raw, 'Workload observation')
@@ -19,7 +20,7 @@ export async function recordWorkload(db: Db, session: ClientSession, user: Staff
   const dateText = text(body.date, 'Work date', 10, true)
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateText)) fail(400, 'Work date must use YYYY-MM-DD')
   const observedDate = new Date(`${dateText}T12:00:00Z`)
-  if (!Number.isFinite(observedDate.getTime()) || observedDate.toISOString().slice(0, 10) !== dateText || dateText > new Date().toISOString().slice(0, 10) || dateText < appointment.startDate.toISOString().slice(0, 10) || dateText > appointment.endDate.toISOString().slice(0, 10)) fail(400, 'Work date must be within the appointment and cannot be in the future (UTC dates)')
+  if (!Number.isFinite(observedDate.getTime()) || observedDate.toISOString().slice(0, 10) !== dateText || dateText > courseDate() || dateText < courseDate(appointment.startDate) || dateText > courseDate(appointment.endDate)) fail(400, 'Work date must be within the appointment and cannot be in the future (Eastern Time)')
   const kind = text(body.kind, 'Work category', 30, true)
   if (!['attendance', 'lab', 'discussion', 'grading', 'office_hours', 'preparation', 'coordination'].includes(kind)) fail(400, 'Unknown teaching work category')
   const hours = number(body.hours, 'Hours', 0.05, 24)

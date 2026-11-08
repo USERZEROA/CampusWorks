@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 import { createHash } from "node:crypto";
 import { mkdirSync, writeFileSync } from "node:fs";
+import { courseDate } from "../shared/course-time.ts";
 
 export const LOOP_STEP_COUNT = 33;
 export const loopStepCount = (withAi = false) =>
@@ -760,11 +761,22 @@ export async function runLoopCycle({
         "office_hours",
       );
       await fill(page.getByTestId("workload-hours"), "0.5");
+      const workDate = courseDate();
+      await fill(page.getByTestId("workload-date"), workDate);
       await fill(
         page.getByLabel("Notes", { exact: true }),
         "Synthetic reported office-hours preparation and student support.",
       );
+      const receiptPromise = page.waitForResponse(
+        (response) =>
+          response.url().endsWith("/api/staffing/workload") &&
+          response.request().method() === "POST",
+      );
       await click(page.getByTestId("workload-save"));
+      const receipt = await read(receiptPromise);
+      expect(receipt.record.date).toBe(workDate);
+      expect(receipt.record.hours).toBe(0.5);
+      details.workload = { date: workDate, hours: receipt.record.hours };
       await expect(
         page.getByText("Workload recorded.", { exact: true }),
       ).toBeVisible();
@@ -884,6 +896,7 @@ export async function runLoopCycle({
       expect(helper.feedbackCount).toBe(1);
       expect(helper.feedbackAverage).toBe(5);
       expect(helper.feedbackReviewers).toBe(1);
+      expect(helper.reportedHours).toBeGreaterThanOrEqual(0.5);
       await stage.spotlight(
         page.getByTestId(`insights-helper-${LOOP_APPLICANT.email}`),
       );
@@ -892,6 +905,7 @@ export async function runLoopCycle({
         personalFeedbackCount: helper.feedbackCount,
         personalFeedbackAverage: helper.feedbackAverage,
         reviewers: helper.feedbackReviewers,
+        reportedHours: helper.reportedHours,
       };
     },
   );

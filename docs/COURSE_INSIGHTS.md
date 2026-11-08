@@ -9,7 +9,7 @@ Open **Course insights** from Home. Site administrators see the department; inst
 - Current TA coverage, on-duty helpers, unfilled approved seats, known weekly hours and pending clearance.
 - Helper activity, reported teaching work and explicitly attributed feedback, with sample counts.
 
-The administrator's shared current recruitment semester supplies the reporting context. The default window covers up to 28 calendar days within that semester. Dates and heatmap hours use `America/New_York`; entered workload dates remain UTC work dates. Request outcomes follow arrivals in the selected range and use recorded help through the displayed update time. Staffing state is current for that semester. Changing filters silently loads the matching scope.
+The administrator's shared current recruitment semester supplies the reporting context. The default window covers up to 28 calendar days within that semester. Dates, heatmap hours and new work dates use `America/New_York`. Work dates default to the course's current day and must fall within the appointment without entering a future course day. Existing recorded date strings remain unchanged. Request outcomes follow arrivals in the selected range and use recorded help through the displayed update time. Staffing state is current for that semester. Changing filters silently loads the matching scope.
 
 Summary responses contain aggregates and helper identities, not student identities, queue questions, locations or feedback narratives. Authorized course-management detail retains its separate permissions and identified feedback. Loss of course authority removes the corresponding reporting scope.
 
