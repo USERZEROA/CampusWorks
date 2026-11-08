@@ -45,7 +45,8 @@ export function assertVersion(record: Document, expected: unknown) {
 }
 export function publicRecord(record: Document | null | undefined) {
   if (!record) return null
-  const { _id, bytes, projectId, ...dto } = record
+  // Historical financial values remain in storage and are not part of staffing.
+  const { _id, bytes, projectId, hourlyRate, budget, weeks, appointmentCost, committedBudget, committedCost, incurredCost, budgetStatus, releasedBudget, settledBy, settledAt, ...dto } = record
   return dto
 }
 export async function event(db: Db, session: ClientSession, user: StaffingActor, kind: string, targetId: string, details: Record<string, unknown> = {}) {

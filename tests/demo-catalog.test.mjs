@@ -24,18 +24,19 @@ test('the showcase is deterministic, isolated to synthetic identities and rich i
   const catalog = createDemoCatalog(referenceTime);
   assert.deepEqual(catalog, createDemoCatalog(new Date(referenceTime)));
   assert.equal(catalog.synthetic, true);
-  assert.equal(DEMO_CATALOG_VERSION, 5);
-  assert.equal(catalog.marker, 'campusworks-showcase-v5');
+  assert.equal(DEMO_CATALOG_VERSION, 6);
+  assert.equal(catalog.marker, 'campusworks-showcase-v6');
   assert.match(catalog.disclosure, /synthetic demonstration records/);
   assert.equal(new Set(catalog.actors.map(actor => actor.key)).size, catalog.actors.length);
   assert.equal(new Set(catalog.actors.map(actor => actor.email)).size, catalog.actors.length);
   assert.ok(catalog.actors.every(actor => actor.email.endsWith('@example.com')));
   assert.deepEqual([...new Set(catalog.actors.map(actor => actor.role))].sort(), ['admin', 'instructor', 'student', 'ta']);
   assert.deepEqual([catalog.actors.length, catalog.courses.length, catalog.opportunities.length, catalog.applications.length, catalog.workloads.length, catalog.history.length, catalog.feedback.length, catalog.queuePlans.reduce((sum, plan) => sum + plan.entries.length, 0)], [41, 10, 21, 68, 30, 380, 80, 11]);
+  for (const course of catalog.courses) assert.ok(course.announcements.some(message => message.includes(`Zoom (demo): https://zoom.example.com/j/${course.code}-office-hours`)));
   assert.ok(['draft', 'pending_approval', 'published', 'applications_closed', 'filled', 'archived', 'cancelled'].every(stage => catalog.opportunities.some(opportunity => opportunity.stage === stage)));
 });
 
-test('each posting passes the real opportunity validator and fits the shared semester and duty budget', () => {
+test('each posting passes the real opportunity validator and fits the shared semester and duty requirements', () => {
   for (const time of [referenceTime, '2028-02-29T12:30:00.000Z', '2027-01-01T00:15:00.000Z']) {
     const catalog = createDemoCatalog(time);
     const courseKeys = new Set(catalog.courses.map(course => course.key));

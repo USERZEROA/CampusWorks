@@ -360,28 +360,24 @@ test("browser users publish, apply, upload, select, accept, clear, operate and e
       new RegExp(`/courses/${space.code}/student$`),
       { timeout: 15000 },
     );
-    await expect(
-      faculty.getByTestId(`appointment-settle-${appointmentId}`),
-    ).toHaveCount(0);
-    await open(admin, "/admin/staffing");
-    await admin.getByTestId(`settlement-cost-${appointmentId}`).fill("100");
-    await admin.getByTestId(`appointment-settle-${appointmentId}`).click();
-    await expect(
-      admin.getByTestId(`appointment-settle-${appointmentId}`),
-    ).toHaveCount(0);
-    const settledVersion = (
+    await open(admin, `/staffing/${postingId}`);
+    await admin.getByTestId("opportunity-close").click();
+    await expect(admin.getByTestId("opportunity-status")).toHaveText(
+      /applications closed/i,
+    );
+    const closedVersion = (
       await json(
         space.admin.api.get(`/api/staffing/opportunities/${postingId}`),
       )
     ).opportunity.version;
     // Returning to the faculty window wakes its automatic synchronization;
-    // financial settlement in another session must be observed before the
+    // application closure in another session must be observed before the
     // separately confirmed archive command uses its optimistic version.
     await faculty.bringToFront();
     await faculty.evaluate(() => window.dispatchEvent(new Event("focus")));
     await expect(faculty.getByTestId("opportunity-status")).toHaveAttribute(
       "data-version",
-      String(settledVersion),
+      String(closedVersion),
       { timeout: 15000 },
     );
     await expect(faculty.getByTestId("opportunity-archive")).toBeVisible();
@@ -713,7 +709,7 @@ test("RA applicants receive an offer and appointment without project or course s
   }
 });
 
-test("current-semester course review keeps complete aggregates when loading scenario details", async ({
+test("current-semester course review keeps complete aggregates when loading staffing plan details", async ({
   page,
   space,
 }) => {
@@ -721,7 +717,7 @@ test("current-semester course review keeps complete aggregates when loading scen
     space.instructor.api.get("/api/staffing/reviews/" + space.code),
   );
   const requests: Array<{ page: number; termId: string }> = [];
-  // These labeled pagination responses stay in this browser and do not write financial observations.
+  // These labeled pagination responses stay in this browser and do not write staffing observations.
   await page.route(
     "**/api/staffing/reviews/" + space.code + "*",
     async (route) => {
@@ -745,28 +741,19 @@ test("current-semester course review keeps complete aggregates when loading scen
             count: 2,
             records: [{ id: "synthetic-workload-" + pageNumber, hours: 10 }],
           },
-          budget: {
-            ...baseline.budget,
-            requestedBudget: 600,
-            approvedBudget: 2000,
-            committedBudget: 400,
-            settledBudget: 100,
+          staffing: {
+            ...baseline.staffing,
+            approvedPositions: 6,
+            committedPositions: 2,
+            openPositions: 4,
             opportunities: [
               {
                 id: recordId,
                 title: label + " position " + pageNumber,
-                budget: 1000,
-                committedBudget: 200,
-              },
-            ],
-            scenarios: [
-              {
-                opportunityId: recordId,
-                positions: 1,
-                weeklyHours: 10,
-                estimatedCost: 1000,
-                budgetCovered: true,
-                coverageValidated: false,
+                positions: 3,
+                committedPositions: 1,
+                approved: true,
+                status: "published",
               },
             ],
           },
@@ -811,17 +798,12 @@ test("current-semester course review keeps complete aggregates when loading scen
   ).toBeVisible();
   await expect(workload).toHaveText("20.0 hours");
   await expect(
-    page.locator('dt:has-text("Requested position plans") + dd'),
-  ).toHaveText("600");
+    page.locator('dt:has-text("Approved positions") + dd'),
+  ).toHaveText("6");
   await expect(
-    page.locator('dt:has-text("Approved position plans") + dd'),
-  ).toHaveText("2000");
-  await expect(
-    page.locator('dt:has-text("Outstanding commitments") + dd'),
-  ).toHaveText("400");
-  await expect(page.locator('dt:has-text("Settled costs") + dd')).toHaveText(
-    "100",
-  );
+    page.locator('dt:has-text("Reserved positions") + dd'),
+  ).toHaveText("2");
+  await expect(page.locator('dt:has-text("Unfilled seats") + dd')).toHaveText("4");
   expect(requests.every((request) => request.termId === "")).toBe(true);
   expect(requests.at(-1)?.page).toBe(2);
   let nextTerm: any;

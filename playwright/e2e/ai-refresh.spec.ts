@@ -205,7 +205,7 @@ test('ended appointments stop new candidate analysis and automatic calls while r
 });
 
 test('course restrictions update TA recommendations automatically while leaving RA evidence and provider usage unchanged', async ({ space }) => {
-  const teaching = await space.opportunity({ positions: 2, budget: 2400 });
+  const teaching = await space.opportunity({ positions: 2 });
   const research = await space.opportunity({ type: 'ra', courseId: '' });
   const first = await space.application(teaching);
   const second = await space.application(teaching, await space.actor('restriction-peer'));
@@ -234,7 +234,7 @@ test('course restrictions update TA recommendations automatically while leaving 
 });
 
 test('the reviewer browser updates named candidate advice automatically without another analysis request', async ({ space, browser }, testInfo) => {
-  const posting = await space.opportunity({ positions: 2, budget: 2400 });
+  const posting = await space.opportunity({ positions: 2 });
   const first = await space.application(posting);
   const second = await space.application(posting, await space.actor('browser-refresh-second'));
   const service = await harness(space);
@@ -264,7 +264,7 @@ test('the reviewer browser updates named candidate advice automatically without 
 });
 
 test('two application workers coalesce selection, submission and withdrawal refreshes without read cycles', async ({ space }) => {
-  const posting = await space.opportunity({ positions: 3, budget: 3600 });
+  const posting = await space.opportunity({ positions: 3 });
   const first = await space.application(posting);
   const secondActor = await space.actor('refresh-second');
   const second = await space.application(posting, secondActor);
@@ -296,7 +296,7 @@ test('two application workers coalesce selection, submission and withdrawal refr
 });
 
 test('a change during an in-flight model call hides the old result and schedules one fresh generation', async ({ space }) => {
-  const posting = await space.opportunity({ positions: 2, budget: 2400 });
+  const posting = await space.opportunity({ positions: 2 });
   await space.application(posting);
   let arrived!: () => void; const received = new Promise<void>(resolve => { arrived = resolve; });
   let release!: () => void; const released = new Promise<void>(resolve => { release = resolve; });
@@ -319,7 +319,7 @@ test('a change during an in-flight model call hides the old result and schedules
 });
 
 test('offer expiry triggers automatic reconsideration without any reviewer page or polling request', async ({ space }) => {
-  const posting = await space.opportunity({ positions: 2, budget: 2400 });
+  const posting = await space.opportunity({ positions: 2 });
   const first = await space.application(posting);
   const other = await space.actor('expiry-other');
   const second = await space.application(posting, other);
@@ -341,7 +341,7 @@ test('offer expiry triggers automatic reconsideration without any reviewer page 
 });
 
 test('revoked reviewer authority prevents automatic generation after a genuine list change', async ({ space }) => {
-  const posting = await space.opportunity({ positions: 2, budget: 2400 });
+  const posting = await space.opportunity({ positions: 2 });
   await space.application(posting);
   const service = await harness(space);
   try {
@@ -369,7 +369,7 @@ test('a provider failure does not retry historical events or ordinary status rea
 });
 
 test('provider-disabled instances retain pending changes without making an automatic call', async ({ space }) => {
-  const posting = await space.opportunity({ positions: 2, budget: 2400 }); await space.application(posting);
+  const posting = await space.opportunity({ positions: 2 }); await space.application(posting);
   const service = await harness(space);
   try {
     expect((await analysis(service.apis[0]!, posting.id)).task.status).toBe('completed');
@@ -386,7 +386,7 @@ test('provider-disabled instances retain pending changes without making an autom
 });
 
 test('an automatic refresh respects durable per-user quota without a provider retry storm', async ({ space }) => {
-  const posting = await space.opportunity({ positions: 2, budget: 2400 }); await space.application(posting);
+  const posting = await space.opportunity({ positions: 2 }); await space.application(posting);
   const service = await harness(space);
   const { client, db } = await database();
   const budgets = db.collection<any>('staffingAiBudgets');
@@ -417,7 +417,7 @@ test('an automatic refresh respects durable per-user quota without a provider re
 });
 
 test('a provider-disabled submission queues before historical events drain and resumes past an orphan job', async ({ space }) => {
-  const posting = await space.opportunity({ positions: 2, budget: 2400 });
+  const posting = await space.opportunity({ positions: 2 });
   await space.application(posting);
   const service = await harness(space);
   const { client, db } = await database();
@@ -450,7 +450,7 @@ test('a provider-disabled submission queues before historical events drain and r
 });
 
 test('a queued submission reaches exhausted reviewer capacity behind historical events without repeated attempts', async ({ space }) => {
-  const posting = await space.opportunity({ positions: 2, budget: 2400 });
+  const posting = await space.opportunity({ positions: 2 });
   await space.application(posting);
   const service = await harness(space);
   const { client, db } = await database();

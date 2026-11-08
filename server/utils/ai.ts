@@ -23,7 +23,7 @@ const taskDirections: Record<AiKind, string> = {
   candidate_fit: 'Compare only the supplied eligible candidate page against the stated requirements. Return exactly one item for every supplied target ID in its supplied order, without duplicates or omissions. Keep the summary within 25 words about this page, citing 1–2 scope or requirement references. For each candidate use at most 24 words for one demonstrated strength and one uncertainty, with 1–2 exact evidence references. At least one item reference must start with app:<that exact targetId>:; never cite another applicant in that item. Do not repeat evidence values or identifiers in prose. Use at most one caution of 20 words. Do not imply an overall ranking beyond this page.',
   cv_summary: 'Summarize the applicant qualification profile, qualification text and screening answers, including relevant experience and missing qualification evidence. Return exactly one item with the supplied target ID. Copy each evidence reference verbatim, including its app prefix and exact ID; never cite a bare field name or target ID. Use one or two references for the summary and one or two for the item. Do not repeat identifiers or evidence values in prose. No PDF contents have been extracted.',
   opportunity_draft: 'Suggest concise, usable requirement wording and qualification-focused screening questions for this TA or RA position. Treat suggestions as proposed wording rather than established facts. Do not suggest questions about protected or administrative characteristics.',
-  term_review: 'Suggest evidence-linked course improvements, workload follow-up questions and conditional staffing or budget scenarios. Explicitly preserve missing-data limitations; recorded demand alone cannot establish the required headcount or justify a budget cut.'
+  term_review: 'Suggest evidence-linked course improvements, office-hour coverage and teaching-workload follow-up questions. Preserve missing-data limitations; recorded queue activity alone cannot establish required headcount. Discuss teaching needs and staffing coverage without financial calculations.'
 }
 export function aiStatus() {
   const configured = !!(process.env.AI_BASE_URL?.trim() && process.env.AI_API_KEY?.trim() && process.env.AI_MODEL?.trim())
@@ -155,7 +155,7 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
           { reference: 'course:context', value: { code: course.code, title: course.title, termId: report.termId, phase, scope: report.termId ? 'Selected term' : 'All recorded course terms' } },
           { reference: 'metrics:recorded_sessions', value: report.metrics },
           { reference: 'metrics:recorded_workload', value: { hours: report.workload.totalHours, count: report.workload.count, byKind: report.workload.byKind, source: report.workload.source } },
-          { reference: 'metrics:budget', value: { requestedBudget: report.budget.requestedBudget, approvedBudget: report.budget.approvedBudget, committedBudget: report.budget.committedBudget, settledBudget: report.budget.settledBudget } },
+          { reference: 'metrics:staffing', value: { approvedPositions: report.staffing.approvedPositions, committedPositions: report.staffing.committedPositions } },
           { reference: 'metrics:limitations', value: report.missingEvidence }
         ],
         targetIds: [targetId],
@@ -197,13 +197,11 @@ async function taskInput(db: Db, user: StaffingActor, kind: AiKind, targetId: st
   if (kind === 'term_review') {
     const sessions = opportunity.type === 'ta' ? await db.collection('helpSessions').aggregate([{ $match: { courseId: opportunity.courseId, joinedAt: { $gte: opportunity.appointmentStart, $lt: opportunity.appointmentEnd } } }, { $group: { _id: null, sessions: { $sum: 1 }, helped: { $sum: { $cond: ['$wasHelped', 1, 0] } }, recordedHelpMinutes: { $sum: { $ifNull: ['$helpMinutes', 0] } } } }]).next() : null
     const workload = await db.collection('staffingWorkload').aggregate([{ $match: { opportunityId: targetId } }, { $group: { _id: null, entries: { $sum: 1 }, hours: { $sum: '$hours' } } }]).next()
-    const financial = await db.collection('staffingAppointments').aggregate([{ $match: { opportunityId: targetId } }, { $group: { _id: null, committedBudget: { $sum: { $cond: [{ $not: [{ $in: ['$budgetStatus', ['settled', 'released']] }] }, '$committedCost', 0] } }, settledBudget: { $sum: { $cond: [{ $eq: ['$budgetStatus', 'settled'] }, '$incurredCost', 0] } } } }]).next()
-    const approvedPlan = opportunity.approved && ['published', 'applications_closed', 'filled', 'archived'].includes(opportunity.status)
     return { targetType: 'opportunity' as const, opportunityId: targetId, termId: opportunity.termId, version: opportunity.version, evidence: [...requirements,
       { reference: 'metrics:recorded_sessions', value: { sessions: sessions?.sessions || 0, helped: sessions?.helped || 0, recordedHelpMinutes: sessions?.recordedHelpMinutes || 0 } },
       { reference: 'metrics:recorded_workload', value: { entries: workload?.entries || 0, hours: workload?.hours || 0 } },
-      { reference: 'metrics:budget', value: { requestedBudget: !approvedPlan && !['cancelled', 'archived'].includes(opportunity.status) ? opportunity.budget : 0, approvedBudget: approvedPlan ? opportunity.budget : 0, committedBudget: financial?.committedBudget || 0, settledBudget: financial?.settledBudget || 0, weeklyHours: opportunity.weeklyHours, positions: opportunity.positions } },
-      { reference: 'metrics:limitations', value: 'Recorded queue and self-reported workload do not establish total demand, paid hours, causal effects, or safe staffing cuts. No automatic budget reduction is allowed.' }
+      { reference: 'metrics:staffing', value: { weeklyHours: opportunity.weeklyHours, positions: opportunity.positions, committedPositions: opportunity.committedPositions } },
+      { reference: 'metrics:limitations', value: 'Recorded queue and self-reported workload do not establish complete teaching demand, attendance, causal effects or required headcount. Staffing decisions require a human review of duties and coverage.' }
     ], targetIds: [targetId], coverage: { source: 'All matching recorded aggregates; no row-count truncation' } }
   }
   return { targetType: 'opportunity' as const, opportunityId: targetId, termId: opportunity.termId, version: opportunity.requirementsVersion || 1, evidence: requirements, targetIds: [targetId], coverage: { source: 'Saved opportunity requirements' } }

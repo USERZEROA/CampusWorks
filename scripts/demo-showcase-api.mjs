@@ -152,8 +152,6 @@ export async function seedShowcaseApi({ baseURL, catalog, manifest = {}, save = 
           for (const observation of catalog.workloads.filter(record => record.applicationKey === application.key)) await checkpoint(`workload-record:${observation.key}`, () => call(opportunity.ownerKey, 'post', '/api/staffing/workload', { data: { appointmentId, date: observation.date, kind: observation.kind, hours: observation.hours, notes: observation.notes, idempotencyKey: `showcase-${observation.key}` } }));
         } else if (action === 'suspend' || action === 'end') {
           if (detail.appointment?.status !== (action === 'suspend' ? 'suspended' : 'ended')) await call(opportunity.ownerKey, 'post', `/api/staffing/appointments/${appointmentId}/${action}`, { data: { reason: application.reason } });
-        } else if (action === 'settle') {
-          if (detail.appointment?.budgetStatus !== 'settled') await call('admin', 'post', `/api/staffing/appointments/${appointmentId}/settle`, { data: { incurredCost: Math.round(detail.appointment.committedCost * (application.settlementRatio || 0) * 100) / 100 } });
         } else throw new Error(`Unknown synthetic application stage: ${action}.`);
       });
     }

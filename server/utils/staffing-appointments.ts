@@ -5,7 +5,7 @@ import { invalidateCandidateRefresh } from './ai-refresh'
 import { releaseStaffClaims } from './queue'
 import { lockStaffingResource } from './staffing-catalog'
 import { assertRecruitmentGate, getRecruitmentCycle } from './staffing-cycle'
-import { actorId, applicationAccess, applicationDto, appointmentDto, assertOpportunityManager, assertVersion, commitmentUnavailable, eligibility, event, fail, findOpportunity, getAppointmentCourseRole, lockApplicantCommitments, number, object, publicRecord, text, uid, type StaffingActor } from './staffing'
+import { actorId, applicationAccess, applicationDto, appointmentDto, assertOpportunityManager, assertVersion, commitmentUnavailable, eligibility, event, fail, findOpportunity, getAppointmentCourseRole, lockApplicantCommitments, object, publicRecord, text, uid, type StaffingActor } from './staffing'
 
 const terminalAppointments = ['ended', 'cancelled', 'not_cleared', 'expired']
 const safeAllocationId = (applicantId: string, termId: string) => createHash('sha256').update(`${termId}\0${applicantId}`).digest('hex')
@@ -25,14 +25,12 @@ async function releaseCommitments(db: Db, session: ClientSession, appointment: D
   // Every caller holds the canonical resource and stable applicant locks.
   if (terminalAppointments.includes(appointment.status)) return
   const opportunity = await findOpportunity(db, appointment.opportunityId, session)
-  const retainBudget = !!appointment.activatedAt || (!!appointment.acceptedAt && appointment.clearance === 'cleared' && appointment.startDate <= new Date())
-  const releasedBudget = retainBudget ? 0 : appointment.committedCost
   const cycle = await getRecruitmentCycle(db, session)
   await db.collection('staffingOpportunities').updateOne({ id: opportunity.id }, {
-    $inc: { committedPositions: -1, committedBudget: -releasedBudget, version: 1 },
+    $inc: { committedPositions: -1, version: 1 },
     $set: { status: opportunity.status === 'filled' ? (cycle.isOpen && cycle.termId === opportunity.termId ? 'published' : 'applications_closed') : opportunity.status, updatedAt: new Date() }
   }, { session })
-  await db.collection('staffingAppointments').updateOne({ id: appointment.id }, { $set: { status, endReason: reason, endedAt: new Date(), budgetStatus: retainBudget ? 'awaiting_settlement' : 'released', releasedBudget }, $inc: { version: 1 } }, { session })
+  await db.collection('staffingAppointments').updateOne({ id: appointment.id }, { $set: { status, endReason: reason, endedAt: new Date() }, $inc: { version: 1 } }, { session })
   await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: 'released', releasedAt: new Date() }, $inc: { version: 1 } }, { session })
   await db.collection('staffingOffers').updateOne({ id: appointment.offerId, status: { $in: ['issued', 'accepted'] } }, { $set: { status: status === 'expired' ? 'expired' : 'rescinded', resolvedAt: new Date() } }, { session })
   if (!appointment.acceptedAt) await db.collection('staffingApplications').updateOne({ id: appointment.applicationId, status: 'selected' }, { $set: { status: 'under_review', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
@@ -114,22 +112,22 @@ export async function selectApplication(db: Db, session: ClientSession, user: St
   assertVersion(application, body.expectedVersion)
   if (!['submitted', 'under_review', 'shortlisted'].includes(application.status)) fail(409, 'Only current submitted applications may be selected')
   if (!['published', 'applications_closed', 'filled'].includes(opportunity.status) || !opportunity.approved || opportunity.appointmentEnd <= new Date()) fail(409, 'This opportunity is not available for selection')
-  if (opportunity.committedPositions >= opportunity.positions || opportunity.committedBudget + opportunity.appointmentCost > opportunity.budget + 0.001) fail(409, 'No approved position or budget remains')
+  if (opportunity.committedPositions >= opportunity.positions) fail(409, 'No approved position remains')
   const eligible = eligibility(application, opportunity)
   if (!eligible.eligible) fail(409, eligible.reasons.join('; '))
   if (application.applicantEmail === user.email) fail(403, 'Reviewers cannot select themselves')
   if (await commitmentUnavailable(db, application.applicantId, opportunity.termId, opportunity.appointmentStart, opportunity.appointmentEnd, session)) fail(409, 'Candidate already holds an appointment in this term or overlapping these dates. Available applicants update automatically.')
   // An expired offer does not reserve the applicant. Its original resource keeps
-  // its financial reservation until maintenance releases it with the old offer ID.
+  // its position reservation until maintenance releases it with the old offer ID.
   const offerId = uid()
   const appointmentId = uid()
   const expiresAt = new Date(Math.min(Date.now() + 7 * 86400000, opportunity.appointmentEnd.getTime()))
-  const offer = { id: offerId, applicationId, opportunityId: opportunity.id, appointmentId, applicantId: application.applicantId, applicantEmail: application.applicantEmail, instructorEmail: user.email, status: 'issued', version: 1, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, weeklyHours: opportunity.weeklyHours, duties: opportunity.duties, committedCost: opportunity.appointmentCost, expiresAt, createdAt: new Date() }
-  const appointment = { id: appointmentId, offerId, applicationId, opportunityId: opportunity.id, applicantId: application.applicantId, applicantEmail: application.applicantEmail, applicantName: application.applicantName, instructorEmail: user.email, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, offerExpiresAt: expiresAt, weeklyHours: opportunity.weeklyHours, committedCost: opportunity.appointmentCost, status: 'offered', clearance: 'not_started', version: 1, acceptedAt: null, activatedAt: null, createdAt: new Date() }
+  const offer = { id: offerId, applicationId, opportunityId: opportunity.id, appointmentId, applicantId: application.applicantId, applicantEmail: application.applicantEmail, instructorEmail: user.email, status: 'issued', version: 1, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, weeklyHours: opportunity.weeklyHours, duties: opportunity.duties, expiresAt, createdAt: new Date() }
+  const appointment = { id: appointmentId, offerId, applicationId, opportunityId: opportunity.id, applicantId: application.applicantId, applicantEmail: application.applicantEmail, applicantName: application.applicantName, instructorEmail: user.email, termId: opportunity.termId, title: opportunity.title, type: opportunity.type, courseId: opportunity.courseId, startDate: opportunity.appointmentStart, endDate: opportunity.appointmentEnd, offerExpiresAt: expiresAt, weeklyHours: opportunity.weeklyHours, status: 'offered', clearance: 'not_started', version: 1, acceptedAt: null, activatedAt: null, createdAt: new Date() }
   await db.collection('staffingAllocations').updateOne({ applicantId: application.applicantId, termId: opportunity.termId }, { $set: { offerId, appointmentId, opportunityId: opportunity.id, status: 'offered', expiresAt, endDate: opportunity.appointmentEnd, updatedAt: new Date() }, $setOnInsert: { _id: safeAllocationId(application.applicantId, opportunity.termId) } as any, $inc: { version: 1 } }, { session, upsert: true })
   await db.collection('staffingOffers').insertOne(offer, { session })
   await db.collection('staffingAppointments').insertOne(appointment, { session })
-  await db.collection('staffingOpportunities').updateOne({ id: opportunity.id }, { $inc: { committedPositions: 1, committedBudget: opportunity.appointmentCost, version: 1 }, $set: { status: opportunity.committedPositions + 1 === opportunity.positions ? 'filled' : opportunity.status, updatedAt: new Date() } }, { session })
+  await db.collection('staffingOpportunities').updateOne({ id: opportunity.id }, { $inc: { committedPositions: 1, version: 1 }, $set: { status: opportunity.committedPositions + 1 === opportunity.positions ? 'filled' : opportunity.status, updatedAt: new Date() } }, { session })
   await db.collection('staffingApplications').updateOne({ id: applicationId }, { $set: { status: 'selected', updatedAt: new Date() }, $inc: { version: 1 } }, { session })
   await db.collection('staffingCommands').insertOne({ actorId: actorId(user), key, kind: 'select', applicationId, offerId, appointmentId, createdAt: new Date() }, { session })
   await invalidateCandidateRefresh(db, session, { applicantId: application.applicantId })
@@ -170,6 +168,7 @@ export async function offerAction(db: Db, session: ClientSession, user: Staffing
 }
 
 export async function appointmentAction(db: Db, session: ClientSession, user: StaffingActor, id: string, action: string, raw: unknown) {
+  if (action === 'settle') fail(410, 'This appointment action is no longer available')
   const appointment = await db.collection('staffingAppointments').findOne({ id }, { session }) || fail(404, 'Appointment not found')
   const opportunity = await findOpportunity(db, appointment.opportunityId, session)
   await lockStaffingResource(db, opportunity, session)
@@ -180,7 +179,7 @@ export async function appointmentAction(db: Db, session: ClientSession, user: St
   if (grantsAuthority && opportunity.type === 'ta' && await db.collection('courseRestrictions').findOne({ courseId: opportunity.courseId, userEmail: appointment.applicantEmail }, { session })) fail(409, 'Restore course access before activating this teaching appointment')
   await lockApplicantCommitments(db, appointment.applicantId, session, !grantsAuthority)
   const reason = text(body.reason, 'Reason', 2000)
-  if (['clearance', 'settle'].includes(action) && !isGlobalAdmin(user)) fail(403, 'Only site administrators may process clearance or financial settlement')
+  if (action === 'clearance' && !isGlobalAdmin(user)) fail(403, 'Only site administrators may process clearance')
   if (action === 'clearance') {
     const status = text(body.status, 'Clearance status', 32, true)
     if (!['cleared', 'needs_information', 'not_cleared'].includes(status)) fail(400, 'Invalid clearance status')
@@ -209,15 +208,9 @@ export async function appointmentAction(db: Db, session: ClientSession, user: St
     const state = appointment.startDate <= new Date() ? 'active' : 'pending_start'
     await db.collection('staffingAppointments').updateOne({ id }, { $set: { status: state }, $inc: { version: 1 } }, { session })
     await db.collection('staffingAllocations').updateOne({ applicantId: appointment.applicantId, termId: appointment.termId, offerId: appointment.offerId }, { $set: { status: state === 'active' ? 'active' : 'accepted_pending_clearance' }, $inc: { version: 1 } }, { session })
-  } else if (action === 'settle') {
-    if (appointment.budgetStatus !== 'awaiting_settlement') fail(409, 'No unsettled commitment remains')
-    const incurredCost = number(body.incurredCost, 'Approved incurred cost', 0, appointment.committedCost)
-    const unused = appointment.committedCost - incurredCost
-    await db.collection('staffingOpportunities').updateOne({ id: opportunity.id }, { $inc: { committedBudget: -unused, version: 1 } }, { session })
-    await db.collection('staffingAppointments').updateOne({ id }, { $set: { budgetStatus: 'settled', incurredCost, releasedBudget: unused, settledBy: user.email }, $inc: { version: 1 } }, { session })
   } else fail(404, 'Unknown appointment action')
-  if (!['end', 'settle'].includes(action) && !(action === 'clearance' && body.status === 'not_cleared')) await invalidateCandidateRefresh(db, session, { applicantId: appointment.applicantId })
-  await event(db, session, user, `Appointment${action[0]!.toUpperCase() + action.slice(1)}`, id, action === 'settle' ? { incurredCost: body.incurredCost } : {})
+  if (action !== 'end' && !(action === 'clearance' && body.status === 'not_cleared')) await invalidateCandidateRefresh(db, session, { applicantId: appointment.applicantId })
+  await event(db, session, user, `Appointment${action[0]!.toUpperCase() + action.slice(1)}`, id)
   return { appointment: appointmentDto(await db.collection('staffingAppointments').findOne({ id }, { session }), user) }
 }
 

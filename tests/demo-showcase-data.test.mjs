@@ -170,7 +170,7 @@ test('interrupted fixture replay retains one rating per student session helper a
 test('version and reference guards leave earlier complete showcase datasets untouched', async () => {
   const current = createDemoCatalog('2026-11-07T17:00:00Z');
   for (const change of [
-    fixture => { fixture.manifest.version = DEMO_CATALOG_VERSION - 1; fixture.manifest.marker = 'campusworks-showcase-v4'; },
+    fixture => { fixture.manifest.version = DEMO_CATALOG_VERSION - 1; fixture.manifest.marker = `campusworks-showcase-v${DEMO_CATALOG_VERSION - 1}`; },
     fixture => { fixture.manifest.referenceTime = '2026-11-06T17:00:00Z'; },
   ]) {
     const fixture = observationFixture(current);
@@ -179,9 +179,11 @@ test('version and reference guards leave earlier complete showcase datasets unto
     await assert.rejects(seedShowcaseObservations({ catalog: current, ...fixture }), /data version/);
     assert.equal(fixture.writes, 0);
   }
-  const prior = { ...current, version: 4, marker: 'campusworks-showcase-v4' };
-  const fixture = observationFixture(prior);
-  fixture.manifest.stages.observations = true;
-  await assert.rejects(seedShowcaseObservations({ catalog: prior, ...fixture }), /data version/);
-  assert.equal(fixture.writes, 0);
+  for (const version of [4, 5]) {
+    const prior = { ...current, version, marker: `campusworks-showcase-v${version}` };
+    const fixture = observationFixture(prior);
+    fixture.manifest.stages.observations = true;
+    await assert.rejects(seedShowcaseObservations({ catalog: prior, ...fixture }), /data version/);
+    assert.equal(fixture.writes, 0);
+  }
 });

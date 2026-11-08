@@ -4,7 +4,7 @@ import { test, expect, json, ok, database, type StaffingSpace } from '../staffin
 const draftBody = (space: StaffingSpace, changes: Record<string, unknown> = {}) => ({
   type: 'ra', title: `Synthetic recruitment ${space.suffix}`, courseId: '', department: 'Computer Science',
   description: 'Synthetic recruitment cycle verification.', positions: 1, weeklyHours: 10, duties: [], questions: [],
-  cvRequired: false, approvalRequired: false, hourlyRate: 20, budget: 10000, ...changes,
+  cvRequired: false, approvalRequired: false, ...changes,
 });
 
 async function configure(space: StaffingSpace, changes: Record<string, unknown>) {
@@ -204,7 +204,7 @@ test('course queue reads leave linked RA lifecycle changes to the canonical oppo
 
 test('current-semester course reports include legacy TA observations while excluding RA course metadata', async ({ space }) => {
   const teaching = await space.opportunity();
-  const research = await space.opportunity({ type: 'ra', courseId: space.code, budget: 3600 });
+  const research = await space.opportunity({ type: 'ra', courseId: space.code });
   const selected = await space.select(await space.application(teaching));
   await ok(space.student.api.post(`/api/staffing/offers/${selected.offer.id}/accept`, { data: {} }));
   await ok(space.admin.api.post(`/api/staffing/appointments/${selected.appointment.id}/clearance`, { data: { status: 'cleared' } }));
@@ -218,8 +218,8 @@ test('current-semester course reports include legacy TA observations while exclu
     expect(report.currentCycle.termId).toBe(space.term.id);
     expect(report.workload).toMatchObject({ totalHours: 2, count: 1, byKind: { office_hours: 2 } });
     expect(report.workload.byKind).not.toHaveProperty('research');
-    expect(report.budget.approvedBudget).toBe(teaching.budget);
-    expect(report.budget.opportunities.map((opportunity: any) => opportunity.id)).toEqual([teaching.id]);
-    expect(report.budget.scenarios.every((scenario: any) => scenario.opportunityId === teaching.id)).toBe(true);
+    expect(report.staffing).toMatchObject({ approvedPositions: teaching.positions, committedPositions: 1, openPositions: teaching.positions - 1 });
+    expect(report.staffing.opportunities.map((opportunity: any) => opportunity.id)).toEqual([teaching.id]);
+    expect(report).not.toHaveProperty('budget');
   } finally { await client.close(); }
 });

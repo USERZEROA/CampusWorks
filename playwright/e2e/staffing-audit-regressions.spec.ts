@@ -17,7 +17,8 @@ test('course aliases persist one canonical appointment scope and cannot bypass d
     }
     expect((await json(space.student.api.get(`/api/courses/${space.code}`))).isStaff).toBe(true);
     const oldScopeReport = await json(space.instructor.api.get(`/api/staffing/reviews/${space.code}`));
-    expect(oldScopeReport.budget).toMatchObject({ approvedBudget: posting.budget, committedBudget: selected.appointment.committedCost });
+    expect(oldScopeReport.staffing).toMatchObject({ approvedPositions: posting.positions, committedPositions: 1, openPositions: posting.positions - 1 });
+    expect(oldScopeReport).not.toHaveProperty('budget');
     expect(oldScopeReport.workload.totalHours).toBe(1);
     expect((await space.admin.api.delete(`/api/courses/${space.code}`)).status()).toBe(409);
     await ok(space.instructor.api.post(`/api/staffing/appointments/${selected.appointment.id}/end`, { data: { reason: 'Synthetic closeout' } }));
@@ -76,31 +77,36 @@ test('only site administrators can correct cleared details with a private before
     expect(JSON.stringify(event)).not.toContain(correction.reason);
     expect(JSON.stringify(await db.collection('staffingNotifications').find({}).toArray())).not.toContain(correction.reason);
   } finally { await client.close(); }
-  await ok(space.instructor.api.post(`/api/staffing/appointments/${selected.appointment.id}/end`, { data: { reason: 'Synthetic history closeout' } }));
-  const settled = (await json(space.admin.api.post(`/api/staffing/appointments/${selected.appointment.id}/settle`, { data: { incurredCost: 100 } }))).appointment;
+  const ended = (await json(space.instructor.api.post(`/api/staffing/appointments/${selected.appointment.id}/end`, { data: { reason: 'Synthetic history closeout' } }))).appointment;
   await ok(space.admin.api.post(path, { data: { ...correction, expectedAdministrativeVersion: 2, reason: 'Synthetic historical correction', administrative: { dukeUniqueId: 'SYNTHETIC-HISTORY-ID' } } }));
   const historical = await json(space.admin.api.get(`/api/staffing/applications/${application.id}`));
-  expect(historical.appointment).toEqual(settled);
+  expect(historical.appointment).toEqual(ended);
   expect(historical.administrativeCorrections[0]).toMatchObject({ before: { dukeUniqueId: 'SYNTHETIC-NEW-ID' }, after: { dukeUniqueId: 'SYNTHETIC-HISTORY-ID' }, reason: 'Synthetic historical correction' });
   expect((await space.student.api.post(path, { data: { ...correction, expectedAdministrativeVersion: 3 } })).status()).toBe(403);
 });
 
-test('reports distinguish requested plans, published approved plans, commitments and settled costs', async ({ space }) => {
+test('reports count only approved active staffing plans and release reserved seats on appointment end', async ({ space }) => {
   const published = await space.opportunity();
-  const draft = (await json(space.instructor.api.post('/api/staffing/opportunities', { data: { ...published, title: 'Synthetic pending plan', approvalRequired: true, budget: 3456 } }))).opportunity;
+  const draft = (await json(space.instructor.api.post('/api/staffing/opportunities', { data: { ...published, title: 'Synthetic pending plan', approvalRequired: true, positions: 3 } }))).opportunity;
   expect(draft.approved).toBe(false);
-  await ok(space.admin.api.post('/api/staffing/opportunities', { data: { ...published, title: 'Synthetic administrator draft', budget: 800 } }));
+  const adminDraft = (await json(space.admin.api.post('/api/staffing/opportunities', { data: { ...published, title: 'Synthetic administrator draft', positions: 4 } }))).opportunity;
+  expect(adminDraft.approved).toBe(true);
   const path = `/api/staffing/reviews/${space.code}`;
   const before = await json(space.instructor.api.get(path));
-  expect(before.budget).toMatchObject({ requestedBudget: 4256, approvedBudget: 1200, committedBudget: 0, settledBudget: 0 });
+  expect(before.staffing).toMatchObject({ approvedPositions: published.positions, committedPositions: 0, openPositions: published.positions });
+  expect(before.staffing.opportunities).toHaveLength(3);
+  expect(before).not.toHaveProperty('budget');
   const application = await space.application(published);
   const selected = await space.select(application);
   await ok(space.student.api.post(`/api/staffing/offers/${selected.offer.id}/accept`, { data: {} }));
   await ok(space.admin.api.post(`/api/staffing/appointments/${selected.appointment.id}/clearance`, { data: { status: 'cleared' } }));
+  expect((await json(space.instructor.api.get(path))).staffing).toMatchObject({ approvedPositions: published.positions, committedPositions: 1, openPositions: published.positions - 1 });
+  await ok(space.instructor.api.post(`/api/staffing/opportunities/${published.id}/close`, { data: {} }));
+  expect((await json(space.instructor.api.get(path))).staffing).toMatchObject({ approvedPositions: published.positions, committedPositions: 1, openPositions: published.positions - 1 });
   await ok(space.instructor.api.post(`/api/staffing/appointments/${selected.appointment.id}/end`, { data: { reason: 'Synthetic work completed' } }));
-  expect((await json(space.instructor.api.get(path))).budget.committedBudget).toBe(selected.appointment.committedCost);
-  await ok(space.admin.api.post(`/api/staffing/appointments/${selected.appointment.id}/settle`, { data: { incurredCost: 100 } }));
-  expect((await json(space.instructor.api.get(path))).budget).toMatchObject({ approvedBudget: 1200, committedBudget: 0, settledBudget: 100 });
+  expect((await json(space.instructor.api.get(path))).staffing).toMatchObject({ approvedPositions: published.positions, committedPositions: 0, openPositions: published.positions });
+  await ok(space.instructor.api.post(`/api/staffing/opportunities/${published.id}/archive`, { data: {} }));
+  expect((await json(space.instructor.api.get(path))).staffing).toMatchObject({ approvedPositions: 0, committedPositions: 0, openPositions: 0 });
 });
 
 test('a course restriction prevents selection and future automatic TA activation until restored', async ({ space }) => {
@@ -121,7 +127,8 @@ test('a course restriction prevents selection and future automatic TA activation
     await db.collection('staffingAppointments').updateOne({ id: pending.id }, { $set: { startDate: new Date(Date.now() - 3600000) } });
     expect((await json(space.student.api.get(`/api/courses/${space.code}`))).isStaff).toBe(false);
     const suspended = await db.collection('staffingAppointments').findOne({ id: pending.id });
-    expect(suspended).toMatchObject({ status: 'suspended', committedCost: pending.committedCost });
+    expect(suspended).toMatchObject({ status: 'suspended', weeklyHours: pending.weeklyHours });
+    expect((await db.collection('staffingOpportunities').findOne({ id: posting.id }))?.committedPositions).toBe(1);
     expect((await db.collection('staffingAllocations').findOne({ appointmentId: pending.id }))?.status).toBe('suspended');
     expect((await space.instructor.api.post(`/api/staffing/appointments/${pending.id}/resume`, { data: {} })).status()).toBe(409);
     await ok(space.instructor.api.post(`/api/courses/${space.code}/enrollments/restore`, { data: { email: space.student.email } }));

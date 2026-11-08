@@ -51,8 +51,8 @@ test('competing instructors cannot reserve the same candidate across course offe
   } finally { await space.admin.api.delete(`/api/courses/${other}`); }
 });
 
-test('last vacancy and approved budget cannot be oversubscribed by concurrent selections', async ({ space }) => {
-  const posting = await space.opportunity({ positions: 1, budget: 600 });
+test('the last approved vacancy cannot be oversubscribed by concurrent selections', async ({ space }) => {
+  const posting = await space.opportunity({ positions: 1 });
   const second = await space.actor('second-candidate');
   const a = await space.application(posting);
   const b = await space.application(posting, second);
@@ -64,7 +64,10 @@ test('last vacancy and approved budget cannot be oversubscribed by concurrent se
   expect(responses.map(response => response.status()).sort()).toEqual([200, 409]);
   const detail = await json(space.instructor.api.get(`/api/staffing/opportunities/${posting.id}`));
   expect(detail.opportunity.committedPositions).toBe(1);
-  expect(detail.opportunity.committedBudget).toBeLessThanOrEqual(detail.opportunity.budget);
+  expect(detail.opportunity.committedPositions).toBeLessThanOrEqual(detail.opportunity.positions);
+  expect(detail.opportunity).not.toHaveProperty('committedBudget');
+  expect(detail.offers[0]).not.toHaveProperty('committedCost');
+  expect(detail.appointments[0]).not.toHaveProperty('committedCost');
   expect(detail.offers).toHaveLength(1);
 });
 
@@ -79,7 +82,7 @@ test('selection replay is idempotent and a declined offer frees the candidate an
   await ok(space.student.api.post(`/api/staffing/offers/${selected.offer.id}/decline`, { data: {} }));
   const detail = await json(space.instructor.api.get(`/api/staffing/opportunities/${posting.id}`));
   expect(detail.opportunity.committedPositions).toBe(0);
-  expect(detail.opportunity.committedBudget).toBe(0);
+  expect(detail.opportunity).not.toHaveProperty('committedBudget');
   expect(detail.applications[0].availability.unavailable).toBe(false);
   const updated = (await json(space.student.api.get(`/api/staffing/applications/${application.id}`))).application;
   const next = await space.select(updated);

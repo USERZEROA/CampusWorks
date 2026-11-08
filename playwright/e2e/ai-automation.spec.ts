@@ -208,8 +208,8 @@ test("manual selection refreshes both faculty comparisons while unchanged summar
       status: "completed",
     })
     .toArray();
-  // Zero-rate fixtures keep the course financial evidence unchanged, isolating
-  // the two real candidate-list changes from legitimate report regeneration.
+  // Selection changes both candidate lists and the selected course's reserved
+  // headcount. Summaries and saved requirements remain unchanged.
   const selected = await json(
     service.faculty.api.post(`/api/staffing/applications/${first.id}/select`, {
       data: { expectedVersion: first.version, idempotencyKey: randomUUID() },
@@ -229,9 +229,16 @@ test("manual selection refreshes both faculty comparisons while unchanged summar
       )
       .toEqual([id]);
   }
+  await expect.poll(() => courseCalls(service, service.code).length, {
+    timeout: 30000,
+  }).toBe(2);
+  expect(courseCalls(service, service.code).at(-1)?.input.evidence.find(
+    (entry: any) => entry.reference === "metrics:staffing",
+  )?.value).toEqual({ approvedPositions: firstPosting.positions, committedPositions: 1 });
+  expect(courseCalls(service, otherCourse)).toHaveLength(1);
   await allIdle(service);
   await pause(1000);
-  expect(service.seen).toHaveLength(12);
+  expect(service.seen).toHaveLength(13);
   const after = await service.db
     .collection("staffingAiTasks")
     .find({

@@ -117,19 +117,37 @@ test('lifecycle outbox delivers an offer notification once and only the recipien
   expect(rescinded.notifications.some((item: any) => item.path === `/applications/${application.id}` && /rescinded/i.test(item.title))).toBe(true);
 });
 
-test('course deletion preserves the settlement path until an activated appointment is financially closed', async ({ space }) => {
+test('course deletion requires staffing closeout while legacy financial fields stay private and cannot block completed work', async ({ space }) => {
   const posting = await space.opportunity();
   const application = await space.application(posting);
   const selected = await space.select(application);
   await ok(space.student.api.post(`/api/staffing/offers/${selected.offer.id}/accept`, { data: {} }));
   await ok(space.admin.api.post(`/api/staffing/appointments/${selected.appointment.id}/clearance`, { data: { status: 'cleared' } }));
-  const ended = await json(space.instructor.api.post(`/api/staffing/appointments/${selected.appointment.id}/end`, { data: { reason: 'Work completed' } }));
-  expect(ended.appointment.budgetStatus).toBe('awaiting_settlement');
-  const detail = await json(space.instructor.api.get(`/api/staffing/opportunities/${posting.id}`));
-  await ok(space.instructor.api.post(`/api/staffing/opportunities/${posting.id}/archive`, { data: { expectedVersion: detail.opportunity.version } }));
   expect((await space.admin.api.delete(`/api/courses/${space.code}`)).status()).toBe(409);
-  await ok(space.admin.api.post(`/api/staffing/appointments/${selected.appointment.id}/settle`, { data: { incurredCost: 100 } }));
-  expect((await space.admin.api.delete(`/api/courses/${space.code}`)).status()).toBe(200);
+  const { client, db } = await database();
+  try {
+    await db.collection('staffingOpportunities').updateOne({ id: posting.id }, { $set: { hourlyRate: 20, budget: 1000, committedBudget: 1000, appointmentCost: 1000, weeks: 5 } });
+    await db.collection('staffingOffers').updateOne({ id: selected.offer.id }, { $set: { committedCost: 1000 } });
+    await db.collection('staffingAppointments').updateOne({ id: selected.appointment.id }, { $set: { committedCost: 1000, budgetStatus: 'awaiting_settlement' } });
+    const before = await db.collection('staffingAppointments').findOne({ id: selected.appointment.id });
+    const postingBefore = await db.collection('staffingOpportunities').findOne({ id: posting.id });
+    expect((await space.admin.api.post(`/api/staffing/appointments/${selected.appointment.id}/settle`, { data: { incurredCost: 100 } })).status()).toBe(410);
+    expect(await db.collection('staffingAppointments').findOne({ id: selected.appointment.id })).toEqual(before);
+    expect(await db.collection('staffingOpportunities').findOne({ id: posting.id })).toEqual(postingBefore);
+    const ended = await json(space.instructor.api.post(`/api/staffing/appointments/${selected.appointment.id}/end`, { data: { reason: 'Work completed' } }));
+    expect(ended.appointment.status).toBe('ended');
+    expect(ended.appointment).not.toHaveProperty('budgetStatus');
+    expect(ended.appointment).not.toHaveProperty('committedCost');
+    const detail = await json(space.instructor.api.get(`/api/staffing/opportunities/${posting.id}`));
+    expect(detail.opportunity.committedPositions).toBe(0);
+    for (const field of ['hourlyRate', 'budget', 'committedBudget', 'appointmentCost', 'weeks']) expect(detail.opportunity).not.toHaveProperty(field);
+    expect(detail.offers[0]).not.toHaveProperty('committedCost');
+    expect(await db.collection('staffingAppointments').findOne({ id: selected.appointment.id })).toMatchObject({ committedCost: 1000, budgetStatus: 'awaiting_settlement' });
+    expect(await db.collection('staffingOpportunities').findOne({ id: posting.id })).toMatchObject({ budget: 1000, committedBudget: 1000 });
+    expect((await space.admin.api.delete(`/api/courses/${space.code}`)).status()).toBe(409);
+    await ok(space.instructor.api.post(`/api/staffing/opportunities/${posting.id}/archive`, { data: { expectedVersion: detail.opportunity.version } }));
+    expect((await space.admin.api.delete(`/api/courses/${space.code}`)).status()).toBe(200);
+  } finally { await client.close(); }
 });
 
 test('a TA cannot manufacture a helped session by claiming their own queue entry', async ({ space }) => {

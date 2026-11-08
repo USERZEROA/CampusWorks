@@ -275,7 +275,6 @@ function emptyMetrics(): InsightsMetrics {
     openPositions: 0,
     pendingClearance: 0,
     pendingStart: 0,
-    unsettled: 0,
   };
 }
 type Segment = {
@@ -704,8 +703,6 @@ export function buildCourseInsights(
     )
       helpers.get(email)!.dto.role = "staff";
   }
-  let committed = 0,
-    settled = 0;
   const appointmentById = new Map<string, Row>();
   for (const appointment of evidence.appointments) {
     const id = keyOf(appointment);
@@ -714,11 +711,6 @@ export function buildCourseInsights(
     appointmentById.set(String(appointment.id), appointment);
     const course = courseRows.get(id)!,
       email = emailOf(appointment.applicantEmail);
-    if (appointment.budgetStatus === "settled")
-      settled += nonnegative(appointment.incurredCost);
-    else if (appointment.budgetStatus !== "released")
-      committed += nonnegative(appointment.committedCost);
-    if (appointment.budgetStatus === "awaiting_settlement") course.unsettled++;
     const end = instant(appointment.endDate),
       start = instant(appointment.startDate);
     if (end === null || end <= now.getTime()) continue;
@@ -805,70 +797,25 @@ export function buildCourseInsights(
     workloadCount++;
     courseRows.get(id)!.reportedHours += hours;
   }
-  let requestedBudget = 0,
-    approvedBudget = 0;
-  const scenarios: CourseInsights["budget"]["scenarios"] = [];
   for (const opportunity of evidence.opportunities) {
     const id = keyOf(opportunity);
     if (!id || opportunity.type !== "ta" || opportunity.termId !== term.id)
       continue;
     const approved =
       opportunity.approved === true &&
-      ["published", "applications_closed", "filled", "archived"].includes(
+      ["published", "applications_closed", "filled"].includes(
         opportunity.status,
-      );
-    if (approved) approvedBudget += nonnegative(opportunity.budget);
-    else if (!["cancelled", "archived"].includes(opportunity.status))
-      requestedBudget += nonnegative(opportunity.budget);
-    if (approved && opportunity.status !== "archived") {
-      const course = courseRows.get(id)!;
-      course.approvedPositions += nonnegative(opportunity.positions);
-      course.committedPositions += nonnegative(opportunity.committedPositions);
-      if (
-        ["published", "applications_closed"].includes(opportunity.status) &&
-        (instant(opportunity.appointmentEnd) ?? 0) > now.getTime()
-      )
-        course.openPositions += Math.max(
-          0,
-          nonnegative(opportunity.positions) -
-            nonnegative(opportunity.committedPositions),
-        );
-      if (
-        [
-          "positions",
-          "weeklyHours",
-          "weeks",
-          "hourlyRate",
-          "appointmentCost",
-          "budget",
-        ].every(
-          (key) =>
-            typeof opportunity[key] === "number" &&
-            Number.isFinite(opportunity[key]) &&
-            opportunity[key] >= 0,
-        )
-      ) {
-        for (const change of [-1, 0, 1]) {
-          const positions = opportunity.positions + change;
-          if (positions < 0) continue;
-          const estimatedCost = round(positions * opportunity.appointmentCost);
-          scenarios.push({
-            courseId: id,
-            opportunityId: String(opportunity.id),
-            title: String(opportunity.title || ""),
-            positions,
-            change,
-            weeklyHours: opportunity.weeklyHours,
-            weeks: opportunity.weeks,
-            hourlyRate: opportunity.hourlyRate,
-            estimatedCost,
-            approvedBudget: opportunity.budget,
-            budgetCovered: estimatedCost <= opportunity.budget,
-            coverageValidated: false,
-          });
-        }
-      }
-    }
+      ) &&
+      (instant(opportunity.appointmentEnd) ?? 0) > now.getTime();
+    if (!approved) continue;
+    const course = courseRows.get(id)!;
+    course.approvedPositions += nonnegative(opportunity.positions);
+    course.committedPositions += nonnegative(opportunity.committedPositions);
+    course.openPositions += Math.max(
+      0,
+      nonnegative(opportunity.positions) -
+        nonnegative(opportunity.committedPositions),
+    );
   }
   const attention: InsightsSignal[] = [],
     allActive = new Set<string>();
@@ -921,13 +868,6 @@ export function buildCourseInsights(
         `${course.pendingClearance} accepted appointment(s) await clearance.`,
         "attention",
       );
-    if (course.unsettled)
-      add(
-        "unsettled",
-        "Settle ended appointments",
-        `${course.unsettled} appointment(s) retain a financial commitment.`,
-        "attention",
-      );
     if (course.unhelpedCount)
       add(
         "unhelped",
@@ -969,7 +909,6 @@ export function buildCourseInsights(
     "openPositions",
     "pendingClearance",
     "pendingStart",
-    "unsettled",
   ];
   for (const course of courseRows.values())
     for (const key of additive)
@@ -1045,17 +984,10 @@ export function buildCourseInsights(
       source:
         "Self-reported UTC work dates; not payroll or complete observation evidence.",
     },
-    budget: {
-      requested: round(requestedBudget),
-      approved: round(approvedBudget),
-      committed: round(committed),
-      settled: round(settled),
-      scenarios,
-    },
     attention,
     coverage: {
       source:
-        "One authorized database snapshot. Request-start cohort: arrivals within the Eastern date range, with outcomes and full recorded help intervals observed through generatedAt. Feedback uses submission dates; workload uses UTC work dates. Staffing and financial state are current for the selected semester.",
+        "One authorized database snapshot. Request-start cohort: arrivals within the Eastern date range, with outcomes and full recorded help intervals observed through generatedAt. Feedback uses submission dates; workload uses UTC work dates. Staffing state is current for the selected semester.",
       completeObservationEstablished: false,
       feedbackAttribution:
         "Only explicit helper-scoped feedback linked to the student and an actual recorded helper contributes to an individual rating. Unattributed feedback remains course-level.",
@@ -1075,7 +1007,7 @@ export function buildCourseInsights(
         "Course feedback is never assigned to an individual helper.",
         "Self-reported work and queue minutes overlap and must not be added together.",
         "Manual TA assignments without an effective appointment lack contractual weekly-hour evidence.",
-        "Costs are conditional scenarios; required headcount and savings are not established.",
+        "Observed support does not establish required TA headcount.",
         "Eastern repeated DST hours are combined; zero records do not establish zero demand.",
       ],
     },
@@ -1232,11 +1164,47 @@ export async function readCourseInsights(
       : [];
     const opportunities = await db
       .collection("staffingOpportunities")
-      .find({ ...byCourse, termId: term.id, type: "ta" }, { session })
+      .find(
+        { ...byCourse, termId: term.id, type: "ta" },
+        {
+          session,
+          projection: {
+            id: 1,
+            courseId: 1,
+            termId: 1,
+            type: 1,
+            approved: 1,
+            status: 1,
+            appointmentEnd: 1,
+            positions: 1,
+            committedPositions: 1,
+          },
+        },
+      )
       .toArray();
     const appointments = await db
       .collection("staffingAppointments")
-      .find({ ...byCourse, termId: term.id, type: "ta" }, { session })
+      .find(
+        { ...byCourse, termId: term.id, type: "ta" },
+        {
+          session,
+          projection: {
+            id: 1,
+            courseId: 1,
+            termId: 1,
+            type: 1,
+            applicantId: 1,
+            applicantEmail: 1,
+            applicantName: 1,
+            status: 1,
+            clearance: 1,
+            acceptedAt: 1,
+            startDate: 1,
+            endDate: 1,
+            weeklyHours: 1,
+          },
+        },
+      )
       .toArray();
     const workload = await db
       .collection("staffingWorkload")

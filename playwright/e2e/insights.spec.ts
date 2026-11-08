@@ -647,13 +647,6 @@ test("real help-session feedback updates one helper and responsive dashboards re
     await expect(
       reviewer.page.locator('tr[data-testid^="insights-helper-"]').first(),
     ).toHaveAttribute("data-testid", `insights-helper-${helperEmail}`);
-    await reviewer.page
-      .getByTestId("insights-scenario")
-      .selectOption(manifest.opportunityIds["systems-ta"]);
-    await expect(reviewer.page.locator(".scenario-card")).toHaveCount(3);
-    await expect(
-      reviewer.page.locator(".scenario-card.is-current"),
-    ).toHaveCount(1);
     for (const width of [1440, 768, 390, 320]) {
       await reviewer.page.setViewportSize({ width, height: 1000 });
       await expect(reviewer.page.getByTestId("insights-root")).toBeVisible();

@@ -32,8 +32,6 @@ const initialForm = {
   requiredSkills: "",
   preferredSkills: "",
   cvRequired: true,
-  hourlyRate: 20,
-  budget: 10000,
   approvalRequired: true,
   allowedPositionPreferences: ["full", "half", "either", "other"],
   duties: [{ kind: "office_hours", sessionsPerWeek: 1, minutesPerSession: 60 }],
@@ -517,28 +515,7 @@ function addQuestion() {
             </button>
           </div>
         </fieldset>
-        <fieldset :disabled="busy || !draftEditable">
-          <legend>Budget and approval</legend>
-          <div class="grid">
-            <label
-              >Hourly rate<input
-                v-model.number="form.hourlyRate"
-                type="number"
-                min="0"
-                step="0.01"
-                required
-                data-testid="opportunity-rate" /></label
-            ><label
-              >Total approved budget<input
-                v-model.number="form.budget"
-                type="number"
-                min="0"
-                step="0.01"
-                required
-                data-testid="opportunity-budget"
-            /></label>
-          </div>
-        </fieldset>
+
         <div v-if="draftEditable" class="actions form-actions">
           <button
             type="submit"

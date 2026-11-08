@@ -6,11 +6,10 @@ Open **Course insights** from Home. Site administrators see the department; inst
 
 - Recorded requests, helped and active requests, first-help waiting-time samples and P90.
 - Daily demand and an Eastern Time weekday/hour heatmap, with a course filter and reporting dates.
-- Current TA coverage, on-duty helpers, unfilled approved seats, pending clearance and unsettled appointments.
+- Current TA coverage, on-duty helpers, unfilled approved seats, known weekly hours and pending clearance.
 - Helper activity, reported teaching work and explicitly attributed feedback, with sample counts.
-- Conditional position costs for a smaller, current or larger plan where valid. These are arithmetic scenarios, not approved staffing reductions.
 
-The administrator's shared current recruitment semester supplies the reporting context. The default window covers up to 28 calendar days within that semester. Dates and heatmap hours use `America/New_York`; entered workload dates remain UTC work dates. Request outcomes follow arrivals in the selected range and use recorded help through the displayed update time. Staffing and financial state are current for that semester. Changing filters silently loads the matching scope.
+The administrator's shared current recruitment semester supplies the reporting context. The default window covers up to 28 calendar days within that semester. Dates and heatmap hours use `America/New_York`; entered workload dates remain UTC work dates. Request outcomes follow arrivals in the selected range and use recorded help through the displayed update time. Staffing state is current for that semester. Changing filters silently loads the matching scope.
 
 Summary responses contain aggregates and helper identities, not student identities, queue questions, locations or feedback narratives. Authorized course-management detail retains its separate permissions and identified feedback. Loss of course authority removes the corresponding reporting scope.
 
@@ -34,10 +33,10 @@ These labels organize recorded feedback. They do not establish teaching quality 
 
 ## Demonstration evidence
 
-Catalog **v5** preserves the ten-course showcase's 41 accounts, 21 positions, 68 applications, thirty work records, 380 historical requests, eighty feedback records and eleven live requests. Current history contains illustrative weekday office-hour clusters with uneven daily demand and busy afternoons. Work counts and hours vary between the five demonstrated TA appointments.
+Catalog **v6** preserves the ten-course showcase's 41 accounts, 21 positions, 68 applications, thirty work records, 380 historical requests, eighty feedback records and eleven live requests. Current history contains illustrative weekday office-hour clusters with uneven daily demand and busy afternoons. Work counts and hours vary between the five demonstrated TA appointments.
 
 Sixty feedback fixtures explicitly link to same-student, same-course completed requests and actual helper segments; twenty remain course-level. The loader validates their dates, linkage and unique student/session/helper target. All people, schedules, scores and observations are synthetic. Their variation demonstrates the interface, not measured institutional performance.
 
-New preparation uses a dedicated v5 dataset. Existing v4 datasets and their dated screenshots and verification receipts remain separate historical evidence; they are not silently changed to v5.
+New preparation uses a dedicated v6 dataset. Earlier catalog datasets and their dated screenshots and verification receipts remain separate historical evidence.
 
-Charts and totals are deterministic database calculations. Opening insights does not purchase an AI response. The separate [AI workflows](AI_WORKFLOWS.md) retain their provider configuration, evidence checks and human decisions. Queue use, self-reported work and feedback do not establish complete paid workload, hiring quality or budget savings.
+Charts and totals are deterministic database calculations. Opening insights does not purchase an AI response. The separate [AI workflows](AI_WORKFLOWS.md) retain their provider configuration, evidence checks and human decisions. Queue use, self-reported work and feedback do not establish complete teaching workload, hiring quality or required TA headcount.

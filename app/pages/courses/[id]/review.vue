@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 const courseId = String(useRoute().params.id);
 const reportCacheKey = `term-review-${courseId}`;
 const { data, error, refresh, pending } = await useStaffingPagedRecord(
@@ -7,15 +7,6 @@ const { data, error, refresh, pending } = await useStaffingPagedRecord(
 );
 const termId = computed(() => data.value?.termId || "");
 useIntervalRefresh(refresh, 10000);
-const opportunityTitles = computed(
-  () =>
-    new Map<string, string>(
-      (data.value?.budget?.opportunities || []).map((item: any) => [
-        item.id,
-        item.title,
-      ]),
-    ),
-);
 </script>
 <template>
   <StaffingShell
@@ -70,41 +61,34 @@ const opportunityTitles = computed(
         </div>
       </section>
       <section class="panel">
-        <div class="panel-heading"><h2>Staffing Budget</h2></div>
+        <div class="panel-heading"><h2>Staffing Plan</h2></div>
         <div class="panel-body">
           <dl>
-            <dt>Requested position plans</dt>
-            <dd>{{ data.budget?.requestedBudget ?? "Unavailable" }}</dd>
-            <dt>Approved position plans</dt>
-            <dd>{{ data.budget?.approvedBudget ?? "Unavailable" }}</dd>
-            <dt>Outstanding commitments</dt>
-            <dd>{{ data.budget?.committedBudget ?? "Unavailable" }}</dd>
-            <dt>Settled costs</dt>
-            <dd>{{ data.budget?.settledBudget ?? "Unavailable" }}</dd>
+            <dt>Approved positions</dt>
+            <dd>{{ data.staffing?.approvedPositions ?? 0 }}</dd>
+            <dt>Reserved positions</dt>
+            <dd>{{ data.staffing?.committedPositions ?? 0 }}</dd>
+            <dt>Unfilled seats</dt>
+            <dd>{{ data.staffing?.openPositions ?? 0 }}</dd>
           </dl>
           <p class="muted">
-            {{ data.budget?.opportunities?.length || 0 }} of
-            {{ data.pagination?.totals?.opportunities || 0 }} positions shown
+            {{ data.staffing?.opportunities?.length || 0 }} of
+            {{ data.pagination?.totals?.opportunities || 0 }} opportunities
+            shown
           </p>
           <article
-            v-for="(item, index) in data.budget?.scenarios || []"
-            :key="index"
+            v-for="item in data.staffing?.opportunities || []"
+            :key="item.id"
             class="opportunity-card"
           >
-            <h3>
-              {{ opportunityTitles.get(item.opportunityId) || "Position" }} ·
-              {{ item.positions }} assistant(s)
-            </h3>
+            <h3>{{ item.title }} · {{ item.positions }} planned</h3>
             <p>
-              {{ item.weeklyHours }} hours/week · Estimated cost
-              {{ Number(item.estimatedCost || 0).toFixed(2) }}
+              {{ item.committedPositions || 0 }} reserved ·
+              {{ staffingState(item.status) }}
             </p>
-            <span class="status">{{
-              item.budgetCovered ? "Within budget" : "Exceeds budget"
-            }}</span>
           </article>
-          <p v-if="!data.budget?.scenarios?.length" class="empty">
-            No budget scenarios yet.
+          <p v-if="!data.staffing?.opportunities?.length" class="empty">
+            No staffing plans yet.
           </p>
         </div>
       </section>

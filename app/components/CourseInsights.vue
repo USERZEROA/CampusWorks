@@ -51,7 +51,6 @@ const prefix = props.standalone ? "insights" : "report";
 const chartId = `${useId()}-demand`;
 const helperSearch = ref("");
 const helperSort = ref("name");
-const scenarioId = ref("");
 const quantity = (value: number | null | undefined) =>
   typeof value === "number" && Number.isFinite(value) ? Math.max(0, value) : 0;
 const count = (value: number) =>
@@ -59,14 +58,6 @@ const count = (value: number) =>
 const decimal = (value: number | null | undefined, digits = 1) =>
   typeof value === "number" && Number.isFinite(value)
     ? value.toFixed(digits)
-    : "—";
-const money = (value: number) =>
-  Number.isFinite(value)
-    ? new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-        maximumFractionDigits: 0,
-      }).format(value)
     : "—";
 const dayLabel = (value: string) =>
   new Intl.DateTimeFormat("en-US", {
@@ -250,33 +241,31 @@ const workLabels: Record<string, string> = {
 };
 const workLabel = (kind: string) =>
   workLabels[kind] || kind.replaceAll("_", " ");
-const scenarioChoices = computed(() => [
-  ...new Map(
-    (data.value?.budget.scenarios || []).map((item) => [
-      item.opportunityId,
-      { id: item.opportunityId, title: item.title, courseId: item.courseId },
-    ]),
-  ).values(),
-]);
-const selectedScenario = computed({
-  get: () =>
-    scenarioChoices.value.some((item) => item.id === scenarioId.value)
-      ? scenarioId.value
-      : scenarioChoices.value[0]?.id || "",
-  set: (value: string) => {
-    scenarioId.value = value;
-  },
+const staffingPlan = computed(() => {
+  const courses = data.value?.courses || [];
+  return {
+    approved: courses.reduce(
+      (total, course) => total + quantity(course.approvedPositions),
+      0,
+    ),
+    reserved: courses.reduce(
+      (total, course) => total + quantity(course.committedPositions),
+      0,
+    ),
+    weeklyHours: courses.reduce(
+      (total, course) => total + quantity(course.appointedWeeklyHours),
+      0,
+    ),
+    unknown: courses.reduce(
+      (total, course) => total + quantity(course.manualCapacityUnknown),
+      0,
+    ),
+  };
 });
-const scenarios = computed(() =>
-  (data.value?.budget.scenarios || [])
-    .filter((item) => item.opportunityId === selectedScenario.value)
-    .sort((left, right) => left.change - right.change),
-);
 const attentionGroups = computed(() => {
   const courses = data.value?.courses || [];
   const priorities = [
     "pending-clearance",
-    "unsettled",
     "unhelped",
     "manual-capacity",
     "missing-workload",
@@ -315,12 +304,6 @@ const attentionGroups = computed(() => {
         title = "Appointment clearance";
         detail = units(
           sum((course) => course.pendingClearance),
-          "appointment",
-        );
-      } else if (code === "unsettled") {
-        title = "Cost settlement";
-        detail = units(
-          sum((course) => course.unsettled),
           "appointment",
         );
       } else if (code === "unhelped") {
@@ -985,31 +968,35 @@ const courseName = (id: string) =>
             separately.
           </p>
         </section>
-        <section class="insight-card" aria-labelledby="insight-finance-title">
+        <section class="insight-card" aria-labelledby="insight-staffing-title">
           <div class="insight-card-heading">
             <div>
               <p class="insight-eyebrow">Current semester</p>
-              <h3 id="insight-finance-title">Staffing commitments</h3>
+              <h3 id="insight-staffing-title">Staffing coverage</h3>
             </div>
           </div>
-          <dl class="insight-financials">
+          <dl class="insight-plan-totals">
             <div>
-              <dt>Approved plans</dt>
-              <dd>{{ money(data.budget.approved) }}</dd>
+              <dt>Approved positions</dt>
+              <dd>{{ count(staffingPlan.approved) }}</dd>
             </div>
             <div>
-              <dt>Outstanding commitments</dt>
-              <dd>{{ money(data.budget.committed) }}</dd>
+              <dt>Reserved positions</dt>
+              <dd>{{ count(staffingPlan.reserved) }}</dd>
             </div>
             <div>
-              <dt>Settled incurred costs</dt>
-              <dd>{{ money(data.budget.settled) }}</dd>
+              <dt>Unfilled seats</dt>
+              <dd>{{ count(data.summary.openPositions) }}</dd>
             </div>
             <div>
-              <dt>Requested plans</dt>
-              <dd>{{ money(data.budget.requested) }}</dd>
+              <dt>Known assigned hours / week</dt>
+              <dd>{{ decimal(staffingPlan.weeklyHours) }}</dd>
             </div>
           </dl>
+          <p v-if="staffingPlan.unknown" class="insight-note">
+            {{ staffingPlan.unknown }} manual assignments have no recorded
+            weekly hours.
+          </p>
           <div class="staffing-facts">
             <span
               ><strong>{{ data.summary.pendingClearance }}</strong> pending
@@ -1017,81 +1004,10 @@ const courseName = (id: string) =>
             ><span
               ><strong>{{ data.summary.pendingStart }}</strong> future
               starts</span
-            ><span
-              ><strong>{{ data.summary.unsettled }}</strong> awaiting
-              settlement</span
             >
           </div>
         </section>
       </div>
-
-      <section class="insight-card" aria-labelledby="insight-scenarios-title">
-        <div class="insight-card-heading">
-          <div>
-            <p class="insight-eyebrow">Plan the next staffing conversation</p>
-            <h3 id="insight-scenarios-title">
-              One fewer, current plan, one more
-            </h3>
-          </div>
-        </div>
-        <label v-if="scenarioChoices.length" class="scenario-select"
-          >Position<select
-            v-model="selectedScenario"
-            data-testid="insights-scenario"
-          >
-            <option value="" disabled>Choose a position</option>
-            <option
-              v-for="choice in scenarioChoices"
-              :key="choice.id"
-              :value="choice.id"
-            >
-              {{ courseName(choice.courseId) }} · {{ choice.title }}
-            </option>
-          </select></label
-        >
-        <div v-if="scenarios.length" class="scenario-grid">
-          <article
-            v-for="scenario in scenarios"
-            :key="`${scenario.opportunityId}-${scenario.change}`"
-            class="scenario-card"
-            :class="{ 'is-current': scenario.change === 0 }"
-          >
-            <span class="scenario-label">{{
-              scenario.change === 0
-                ? "Current plan"
-                : scenario.change < 0
-                  ? "One fewer"
-                  : "One more"
-            }}</span>
-            <h4>
-              {{ scenario.positions }} TA{{
-                scenario.positions === 1 ? "" : "s"
-              }}
-            </h4>
-            <strong>{{ money(scenario.estimatedCost) }}</strong>
-            <p>
-              {{ scenario.weeklyHours }} h/week ·
-              {{ decimal(scenario.weeks, 0) }} weeks ·
-              {{ money(scenario.hourlyRate) }}/h
-            </p>
-            <span
-              class="insight-signal"
-              :class="{ 'is-attention': !scenario.budgetCovered }"
-              >{{
-                scenario.budgetCovered
-                  ? "Within approved budget"
-                  : "Exceeds approved budget"
-              }}</span
-            >
-          </article>
-        </div>
-        <p v-else class="insight-empty">
-          No approved-position scenarios are available.
-        </p>
-        <p class="insight-note">
-          Review teaching coverage before changing staffing.
-        </p>
-      </section>
 
       <details class="insight-coverage">
         <summary>
@@ -1660,20 +1576,20 @@ const courseName = (id: string) =>
   background: #17408b;
   border-radius: 5px;
 }
-.course-insights .insight-financials {
+.course-insights .insight-plan-totals {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   margin: 0 0 25px;
   padding: 0;
 }
-.insight-financials dt {
+.insight-plan-totals dt {
   font-size: 11px;
   font-weight: 400;
   color: var(--insight-muted);
   line-height: 1.5;
 }
-.course-insights .insight-financials dd {
+.course-insights .insight-plan-totals dd {
   font-size: 24px;
   line-height: 1.3;
   letter-spacing: -0.025em;
@@ -1694,50 +1610,7 @@ const courseName = (id: string) =>
 .staffing-facts strong {
   color: var(--insight-blue);
 }
-.scenario-select {
-  max-width: 650px;
-  margin-bottom: 18px !important;
-}
-.scenario-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-}
-.scenario-card {
-  padding: 18px;
-  border: 1px solid var(--insight-line);
-  border-radius: 9px;
-  background: #fbfcff;
-  min-width: 0;
-}
-.scenario-card.is-current {
-  border-color: #17408b;
-  background: #f0f5ff;
-  box-shadow: inset 0 3px 0 #17408b;
-}
-.scenario-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--insight-accent);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.scenario-card h4 {
-  font-size: 15px;
-  margin: 12px 0 4px;
-  color: var(--insight-blue);
-}
-.scenario-card > strong {
-  font-size: 29px;
-  letter-spacing: -0.03em;
-  color: var(--insight-blue);
-}
-.scenario-card p {
-  font-size: 10px;
-  line-height: 1.6;
-  color: var(--insight-muted);
-  margin: 10px 0 13px;
-}
+
 .insight-empty {
   font-size: 12px;
   line-height: 1.7;
@@ -1803,32 +1676,7 @@ const courseName = (id: string) =>
   .insight-card h3 {
     font-size: 18px;
   }
-  .scenario-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .scenario-card {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px 12px;
-    align-items: center;
-  }
-  .scenario-label {
-    grid-column: 1/-1;
-  }
-  .scenario-card h4 {
-    margin: 4px 0;
-  }
-  .scenario-card p {
-    grid-column: 1/-1;
-    margin: 0 0 4px;
-  }
-  .scenario-card > .insight-signal {
-    grid-column: 1/-1;
-    justify-self: start;
-  }
-  .scenario-card > strong {
-    font-size: 27px;
-  }
+
   .insight-attention-list {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1838,7 +1686,7 @@ const courseName = (id: string) =>
   .insight-helper-filters > label:last-child {
     flex: 1 1 210px;
   }
-  .course-insights .insight-financials dd {
+  .course-insights .insight-plan-totals dd {
     font-size: 22px;
   }
 }

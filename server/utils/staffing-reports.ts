@@ -63,23 +63,25 @@ export async function courseReview(db: Db, user: StaffingActor, courseId: string
   const workloadGroups = await db.collection('staffingWorkload').aggregate([{ $match: workloadFilter }, { $group: { _id: '$kind', hours: { $sum: '$hours' } } }], { session }).toArray()
   const records = await db.collection('staffingWorkload').find(workloadFilter, { session }).sort({ date: -1, createdAt: -1, id: 1 }).skip(offset).limit(100).toArray()
   const recordCount = await db.collection('staffingWorkload').countDocuments(workloadFilter, { session })
-  const approvedPlan = { $and: [{ $eq: ['$approved', true] }, { $in: ['$status', ['published', 'applications_closed', 'filled', 'archived']] }] }
-  const requestedPlan = { $and: [{ $not: [approvedPlan] }, { $not: [{ $in: ['$status', ['cancelled', 'archived']] }] }] }
-  const opportunityStats = await db.collection('staffingOpportunities').aggregate([{ $match: opportunityFilter }, { $group: { _id: null, count: { $sum: 1 }, requestedBudget: { $sum: { $cond: [requestedPlan, '$budget', 0] } }, approvedBudget: { $sum: { $cond: [approvedPlan, '$budget', 0] } } } }], { session }).next()
-  const appointments = await db.collection('staffingAppointments').aggregate([{ $match: { courseId: linkedCourse, type: 'ta', termId } }, { $group: { _id: null, committedBudget: { $sum: { $cond: [{ $not: [{ $in: [{ $ifNull: ['$budgetStatus', 'reserved'] }, ['settled', 'released']] }] }, '$committedCost', 0] } }, settledBudget: { $sum: { $cond: [{ $eq: ['$budgetStatus', 'settled'] }, '$incurredCost', 0] } } } }], { session }).next()
+  const approvedPlan = { $and: [{ $eq: ['$approved', true] }, { $in: ['$status', ['published', 'applications_closed', 'filled']] }, { $gt: ['$appointmentEnd', new Date()] }] }
+  const opportunityStats = await db.collection('staffingOpportunities').aggregate([{ $match: opportunityFilter }, { $group: {
+    _id: null, count: { $sum: 1 },
+    approvedPositions: { $sum: { $cond: [approvedPlan, '$positions', 0] } },
+    committedPositions: { $sum: { $cond: [approvedPlan, { $ifNull: ['$committedPositions', 0] }, 0] } },
+    openPositions: { $sum: { $cond: [approvedPlan, { $max: [0, { $subtract: ['$positions', { $ifNull: ['$committedPositions', 0] }] }] }, 0] } }
+  } }], { session }).next()
   const opportunities = await db.collection('staffingOpportunities').find(opportunityFilter, { session }).sort({ createdAt: -1, id: 1 }).skip(offset).limit(100).toArray()
   const waitStats = await db.collection('helpSessions').aggregate([{ $match: waitFilter }, { $group: { _id: null, count: { $sum: 1 }, average: { $avg: '$waitMinutes' } } }], { session }).next()
   const percentile = waitStats?.count ? await db.collection('helpSessions').find(waitFilter, { session }).sort({ waitMinutes: 1, _id: 1 }).skip(Math.ceil(waitStats.count * .9) - 1).limit(1).next() : null
   // Aggregation groups have no natural order. Stable keys keep unchanged
   // course evidence from triggering another automatic model request.
   const byKind = Object.fromEntries(workloadGroups.sort((a, b) => String(a._id).localeCompare(String(b._id))).map(row => [row._id, row.hours]))
-  const scenarios = opportunities.flatMap(o => [o.positions - 1, o.positions, o.positions + 1].filter(n => n >= 0).map(positions => ({ opportunityId: o.id, positions, weeklyHours: o.weeklyHours, weeks: o.weeks, hourlyRate: o.hourlyRate, estimatedCost: Math.round(positions * o.appointmentCost * 100) / 100, budgetCovered: positions * o.appointmentCost <= o.budget, coverageValidated: false })))
   return {
     course: { id: course.id, code: course.code, title: course.title }, termId: termId || null, currentCycle,
     metrics: { sessions: sessionStats?.sessions || 0, helped: sessionStats?.helped || 0, avgWaitMinutes: waitStats?.average ?? null, p90WaitMinutes: percentile?.waitMinutes ?? null, recordedHelpMinutes: sessionStats?.recordedHelpMinutes || 0, feedbackCount: feedbackStats?.count || 0, feedbackAverage: feedbackStats?.average ?? null },
-    workload: { totalHours: workloadGroups.reduce((sum, w) => sum + w.hours, 0), byKind, count: recordCount, records: records.map(publicRecord), source: 'self-reported; not payroll evidence' },
-    budget: { requestedBudget: opportunityStats?.requestedBudget || 0, approvedBudget: opportunityStats?.approvedBudget || 0, committedBudget: appointments?.committedBudget || 0, settledBudget: appointments?.settledBudget || 0, opportunities: opportunities.map(o => ({ id: o.id, title: o.title, positions: o.positions, budget: o.budget, approved: o.approved, status: o.status, committedBudget: o.committedBudget })), scenarios },
-    missingEvidence: ['Complete observation coverage is not established.', 'Self-reported workload does not prove paid hours.', 'Lab, grading, attendance and deadline coverage require instructor validation.', 'Cost scenarios do not establish that lower staffing will meet demand.'],
+    workload: { totalHours: workloadGroups.reduce((sum, w) => sum + w.hours, 0), byKind, count: recordCount, records: records.map(publicRecord), source: 'self-reported observations' },
+    staffing: { approvedPositions: opportunityStats?.approvedPositions || 0, committedPositions: opportunityStats?.committedPositions || 0, openPositions: opportunityStats?.openPositions || 0, opportunities: opportunities.map(o => ({ id: o.id, title: o.title, positions: o.positions, approved: o.approved, status: o.status, committedPositions: o.committedPositions || 0 })) },
+    missingEvidence: ['Complete observation coverage is not established.', 'Self-reported workload is not verified attendance.', 'Lab, grading, attendance and deadline coverage require instructor validation.'],
     pagination: { page, limit: 100, totals: { workload: recordCount, opportunities: opportunityStats?.count || 0 }, hasMore: recordCount > offset + 100 || (opportunityStats?.count || 0) > offset + 100 },
     aggregateCoverage: 'All matching database records; detail rows are independently paged.',
     ai: aiStatus()

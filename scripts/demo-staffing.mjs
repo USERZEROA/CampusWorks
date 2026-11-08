@@ -64,7 +64,7 @@ export async function prepareStaffingDemo(baseURL, course = 'cs101') {
           requiredSkills: definition.type === 'ta' ? 'Programming and clear explanations' : 'Data analysis and research documentation', preferredSkills: 'Collaboration',
           requiresAttendance: definition.type === 'ta', hasLab: definition.type === 'ta', hasDiscussion: false, requiresGrading: definition.type === 'ta', holdsOfficeHours: definition.type === 'ta',
           duties: [{ kind: definition.type === 'ta' ? 'office_hours' : 'research', sessionsPerWeek: 2, minutesPerSession: 60 }],
-          questions: [{ id: 'experience', prompt: 'Describe relevant coursework or experience.', required: true }], cvRequired: true, approvalRequired: true, hourlyRate: 20, budget: 6000,
+          questions: [{ id: 'experience', prompt: 'Describe relevant coursework or experience.', required: true }], cvRequired: true, approvalRequired: true,
         } }))).opportunity;
       }
       if (opportunity.status === 'draft') opportunity = (await call(instructor.post(`/api/staffing/opportunities/${opportunity.id}/publish`, { data: { expectedVersion: opportunity.version } }))).opportunity;

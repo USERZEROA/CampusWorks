@@ -16,12 +16,12 @@
 - A candidate may apply to multiple opportunities. Only one reserved/offered/accepted/active TA or RA allocation per term is permitted by default; the first committed selection wins.
 - Selection reserves a vacancy. Candidate acceptance and explicit administrative clearance precede dated operational authority.
 - TA grants apply only to the appointed course. RA appointments grant no course authority or project workspace. Manual instructor/admin authority is preserved when an appointment ends.
-- AI remains advisory and optional. Candidate availability, deadlines, position capacity, budgets, permissions, and activation are deterministic service decisions.
-- Page synchronization and advisory generation run silently. Hiring, acceptance, clearance, settlement and deletion require human commands. Persistent due-date and notification maintenance runs independently of AI and browser traffic.
+- AI remains advisory and optional. Candidate availability, deadlines, position capacity, permissions, and activation are deterministic service decisions. Staffing covers positions and work requirements without financial budgeting.
+- Page synchronization and advisory generation run silently. Hiring, acceptance, clearance and deletion require human commands. Persistent due-date and notification maintenance runs independently of AI and browser traffic.
 - Payroll, SSN numbers, citizenship, and immigration documents do not enter qualification review or AI fit inputs.
 - Removing a student blocks re-enrollment and queue use in that course until an authorized manager explicitly restores access. Restoration does not enroll the student.
 - After clearance, a site administrator may correct administrative fields with a required reason and private before/after audit. Correction alone changes no appointment status.
-- Appointment end stops new candidate analyses and automatic comparisons while preserving authorized historical results, settlement and course reviews.
+- Appointment end stops new candidate analyses and automatic comparisons while preserving authorized historical results and course reviews.
 
 ## Verification coverage
 
@@ -32,4 +32,4 @@
 
 ## Review follow-up
 
-The confirmed owner choices are recorded in [PRODUCT_POLICY.md](PRODUCT_POLICY.md). Report any additional business rule needing a decision separately from technical fixes. Real institutional SSO, employment eligibility integrations, external expense validation and production operating policy require evidence outside local verification.
+The confirmed owner choices are recorded in [PRODUCT_POLICY.md](PRODUCT_POLICY.md). Report any additional business rule needing a decision separately from technical fixes. Real institutional SSO, employment eligibility integrations and production operating policy require evidence outside local verification.

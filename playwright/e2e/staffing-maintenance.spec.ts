@@ -19,7 +19,8 @@ test('provider-independent maintenance expires an unanswered offer and delivers 
     await expect.poll(async () => (await db.collection('staffingAppointments').findOne({ id: selected.appointment.id }))?.status, { timeout: 30000 }).toBe('expired');
     expect(await db.collection('staffingOffers').findOne({ id: selected.offer.id })).toMatchObject({ status: 'expired' });
     expect(await db.collection('staffingAllocations').findOne({ appointmentId: selected.appointment.id })).toMatchObject({ status: 'released' });
-    expect(await db.collection('staffingOpportunities').findOne({ id: posting.id })).toMatchObject({ committedPositions: 0, committedBudget: 0 });
+    expect(await db.collection('staffingOpportunities').findOne({ id: posting.id })).toMatchObject({ committedPositions: 0 });
+    expect(await db.collection('staffingOpportunities').findOne({ id: posting.id })).not.toHaveProperty('committedBudget');
     const event = await db.collection('staffingEvents').findOne({ kind: 'AppointmentExpired', targetId: selected.appointment.id });
     expect(event).toBeTruthy();
     await expect.poll(() => db.collection('staffingNotifications').countDocuments({ eventId: event!.id, recipientId: space.student.user.id }), { timeout: 30000 }).toBe(1);
@@ -32,7 +33,7 @@ test('due cleared appointments activate automatically while restricted candidate
   const restricted = await space.actor('maintenance-restricted');
   const uncleared = await space.actor('maintenance-uncleared');
   const requester = await space.actor('maintenance-requester');
-  const posting = await space.opportunity({ positions: 3, budget: 3600, appointmentStart: new Date(Date.now() + 86400000).toISOString() });
+  const posting = await space.opportunity({ positions: 3, appointmentStart: new Date(Date.now() + 86400000).toISOString() });
   await ok(restricted.api.post('/api/courses/enroll', { data: { courseId: space.code, enroll: true } }));
   const active = await space.select(await space.application(posting));
   const blocked = await space.select(await space.application(posting, restricted));
@@ -54,7 +55,7 @@ test('due cleared appointments activate automatically while restricted candidate
     await expect.poll(async () => (await db.collection('staffingAppointments').findOne({ id: blocked.appointment.id }))?.status, { timeout: 30000 }).toBe('suspended');
     expect(await db.collection('staffingAppointments').findOne({ id: pending.appointment.id })).toMatchObject({ status: 'pending_clearance', clearance: 'pending' });
     expect(await db.collection('staffingAllocations').findOne({ appointmentId: blocked.appointment.id })).toMatchObject({ status: 'suspended' });
-    expect(await db.collection('staffingOpportunities').findOne({ id: posting.id })).toMatchObject({ committedPositions: 3, committedBudget: active.appointment.committedCost + blocked.appointment.committedCost + pending.appointment.committedCost });
+    expect(await db.collection('staffingOpportunities').findOne({ id: posting.id })).toMatchObject({ committedPositions: 3 });
     expect((await db.collection('courses').findOne({ id: space.code }))?.onDutyTAs).not.toEqual(expect.arrayContaining([expect.objectContaining({ email: restricted.email })]));
     expect(await db.collection('queueEntries').findOne({ _id: entryId })).toMatchObject({ question: 'Synthetic pending help' });
     expect((await db.collection('queueEntries').findOne({ _id: entryId }))?.taEmail).toBeUndefined();
@@ -78,19 +79,19 @@ test('bounded maintenance advances beyond one hundred resources and drains both 
   const now = Date.now();
   try {
     await db.collection('users').insertMany(rows.map(row => ({ id: row.userId, email: row.email, name: 'Synthetic maintenance candidate', identityKind: 'mock', disabledAt: null })));
-    await db.collection('staffingOpportunities').insertMany(rows.map(row => ({ id: row.opportunityId, type: 'ra', termId: space.term.id, ownerId: space.instructor.user.id, ownerEmail: space.instructor.email, title: 'Synthetic maintenance position', department: 'Computer Science', courseId: '', status: 'filled', approved: true, version: 1, mutationVersion: 0, positions: 1, committedPositions: 1, budget: 20, committedBudget: 20, appointmentCost: 20, appointmentStart: new Date(now - 3600000), appointmentEnd: new Date(now + 86400000) })));
+    await db.collection('staffingOpportunities').insertMany(rows.map(row => ({ id: row.opportunityId, type: 'ra', termId: space.term.id, ownerId: space.instructor.user.id, ownerEmail: space.instructor.email, title: 'Synthetic maintenance position', department: 'Computer Science', courseId: '', status: 'filled', approved: true, version: 1, mutationVersion: 0, positions: 1, committedPositions: 1, appointmentStart: new Date(now - 3600000), appointmentEnd: new Date(now + 86400000) })));
     await db.collection('staffingApplications').insertMany(rows.map(row => ({ id: row.applicationId, opportunityId: row.opportunityId, termId: space.term.id, applicantId: row.userId, applicantEmail: row.email, applicantName: 'Synthetic maintenance candidate', status: 'selected', version: 1, submittedAt: new Date(now - 3600000), profile: {}, answers: {} })));
     await db.collection('staffingOffers').insertMany(rows.map(row => ({ id: row.offerId, applicationId: row.applicationId, appointmentId: row.appointmentId, opportunityId: row.opportunityId, applicantId: row.userId, applicantEmail: row.email, instructorEmail: space.instructor.email, termId: space.term.id, status: 'issued', version: 1, expiresAt: new Date(now - 1000), endDate: new Date(now + 86400000) })));
     await db.collection('staffingAllocations').insertMany(rows.map(row => ({ applicantId: row.userId, termId: space.term.id, appointmentId: row.appointmentId, opportunityId: row.opportunityId, offerId: row.offerId, status: 'offered', version: 1, expiresAt: new Date(now - 1000), endDate: new Date(now + 86400000) })));
     await db.collection('staffingEvents').insertMany(rows.map(row => ({ id: row.eventId, actorId: space.instructor.user.id, kind: 'OfferIssued', targetId: row.offerId, details: {}, createdAt: new Date(now - 3600000 + row.index), delivery: 'pending' })));
     // Insert the due resources last so every transition observes a complete synthetic graph.
-    await db.collection('staffingAppointments').insertMany(rows.map(row => ({ id: row.appointmentId, type: 'ra', applicationId: row.applicationId, offerId: row.offerId, opportunityId: row.opportunityId, applicantId: row.userId, applicantEmail: row.email, applicantName: 'Synthetic maintenance candidate', instructorEmail: space.instructor.email, termId: space.term.id, status: 'offered', clearance: 'not_started', acceptedAt: null, version: 1, committedCost: 20, startDate: new Date(now - 3600000), endDate: new Date(now + 86400000), offerExpiresAt: new Date(now - 1000) })));
+    await db.collection('staffingAppointments').insertMany(rows.map(row => ({ id: row.appointmentId, type: 'ra', applicationId: row.applicationId, offerId: row.offerId, opportunityId: row.opportunityId, applicantId: row.userId, applicantEmail: row.email, applicantName: 'Synthetic maintenance candidate', instructorEmail: space.instructor.email, termId: space.term.id, status: 'offered', clearance: 'not_started', acceptedAt: null, version: 1, startDate: new Date(now - 3600000), endDate: new Date(now + 86400000), offerExpiresAt: new Date(now - 1000) })));
     await expect.poll(() => db.collection('staffingAppointments').countDocuments({ id: { $in: appointmentIds }, status: 'expired' }), { timeout: 60000 }).toBe(count);
     await expect.poll(() => db.collection('staffingNotifications').countDocuments({ eventId: { $in: eventIds }, recipientId: { $in: userIds } }), { timeout: 30000 }).toBe(count);
     await expect.poll(() => db.collection('staffingEvents').countDocuments({ targetId: { $in: appointmentIds }, kind: 'AppointmentExpired', delivery: 'delivered' }), { timeout: 30000 }).toBe(count);
     expect(await db.collection('staffingEvents').countDocuments({ targetId: { $in: appointmentIds }, kind: 'AppointmentExpired' })).toBe(count);
     expect(await db.collection('staffingAllocations').countDocuments({ applicantId: { $in: userIds }, status: 'released' })).toBe(count);
-    expect(await db.collection('staffingOpportunities').countDocuments({ id: { $in: opportunityIds }, committedPositions: 0, committedBudget: 0 })).toBe(count);
+    expect(await db.collection('staffingOpportunities').countDocuments({ id: { $in: opportunityIds }, committedPositions: 0 })).toBe(count);
   } finally {
     await db.collection('staffingNotifications').deleteMany({ recipientId: { $in: userIds } });
     await db.collection('staffingEvents').deleteMany({ $or: [{ id: { $in: eventIds } }, { targetId: { $in: appointmentIds } }] });

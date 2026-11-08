@@ -105,6 +105,9 @@ for (const kind of ['term_review', 'opportunity_draft'] as const) {
       await expect(panel.getByTestId('ai-result')).toContainText('Synthetic evidence-linked background comparison.');
       expect(provider.seen).toHaveLength(1);
       expect(provider.seen[0].input.kind).toBe(kind);
+      const transmitted = JSON.stringify(provider.seen[0].input);
+      expect(transmitted).not.toMatch(/"(budget|hourlyRate|appointmentCost|committedCost|committedBudget|incurredCost)"/);
+      if (courseReview) expect(provider.seen[0].input.evidence.find((entry: any) => entry.reference === 'metrics:staffing')?.value).toEqual({ approvedPositions: posting.positions, committedPositions: 0 });
       expect((await json(provider.api.get(`/api/staffing/opportunities/${posting.id}`))).offers).toHaveLength(0);
       expect(errors).toEqual([]);
     } finally { await context.close(); await provider.close(); }
@@ -155,7 +158,7 @@ test('AI excludes administrative and unclassified screening while retaining tech
 
 for (const invalid of ['empty', 'omitted', 'duplicate'] as const) {
   test(`candidate comparison rejects ${invalid} target coverage`, async ({ space }) => {
-    const posting = await space.opportunity({ positions: 2, budget: 2400 });
+    const posting = await space.opportunity({ positions: 2 });
     await space.application(posting);
     await space.application(posting, await space.actor(`coverage-${invalid}`));
     const provider = await providerApp(space, (input, response) => {

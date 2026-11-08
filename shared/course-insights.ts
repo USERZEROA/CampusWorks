@@ -33,7 +33,6 @@ export type InsightsMetrics = {
   openPositions: number;
   pendingClearance: number;
   pendingStart: number;
-  unsettled: number;
 };
 export type InsightsCourse = InsightsMetrics & {
   id: string;
@@ -81,20 +80,6 @@ export type InsightsHour = {
   requests: number;
   observedDates: number;
 };
-export type InsightsScenario = {
-  courseId: string;
-  opportunityId: string;
-  title: string;
-  positions: number;
-  change: number;
-  weeklyHours: number;
-  weeks: number;
-  hourlyRate: number;
-  estimatedCost: number;
-  approvedBudget: number;
-  budgetCovered: boolean;
-  coverageValidated: false;
-};
 export type CourseInsights = {
   scope: InsightsScope;
   generatedAt: string;
@@ -112,13 +97,6 @@ export type CourseInsights = {
     byKind: Record<string, number>;
     reporters: number;
     source: string;
-  };
-  budget: {
-    requested: number;
-    approved: number;
-    committed: number;
-    settled: number;
-    scenarios: InsightsScenario[];
   };
   attention: InsightsSignal[];
   coverage: {

@@ -136,17 +136,12 @@ export function useStaffingPagedRecord(
                   current.workload.records,
                 ),
               };
-            if (current.budget)
-              result.budget = {
-                ...current.budget,
+            if (current.staffing)
+              result.staffing = {
+                ...current.staffing,
                 opportunities: merge(
-                  previous.budget?.opportunities,
-                  current.budget.opportunities,
-                ),
-                scenarios: merge(
-                  previous.budget?.scenarios,
-                  current.budget.scenarios,
-                  (item) => `${item.opportunityId}:${item.positions}`,
+                  previous.staffing?.opportunities,
+                  current.staffing.opportunities,
                 ),
               };
           }

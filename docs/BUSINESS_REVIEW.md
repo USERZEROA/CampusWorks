@@ -7,14 +7,15 @@ Reviewed on November 7, 2026. This record describes the current fixes and their 
 | Decision | Result |
 | --- | --- |
 | Removing a student | Course-scoped re-enrollment and queue restriction persists until an instructor or administrator restores access. Restoration does not enroll or reactivate an appointment. |
-| Correcting cleared administrative information | Site administrators alone may correct it, including historical cleared appointments. Reason, optimistic version and a private before/after audit are required. Appointment and financial state stay unchanged. |
-| Position appointment end | New candidate comparisons, candidate summaries and automatic recommendations stop. Currently authorized historical results, settlement and course review remain available. |
+| Correcting cleared administrative information | Site administrators alone may correct it, including historical cleared appointments. Reason, optimistic version and a private before/after audit are required. Appointment state stays unchanged. |
+| Position appointment end | New candidate comparisons, candidate summaries and automatic recommendations stop. Currently authorized historical results and course review remain available. |
+| Staffing scope | Approved headcount, appointment dates, duties and workload are managed without financial budgets, pay calculations or settlement. |
 
 ## Closed business sequence
 
-An administrator chooses the current semester, recruitment window and approval policy. Authorized faculty create qualification-focused TA/RA positions with duties, hours, schedules and position budgets. Students draft answers and attach a private CV; submission freezes the exact reviewed version. Human selection reserves candidate, vacancy and commitment together. Acceptance and administrative clearance precede effective dated TA access. RA appointments grant no course queue access.
+An administrator chooses the current semester, recruitment window and approval policy. Authorized faculty create qualification-focused TA/RA positions with duties, hours, schedules and headcount. Students draft answers and attach a private CV; submission freezes the exact reviewed version. Human selection reserves the candidate and vacancy together. Acceptance and administrative clearance precede effective dated TA access. RA appointments grant no course queue access.
 
-Course restrictions also govern selection, clearance, resumption and future activation. Restricting or restoring a TA applicant updates established candidate comparisons; another course's restriction does not remove that applicant from RA consideration. Ending or suspending an appointment removes its operational authority while preserving independent manual grants and financial obligations. Administrators settle incurred costs, managers archive resolved positions, and reports support human planning for the following semester.
+Course restrictions also govern selection, clearance, resumption and future activation. Restricting or restoring a TA applicant updates established candidate comparisons; another course's restriction does not remove that applicant from RA consideration. Ending or suspending an appointment removes its operational authority while preserving independent manual grants and appointment history. Ending releases its reserved position; suspension keeps its reservation. Managers archive resolved positions, and reports support human planning for the following semester.
 
 ## Review findings and implemented controls
 
@@ -32,13 +33,13 @@ Course restrictions also govern selection, clearance, resumption and future acti
 | F10: Application controls retain an old cycle | Details return current cycle; silent synchronization uses authoritative capabilities | `staffing-browser`: reopen without browser reload |
 | F11: Closed recruitment hides withdrawal | Withdrawal follows pre-acceptance state independently of edit permission | `staffing-browser`: closed-cycle withdrawal |
 | F12: Accepted end boundary prevents default postings | Recruitment closes strictly before semester end | `staffing-audit-regressions`: invalid boundary leaves cycle unchanged |
-| F13: Draft budgets appear approved | Requested plans, approved published plans, outstanding commitments and settled costs are separate | `staffing-audit-regressions`: budget progression; fake-provider report evidence |
-| F14: Browser cannot complete financial closeout | Authorized incurred-cost settlement, cancellation and archive controls | `staffing-browser`: end, settle, archive and course deletion |
+| F13: Draft or historical plans inflate current headcount | Approved, not-ended published/closed/filled plans supply approved positions, reserved positions and unfilled seats; detail rows retain historical plans | `staffing-audit-regressions`: reservation progression; fake-provider staffing evidence |
+| F14: Closeout is blocked after work ends | Authorized end, cancellation and archive controls; legacy financial fields stay private and do not block completed appointments | `staffing-browser`, `staffing-boundaries`: end, archive and course deletion; removed action rejects without writes |
 | F15: AI omits or duplicates candidates | Exact candidate-set coverage and unique output targets | `ai-evidence`, `ai-provider`: empty, omitted and duplicate targets |
 | F16: Technical questions disappear through broad word filtering | Contextual administrative filtering retains race-condition and software-health evidence | `ai-evidence`, `ai-provider`: retained technical answers |
 | F17: RA/TA controls and historical titles disagree with scope | Type-aware queue/work controls and private historical title lookup | `staffing-browser`, `staffing-audit-regressions`: RA metadata and historical titles |
 
-Additional review fixes confirm a valid provider lease after budget commit, use one snapshot for course-review aggregates and P90, guard CSV formula prefixes, prevent snapshot reuse after course deletion/recreation, and check all declared mandatory database indexes during readiness. Local form versions advance from successful commands without adopting another tab's unseen revision. Candidate-analysis capability defaults explicitly preserve other AI task kinds; expired candidate controls alone are hidden. Manager refreshes stop displaying a deleted or newly unauthorized resource.
+Additional review fixes confirm a valid provider lease after AI quota reservation commits, use one snapshot for course-review aggregates and P90, guard CSV formula prefixes, prevent snapshot reuse after course deletion/recreation, and check all declared mandatory database indexes during readiness. Local form versions advance from successful commands without adopting another tab's unseen revision. Candidate-analysis capability defaults explicitly preserve other AI task kinds; expired candidate controls alone are hidden. Manager refreshes stop displaying a deleted or newly unauthorized resource.
 
 ## Automatic operation review
 
@@ -48,7 +49,7 @@ Saved requirements, submitted summaries, candidate comparisons and course previe
 
 An independent leased maintenance worker alternates timed lifecycle transitions and in-app notification delivery without provider configuration or an open page. Empty batches return to the idle interval; persistent cursors and bounded continuation prevent a large first batch from starving later resources. The original transactional domain controls still govern every transition.
 
-Position end independently blocks new application drafts, qualification/CV edits and submissions even if an administrator extends the shared recruitment window. Pre-acceptance withdrawal remains available. Selection, acceptance, clearance, settlement, suspension/end and deletion are never retried or chosen automatically.
+Position end independently blocks new application drafts, qualification/CV edits and submissions even if an administrator extends the shared recruitment window. Pre-acceptance withdrawal remains available. Selection, acceptance, clearance, suspension/end and deletion are never retried or chosen automatically.
 
 ## Evidence boundaries
 

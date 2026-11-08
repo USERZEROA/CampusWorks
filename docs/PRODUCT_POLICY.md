@@ -9,6 +9,7 @@ Confirmed by the owner on November 7, 2026.
 - An issued offer reserves the candidate until its response deadline. Accepted, cleared, pending-start, active and suspended appointments reserve their corresponding dates until resolved or ended.
 - Instructors and administrators use the existing appointment suspension/end and manual course-permission controls. There is no student resignation request workflow.
 - Appointment-derived access remains scoped to its TA course; RA appointments have no operational workspace. Ending that appointment preserves separately granted manual roles.
+- Staffing manages approved positions, dates, duties and hours without pay calculations, financial budgets or settlement.
 
 ## Administration and documents
 
@@ -24,9 +25,9 @@ Confirmed by the owner on November 7, 2026.
 - Automatic comparisons remain advisory, use current permissions and evidence, and obey the existing daily and concurrent request budgets.
 - Duplicate changes and overlapping worker executions must not produce duplicate calls for the same current evidence.
 - Missing provider configuration means no model call. The owner supplied an OpenAI Key through a masked local form; provider verification is recorded separately.
-- Automatic comparison does not select, reject, approve clearance, change roles or alter budgets.
-- Hiring, offer responses, clearance, settlement and deletion remain human decisions, as confirmed by the owner. Date transitions and in-app delivery run independently of AI configuration or page traffic.
-- When a position's appointment end is reached, new candidate comparisons, candidate summaries and automatic recommendations stop. Authorized historical records, financial settlement and course reviews remain available.
+- Automatic comparison does not select, reject, approve clearance or change roles.
+- Hiring, offer responses, clearance and deletion remain human decisions, as confirmed by the owner. Date transitions and in-app delivery run independently of AI configuration or page traffic.
+- When a position's appointment end is reached, new candidate comparisons, candidate summaries and automatic recommendations stop. Authorized historical records and course reviews remain available.
 
 ## Presentation and verification
 

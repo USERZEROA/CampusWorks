@@ -123,8 +123,13 @@ export type AutomaticAiHarness = {
   close: () => Promise<void>;
 };
 
+type AutomaticAiHarnessOptions = {
+  environment?: Record<string, string>;
+  identitySuffix?: string;
+};
+
 /** Disposable database and two stable loopback origins; no credential file is read. */
-export async function createAutomaticAiHarness(): Promise<AutomaticAiHarness> {
+export async function createAutomaticAiHarness(options: AutomaticAiHarnessOptions = {}): Promise<AutomaticAiHarness> {
   const uri = process.env.TEST_MONGODB_URI || "";
   const mainName = process.env.TEST_MONGODB_DB || "";
   if (
@@ -136,6 +141,8 @@ export async function createAutomaticAiHarness(): Promise<AutomaticAiHarness> {
       "Automatic AI checks require the isolated loopback replica set.",
     );
   const suffix = randomBytes(6).toString("hex");
+  const identitySuffix = options.identitySuffix || suffix;
+  if (!/^[a-z0-9-]{1,48}$/.test(identitySuffix)) throw new Error("Invalid synthetic identity suffix.");
   const name = `campusworks_ai_auto_${suffix}`;
   if (name === mainName || !/^campusworks_ai_auto_[a-f0-9]+$/.test(name))
     throw new Error("Invalid isolated AI database.");
@@ -217,6 +224,7 @@ export async function createAutomaticAiHarness(): Promise<AutomaticAiHarness> {
         AI_GLOBAL_DAILY_REQUEST_LIMIT: "10000",
         AI_GLOBAL_DAILY_TOKEN_BUDGET: "100000000",
         AI_MAX_CONCURRENT: "2",
+        AI_USAGE_DATABASE: "",
         AI_AUTO_REFRESH_ENABLED: enabled ? "true" : "false",
         AI_AUTO_DISCOVERY_INTERVAL_MS: "50",
         AI_AUTO_DEBOUNCE_MS: "50",
@@ -226,8 +234,10 @@ export async function createAutomaticAiHarness(): Promise<AutomaticAiHarness> {
         AI_AUTO_SCOPE_SCAN_INTERVAL_MS: "50",
         AI_TERM_REVIEW_SCAN_INTERVAL_MS: "50",
         AI_TERM_REVIEW_COOLDOWN_MS: "50",
+        ...options.environment,
         ...environment,
       };
+      if (!Object.hasOwn(options.environment || {}, "AI_AUTOMATION_SCOPES") && !Object.hasOwn(environment, "AI_AUTOMATION_SCOPES")) delete env.AI_AUTOMATION_SCOPES;
       // Its absence verifies that four-kind discovery is enabled by default.
       delete env.AI_AUTO_DISCOVERY_ENABLED;
       const log = openSync(`.cache/automatic-ai-${suffix}-${index}.log`, "w");
@@ -275,7 +285,7 @@ export async function createAutomaticAiHarness(): Promise<AutomaticAiHarness> {
     ): Promise<Actor> => {
       const api = await request.newContext({ baseURL: origins[0] });
       contexts.push(api);
-      const email = `${label}-${suffix}@example.com`;
+      const email = `${label}-${identitySuffix}@example.com`;
       const result = await json(
         api.post("/api/auth/mock", { data: { as: role, email } }),
       );
@@ -354,8 +364,6 @@ export async function createAutomaticAiHarness(): Promise<AutomaticAiHarness> {
               ],
               cvRequired: false,
               approvalRequired: false,
-              hourlyRate: 0,
-              budget: 0,
               duties: [],
               ...overrides,
             },

@@ -475,8 +475,6 @@ test("current staffing deduplicates manual/appointment grants and excludes disab
     status: "active",
     acceptedAt: term.startDate,
     clearance: "cleared",
-    budgetStatus: "reserved",
-    committedCost: 200,
   }));
   const result = report({
     users,
@@ -508,11 +506,7 @@ test("reported teaching work is separate from recorded help and RA observations 
     approved: true,
     positions: 2,
     committedPositions: 1,
-    budget: 500,
-    appointmentCost: 200,
     weeklyHours: 10,
-    weeks: 1,
-    hourlyRate: 20,
     appointmentEnd: term.endDate,
   };
   const result = report({
@@ -542,20 +536,47 @@ test("reported teaching work is separate from recorded help and RA observations 
   assert.equal(result.summary.reportedHours, 10);
   assert.equal(result.summary.helpMinutes, 6);
   assert.equal(result.workload.count, 1);
-  assert.deepEqual(
-    result.budget.scenarios.map((row) => [
-      row.positions,
-      row.estimatedCost,
-      row.coverageValidated,
-    ]),
-    [
-      [1, 200, false],
-      [2, 400, false],
-      [3, 600, false],
-    ],
-  );
+  assert.equal(result.courses[0].approvedPositions, 2);
+  assert.equal(result.courses[0].committedPositions, 1);
   assert.equal(result.summary.openPositions, 1);
-  assert.equal(result.budget.approved, 500);
+});
+
+test("staffing coverage counts only current approved teaching plans and clamps unfilled seats", () => {
+  const posting = {
+    id: "position",
+    courseId: "course-a",
+    type: "ta",
+    termId: term.id,
+    status: "published",
+    approved: true,
+    positions: 3,
+    committedPositions: 1,
+    appointmentEnd: term.endDate,
+  };
+  const result = report({
+    opportunities: [
+      posting,
+      { ...posting, id: "closed", status: "applications_closed", positions: 2 },
+      {
+        ...posting,
+        id: "filled",
+        status: "filled",
+        positions: 1,
+        committedPositions: 2,
+      },
+      { ...posting, id: "ended", appointmentEnd: now.toISOString() },
+      { ...posting, id: "unapproved", approved: false },
+      { ...posting, id: "draft", status: "draft" },
+      { ...posting, id: "archived", status: "archived" },
+      { ...posting, id: "cancelled", status: "cancelled" },
+      { ...posting, id: "research-assistant", type: "ra" },
+      { ...posting, id: "old-semester", termId: "previous" },
+      { ...posting, id: "other-course", courseId: "course-b" },
+    ],
+  });
+  assert.equal(result.courses[0].approvedPositions, 6);
+  assert.equal(result.courses[0].committedPositions, 4);
+  assert.equal(result.summary.openPositions, 3);
 });
 
 test("adjacent help intervals do not create artificial simultaneous helpers and no student prose leaks", () => {

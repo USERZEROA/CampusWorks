@@ -305,7 +305,7 @@ useIntervalRefresh((options) =>
             <h3 class="record-title">{{ item.title }}</h3>
             <p>
               {{ item.type?.toUpperCase() }} · {{ item.positions }} position(s)
-              · {{ item.weeklyHours }} hours/week · Budget {{ item.budget }}
+              · {{ item.weeklyHours }} hours/week
             </p>
             <p>{{ item.description }}</p>
             <div class="actions">
@@ -356,11 +356,6 @@ useIntervalRefresh((options) =>
           <NuxtLink :to="`/applications/${item.applicationId}`"
             >Appointment details</NuxtLink
           >
-          <StaffingSettlement
-            v-if="item.budgetStatus === 'awaiting_settlement'"
-            :appointment="item"
-            @saved="refresh"
-          />
           <div
             v-if="
               !['ended', 'cancelled', 'not_cleared', 'expired'].includes(

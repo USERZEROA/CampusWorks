@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
   const [resource, id, action] = parts
   if (parts.length > 3) fail(404, 'Staffing endpoint not found')
   const method = event.method
+  if (resource === 'appointments' && id && method === 'POST' && action === 'settle') fail(410, 'This appointment action is no longer available')
   if (!id && resource === 'cycle') {
     if (method === 'GET') { const cycle = await getRecruitmentCycle(db); return { cycle, currentCycle: cycle, serverTime: new Date() } }
     if (method === 'PUT') { const input = await readBody(event); return withTransaction((database, session) => configureRecruitmentCycle(database, session, user, input)) }
@@ -105,7 +106,7 @@ export default defineEventHandler(async (event) => {
     if (action === 'administrative') return withTransaction((database, session) => updateAdministrative(database, session, user, id, body))
   }
   if (resource === 'offers' && id && method === 'POST' && ['accept', 'decline', 'rescind'].includes(action || '')) return withTransaction((database, session) => offerAction(database, session, user, id, action as 'accept' | 'decline' | 'rescind', body))
-  if (resource === 'appointments' && id && method === 'POST' && ['clearance', 'end', 'suspend', 'resume', 'settle'].includes(action || '')) return withTransaction((database, session) => appointmentAction(database, session, user, id, action!, body))
+  if (resource === 'appointments' && id && method === 'POST' && ['clearance', 'end', 'suspend', 'resume'].includes(action || '')) return withTransaction((database, session) => appointmentAction(database, session, user, id, action!, body))
   if (resource === 'workload' && !id && method === 'POST') return withTransaction((database, session) => recordWorkload(database, session, user, body))
   if (resource === 'opportunities' && id && ((method === 'PATCH' && !action) || (method === 'POST' && ['publish', 'approve', 'close', 'cancel', 'archive'].includes(action || '')))) {
     return withTransaction(async (database, session) => {

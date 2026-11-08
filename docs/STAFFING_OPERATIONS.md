@@ -10,19 +10,19 @@ CampusWorks retains four identities: student, TA, instructor, and administrator.
 | --- | --- |
 | Applicant | Maintain own applications; upload own CV; submit or withdraw under the state rules; answer own offers; provide restricted administrative details after an offer; record own active TA appointment work |
 | Course TA | Existing duty, queue and announcement operations in the course where an effective TA grant exists |
-| Course instructor/admin | Publish and review positions for courses they manage; shortlist, select and issue offers; oversee appointments; review course activity and staffing scenarios |
+| Course instructor/admin | Publish and review positions for courses they manage; shortlist, select and issue offers; oversee appointments; review course activity, headcount and workload |
 | RA position owner | Review direct RA positions while retaining current instructional authority |
-| Site administrator | Configure terms and their approval policy; approve staffing requests; determine clearance; settle financial commitments; administer courses and authorized staffing records |
+| Site administrator | Configure terms and their approval policy; approve staffing requests; determine clearance; administer courses and authorized staffing records |
 
 The server checks current course enrollment and direct RA ownership. A primary role label alone is not authority over an unrelated course. A person may apply while holding another platform identity, but a reviewer cannot select themselves. TA status alone never grants hiring rights; unavailable management controls are hidden.
 
-The owner has retained the existing course/site administration scopes without adding a department-admin hierarchy or independent second-approver workflow. Course administration stays course-scoped. Clearance and settlement use site-admin authority. See [PRODUCT_POLICY.md](PRODUCT_POLICY.md) for the confirmed scope.
+The owner has retained the existing course/site administration scopes without adding a department-admin hierarchy or independent second-approver workflow. Course administration stays course-scoped. Clearance uses site-admin authority. Staffing manages headcount and work requirements without financial budgeting. See [PRODUCT_POLICY.md](PRODUCT_POLICY.md) for the confirmed scope.
 
 ## Runtime prerequisites
 
 MongoDB must support transactions through a replica set or compatible sharded topology. Standalone MongoDB is rejected. Required uniqueness indexes must be established successfully; an unsuccessful index setup is a readiness failure.
 
-Course mutations and TA appointment transitions share a write on the canonical course record before authorization/state validation. Staffing takes the shared recruitment-cycle write first. RA transitions then lock their direct opportunity and current instructional authority. Candidate allocation, vacancy counters, budget commitments, offers, appointments, audit/outbox events and command receipts commit together. There is no process-local mutex being treated as a cross-instance guarantee.
+Course mutations and TA appointment transitions share a write on the canonical course record before authorization/state validation. Staffing takes the shared recruitment-cycle write first. RA transitions then lock their direct opportunity and current instructional authority. Candidate allocation, vacancy counters, offers, appointments, audit/outbox events and command receipts commit together. There is no process-local mutex being treated as a cross-instance guarantee.
 
 Use an explicit `SESSION_SECRET` of at least 32 characters in production. Set `PUBLIC_ORIGIN` for production OAuth and enable `TRUST_PROXY` only behind a correctly configured trusted proxy. Keep `ENABLE_MOCK_LOGIN=false` for real users. Demo sign-in deliberately permits role selection and is not an institutional authentication method.
 
@@ -30,15 +30,15 @@ Use an explicit `SESSION_SECRET` of at least 32 characters in production. Set `P
 
 1. A site administrator creates a semester with dates and `requiresApproval`, selects it as the single current semester, and sets its application window. Approval is required by default. Only that administrator-owned term policy can relax the requirement; an instructor's posting checkbox cannot override it.
 2. A site administrator creates the operational course offering and assigns its instructor/course administrators using the course people controls. The operational course can be reused across recruitment semesters. Every posting inherits the current semester and shared application deadline.
-3. An authorized instructor creates an opportunity, supplies duties, hours, qualifications, required availability, questions, CV requirement, positions and cost basis, and requests publication. A required approval produces `pending_approval`; administrator approval publishes it. Administrator-created/approved requests and explicitly approval-optional terms follow their corresponding path.
+3. An authorized instructor creates an opportunity, supplies duties, hours, qualifications, required availability, questions, CV requirement and positions, and requests publication. A required approval produces `pending_approval`; administrator approval publishes it. Administrator-created/approved requests and explicitly approval-optional terms follow their corresponding path.
 4. A student opens the published opportunity, saves a draft, supplies academic and availability information, answers questions, and uploads the required CV. Saving revised qualifications returns the application to `draft`; submission is explicit.
 5. Submission validates the published requirements version, required profile/answers/CV, declared hours and schedule. It records a frozen qualification/CV snapshot. Reviewers cannot inspect unsent drafts or a newer draft CV.
-6. An authorized reviewer shortlists or reviews the submitted application, then selects it with an idempotency key. Selection immediately issues an offer and reserves the candidate, one vacancy and its budget commitment in the same transaction.
+6. An authorized reviewer shortlists or reviews the submitted application, then selects it with an idempotency key. Selection immediately issues an offer and reserves the candidate and one vacancy in the same transaction.
 7. The candidate accepts the offer. The appointment becomes `pending_clearance`; acceptance does not grant course staff access.
 8. A site administrator records clearance. A cleared appointment becomes `active` if its start has arrived, otherwise `pending_start` until the effective start.
 9. The course's effective role calculation recognizes the active, accepted, cleared, date-valid TA appointment. The person can enter the familiar TA view and start duty. Their other courses retain their own roles; the session is not promoted globally.
 10. Ending, expiry or suspension removes appointment-derived authority. If no other valid staff grant remains, duty and live claims are cleared while the student request and accumulated help history are preserved. Independent manual instructor/admin/TA grants are retained.
-11. TA course review combines recorded queue activity, submitted feedback, declared workload and explicit cost scenarios. Instructors and administrators decide the following term's requirements.
+11. TA course review combines recorded queue activity, submitted feedback, declared workload and approved/reserved headcount. Instructors and administrators decide the following term's requirements.
 
 The service permits applying to several opportunities while available. Shortlisting does not reserve a student. A stable applicant cannot hold date-overlapping TA/RA commitments across any term IDs, including two half appointments. The existing one-live-allocation-per-term rule also remains. Date intervals include the start and exclude the end, so adjacent appointments may meet at the same instant.
 
@@ -50,11 +50,11 @@ Attendance, lab, discussion, grading and office-hour flags are separate from dut
 
 `requirementsVersion` changes only when draft requirements change. Operational counters use the separate row `version`, so selecting another person does not invalidate an applicant's unchanged draft requirements. Scope and term cannot be edited into another resource. Requirements freeze once publication/applications prevent ordinary draft editing; materially different requirements need a separate opportunity.
 
-Cost is computed from weekly hours, the rounded-up appointment weeks and hourly rate. The published budget must cover the advertised positions under that cost basis. This is application budgeting, not a payroll calculation or confirmation of an approved institutional pay rate.
+Publication requires a valid position count, appointment dates, work requirements and the applicable administrative approval. Selection checks approved vacancy capacity and candidate availability. It performs no pay or financial calculations.
 
 Closing applications prevents new submissions without ending existing appointments. Outstanding offers/appointments must be resolved before cancellation/archive. Linked staffing records also constrain course deletion.
 
-Course deletion also waits for activated appointments' financial commitments to be settled, including appointments whose operational status has already ended.
+Course deletion requires linked opportunities to be archived or cancelled and every linked appointment to reach a terminal state. A completed appointment needs no additional closeout step.
 
 ## State and concurrency rules
 
@@ -66,7 +66,7 @@ Course deletion also waits for activated appointments' financial commitments to 
 | Appointment | `offered`, `pending_clearance`, `pending_start`, `active`, `suspended`, `ended`, `cancelled`, `not_cleared`, `expired` |
 | Clearance | `not_started`, `pending`, `needs_information`, `cleared`, `not_cleared` |
 
-The first successful server-side selection transaction wins. Client clock, application order and AI ordering do not decide ownership. A competing selection receives a conflict and the interface synchronizes current availability. The unique applicant/term allocation and shared transaction also prevent overfilling the last vacancy or consuming the same remaining budget twice. A rejected command is never replayed automatically.
+The first successful server-side selection transaction wins. Client clock, application order and AI ordering do not decide ownership. A competing selection receives a conflict and the interface synchronizes current availability. The unique applicant/term allocation and shared transaction also prevent overfilling the last vacancy. A rejected command is never replayed automatically.
 
 Offer response expires after seven days or at the appointment end, whichever arrives first. Acceptance checks server time and the current offer/allocation reference. Expired, declined or rescinded offers release commitments, and a pre-acceptance application can return to review. An accepted appointment is not released by an obsolete offer-expiry transition. Clearance still pending at the appointment end cannot extend privileges beyond that end.
 
@@ -76,7 +76,7 @@ Profile edits require `expectedVersion`; CV upload includes the current applicat
 
 Submission also requires the reviewed application's `expectedVersion`; it cannot freeze an unseen newer draft. The administrator's recruitment-window form keeps the version from which editing began, even when background polling sees another update. An application detail refresh includes current cycle capabilities, and pre-acceptance withdrawal remains available after applications close.
 
-Removing a student stores a course-scoped restriction and removes membership/queue participation atomically. Enrollment, queue entry and later TA activation respect that restriction. An authorized instructor or administrator can restore access from the course people controls; restoration does not re-enroll the student. Disabled accounts cannot retain live duty or claims, while independent role records and financial obligations remain recorded.
+Removing a student stores a course-scoped restriction and removes membership/queue participation atomically. Enrollment, queue entry and later TA activation respect that restriction. An authorized instructor or administrator can restore access from the course people controls; restoration does not re-enroll the student. Disabled accounts cannot retain live duty or claims, while independent role records and appointment history remain recorded.
 
 Queue writes require explicit intent. `join` creates a request; `edit` and leave require its `entryId`. `complete` additionally requires its `expectedRevision` and the acting helper's current, unpaused claim. Explicit removal is separately recorded. Admin pagination supplies a dataset fingerprint; changed pages return a conflict and the interface restarts the complete read. Counts and CSV keep the previous complete snapshot until every replacement page succeeds. Polls do not supersede unfinished reads.
 
@@ -129,11 +129,11 @@ Candidate comparisons scan past unavailable/ineligible submissions, then compare
 
 Provider JSON must contain `summary`, `summaryEvidenceRefs`, bounded `items` with `targetId`, `explanation`, `evidenceRefs`, and bounded `cautions`. References must exist in the supplied input; candidate items cannot cite another candidate's evidence. Uploaded text is untrusted content, not permission to alter criteria or execute commands. Structural validation does not establish semantic correctness or fair hiring outcomes.
 
-A candidate comparison must include every supplied candidate exactly once; omitted, repeated or invented targets are invalid. The provider is contacted only while its distributed lease is still valid after budget reservation commits. At appointment end, new comparisons and candidate summaries stop and automatic refresh scopes deactivate. Authorized completed results remain explicitly historical, with their original generation time; they do not imply current availability. Course reviews and financial closeout remain available.
+A candidate comparison must include every supplied candidate exactly once; omitted, repeated or invented targets are invalid. The provider is contacted only while its distributed lease is still valid after AI quota reservation commits. At appointment end, new comparisons and candidate summaries stop and automatic refresh scopes deactivate. Authorized completed results remain explicitly historical, with their original generation time; they do not imply current availability. Course reviews and appointment history remain available.
 
 The service rechecks authorization, execution fences and input hashes after the call and when reading current completed analyses. Changed availability, qualifications or report evidence produces `stale`; invalid/failed/timeout/quota-limited calls expose safe messages and back off. Ended-position history preserves its original result/date; current management and source-access permissions remain required. Requirements drafts, submitted summaries, candidate comparisons and course reviews are automatically discovered in persistent round-robin passes. Jobs/results are shared by resource, task, semester and candidate page, with a current authorized account executing the work. A current peer can take over revoked authority; no manager means no call. Ordinary polling purchases no requests. Unchanged evidence reuses results. Daily quota exhaustion waits until the next UTC day. Missing configuration never calls a provider.
 
-Course reviews use a preview phase while the semester is underway and a final phase at its end. Changing checked aggregates coalesces previews with a fifteen-minute default cooldown. The first final phase bypasses that cooldown without requiring a page visit. Results remain advisory; the service never performs hiring, offer responses, clearance, settlement or deletion on behalf of a person.
+Course reviews use a preview phase while the semester is underway and a final phase at its end. Changing checked aggregates coalesces previews with a fifteen-minute default cooldown. The first final phase bypasses that cooldown without requiring a page visit. Results remain advisory; the service never performs hiring, offer responses, clearance or deletion on behalf of a person.
 
 ## Maintenance and in-app delivery
 
@@ -151,17 +151,17 @@ RA uses the same application, offer, acceptance and administrative-clearance sta
 
 TA appointees and authorized managers may record bounded, categorized workload with replay-safe command keys. Queue help time and self-reported workload remain distinct evidence sources.
 
-## Course reports and budget settlement
+## Course reports and appointment closeout
 
-The course review uses the shared current semester by default, with an optional authorized historical API scope, and applies its dates to queue/feedback records and its ID to staffing/workload records. Metrics aggregate all matching TA course records; RA metadata does not contribute TA staffing budgets or workload. Detailed workload rows and opportunity scenarios are paged separately, so the report does not silently truncate totals at a row limit.
+The course review uses the shared current semester by default, with an optional authorized historical API scope, and applies its dates to queue/feedback records and its ID to staffing/workload records. Metrics aggregate all matching TA course records; RA metadata does not contribute TA headcount or workload. Detailed workload and opportunity rows are paged separately, so the report does not silently truncate totals at a row limit.
 
-Every aggregate, detail page and P90 query within one course-review response uses the same database snapshot. Recorded outputs include queue/help counts, mean/nearest-rank P90 wait, recorded help duration, feedback count/mean and workload totals by category. Requested position plans are separate from approved published position plans, outstanding commitments and settled incurred costs. An approved position plan does not establish external fiscal approval. Scenarios explicitly lack validated coverage and cannot authorize staffing reductions.
+Every aggregate, detail page and P90 query within one course-review response uses the same database snapshot. Recorded outputs include queue/help counts, mean/nearest-rank P90 wait, recorded help duration, feedback count/mean and workload totals by category. Approved positions, reserved positions and unfilled seats count approved published, applications-closed or filled plans whose appointment end is still in the future. Draft, cancelled, archived and ended plans do not inflate these active totals; the opportunity detail list retains historical plans.
 
-Queue interactions do not measure all lecture attendance, labs, grading, discussions, preparation, peak demand or paid hours. The report lists missing evidence. AI can draft observations from those checked aggregates, but it cannot infer causal effects, rank staff performance or change staffing/budget itself.
+Queue interactions do not measure all lecture attendance, labs, grading, discussions, preparation or total workload. The report lists missing evidence. AI can draft observations from those checked aggregates, but it cannot infer causal effects, assign a staff-quality score or change staffing itself.
 
-Before work starts, a cancelled/expired/not-cleared offer releases its financial commitment. Once an appointment has begun, ending it retains the commitment as `awaiting_settlement`. A site administrator supplies an approved `incurredCost` between zero and the committed cost through the settlement action; only the unused remainder is released. There is no payroll system or automatic proof of incurred expense.
+Declined, rescinded, expired, not-cleared and ended appointments release the reserved position and candidate allocation atomically. Suspension preserves the reservation while removing operational access. Repeating a completed end/release does not decrement capacity twice.
 
-The staffing and administration interfaces expose authorized settlement, cancellation and archive actions with the same server checks. An opportunity cannot be cancelled or archived while live offers or appointments remain. Archive does not release an unsettled commitment; settlement remains available to site administrators, and course deletion still waits for financial resolution.
+The staffing and administration interfaces expose authorized end, cancellation and archive actions with the same server checks. An opportunity cannot be cancelled or archived while live offers or appointments remain. Legacy financial fields are preserved in stored historical records but are not returned, used in capacity decisions or required for closeout. The removed settlement API returns `410` before maintenance or mutations. AI request, token and concurrency quotas remain separate operational protections.
 
 ## Identity changes
 
@@ -173,4 +173,4 @@ Demo sign-in cannot impersonate an institutional binding. Sessions reference rev
 
 The owner has prohibited overlapping appointments, including two half appointments; retained existing manager-controlled departure and course/site administration; declined additional retention/document/HR features; and authorized automatic candidate comparison updates after list changes. These decisions are recorded in [PRODUCT_POLICY.md](PRODUCT_POLICY.md).
 
-The owner supplied an OpenAI Key through the local masked form and authorized real-provider verification using synthetic records. [AI workflows](AI_WORKFLOWS.md) describes automatic insertion points and links to the current executed receipt; the older five-request receipt is historical. No real institutional identity, payroll, email or document-scanning service is established by these checks. In-app notifications and private attachment controls remain available. Descriptive workload and budget scenarios require a human staffing decision; the software cannot validate unrecorded work or external expense evidence.
+The owner supplied an OpenAI Key through the local masked form and authorized real-provider verification using synthetic records. [AI workflows](AI_WORKFLOWS.md) describes automatic insertion points and links to executed receipts, whose source boundaries and dates matter. No real institutional identity, payroll, email or document-scanning service is established by these checks. In-app notifications and private attachment controls remain available. Descriptive workload and queue observations support a human staffing decision; the software cannot validate unrecorded work.

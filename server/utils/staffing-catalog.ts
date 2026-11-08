@@ -65,11 +65,6 @@ export function opportunityInput(raw: unknown) {
     return { id: text(item.id, 'Question ID', 64) || `q${index + 1}`, prompt, purpose: qualificationQuestionPurpose(prompt, item.purpose), required: flag(item.required, 'Question required', true) }
   })
   if (new Set(normalizedQuestions.map(q => q.id)).size !== normalizedQuestions.length || normalizedQuestions.some(q => !/^[a-zA-Z0-9_-]+$/.test(q.id) || ['__proto__', 'prototype', 'constructor'].includes(q.id))) fail(400, 'Question IDs must be unique safe identifiers')
-  const hourlyRate = number(body.hourlyRate, 'Hourly rate', 0, 1000, 0)
-  const budget = number(body.budget, 'Position budget', 0, 10000000, 0)
-  const weeks = Math.ceil((appointmentEnd.getTime() - appointmentStart.getTime()) / (7 * 86400000))
-  const appointmentCost = Math.round(weeklyHours * weeks * hourlyRate * 100) / 100
-  if (budget + 0.001 < appointmentCost * positions) fail(400, 'Budget does not cover the advertised positions and hours')
   const preferences = body.allowedPositionPreferences ?? ['full', 'half', 'either', 'other']
   if (!Array.isArray(preferences) || !preferences.length || preferences.some(p => !['full', 'half', 'either', 'other'].includes(p))) fail(400, 'Appointment preferences are invalid')
   return {
@@ -81,7 +76,7 @@ export function opportunityInput(raw: unknown) {
     requiresGrading: flag(body.requiresGrading, 'Grading required'), holdsOfficeHours: flag(body.holdsOfficeHours, 'Office hours required'),
     duties: normalizedDuties, requiredSkills: text(body.requiredSkills, 'Required skills', 3000), preferredSkills: text(body.preferredSkills, 'Preferred skills', 3000),
     questions: normalizedQuestions, requiredSlots: slots(body.requiredSlots, 'Required availability'), allowedPositionPreferences: preferences,
-    cvRequired: flag(body.cvRequired, 'CV required', true), approvalRequired: flag(body.approvalRequired, 'Administrative approval required', true), hourlyRate, budget, weeks, appointmentCost
+    cvRequired: flag(body.cvRequired, 'CV required', true), approvalRequired: flag(body.approvalRequired, 'Administrative approval required', true)
   }
 }
 
@@ -117,7 +112,7 @@ export async function createOpportunity(db: Db, session: ClientSession, user: St
   if (input.courseId && course) input.courseId = course.id
   const term = await db.collection('staffingTerms').findOne({ id: input.termId }, { session }) || fail(409, 'Recruitment semester is unavailable')
   const approvalRequired = term.requiresApproval !== false || input.approvalRequired
-  const opportunity = { ...input, approvalRequired, id: uid(), status: 'draft', version: 1, mutationVersion: 0, requirementsVersion: 1, ownerEmail: user.email, ownerId: actorId(user), approved: isGlobalAdmin(user) || !approvalRequired, committedPositions: 0, committedBudget: 0, createdAt: new Date(), updatedAt: new Date() }
+  const opportunity = { ...input, approvalRequired, id: uid(), status: 'draft', version: 1, mutationVersion: 0, requirementsVersion: 1, ownerEmail: user.email, ownerId: actorId(user), approved: isGlobalAdmin(user) || !approvalRequired, committedPositions: 0, createdAt: new Date(), updatedAt: new Date() }
   await db.collection('staffingOpportunities').insertOne(opportunity, { session })
   await event(db, session, user, 'OpportunityCreated', opportunity.id)
   return { opportunity: publicRecord(opportunity) }

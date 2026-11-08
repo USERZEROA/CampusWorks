@@ -41,16 +41,6 @@ const openPositions = computed(() =>
       Number(opportunity.value?.committedPositions || 0),
   ),
 );
-const hasOfferBudget = computed(() => {
-  const current = opportunity.value;
-  return (
-    current &&
-    [current.committedBudget, current.appointmentCost, current.budget].every(
-      (value) => typeof value === "number" && Number.isFinite(value),
-    ) &&
-    current.committedBudget + current.appointmentCost <= current.budget + 0.001
-  );
-});
 const canIssueOffer = computed(
   () =>
     canReview.value &&
@@ -58,8 +48,7 @@ const canIssueOffer = computed(
     ["published", "applications_closed", "filled"].includes(
       opportunity.value?.status || opportunity.value?.state,
     ) &&
-    openPositions.value > 0 &&
-    hasOfferBudget.value,
+    openPositions.value > 0,
 );
 const { busy, message, failure, run } = useStaffingMutation(refresh);
 const keys = new Map<string, string>();
@@ -140,9 +129,6 @@ useIntervalRefresh(refresh);
               {{ opportunity.positions }} positions</span
             >
             · {{ opportunity.weeklyHours }} hours/week
-            <span v-if="openPositions > 0 && !hasOfferBudget" class="muted">
-              · Budget unavailable
-            </span>
           </p>
           <p>{{ opportunity.description }}</p>
           <p>
@@ -391,14 +377,6 @@ useIntervalRefresh(refresh);
               Clearance:
               {{ staffingState(item.clearanceStatus || item.clearance) }}
             </p>
-            <StaffingSettlement
-              v-if="
-                data.viewer?.isGlobalAdmin &&
-                item.budgetStatus === 'awaiting_settlement'
-              "
-              :appointment="item"
-              @saved="refresh"
-            />
             <div class="actions">
               <button
                 v-if="item.status === 'active'"

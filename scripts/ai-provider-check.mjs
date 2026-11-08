@@ -108,7 +108,7 @@ async function proof() {
     requiresAttendance: false, hasLab: false, hasDiscussion: false, requiresGrading: true, holdsOfficeHours: true,
     duties: [{ kind: 'office_hours', sessionsPerWeek: 2, minutesPerSession: 60 }], requiredSkills: 'Algorithms and clear explanations', preferredSkills: 'Peer tutoring',
     questions: [{ id: 'experience', prompt: 'Describe relevant algorithms coursework or teaching practice.', required: true }],
-    cvRequired: false, approvalRequired: false, hourlyRate: 20, budget: 1600,
+    cvRequired: false, approvalRequired: false,
   } }))).opportunity
   opportunity = (await call(faculty.api.post(`/api/staffing/opportunities/${opportunity.id}/publish`, { data: { expectedVersion: opportunity.version } }))).opportunity
   const apply = async (candidate, experience) => {

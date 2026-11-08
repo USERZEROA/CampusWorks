@@ -1,4 +1,4 @@
-export const DEMO_CATALOG_VERSION = 5;
+export const DEMO_CATALOG_VERSION = 6;
 const DAY = 86400000;
 const MINUTE = 60000;
 const easternClock = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
@@ -43,8 +43,7 @@ export const DEMO_STAGE_ACTIONS = Object.freeze({
   active: ['save', 'cv', 'submit', 'select', 'accept', 'administrative', 'clearance:cleared', 'workload'],
   pending_start: ['save', 'cv', 'submit', 'select', 'accept', 'administrative', 'clearance:cleared'],
   suspended: ['save', 'cv', 'submit', 'select', 'accept', 'administrative', 'clearance:cleared', 'workload', 'suspend'],
-  ended_unsettled: ['save', 'cv', 'submit', 'select', 'accept', 'administrative', 'clearance:cleared', 'workload', 'end'],
-  ended_settled: ['save', 'cv', 'submit', 'select', 'accept', 'administrative', 'clearance:cleared', 'workload', 'end', 'settle'],
+  ended: ['save', 'cv', 'submit', 'select', 'accept', 'administrative', 'clearance:cleared', 'workload', 'end'],
   declined: ['save', 'cv', 'submit', 'select', 'decline'],
   rescinded: ['save', 'cv', 'submit', 'select', 'rescind'],
   not_cleared: ['save', 'cv', 'submit', 'select', 'accept', 'administrative', 'clearance:not_cleared'],
@@ -145,9 +144,6 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
     const appointmentStart = at(future ? 14 : -21);
     const appointmentEnd = at(future ? 70 : 49);
     const weeklyHours = 10;
-    const hourlyRate = [22, 24, 25, 26][index % 4];
-    const weeks = Math.ceil((new Date(appointmentEnd) - new Date(appointmentStart)) / (7 * DAY));
-    const appointmentCost = weeklyHours * hourlyRate * weeks;
     const grading = type === 'ta' && !['discrete', 'interaction'].includes(courseKey);
     const lab = type === 'ta' && ['intro', 'systems', 'databases', 'data-science'].includes(courseKey);
     return { key, ownerKey, courseKey, termKey: 'current', stage, input: {
@@ -170,7 +166,6 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
         { id: 'availability', prompt: 'Weekly availability?', purpose: 'qualification', required: true },
       ],
       allowedPositionPreferences: ['half', 'either'], cvRequired: true, approvalRequired: true,
-      hourlyRate, budget: Math.ceil(appointmentCost * positions * 1.12 / 100) * 100,
     } };
   });
   const opportunityByKey = new Map(opportunities.map(opportunity => [opportunity.key, opportunity]));
@@ -222,8 +217,7 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
       qualificationText: `Synthetic qualification record. ${['Explains with diagrams.', 'Documents assumptions.', 'Checks boundary cases.'][strength]}`,
       cv: stage === 'draft_missing_cv' ? null : { name: `${actor.firstName.toLowerCase()}-${actor.lastName.toLowerCase()}-demo-cv.txt`, text: `SYNTHETIC DEMONSTRATION CV\n${actor.name}\nComputer Science\nSkills: ${profile.skills}\nExperience: ${experience}\nAvailability: ${profile.availability}\nNo real individual or academic result is represented.\n` },
       administrative: { dukeUniqueId: `DEMO-${String(actors.indexOf(actor)).padStart(4, '0')}`, payrollBefore: false, hasSsn: false, citizenship: '', authorizationExpiry: '' },
-      reason: ({ not_selected: 'The current opening prioritizes experience with the published lab workload.', needs_information: 'Synthetic clearance checklist: appointment information is awaiting confirmation.', suspended: 'Synthetic temporary scheduling review; independent course grants are preserved.', ended_unsettled: 'The workshop has ended; approved incurred costs are awaiting settlement.', ended_settled: 'The workshop is complete and its approved incurred costs are settled.', declined: 'The candidate chose to keep the semester schedule available.', rescinded: 'The planned support schedule changed before acceptance.', not_cleared: 'Synthetic clearance scenario; no real administrative determination.' })[stage] || '',
-      settlementRatio: stage === 'ended_settled' ? 0.68 : undefined,
+      reason: ({ not_selected: 'The current opening prioritizes experience with the published lab workload.', needs_information: 'Synthetic clearance checklist: appointment information is awaiting confirmation.', suspended: 'Synthetic temporary scheduling review; independent course grants are preserved.', ended: 'The workshop is complete and its appointment has ended.', declined: 'The candidate chose to keep the semester schedule available.', rescinded: 'The planned support schedule changed before acceptance.', not_cleared: 'Synthetic clearance scenario; no real administrative determination.' })[stage] || '',
     });
   };
   for (let number = 4; number <= 15; number++) add(`candidate-${String(number).padStart(2, '0')}`, 'intro-ta', number % 5 === 0 ? 'shortlisted' : number % 4 === 0 ? 'under_review' : 'submitted', number);
@@ -239,8 +233,8 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
     [16, 'discrete-ta', 'pending_clearance'], [17, 'systems-ta', 'needs_information'],
     [18, 'ai-ta', 'active'], [19, 'intro-ta', 'active'], [20, 'database-future', 'pending_start'],
     [21, 'software-ta', 'suspended'], [22, 'ra-data-quality', 'active'], [23, 'ra-systems', 'offered'],
-    [24, 'ra-learning', 'needs_information'], [25, 'systems-closeout', 'ended_unsettled'],
-    [26, 'intro-closeout', 'ended_settled'], [27, 'interaction-ta', 'declined'],
+    [24, 'ra-learning', 'needs_information'], [25, 'systems-closeout', 'ended'],
+    [26, 'intro-closeout', 'ended'], [27, 'interaction-ta', 'declined'],
     [28, 'data-science-ta', 'rescinded'], [29, 'databases-ta', 'not_cleared'],
     [30, 'systems-ta', 'withdrawn'], [31, 'structures-ta', 'not_selected'],
     [32, 'ra-data-quality', 'draft_missing_cv'],
@@ -339,9 +333,9 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
       { key: 'overview', roleKey: 'admin', path: '/courses', title: 'One view of courses, recruiting and operational readiness' },
       { key: 'apply', roleKey: 'student-two', path: '/applications', title: 'A candidate follows applications and an outstanding offer' },
       { key: 'compare', roleKey: 'faculty-main', opportunityKey: 'intro-ta', title: 'A twelve-person eligible pool with evidence-linked candidate pages' },
-      { key: 'clearance', roleKey: 'admin', path: '/admin/staffing', title: 'Approval, clearance, future starts and financial closeout' },
+      { key: 'clearance', roleKey: 'admin', path: '/admin/staffing', title: 'Approval, clearance, future starts and ended appointments' },
       { key: 'queue', roleKey: 'ta-main', courseKey: 'intro', title: 'Live student support with claims, pauses and handoffs' },
-      { key: 'review', roleKey: 'faculty-main', courseKey: 'intro', title: 'Recorded demand, feedback, workload and conditional staffing scenarios' },
+      { key: 'review', roleKey: 'faculty-main', courseKey: 'intro', title: 'Recorded demand, feedback, workload and staffing capacity' },
     ],
   };
 }

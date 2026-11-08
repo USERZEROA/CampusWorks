@@ -70,7 +70,7 @@ export const test = base.extend<{ space: StaffingSpace }>({
           requiresAttendance: true, hasLab: true, hasDiscussion: true, requiresGrading: true, holdsOfficeHours: true,
           duties: [{ kind: 'office_hours', sessionsPerWeek: 2, minutesPerSession: 60 }, { kind: 'grading', sessionsPerWeek: 1, minutesPerSession: 120 }],
           requiredSkills: 'Algorithms and clear explanations', preferredSkills: 'Teaching experience', questions: [{ id: 'motivation', prompt: 'Why this course?', required: true, purpose: 'qualification' }],
-          cvRequired: true, approvalRequired: false, hourlyRate: 20, budget: 1200, ...overrides,
+          cvRequired: true, approvalRequired: false, ...overrides,
         };
         const result = (await json(owner.api.post('/api/staffing/opportunities', { data: input }))).opportunity;
         opportunityIds.push(result.id);
