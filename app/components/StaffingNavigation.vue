@@ -1,5 +1,40 @@
 ﻿<script setup lang="ts">
+import { insightsIdentityScope } from "../composables/useCourseInsights";
 const access = useStaffingCapabilities();
+const viewer = useAuthUser();
+const owner = computed(() => insightsIdentityScope(viewer.value));
+const request = useRequestFetch();
+const { data: insightsAccess, refresh: refreshInsightsAccess } =
+  await useAsyncData(
+    `insights-access:${owner.value}`,
+    async (_app, { signal }) => {
+      const requestedOwner = owner.value;
+      if (!requestedOwner) return { allowed: false };
+      try {
+        const result = await request<{ allowed: boolean }>(
+          "/api/insights/access",
+          {
+            signal,
+          },
+        );
+        return !signal.aborted && requestedOwner === owner.value
+          ? result
+          : { allowed: false };
+      } catch {
+        return { allowed: false };
+      }
+    },
+    { default: () => ({ allowed: false }), dedupe: "defer" },
+  );
+watch(
+  owner,
+  () => {
+    insightsAccess.value = { allowed: false };
+    if (owner.value) void refreshInsightsAccess({ dedupe: "cancel" });
+  },
+  { flush: "sync" },
+);
+useIntervalRefresh(refreshInsightsAccess, 10000);
 </script>
 
 <template>
@@ -10,6 +45,12 @@ const access = useStaffingCapabilities();
   >
     <h2 id="recruitment-title">TA &amp; RA</h2>
     <div class="home-actions">
+      <NuxtLink
+        v-if="insightsAccess?.allowed"
+        to="/insights"
+        data-testid="insights-link"
+        >Course insights</NuxtLink
+      >
       <NuxtLink
         v-if="access.viewer.canApplyStaffing"
         to="/opportunities"

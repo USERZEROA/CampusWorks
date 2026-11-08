@@ -64,6 +64,9 @@ type Feedback = {
   courseCode?: string;
   studentEmail?: string;
   studentName?: string;
+  ratingScope?: "course" | "helper";
+  taName?: string;
+  taEmail?: string;
   category: string;
   rating: number;
   positive: string;
@@ -1080,19 +1083,13 @@ useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(
 
       <p v-if="refreshNotice" class="pagination-note" role="status">{{ refreshNotice }}</p>
 
-      <!-- Analytics -->
+      <CourseInsights :course-id="courseId" v-model:from="startDate" v-model:to="endDate" />
+
+      <!-- Assistance records and helper charts -->
       <section class="panel">
-        <div class="panel-header">TA Performance &amp; Queue Analytics</div>
+        <div class="panel-header">Assistance Records &amp; Helper Charts</div>
         <div class="panel-body analytics-body">
           <div class="analytics-filters">
-            <div class="field">
-              <label for="report-start">Start Date</label>
-              <input v-model="startDate" id="report-start" type="date" />
-            </div>
-            <div class="field">
-              <label for="report-end">End Date</label>
-              <input v-model="endDate" id="report-end" type="date" />
-            </div>
             <div class="field">
               <label for="report-chart">Chart</label>
               <select
@@ -1521,10 +1518,9 @@ useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(
       <section class="panel">
         <div class="panel-header">Course Feedback</div>
         <div class="panel-body">
-          <div v-if="feedback.length">
+          <div v-if="feedback.length" class="feedback-scroll" role="region" tabindex="0" aria-label="Feedback records">
             <table
               class="feedback-table"
-              tabindex="0"
               aria-label="Course feedback"
             >
               <thead>
@@ -1532,6 +1528,7 @@ useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(
                   <th>Time</th>
                   <th>Student</th>
                   <th>Topic</th>
+                  <th>About</th>
                   <th>Rating</th>
                   <th>What worked well</th>
                   <th>What can be improved</th>
@@ -1554,6 +1551,9 @@ useIntervalRefresh((options) => busyActions.value ? Promise.resolve() : refresh(
                   </td>
                   <td>
                     {{ feedbackCategoryLabel(f.category) }}
+                  </td>
+                  <td :title="f.ratingScope === 'helper' ? f.taEmail : undefined">
+                    {{ f.ratingScope === "helper" ? f.taName || f.taEmail : "Course" }}
                   </td>
                   <td>
                     <span class="rating-label">
@@ -2038,12 +2038,13 @@ details > summary {
 
 .analytics-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(380px, 2.6fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
   align-items: stretch;
 }
 
 .sessions-panel {
+  order: 2;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -2098,6 +2099,7 @@ details > summary {
 }
 
 .metrics-panel {
+  order: 1;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -2106,7 +2108,7 @@ details > summary {
 
 .summary-cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -2389,11 +2391,13 @@ details > summary {
 
 .actions {
   vertical-align: middle;
+  min-width: 240px;
 }
 
 .enrollment-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  width: max-content;
   align-items: center;
   gap: 8px;
 }
@@ -2429,13 +2433,17 @@ details > summary {
   cursor: pointer;
 }
 
+.feedback-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .feedback-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
   table-layout: fixed;
-  /* Same minimum width; scroll horizontally on mobile to see everything */
-  min-width: 600px;
+  min-width: 1040px;
 }
 
 .feedback-table th,
@@ -2449,9 +2457,14 @@ details > summary {
 .feedback-table th:nth-child(1),
 .feedback-table th:nth-child(2),
 .feedback-table th:nth-child(3),
-.feedback-table th:nth-child(4) {
+.feedback-table th:nth-child(4),
+.feedback-table th:nth-child(5) {
   width: 110px;
   white-space: nowrap;
+}
+
+.feedback-table th:last-child {
+  width: 90px;
 }
 
 .fb-text {
@@ -2484,6 +2497,7 @@ details > summary {
 }
 
 @media (max-width: 900px) {
+  .summary-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .course-header {
     flex-direction: column;
     align-items: flex-start;
