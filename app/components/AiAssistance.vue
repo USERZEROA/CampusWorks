@@ -1,12 +1,15 @@
 <script setup lang="ts">
-const props = withDefaults(defineProps<{
-  kind: "candidate_fit" | "cv_summary" | "opportunity_draft" | "term_review";
-  targetId: string;
-  title?: string;
-  termId?: string;
-  authorizedTargets?: Array<{ id: string; label: string }>;
-  canAnalyze?: boolean;
-}>(), { canAnalyze: true });
+const props = withDefaults(
+  defineProps<{
+    kind: "candidate_fit" | "cv_summary" | "opportunity_draft" | "term_review";
+    targetId: string;
+    title?: string;
+    termId?: string;
+    authorizedTargets?: Array<{ id: string; label: string }>;
+    canAnalyze?: boolean;
+  }>(),
+  { canAnalyze: true },
+);
 const nuxtApp = useNuxtApp();
 const currentUser = useAuthUser();
 const authError = useAuthError();
@@ -15,7 +18,9 @@ const authorized = ref(true);
 const reconnecting = ref(false);
 const configured = ref<boolean | null>(null);
 const serverCanAnalyze = ref(true);
-const analysisAllowed = computed(() => props.canAnalyze !== false && serverCanAnalyze.value);
+const analysisAllowed = computed(
+  () => props.canAnalyze !== false && serverCanAnalyze.value,
+);
 const task = ref<any>(null);
 const refreshJobs = ref<any[]>([]);
 const subscriptions = ref<any[]>([]);
@@ -23,7 +28,8 @@ const message = ref("Preparing suggestions...");
 const comparisonPage = ref(1);
 let requestGeneration = 0;
 const scope = computed(
-  () => `${props.kind}:${props.targetId}:${props.termId || ""}:${comparisonPage.value}`,
+  () =>
+    `${props.kind}:${props.targetId}:${props.termId || ""}:${comparisonPage.value}`,
 );
 let activeRequest: AbortController | null = null;
 const matchesTask = (item: any) =>
@@ -40,7 +46,8 @@ const currentJob = computed(() => {
         (item) =>
           item.kind === props.kind &&
           item.targetId === props.targetId &&
-          (props.kind !== "term_review" || (item.termId || "") === (props.termId || "")) &&
+          (props.kind !== "term_review" ||
+            (item.termId || "") === (props.termId || "")) &&
           (item.page || 1) === comparisonPage.value,
       )
       .map((item) => item.id),
@@ -94,7 +101,7 @@ const evidenceFields: Record<string, string> = {
   "course:context": "Course and term",
   "metrics:recorded_sessions": "Recorded queue activity",
   "metrics:recorded_workload": "Reported workload",
-  "metrics:budget": "Staffing budget",
+  "metrics:staffing": "Staffing plan",
   "metrics:limitations": "Evidence limitations",
 };
 function evidenceLabel(reference: string): string {
@@ -111,16 +118,14 @@ function evidenceLabel(reference: string): string {
 }
 const statusMessage = computed(() => {
   if (reconnecting.value) return "Reconnecting...";
-  if (!analysisAllowed.value) return "Candidate analysis has ended; history remains available.";
+  if (!analysisAllowed.value)
+    return "Candidate analysis has ended; history remains available.";
   if (configured.value === false) return "AI is not configured.";
   const job = currentJob.value;
   if (job?.status === "queued") return "Suggestions are queued.";
   if (job?.status === "running") return "Updating suggestions...";
   if (job?.status === "blocked")
-    return (
-      job.reason ||
-      "Waiting for provider capacity."
-    );
+    return job.reason || "Waiting for provider capacity.";
   if (["failed", "revoked"].includes(job?.status))
     return job.reason || "AI analysis is unavailable.";
   if (task.value?.status === "stale")
@@ -128,7 +133,10 @@ const statusMessage = computed(() => {
       ? "Candidate details changed; updating automatically."
       : "Evidence changed; updating automatically.";
   if (task.value?.status === "pending") return "Analysis is pending.";
-  if (task.value?.status === "completed") return task.value?.deterministic ? task.value.message : "Updated automatically.";
+  if (task.value?.status === "completed")
+    return task.value?.deterministic
+      ? task.value.message
+      : "Updated automatically.";
   return task.value?.message || message.value;
 });
 async function handleFailure(error: any, fallback: string) {
@@ -155,7 +163,9 @@ async function loadTasks(options?: { signal?: AbortSignal }) {
   const generation = requestGeneration;
   const controller = new AbortController();
   activeRequest = controller;
-  const signal = options?.signal ? AbortSignal.any([options.signal, controller.signal]) : controller.signal;
+  const signal = options?.signal
+    ? AbortSignal.any([options.signal, controller.signal])
+    : controller.signal;
   loading.value = true;
   try {
     const result = await staffingRequest<any>("/api/ai/tasks", {
@@ -181,15 +191,24 @@ async function loadTasks(options?: { signal?: AbortSignal }) {
         .filter(matchesTask)
         .sort(
           (left, right) =>
-            (!analysisAllowed.value ? Number(right.status === 'completed' && !!right.result) - Number(left.status === 'completed' && !!left.result) : 0) ||
+            (!analysisAllowed.value
+              ? Number(right.status === "completed" && !!right.result) -
+                Number(left.status === "completed" && !!left.result)
+              : 0) ||
             Number(!!right.automatic) - Number(!!left.automatic) ||
             new Date(right.createdAt).getTime() -
-            new Date(left.createdAt).getTime(),
+              new Date(left.createdAt).getTime(),
         )[0] || null;
     reconnecting.value = false;
-    message.value = configured.value ? "Preparing suggestions..." : "AI is not configured.";
+    message.value = configured.value
+      ? "Preparing suggestions..."
+      : "AI is not configured.";
   } catch (error) {
-    if (signal.aborted || requestedScope !== scope.value || generation !== requestGeneration)
+    if (
+      signal.aborted ||
+      requestedScope !== scope.value ||
+      generation !== requestGeneration
+    )
       return;
     await handleFailure(error, "AI availability could not be checked.");
   } finally {
@@ -197,7 +216,12 @@ async function loadTasks(options?: { signal?: AbortSignal }) {
     if (activeRequest === controller) activeRequest = null;
   }
 }
-watch(() => `${props.kind}:${props.targetId}:${props.termId || ""}`, () => { comparisonPage.value = 1; });
+watch(
+  () => `${props.kind}:${props.targetId}:${props.termId || ""}`,
+  () => {
+    comparisonPage.value = 1;
+  },
+);
 watch(scope, () => {
   requestGeneration++;
   activeRequest?.abort();
@@ -212,8 +236,13 @@ watch(scope, () => {
   message.value = "Preparing suggestions...";
   void loadTasks();
 });
-onMounted(() => { void loadTasks(); });
-onBeforeUnmount(() => { requestGeneration++; activeRequest?.abort(); });
+onMounted(() => {
+  void loadTasks();
+});
+onBeforeUnmount(() => {
+  requestGeneration++;
+  activeRequest?.abort();
+});
 useIntervalRefresh(loadTasks, 2500);
 </script>
 <template>
@@ -222,14 +251,16 @@ useIntervalRefresh(loadTasks, 2500);
       <h2>{{ title || "AI Assistance" }}</h2>
     </div>
     <div class="panel-body" :aria-busy="!task && (loading || refreshWorking)">
-      <p
-        class="notice"
-        role="status"
-        data-testid="ai-status"
-      >
+      <p class="notice" role="status" data-testid="ai-status">
         {{ statusMessage }}
       </p>
-      <div v-if="kind === 'candidate_fit' && (comparisonPage > 1 || task?.coverage?.hasMore)" class="actions">
+      <div
+        v-if="
+          kind === 'candidate_fit' &&
+          (comparisonPage > 1 || task?.coverage?.hasMore)
+        "
+        class="actions"
+      >
         <button
           v-if="comparisonPage > 1"
           type="button"
@@ -250,7 +281,13 @@ useIntervalRefresh(loadTasks, 2500);
         </button>
       </div>
       <p v-if="task" class="muted">
-        {{ task.historical ? 'Historical analysis' : `Analysis ${staffingState(task.status)}` }} -
+        <span v-if="completedTask?.provider?.host === 'api.openai.com'" data-testid="ai-provider">OpenAI · </span>
+        {{
+          task.historical
+            ? "Historical analysis"
+            : `Analysis ${staffingState(task.status)}`
+        }}
+        -
         {{ staffingDate(task.completedAt || task.createdAt) }}
       </p>
       <p v-if="task?.coverage" class="muted" data-testid="ai-coverage">
@@ -261,7 +298,11 @@ useIntervalRefresh(loadTasks, 2500);
         </template>
       </p>
       <div v-if="completedTask?.result" data-testid="ai-result">
-        <h3>{{ completedTask.historical ? 'Historical suggestions' : 'Suggestions' }}</h3>
+        <h3>
+          {{
+            completedTask.historical ? "Historical suggestions" : "Suggestions"
+          }}
+        </h3>
         <p class="preserve-lines">{{ completedTask.result.summary }}</p>
         <p
           v-if="completedTask.result.summaryEvidenceRefs?.length"

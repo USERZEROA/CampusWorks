@@ -1,6 +1,10 @@
 import { expect } from "@playwright/test";
+import { createHash } from "node:crypto";
+import { mkdirSync, writeFileSync } from "node:fs";
 
-export const LOOP_STEP_COUNT = 34;
+export const LOOP_STEP_COUNT = 33;
+export const loopStepCount = (withAi = false) =>
+  LOOP_STEP_COUNT + (withAi ? 5 : 0);
 
 export const LOOP_APPLICANT = Object.freeze({
   key: "applicant",
@@ -75,7 +79,9 @@ export async function runLoopCycle({
     courseId,
     cycle,
     startedAt: new Date(startedAt).toISOString(),
+    ai: [],
   };
+  const usageBefore = await service.readAiUsage();
   const roles = {
     applicant: "Student",
     learner: "Student",
@@ -123,6 +129,135 @@ export async function runLoopCycle({
   const check = async (locator) => {
     await stage.spotlight(locator);
     await locator.check();
+  };
+  const presentAi = async ({
+    actor = "instructor",
+    kind,
+    targetId,
+    termId,
+    route,
+    title,
+    detail,
+    excludedCandidateIds = [],
+  }) => {
+    if (!service.ai.enabled) return;
+    await step(actor, title, detail, async (page) => {
+      const scope = {
+        kind,
+        targetId,
+        ...(termId ? { termId } : {}),
+        ...(kind === "candidate_fit" ? { page: 1, pageSize: 10 } : {}),
+      };
+      await stage.checkpoint();
+      await service.enableAiScope(scope);
+      await stage.checkpoint();
+      await open(page, route);
+      const panel = page
+        .getByRole("region", { name: "AI assistance", exact: true })
+        .filter({
+          has: page.getByRole("heading", { name: title, exact: true }),
+        });
+      await expect(panel).toBeVisible();
+      await stage.spotlight(panel.getByTestId("ai-status"));
+      const query = new URLSearchParams(
+        Object.fromEntries(
+          Object.entries(scope).map(([key, value]) => [key, String(value)]),
+        ),
+      );
+      let completed;
+      let latestState = "waiting";
+      const deadline = Date.now() + 180000;
+      while (Date.now() < deadline) {
+        await stage.checkpoint();
+        const response = await page.request.get(`/api/ai/tasks?${query}`);
+        expect(response.ok()).toBe(true);
+        const payload = await response.json();
+        expect(payload.ai.configured).toBe(true);
+        const tasks = payload.tasks.filter(
+          (task) =>
+            new Date(task.createdAt).getTime() >= startedAt &&
+            task.automatic &&
+            task.kind === kind &&
+            task.targetId === targetId &&
+            (!termId || task.requestedTermId === termId) &&
+            (kind !== "candidate_fit" || task.candidatePage === 1),
+        );
+        completed = tasks.find(
+          (task) =>
+            task.status === "completed" &&
+            !task.historical &&
+            !task.deterministic &&
+            task.result?.summary &&
+            task.provider?.host === "api.openai.com" &&
+            task.provider?.responseId,
+        );
+        if (completed) break;
+        const failed = tasks.find((task) => task.status === "failed");
+        if (failed)
+          throw new Error(
+            `Live ${kind} analysis did not complete (${failed.failureCode || failed.failureCategory || "provider unavailable"}).`,
+          );
+        latestState =
+          tasks[0]?.status || payload.refresh?.jobs?.[0]?.status || "waiting";
+        await stage.hold(750);
+      }
+      if (!completed)
+        throw new Error(
+          `Live ${kind} analysis did not complete before the presentation timeout (${latestState}).`,
+        );
+      expect(
+        completed.provider.model === service.ai.model ||
+          completed.provider.model.startsWith(`${service.ai.model}-`),
+      ).toBe(true);
+      expect(new Date(completed.completedAt).getTime()).toBeGreaterThanOrEqual(
+        new Date(completed.createdAt).getTime(),
+      );
+      if (excludedCandidateIds.length) {
+        expect(completed.candidatePageSize).toBe(10);
+        expect(completed.result.items.length).toBeGreaterThan(0);
+        expect(completed.result.items.map((item) => item.targetId)).not.toEqual(
+          expect.arrayContaining(excludedCandidateIds),
+        );
+      }
+      await expect(panel.getByTestId("ai-result")).toBeVisible({
+        timeout: 20000,
+      });
+      await expect(panel.getByTestId("ai-provider")).toContainText("OpenAI", {
+        timeout: 20000,
+      });
+      await expect(panel.getByTestId("ai-result")).toContainText(
+        completed.result.summary,
+      );
+      await stage.spotlight(panel.getByTestId("ai-result"));
+      mkdirSync(".cache/demo-ai-captures", { recursive: true });
+      const capturePath = `.cache/demo-ai-captures/cycle-${cycle}-${actor}-${kind}-${targetId}.png`;
+      const capture = await panel.screenshot({
+        path: capturePath,
+        style: "#campusworks-demo-stage { visibility: hidden !important; }",
+      });
+      writeFileSync(`.cache/demo-ai-captures/${kind}.png`, capture);
+      details.ai.push({
+        actor,
+        kind,
+        targetId,
+        ...(excludedCandidateIds.length
+          ? { excludedCandidateIds, unavailableCandidateExcluded: true }
+          : {}),
+        ...(termId ? { termId } : {}),
+        taskId: completed.id,
+        automatic: true,
+        deterministic: false,
+        provider: completed.provider,
+        createdAt: completed.createdAt,
+        completedAt: completed.completedAt,
+        summary: completed.result.summary,
+        summaryEvidenceRefs: completed.result.summaryEvidenceRefs,
+        items: completed.result.items,
+        cautions: completed.result.cautions,
+        capturePath,
+        captureSha256: createHash("sha256").update(capture).digest("hex"),
+      });
+    });
   };
 
   await step(
@@ -180,8 +315,6 @@ export async function runLoopCycle({
         page.getByLabel("Qualification question 1", { exact: true }),
         "How would you help a student debug a recursive method without giving away the answer?",
       );
-      await fill(page.getByTestId("opportunity-rate"), "20");
-      await fill(page.getByTestId("opportunity-budget"), "10000");
       await click(page.getByTestId("opportunity-save"));
       await expect(page).toHaveURL(/\/staffing\/[a-f0-9-]+$/);
       positionId = new URL(page.url()).pathname.split("/").at(-1);
@@ -202,6 +335,14 @@ export async function runLoopCycle({
       );
     },
   );
+  await presentAi({
+    kind: "opportunity_draft",
+    targetId: positionId,
+    route: `/staffing/${positionId}`,
+    title: "Requirement Draft Assistance",
+    detail:
+      "Live OpenAI reviews the published duties and requirements. The instructor retains the decision.",
+  });
   await step(
     "applicant",
     "Discover the opportunity",
@@ -340,10 +481,26 @@ export async function runLoopCycle({
       await expect(page.getByTestId("application-cv-download")).toBeVisible();
     },
   );
+  await presentAi({
+    kind: "cv_summary",
+    targetId: applicationId,
+    route: `/applications/${applicationId}`,
+    title: "Qualification Summary Assistance",
+    detail:
+      "Live OpenAI summarizes Alex's submitted qualifications with evidence references. Faculty make the hiring decision.",
+  });
+  await presentAi({
+    kind: "candidate_fit",
+    targetId: positionId,
+    route: `/staffing/${positionId}`,
+    title: "Candidate Review Assistance",
+    detail:
+      "Live OpenAI compares the eligible submitted candidates against CS201 requirements before the instructor decides.",
+  });
   await step(
     "instructor",
     "Shortlist and issue the offer",
-    "The faculty decision reserves the candidate, position and budget together.",
+    "The faculty decision reserves the candidate and position together.",
     async (page) => {
       await open(page, `/staffing/${positionId}`);
       await click(page.getByTestId(`shortlist-candidate-${applicationId}`));
@@ -372,6 +529,16 @@ export async function runLoopCycle({
       ).toBeDisabled();
     },
   );
+  await presentAi({
+    actor: "peer",
+    kind: "candidate_fit",
+    targetId: peerPosition,
+    route: `/staffing/${peerPosition}`,
+    title: "Candidate Review Assistance",
+    detail:
+      "Alex is reserved by CS201. Live OpenAI now reviews CS101's next eligible candidates; the unavailable applicant is excluded.",
+    excludedCandidateIds: [peerApplicationId],
+  });
   await step(
     "applicant",
     "Accept the CS201 offer",
@@ -446,12 +613,20 @@ export async function runLoopCycle({
     async (page) => {
       await fill(
         page.getByTestId("announce-input"),
-        "Alex is holding CS201 office hours. Add your location and a short question to join.",
+        "Alex is holding CS201 office hours. Add your location and a short question to join. Online students can use Zoom (demo): https://zoom.example.com/j/cs201-office-hours",
       );
       await click(page.getByTestId("announce-post"));
       await expect(
         page.getByText("Alex is holding CS201 office hours.", { exact: false }),
       ).toBeVisible();
+      await expect(
+        page
+          .locator('a[href="https://zoom.example.com/j/cs201-office-hours"]')
+          .first(),
+      ).toHaveAttribute(
+        "href",
+        "https://zoom.example.com/j/cs201-office-hours",
+      );
     },
   );
   await step(
@@ -470,7 +645,12 @@ export async function runLoopCycle({
     "Sam supplies a location and a concrete debugging question.",
     async (page) => {
       await click(page.getByTestId("enter-queue-btn"));
-      await fill(page.getByTestId("join-location"), "Computing Lab · Seat 12");
+      await expect(
+        page
+          .locator('a[href="https://zoom.example.com/j/cs201-office-hours"]')
+          .first(),
+      ).toBeVisible();
+      await fill(page.getByTestId("join-location"), "Online · Zoom (demo)");
       await fill(
         page.getByTestId("join-question"),
         "How can I trace the base case in a recursive tree traversal?",
@@ -542,21 +722,19 @@ export async function runLoopCycle({
       await click(page.getByTestId("fb-submit"));
       await expect(page.getByTestId("fb-submit")).toHaveCount(0);
       expect(
-        await service.db
-          .collection("feedback")
-          .findOne({
-            courseId,
-            studentEmail: LOOP_LEARNER.email,
-            helpSessionId: session.id,
-            taEmail: LOOP_APPLICANT.email,
-          }),
+        await service.db.collection("feedback").findOne({
+          courseId,
+          studentEmail: LOOP_LEARNER.email,
+          helpSessionId: session.id,
+          taEmail: LOOP_APPLICANT.email,
+        }),
       ).toMatchObject({ ratingScope: "helper", rating: 5 });
     },
   );
   await step(
     "applicant",
     "Record work beyond queue timing",
-    "Alex reports office-hours work separately; queue duration does not represent all paid teaching work.",
+    "Alex reports office-hours work separately; queue duration does not represent all teaching work.",
     async (page) => {
       await open(page, `/applications/${applicationId}`);
       await select(
@@ -616,7 +794,7 @@ export async function runLoopCycle({
   await step(
     "instructor",
     "End the appointment with a reason",
-    "The faculty member closes Alex’s appointment. Financial obligations remain until settlement.",
+    "The faculty member closes Alex’s appointment and its dated course authority ends.",
     async (page) => {
       await open(page, `/staffing/${positionId}`);
       await fill(
@@ -647,21 +825,9 @@ export async function runLoopCycle({
   );
   roles.applicant = "Student";
   await step(
-    "admin",
-    "Settle the appointment cost",
-    "The administrator confirms a synthetic incurred cost and releases the unused commitment.",
-    async (page) => {
-      await fill(page.getByTestId(`settlement-cost-${appointmentId}`), "10");
-      await click(page.getByTestId(`appointment-settle-${appointmentId}`));
-      await expect(
-        page.getByTestId(`appointment-settle-${appointmentId}`),
-      ).toHaveCount(0);
-    },
-  );
-  await step(
     "instructor",
     "See the evidence for the next cycle",
-    "Course activity, reported work and settled costs inform the next staffing discussion; they do not prove savings.",
+    "Course activity, reported work and staffing capacity inform the next support plan.",
     async (page) => {
       await open(page, `/courses/${courseId}/review`);
       await expect(page.getByRole("heading", { level: 1 })).toContainText(
@@ -671,18 +837,25 @@ export async function runLoopCycle({
         page.request.get(`/api/staffing/reviews/${courseId}`),
       );
       expect(report.workload.totalHours).toBeGreaterThan(0);
-      expect(report.budget.settledBudget).toBeGreaterThanOrEqual(10);
       details.review = {
         reportedHours: report.workload.totalHours,
-        settledCost: report.budget.settledBudget,
         sessions: report.metrics.sessions,
       };
     },
   );
+  await presentAi({
+    kind: "term_review",
+    targetId: courseId,
+    termId: service.manifest.termIds.current,
+    route: `/courses/${courseId}/review`,
+    title: "Course Suggestions",
+    detail:
+      "Live OpenAI reviews recorded activity, reported work and staffing coverage for the current semester. This is a preview using labeled synthetic evidence.",
+  });
   await step(
     "admin",
     "Compare department demand and support",
-    "The administrator compares courses, busy hours and attributed feedback, with sample sizes and staffing costs visible.",
+    "The administrator compares courses, busy hours and attributed feedback, with sample sizes and teaching workload visible.",
     async (page) => {
       await open(page, "/insights");
       await expect(page.getByTestId("insights-root")).toBeVisible();
@@ -707,7 +880,7 @@ export async function runLoopCycle({
   await step(
     "instructor",
     "Archive the completed opening",
-    "Only after appointment and financial closeout is this position archived.",
+    "The instructor archives this position after the appointment has ended.",
     async (page) => {
       await open(page, `/staffing/${positionId}`);
       await click(page.getByTestId("opportunity-archive"));
@@ -732,8 +905,6 @@ export async function runLoopCycle({
     .findOne({ id: appointmentId });
   expect(finalAppointment).toMatchObject({
     status: "ended",
-    budgetStatus: "settled",
-    incurredCost: 10,
   });
   expect(
     await service.db
@@ -743,11 +914,22 @@ export async function runLoopCycle({
   expect(
     await service.db
       .collection("queueEntries")
-      .countDocuments({ courseId, email: LOOP_LEARNER.email }),
+      .countDocuments({ courseId, studentEmail: LOOP_LEARNER.email }),
   ).toBe(0);
-  expect(
-    await service.db.collection("staffingAiBudgets").countDocuments(),
-  ).toBe(0);
+  expect(steps).toHaveLength(loopStepCount(service.ai.enabled));
+  if (service.ai.enabled) {
+    expect(details.ai).toHaveLength(5);
+    expect(new Set(details.ai.map((item) => item.kind)).size).toBe(4);
+  } else {
+    expect(
+      await service.db.collection("staffingAiBudgets").countDocuments(),
+    ).toBe(0);
+    expect(details.ai).toEqual([]);
+  }
+  const usageAfter = await service.readAiUsage();
+  const reservedRequests =
+    usageAfter.reservedRequests - usageBefore.reservedRequests;
+  if (service.ai.enabled) expect(reservedRequests).toBeGreaterThanOrEqual(5);
   return {
     ...details,
     positionId,
@@ -757,7 +939,15 @@ export async function runLoopCycle({
     steps,
     durationMs: Date.now() - startedAt,
     finishedAt: new Date().toISOString(),
-    providerCalls: 0,
+    providerCalls: reservedRequests,
+    completedProviderResults: details.ai.length,
+    aiUsage: {
+      before: usageBefore,
+      after: usageAfter,
+      reservedRequests,
+      boundary:
+        "Shared protected request reservations; may include retries or another concurrent presentation and are not billed-token measurements.",
+    },
     status: "passed",
   };
 }

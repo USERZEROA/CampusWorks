@@ -6,16 +6,12 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect } from "@playwright/test";
 import { createLoopService } from "./demo-loop-service.mjs";
 import { createDemoStage, DemoStopped } from "./demo-stage.mjs";
-import {
-  LOOP_STEP_COUNT,
-  loopWindows,
-  runLoopCycle,
-} from "./demo-loop-flow.mjs";
+import { loopStepCount, loopWindows, runLoopCycle } from "./demo-loop-flow.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const profiles = {
   fast: { holdMs: 150, beforeMs: 0, targetMs: 0 },
-  normal: { holdMs: 7200, beforeMs: 750, targetMs: 300000 },
+  normal: { holdMs: 5500, beforeMs: 750, targetMs: 300000 },
   detailed: { holdMs: 12000, beforeMs: 1000, targetMs: 480000 },
 };
 
@@ -24,12 +20,15 @@ export async function runDemoLoop({
   cycles = Infinity,
   pace = "normal",
   build = true,
+  provider = "disabled",
   verifyControls = false,
   proofPath = ".cache/demo-loop-proof.json",
   onProgress = (message) => console.log(message),
 } = {}) {
   if (!Object.hasOwn(profiles, pace))
     throw new Error("Use fast, normal or detailed pacing.");
+  if (!["disabled", "openai"].includes(provider))
+    throw new Error("Use the disabled or openai demonstration provider.");
   if (!(
     cycles === Infinity ||
     (Number.isSafeInteger(cycles) && cycles >= 1 && cycles <= 100)
@@ -49,6 +48,11 @@ export async function runDemoLoop({
     pace,
     requestedCycles: Number.isFinite(cycles) ? cycles : "continuous",
     providerCalls: 0,
+    provider,
+    completedProviderResults: 0,
+    totalSteps: loopStepCount(provider === "openai"),
+    providerUsageBoundary:
+      "Shared protected request reservations, not billed usage; persistent daily limits survive database restoration and relaunches.",
     providerKeyLoaded: false,
     completedCycles: 0,
     cycles: [],
@@ -88,7 +92,9 @@ export async function runDemoLoop({
             titleToken,
           })),
           completedCycles: proof.completedCycles,
-          providerCalls: 0,
+          providerCalls: proof.providerCalls,
+          completedProviderResults: proof.completedProviderResults,
+          provider: proof.provider,
           status: proof.status || "running",
           updatedAt: new Date().toISOString(),
         },
@@ -104,17 +110,21 @@ export async function runDemoLoop({
   process.once("SIGINT", stop);
   process.once("SIGTERM", stop);
   try {
-    service = await createLoopService({ build, onProgress });
+    service = await createLoopService({ build, provider, onProgress });
     if (cancelled) throw new DemoStopped();
     proof.origin = service.origin;
     proof.database = service.databaseName;
+    proof.ai = service.ai;
+    proof.providerKeyLoaded = service.ai.keyLoaded;
+    proof.aiUsageBefore =
+      service.state.aiUsageBefore || (await service.readAiUsage());
     stage = await createDemoStage({
       windows: loopWindows(service.manifest),
       baseURL: service.origin,
       headless,
       holdMs: profiles[pace].holdMs,
       beforeMs: profiles[pace].beforeMs,
-      totalSteps: LOOP_STEP_COUNT,
+      totalSteps: proof.totalSteps,
       onStop: (reason) => {
         proof.stopReason = reason;
         cancelled = reason !== "page-crashed";
@@ -182,7 +192,7 @@ export async function runDemoLoop({
             await Promise.all(
               stage.windows.map(({ page }) => page.goto("about:blank")),
             );
-            await service.reset();
+            const resetReceipt = await service.reset();
             expect(
               await service.db
                 .collection("staffingOpportunities")
@@ -204,6 +214,8 @@ export async function runDemoLoop({
               previousAppointmentAbsent: true,
               baselineUsers: 41,
               reauthenticatedWindows: 6,
+              aiScopesCleared: service.state.aiScopes.length === 0,
+              sharedUsagePreserved: resetReceipt.sharedUsagePreserved === true,
               status: "passed",
             });
             if (!Number.isFinite(cycles) && proof.resets.length > 8)
@@ -219,7 +231,7 @@ export async function runDemoLoop({
         dwell: (ms) => stage.hold(ms),
         onStep: (event) => {
           onProgress(
-            `Cycle ${cycle} · ${event.step}/${LOOP_STEP_COUNT} · ${event.role}: ${event.title}`,
+            `Cycle ${cycle} · ${event.step}/${proof.totalSteps} · ${event.role}: ${event.title}`,
           );
         },
       });
@@ -240,12 +252,17 @@ export async function runDemoLoop({
         }
       }
       proof.cycles.push(record);
+      proof.completedProviderResults += record.completedProviderResults;
+      proof.aiUsageAfter = record.aiUsage.after;
+      proof.providerCalls =
+        proof.aiUsageAfter.reservedRequests -
+        proof.aiUsageBefore.reservedRequests;
       proof.completedCycles++;
       if (!Number.isFinite(cycles) && proof.cycles.length > 8)
         proof.cycles.shift();
       save();
       onProgress(
-        `Cycle ${cycle} complete: offer, clearance, queue work, feedback, workload, access revocation, settlement and archive all passed.`,
+        `Cycle ${cycle} complete: offer, clearance, queue work, feedback, workload, access revocation and archive all passed.`,
       );
       if (profiles[pace].targetMs)
         await stage.hold(
@@ -290,6 +307,12 @@ export async function runDemoLoop({
       proof.cleanupReceipt = service
         ? await service.close()
         : proof.startupCleanupReceipt;
+      if (proof.cleanupReceipt?.aiUsage) {
+        proof.aiUsageAfter = proof.cleanupReceipt.aiUsage;
+        proof.providerCalls =
+          proof.aiUsageAfter.reservedRequests -
+          (proof.aiUsageBefore?.reservedRequests || 0);
+      }
       proof.cleanup =
         proof.cleanupReceipt?.complete === true && !stageCleanupFailed
           ? "complete"
@@ -306,12 +329,14 @@ export async function runDemoLoop({
 }
 
 function options(args) {
-  const result = {};
+  const result = { provider: "openai" };
   for (let i = 0; i < args.length; i++) {
     const flag = args[i];
     if (flag === "--headless") result.headless = true;
     else if (flag === "--skip-build") result.build = false;
     else if (flag === "--verify-controls") result.verifyControls = true;
+    else if (flag === "--without-ai") result.provider = "disabled";
+    else if (flag === "--provider") result.provider = args[++i];
     else if (flag === "--cycles") result.cycles = Number(args[++i]);
     else if (flag === "--pace") result.pace = args[++i];
     else if (flag === "--help") return null;
@@ -327,7 +352,7 @@ if (
     const chosen = options(process.argv.slice(2));
     if (!chosen)
       console.log(
-        "Usage: node scripts/demo-loop.mjs [--pace normal|fast|detailed] [--cycles N] [--headless] [--skip-build] [--verify-controls]\nDefault: continuous visible six-window lifecycle, about five minutes per round. Pause/Resume and Stop demo are in the demo-only banner. Continuous playback never loads a provider Key or purchases AI calls.",
+        "Usage: node scripts/demo-loop.mjs [--pace normal|fast|detailed] [--cycles N] [--headless] [--skip-build] [--verify-controls] [--without-ai]\nDefault: visible six-window lifecycle with five live OpenAI presentations across four advisory types, including the next eligible candidates after another course issues an offer; about five minutes plus provider latency per round. The locally encrypted Key is loaded only for live AI. Persistent request limits survive each round. --without-ai runs the 33-step deterministic lifecycle without provider calls. Pause/Resume and Stop demo are in the demo-only banner.",
       );
     else {
       const proof = await runDemoLoop(chosen);

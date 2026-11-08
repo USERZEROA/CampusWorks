@@ -53,7 +53,7 @@ test("the complete showcase has coherent real lifecycle records and repeated pre
   expect(review.termId).toBe(manifest.termIds.current);
   expect(review.workload.totalHours).toBeGreaterThan(0);
   expect(review.metrics).toBeTruthy();
-  expect(review.budget.approvedBudget).toBeGreaterThan(0);
+  expect(review.staffing.approvedPositions).toBeGreaterThan(0);
 
   const admin = await showcase.actor("admin");
   const { cycle } = await json(admin.api.get("/api/staffing/cycle"));
@@ -65,7 +65,7 @@ test("the complete showcase has coherent real lifecycle records and repeated pre
   expect((await json(admin.api.get("/api/staffing/cycle"))).cycle).toEqual(disabled);
 });
 
-test("a populated candidate accepts an offer, gains only cleared course authority and completes manual financial closeout through the browser", async ({ showcase, browser }) => {
+test("a populated candidate accepts an offer, gains only cleared course authority and ends the appointment before archiving through the browser", async ({ showcase, browser }) => {
   const { manifest } = showcase;
   const key = appKey("student-two", "structures-ta");
   const applicationId = manifest.applicationIds[key];
@@ -100,18 +100,15 @@ test("a populated candidate accepts an offer, gains only cleared course authorit
     await openShowcasePage(faculty.page, `/staffing/${manifest.opportunityIds["structures-ta"]}`);
     await faculty.page.getByTestId("appointment-reason").fill("Synthetic demonstration appointment concluded after the support session.");
     await faculty.page.getByTestId(`appointment-end-${appointmentId}`).click();
-    await expect.poll(async () => (await showcase.db.collection("staffingAppointments").findOne({ id: appointmentId }))?.budgetStatus).toBe("awaiting_settlement");
+    await expect.poll(async () => (await showcase.db.collection("staffingAppointments").findOne({ id: appointmentId }))?.status).toBe("ended");
     await expect.poll(async () => (await json(student.api.get(`/api/courses/${courseId}`))).isStaff).toBe(false);
     expect(await showcase.db.collection("queueEntries").countDocuments({ courseId, taEmail: student.email })).toBe(0);
     const course = await showcase.db.collection("courses").findOne({ id: courseId });
     expect((course?.onDutyTAs || []).some((person: any) => person.email === student.email)).toBe(false);
-    const appointment = await showcase.db.collection("staffingAppointments").findOne({ id: appointmentId });
-    const approvedCost = Math.round(appointment!.committedCost * 0.5 * 100) / 100;
-    await expect(administrator.page.getByTestId(`settlement-cost-${appointmentId}`)).toBeVisible({ timeout: 15000 });
-    await administrator.page.getByTestId(`settlement-cost-${appointmentId}`).fill(String(approvedCost));
-    await administrator.page.getByTestId(`appointment-settle-${appointmentId}`).click();
-    await expect.poll(async () => (await showcase.db.collection("staffingAppointments").findOne({ id: appointmentId }))?.budgetStatus).toBe("settled");
-    expect(await showcase.db.collection("staffingAppointments").findOne({ id: appointmentId })).toMatchObject({ status: "ended", incurredCost: approvedCost, releasedBudget: appointment!.committedCost - approvedCost });
+    await expect(candidate.page).toHaveURL(new RegExp(`/courses/${courseId}/student$`), { timeout: 20000 });
+    await expect(faculty.page.getByTestId("opportunity-capacity")).toContainText("3 open");
+    await faculty.page.getByTestId("opportunity-archive").click();
+    await expect(faculty.page.getByTestId("opportunity-status")).toHaveText(/archived/i);
   } finally { await Promise.all([candidate.context.close(), administrator.context.close(), faculty.context.close()]); }
 });
 
@@ -127,8 +124,6 @@ test("fractional hours save and submit through real controls while a full positi
     await teacher.page.getByTestId("opportunity-hours").fill("19.9");
     expect(await teacher.page.getByTestId("opportunity-hours").evaluate((input: HTMLInputElement) => input.checkValidity())).toBe(true);
     await teacher.page.getByTestId("opportunity-required-skills").fill("Programming and clear explanations");
-    await teacher.page.getByTestId("opportunity-rate").fill("20");
-    await teacher.page.getByTestId("opportunity-budget").fill("20000");
     await teacher.page.getByTestId("opportunity-add-question").click();
     await teacher.page.getByLabel("Qualification question 1", { exact: true }).fill("How would you explain a failing test to a student?");
     const creation = teacher.page.waitForResponse(response => new URL(response.url()).pathname === "/api/staffing/opportunities" && response.request().method() === "POST");

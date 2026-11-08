@@ -64,13 +64,13 @@ test("populated four-role screens show complete real records and retain accessib
   const reportedHours = catalog.workloads
     .filter((item: any) => courseApplications.has(item.applicationKey))
     .reduce((total: number, item: any) => total + item.hours, 0);
-  const approvedBudget = coursePositions
+  const approvedPositions = coursePositions
     .filter((item: any) =>
-      ["published", "applications_closed", "filled", "archived"].includes(
+      ["published", "applications_closed", "filled"].includes(
         item.stage,
       ),
     )
-    .reduce((total: number, item: any) => total + item.input.budget, 0);
+    .reduce((total: number, item: any) => total + item.input.positions, 0);
 
   expect(manifest.synthetic).toBe(true);
   expect(manifest.complete).toBe(true);
@@ -308,6 +308,9 @@ test("populated four-role screens show complete real records and retain accessib
               .length,
           );
           await expect(page.getByTestId("queue-state")).toHaveText(/open/i);
+          const zoom = `https://zoom.example.com/j/${catalog.courses.find((item: any) => item.key === catalog.featured.courseKey).code}-office-hours`;
+          await expect(page.locator(".announcements-body")).toContainText("Zoom (demo)");
+          await expect(page.locator(`.announcements-body a[href="${zoom}"]`)).toHaveAttribute("href", zoom);
         } else if (screen.key === "course-report") {
           await expect(statistic(page, "Sessions")).toHaveText(
             String(recordedSessions.length),
@@ -330,11 +333,11 @@ test("populated four-role screens show complete real records and retain accessib
           await expect(statistic(page, "Reported workload")).toHaveText(
             `${reportedHours.toFixed(1)} hours`,
           );
-          await expect(statistic(page, "Approved position plans")).toHaveText(
-            String(approvedBudget),
+          await expect(statistic(page, "Approved positions")).toHaveText(
+            String(approvedPositions),
           );
           await expect(
-            page.getByRole("heading", { name: "Staffing Budget", exact: true }),
+            page.getByRole("heading", { name: "Staffing Plan", exact: true }),
           ).toBeVisible();
           await expect(page.getByTestId("review-term")).toHaveCount(0);
           await expect(page.locator("select")).toHaveCount(0);

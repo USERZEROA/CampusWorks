@@ -15,9 +15,14 @@ import { parseEnv } from "node:util";
 import { BSON, MongoClient } from "mongodb";
 import { prepareShowcase } from "./demo-showcase.mjs";
 import { DEMO_CATALOG_VERSION } from "./demo-catalog.mjs";
+import {
+  loadAiProviderConfig,
+  confirmedProviderDefaults,
+} from "./ai-provider-config.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const ownershipCollection = "demoLoopOwnership";
+const usageDatabaseName = "campusworks_demo_ai_usage";
 const wait = (milliseconds) =>
   new Promise((resolve) => setTimeout(resolve, milliseconds));
 
@@ -59,8 +64,24 @@ async function availablePort() {
   return port;
 }
 
+async function waitChildExit(child, milliseconds) {
+  if (!child?.pid || child.exitCode !== null || child.signalCode !== null)
+    return true;
+  return new Promise((resolve) => {
+    const finish = (result) => {
+      clearTimeout(timer);
+      child.off("exit", exited);
+      resolve(result);
+    };
+    const exited = () => finish(true);
+    const timer = setTimeout(() => finish(false), milliseconds);
+    child.once("exit", exited);
+  });
+}
+
 async function stopChild(child) {
-  if (!child || child.exitCode !== null || child.signalCode !== null) return;
+  if (!child?.pid || child.exitCode !== null || child.signalCode !== null)
+    return;
   if (process.platform === "win32") {
     await command("taskkill.exe", [
       "/PID",
@@ -70,18 +91,12 @@ async function stopChild(child) {
     ]).catch(() => {});
   } else {
     child.kill("SIGTERM");
-    await Promise.race([
-      new Promise((resolve) => child.once("exit", resolve)),
-      wait(5000),
-    ]);
+    await waitChildExit(child, 5000);
     if (child.exitCode === null && child.signalCode === null)
       child.kill("SIGKILL");
   }
   if (child.exitCode === null && child.signalCode === null) {
-    await Promise.race([
-      new Promise((resolve) => child.once("exit", resolve)),
-      wait(3000),
-    ]);
+    await waitChildExit(child, 3000);
   }
   if (child.exitCode === null && child.signalCode === null) {
     try {
@@ -96,7 +111,7 @@ async function stopChild(child) {
 /**
  * A disposable, loopback-only presentation service. Only the newly generated
  * database can be restored; existing interactive demonstration data is untouched.
- * AI is deliberately unconfigured, so restarting a round cannot buy model calls.
+ * AI scopes are enabled explicitly after preparation; usage lives outside reset data.
  */
 export async function createLoopService({
   build = false,
@@ -104,10 +119,8 @@ export async function createLoopService({
   configureBaseline,
   onProgress = () => {},
 } = {}) {
-  if (provider !== "disabled")
-    throw new Error(
-      "Continuous demonstration loops require AI to remain unconfigured.",
-    );
+  if (!["disabled", "openai"].includes(provider))
+    throw new Error("Use the disabled or openai demonstration provider.");
   if (
     configureBaseline !== undefined &&
     typeof configureBaseline !== "function"
@@ -130,6 +143,16 @@ export async function createLoopService({
     serverSelectionTimeoutMS: 5000,
   });
   const db = client.db(databaseName);
+  const usageStartedDay = new Date().toISOString().slice(0, 10);
+  let providerEnvironment;
+  let allowedScopes = [];
+  const ai = {
+    enabled: provider === "openai",
+    provider: provider === "openai" ? "OpenAI" : "disabled",
+    model: provider === "openai" ? confirmedProviderDefaults.model : null,
+    keyLoaded: false,
+    usageDatabase: provider === "openai" ? usageDatabaseName : null,
+  };
   const children = new Set();
   const state = {
     synthetic: true,
@@ -139,6 +162,8 @@ export async function createLoopService({
     launcherPid: process.pid,
     providerConfigured: false,
     providerKeyLoaded: false,
+    usageDatabase: ai.usageDatabase,
+    aiScopes: [],
     generation: 0,
     resetCount: 0,
     createdAt: new Date().toISOString(),
@@ -203,16 +228,18 @@ export async function createLoopService({
     }
   }
 
-  async function startApplication() {
+  async function startApplication({ enableAi = false } = {}) {
     if (closing) throw new Error("The demonstration service is closing.");
     const log = openSync(
       join(root, `.cache/demo-loop-app-${instance}.log`),
       "a",
     );
-    app = spawn(process.execPath, [".output/server/index.mjs"], {
+    const entry = new URL("../.output/server/index.mjs", import.meta.url).href;
+    const bootstrap = `const stop = message => { if (message?.command !== 'close-demo-app') return; process.off('message', stop); if (process.connected) process.disconnect(); if (!process.emit('SIGTERM')) process.exit(0); }; process.on('message', stop); await import(${JSON.stringify(entry)});`;
+    app = spawn(process.execPath, ["--input-type=module", "-e", bootstrap], {
       cwd: root,
       windowsHide: true,
-      stdio: ["ignore", log, log],
+      stdio: ["ignore", log, log, "ipc"],
       env: {
         ...process.env,
         NODE_ENV: "production",
@@ -234,8 +261,17 @@ export async function createLoopService({
         AI_BASE_URL: "",
         AI_API_KEY: "",
         AI_MODEL: "",
-        AI_AUTO_DISCOVERY_ENABLED: "false",
-        AI_AUTO_REFRESH_ENABLED: "false",
+        ...(enableAi ? providerEnvironment : {}),
+        AI_AUTO_DISCOVERY_ENABLED: enableAi ? "true" : "false",
+        AI_AUTO_REFRESH_ENABLED: enableAi ? "true" : "false",
+        AI_AUTOMATION_SCOPES: JSON.stringify(enableAi ? allowedScopes : []),
+        AI_USAGE_DATABASE: enableAi ? usageDatabaseName : "",
+        AI_DAILY_REQUEST_LIMIT: "20",
+        AI_DAILY_TOKEN_BUDGET: "100000",
+        AI_GLOBAL_DAILY_REQUEST_LIMIT: "200",
+        AI_GLOBAL_DAILY_TOKEN_BUDGET: "1000000",
+        AI_MAX_CONCURRENT: "2",
+        AI_AUTO_CANDIDATE_PAGE_SIZE: "10",
         STAFFING_MAINTENANCE_ENABLED: "true",
         API_RATE_LIMIT: "100000",
         LOGIN_RATE_LIMIT: "10000",
@@ -274,11 +310,145 @@ export async function createLoopService({
   }
 
   async function stopApplication() {
-    await stopChild(app);
-    children.delete(app);
+    const current = app;
+    if (
+      current?.connected &&
+      current.exitCode === null &&
+      current.signalCode === null
+    ) {
+      try {
+        current.send({ command: "close-demo-app" }, () => {});
+      } catch {}
+      await waitChildExit(current, 20000);
+    }
+    await stopChild(current);
+    children.delete(current);
     app = undefined;
     delete state.appPid;
   }
+
+  async function readAiUsage() {
+    if (!ai.enabled)
+      return {
+        usageDatabase: null,
+        reservedRequests: 0,
+        reservedTokens: 0,
+        daily: [],
+      };
+    if (!connected) return state.aiUsageAfter || state.aiUsageBefore || null;
+    const records = await client
+      .db(usageDatabaseName)
+      .collection("staffingAiBudgets")
+      .find(
+        { _id: { $regex: "^global:" }, day: { $gte: usageStartedDay } },
+        { projection: { day: 1, requests: 1, reservedTokens: 1 } },
+      )
+      .sort({ day: 1 })
+      .toArray();
+    const daily = records.map((record) => ({
+      day: record.day,
+      requests: record.requests || 0,
+      reservedTokens: record.reservedTokens || 0,
+    }));
+    return {
+      usageDatabase: usageDatabaseName,
+      reservedRequests: daily.reduce((sum, record) => sum + record.requests, 0),
+      reservedTokens: daily.reduce(
+        (sum, record) => sum + record.reservedTokens,
+        0,
+      ),
+      daily,
+    };
+  }
+
+  async function waitForAiIdle() {
+    if (!ai.enabled) return;
+    const deadline = Date.now() + 60000;
+    while (!closing && Date.now() < deadline) {
+      const running = await Promise.all(
+        ["staffingAiAutomationJobs", "staffingAiRefreshJobs"].map((name) =>
+          db.collection(name).countDocuments({ status: "running" }),
+        ),
+      );
+      const ids = new Set(
+        await db.collection("staffingAiTasks").distinct("id"),
+      );
+      const concurrency = await client
+        .db(usageDatabaseName)
+        .collection("staffingAiBudgets")
+        .findOne({ _id: "concurrency" });
+      const ownedLeases = (concurrency?.leases || []).filter(
+        (lease) =>
+          ids.has(lease.taskId) &&
+          new Date(lease.expiresAt).getTime() > Date.now(),
+      );
+      if (running.every((count) => count === 0) && ownedLeases.length === 0)
+        return;
+      await wait(200);
+    }
+    if (!closing)
+      throw new Error(
+        "A demonstration AI task is still running; scope changes wait for its protected execution to finish.",
+      );
+  }
+
+  const enableAiScope = (raw) =>
+    serialized(async () => {
+      if (closing || !ai.enabled || !providerEnvironment)
+        throw new Error("Live OpenAI is not available for this demonstration.");
+      if (
+        !raw ||
+        ![
+          "opportunity_draft",
+          "cv_summary",
+          "candidate_fit",
+          "term_review",
+        ].includes(raw.kind) ||
+        typeof raw.targetId !== "string" ||
+        !raw.targetId ||
+        raw.targetId.length > 64
+      )
+        throw new Error("Use a valid current demonstration AI scope.");
+      const scope = { kind: raw.kind, targetId: raw.targetId };
+      if (raw.kind === "term_review") {
+        if (
+          typeof raw.termId !== "string" ||
+          !raw.termId ||
+          raw.termId.length > 64
+        )
+          throw new Error("The course AI scope requires its current semester.");
+        scope.termId = raw.termId;
+      }
+      if (raw.kind === "candidate_fit") {
+        scope.page = raw.page || 1;
+        scope.pageSize = raw.pageSize || 10;
+        if (
+          !Number.isInteger(scope.page) ||
+          scope.page < 1 ||
+          !Number.isInteger(scope.pageSize) ||
+          scope.pageSize !== 10
+        )
+          throw new Error("Use a normal ten-candidate demonstration page.");
+      }
+      if (
+        allowedScopes.some(
+          (existing) => JSON.stringify(existing) === JSON.stringify(scope),
+        )
+      )
+        return scope;
+      if (allowedScopes.length >= 5)
+        throw new Error(
+          "The demonstration enables only its five advisory scopes.",
+        );
+      await assertOwnership();
+      await waitForAiIdle();
+      if (closing) throw new Error("The demonstration service is closing.");
+      await stopApplication();
+      allowedScopes = [...allowedScopes, scope];
+      state.aiScopes = allowedScopes;
+      await startApplication({ enableAi: true });
+      return scope;
+    });
 
   async function captureBaseline() {
     await assertOwnership();
@@ -316,6 +486,7 @@ export async function createLoopService({
       if (closing || !baseline)
         throw new Error("The demonstration baseline is not available.");
       onProgress("Restoring the isolated demonstration to its starting point.");
+      await waitForAiIdle();
       await stopApplication();
       await assertOwnership();
       await db.dropDatabase();
@@ -336,9 +507,17 @@ export async function createLoopService({
       state.generation++;
       state.resetCount++;
       state.lastResetAt = new Date().toISOString();
-      await startApplication();
+      allowedScopes = [];
+      state.aiScopes = [];
+      await startApplication({ enableAi: ai.enabled });
       onProgress("The same isolated baseline is ready for the next round.");
-      return { generation: state.generation, database: databaseName, origin };
+      return {
+        generation: state.generation,
+        database: databaseName,
+        origin,
+        sharedUsagePreserved: ai.enabled,
+        aiScopes: [],
+      };
     });
   };
 
@@ -353,11 +532,21 @@ export async function createLoopService({
         reusedMongo: !mongoStarted,
         ownedMongoStopped: false,
       };
+      const appShutdown = await Promise.allSettled([stopApplication()]);
       const stopped = await Promise.allSettled([...children].map(stopChild));
-      receipt.applicationStopped = stopped.every(
-        (result) => result.status === "fulfilled",
-      );
+      receipt.applicationStopped =
+        stopped.every((result) => result.status === "fulfilled") &&
+        appShutdown.every((result) => result.status === "fulfilled");
       receipt.complete &&= receipt.applicationStopped;
+      if (connected && ai.enabled) {
+        try {
+          state.aiUsageAfter = await readAiUsage();
+          receipt.aiUsage = state.aiUsageAfter;
+          receipt.sharedUsagePreserved = true;
+        } catch {
+          receipt.complete = false;
+        }
+      }
       if (databaseOwned && connected && receipt.applicationStopped) {
         try {
           await assertOwnership({ allowMissingMarker: true });
@@ -469,15 +658,13 @@ export async function createLoopService({
         "The generated demonstration database must be new and empty.",
       );
     databaseOwned = true;
-    await db
-      .collection(ownershipCollection)
-      .insertOne({
-        _id: "loop-owner",
-        ownerToken,
-        database: databaseName,
-        synthetic: true,
-        createdAt: new Date(),
-      });
+    await db.collection(ownershipCollection).insertOne({
+      _id: "loop-owner",
+      ownerToken,
+      database: databaseName,
+      synthetic: true,
+      createdAt: new Date(),
+    });
     await startApplication();
     const { manifest, catalog } = await prepareShowcase({
       baseURL: origin,
@@ -495,8 +682,36 @@ export async function createLoopService({
       0,
     );
     state.referenceTime = manifest.referenceTime;
-    await startApplication();
-    return { origin, db, databaseName, manifest, catalog, reset, close, state };
+    if (ai.enabled) {
+      onProgress(
+        "Loading the locally encrypted OpenAI configuration; no catalog-wide AI discovery is enabled.",
+      );
+      providerEnvironment = await loadAiProviderConfig(
+        confirmedProviderDefaults,
+      );
+      if (!providerEnvironment?.AI_API_KEY)
+        throw new Error(
+          "Save an OpenAI Key in the local configuration window before running the live AI presentation.",
+        );
+      ai.keyLoaded = true;
+      state.providerConfigured = true;
+      state.providerKeyLoaded = true;
+      state.aiUsageBefore = await readAiUsage();
+    }
+    await startApplication({ enableAi: ai.enabled });
+    return {
+      origin,
+      db,
+      databaseName,
+      manifest,
+      catalog,
+      reset,
+      close,
+      state,
+      ai,
+      enableAiScope,
+      readAiUsage,
+    };
   } catch {
     const cleanupReceipt = await close();
     const failure = new Error(
