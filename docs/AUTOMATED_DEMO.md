@@ -1,6 +1,6 @@
 # Automatic lifecycle presentation
 
-Run the complete TA recruitment-to-closeout journey in six independent browser windows. The acting window is maximized and brought to the foreground for each step and control interaction. The default **38-step** round includes five fresh OpenAI responses across four advisory types. Normal presentation pauses total about five minutes; provider latency and page synchronization can make a round longer. The next round restores the isolated starting point and repeats.
+Run the complete TA recruitment-to-closeout journey in six independent browser windows. The acting window is maximized and brought to the foreground for each step and control interaction. The default **38-step** round includes five fresh OpenAI responses across four advisory types. Normal playback targets **five active minutes per cycle**, with more reading time on application evidence, AI results and dashboards. The next round restores the isolated starting point and repeats.
 
 ```sh
 # Visible loop with live OpenAI assistance.
@@ -16,6 +16,21 @@ node scripts/demo-loop.mjs --without-ai --headless --cycles 2 --pace fast --veri
 The launcher builds the current application. Use `--skip-build` only when the existing production build matches the source. `--pace fast` shortens presentation pauses; `--pace detailed` allows longer explanations. Neither changes provider response time. Headless runs require a finite `--cycles` value. No GitHub Action is needed.
 
 The default launcher loads the saved Windows-encrypted OpenAI Key into the server process. If it is missing, open the masked Key form described in the [demonstration guide](DEMO_GUIDE.md). `--without-ai` explicitly selects the **33-step** deterministic test mode; it does not load a saved provider Key or call a model.
+
+## Playback rhythm
+
+The five-minute target is distributed across the actual steps. Brief transitions receive less time, while the following result pages retain a minimum reading period after their content is ready:
+
+| Page or result | Minimum reading time at normal pace |
+| --- | --- |
+| Requirements, qualification summary and CS201 candidate comparison | 15 seconds each |
+| CS101's ten-candidate comparison and course advice | 18 seconds each |
+| Department dashboard | 12 seconds |
+| Course review | 9 seconds |
+| Course operations and feedback | 8 seconds |
+| Application qualification answers | 7 seconds |
+
+Step targets include their active automated actions. Slow synchronization or a provider response can extend a step so that its result still receives the reading time above; the next important page is not rushed to compensate. There is no unused five-minute padding at the final page. Manual pauses and history review do not consume the active playback clock. Initial preparation and baseline restoration are separate from the cycle target.
 
 ## Six identities, four roles
 
@@ -33,8 +48,8 @@ Alex signs in as the same student throughout. Appointment-derived course authori
 ## Visible sequence
 
 1. Administrator confirms the shared recruitment schedule.
-2. Instructor creates CS201 duties, weekly expectations and qualification questions. The first live AI panel suggests requirements before publication approval.
-3. Administrator approves publication.
+2. Instructor creates CS201 duties, weekly expectations and qualification questions.
+3. Administrator approves publication. The first live AI panel reviews the newly published requirements.
 4. Alex discovers the position, answers questions, uploads a synthetic private CV and submits. Alex also applies to CS101 and confirms its required schedule.
 5. Instructor opens Alex's live qualification summary and the CS201 candidate comparison. The second instructor shortlists Alex for CS101.
 6. The CS201 instructor issues the offer. CS101 silently shows Alex as unavailable for an overlapping selection, then presents a fresh AI comparison of its first ten currently eligible applicants. Alex is excluded; coverage identifies this as one page, not the whole pool.
@@ -70,12 +85,21 @@ Each live step waits for a newly completed automatic task from `api.openai.com`,
 
 The banner displays **DEMO**, acting role, name, cycle, step and a short explanation. Playwright injects it only into these owned contexts. The same Alex window is labelled Student, Student to TA, TA and TA to Student during the transition.
 
-- **Pause / Resume** in any window pauses the next operation and presentation timer.
+- **Pause / Resume** is one toggle button in every window: click once to pause and click the same button again to continue. Pausing preserves the remaining reading time and prevents the next automated interaction. A request already submitted and ordinary background synchronization may still finish.
+- The keyboard's **Pause / Break** key toggles pause and resume. **Space** also toggles outside text fields, selection fields and editable content; the banner buttons retain their normal Space activation.
+- **Left / Right arrows** pause playback and reopen already visited pages in a separate read-only tab using their current authorized data. They do not roll back the database, execute future steps or repeat hiring, offer or queue commands. **Resume** closes that review tab, returns to the original automation page and continues from that point.
 - **Stop demo**, closing a presentation window, or Ctrl+C stops the loop and closes its other windows. The browser wait is cancelled before service cleanup.
 - The acting control has a visible outline. The banner reserves space above the page content.
 - On Windows, the native helper locates only the uniquely tagged demonstration window, maximizes it and verifies its foreground handle.
 
 Failed business steps are never skipped or replaced by successful-looking screens. The next launch begins with another independent synthetic application database.
+
+The presenter controls have an independent local browser check, including rapid navigation/resume commands. It uses a local fixture without MongoDB, a saved Key or provider calls:
+
+```sh
+node scripts/check-demo-presenter.mjs
+node scripts/check-demo-presenter.mjs --headed
+```
 
 ## Data and cleanup
 

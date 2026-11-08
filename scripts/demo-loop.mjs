@@ -7,13 +7,9 @@ import { expect } from "@playwright/test";
 import { createLoopService } from "./demo-loop-service.mjs";
 import { createDemoStage, DemoStopped } from "./demo-stage.mjs";
 import { loopStepCount, loopWindows, runLoopCycle } from "./demo-loop-flow.mjs";
+import { createDemoPacing } from "./demo-pacing.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const profiles = {
-  fast: { holdMs: 150, beforeMs: 0, targetMs: 0 },
-  normal: { holdMs: 5500, beforeMs: 750, targetMs: 300000 },
-  detailed: { holdMs: 12000, beforeMs: 1000, targetMs: 480000 },
-};
 
 export async function runDemoLoop({
   headless = false,
@@ -25,10 +21,9 @@ export async function runDemoLoop({
   proofPath = ".cache/demo-loop-proof.json",
   onProgress = (message) => console.log(message),
 } = {}) {
-  if (!Object.hasOwn(profiles, pace))
-    throw new Error("Use fast, normal or detailed pacing.");
   if (!["disabled", "openai"].includes(provider))
     throw new Error("Use the disabled or openai demonstration provider.");
+  const pacing = createDemoPacing({ pace, withAi: provider === "openai" });
   if (!(
     cycles === Infinity ||
     (Number.isSafeInteger(cycles) && cycles >= 1 && cycles <= 100)
@@ -51,6 +46,11 @@ export async function runDemoLoop({
     provider,
     completedProviderResults: 0,
     totalSteps: loopStepCount(provider === "openai"),
+    pacing: {
+      targetActiveMs: pacing.targetMs,
+      steps: pacing.steps,
+      boundary: "Paused time is excluded. Slow actions may extend a cycle to preserve result-reading time; no remaining time is parked on the final page.",
+    },
     providerUsageBoundary:
       "Shared protected request reservations, not billed usage; persistent daily limits survive database restoration and relaunches.",
     providerKeyLoaded: false,
@@ -65,6 +65,7 @@ export async function runDemoLoop({
         "scripts/demo-loop.mjs",
         "scripts/demo-loop-flow.mjs",
         "scripts/demo-loop-service.mjs",
+        "scripts/demo-pacing.mjs",
         "scripts/demo-stage.mjs",
         "scripts/demo-foreground.ps1",
       ].map((name) => [
@@ -122,8 +123,8 @@ export async function runDemoLoop({
       windows: loopWindows(service.manifest),
       baseURL: service.origin,
       headless,
-      holdMs: profiles[pace].holdMs,
-      beforeMs: profiles[pace].beforeMs,
+      holdMs: pace === "fast" ? 150 : 0,
+      beforeMs: pacing.beforeMs,
       totalSteps: proof.totalSteps,
       onStop: (reason) => {
         proof.stopReason = reason;
@@ -228,6 +229,7 @@ export async function runDemoLoop({
         service,
         stage,
         cycle,
+        pacing,
         dwell: (ms) => stage.hold(ms),
         onStep: (event) => {
           onProgress(
@@ -264,10 +266,6 @@ export async function runDemoLoop({
       onProgress(
         `Cycle ${cycle} complete: offer, clearance, queue work, feedback, workload, access revocation and archive all passed.`,
       );
-      if (profiles[pace].targetMs)
-        await stage.hold(
-          Math.max(0, profiles[pace].targetMs - record.durationMs),
-        );
     }
     proof.status = "passed";
   } catch (error) {

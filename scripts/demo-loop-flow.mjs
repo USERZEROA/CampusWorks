@@ -50,7 +50,7 @@ export function loopWindows(manifest) {
   ];
 }
 
-async function open(page, route) {
+async function navigate(page, route) {
   expect((await page.goto(route))?.status()).toBe(200);
   await page.waitForFunction(
     () => !!document.querySelector("#__nuxt")?.__vue_app__,
@@ -68,10 +68,13 @@ export async function runLoopCycle({
   service,
   stage,
   cycle,
+  pacing,
   onStep = () => {},
   dwell = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
 }) {
   const startedAt = Date.now();
+  const activeNow = () => stage.activeElapsedMs ?? performance.now();
+  const activeStartedAt = activeNow();
   const steps = [];
   const courseId = service.manifest.courseIds.structures;
   const peerPosition = service.manifest.opportunityIds["intro-ta"];
@@ -91,6 +94,11 @@ export async function runLoopCycle({
     mentor: "TA",
   };
   let positionId, applicationId, peerApplicationId, appointmentId;
+  const open = async (page, route) => {
+    await stage.checkpoint();
+    await navigate(page, route);
+    await stage.checkpoint();
+  };
   const step = async (actor, title, detail, action) => {
     const began = Date.now();
     onStep({ cycle, step: steps.length + 1, actor, role: roles[actor], title });
@@ -102,6 +110,7 @@ export async function runLoopCycle({
         detail,
         cycle,
         index: steps.length + 1,
+        ...pacing?.forStep({ index: steps.length + 1, actor, title }),
       },
       action,
     );
@@ -116,19 +125,27 @@ export async function runLoopCycle({
   };
   const click = async (locator) => {
     await stage.spotlight(locator);
+    await stage.checkpoint();
     await locator.click();
+    await stage.checkpoint();
   };
   const fill = async (locator, value) => {
     await stage.spotlight(locator);
+    await stage.checkpoint();
     await locator.fill(value);
+    await stage.checkpoint();
   };
   const select = async (locator, value) => {
     await stage.spotlight(locator);
+    await stage.checkpoint();
     await locator.selectOption(value);
+    await stage.checkpoint();
   };
   const check = async (locator) => {
     await stage.spotlight(locator);
+    await stage.checkpoint();
     await locator.check();
+    await stage.checkpoint();
   };
   const presentAi = async ({
     actor = "instructor",
@@ -166,8 +183,8 @@ export async function runLoopCycle({
       );
       let completed;
       let latestState = "waiting";
-      const deadline = Date.now() + 180000;
-      while (Date.now() < deadline) {
+      const deadline = activeNow() + 180000;
+      while (activeNow() < deadline) {
         await stage.checkpoint();
         const response = await page.request.get(`/api/ai/tasks?${query}`);
         expect(response.ok()).toBe(true);
@@ -406,6 +423,7 @@ export async function runLoopCycle({
       /saved/i,
     );
     await stage.spotlight(page.getByTestId("application-cv"));
+    await stage.checkpoint();
     await page.getByTestId("application-cv").setInputFiles({
       name: "alex-morgan-synthetic-cv.txt",
       mimeType: "text/plain",
@@ -938,6 +956,8 @@ export async function runLoopCycle({
     appointmentId,
     steps,
     durationMs: Date.now() - startedAt,
+    activeDurationMs: activeNow() - activeStartedAt,
+    pausedDurationMs: Math.max(0, Date.now() - startedAt - (activeNow() - activeStartedAt)),
     finishedAt: new Date().toISOString(),
     providerCalls: reservedRequests,
     completedProviderResults: details.ai.length,
