@@ -622,7 +622,7 @@ const goAnalytics = () => router.push(`/courses/${courseId}/admin`);
                       {{ a.by }}
                     </td>
                     <td class="ann-message">
-                      {{ a.message }}
+                      <AnnouncementMessage :text="a.message" />
                     </td>
                     <td class="ann-actions-cell">
                       <button

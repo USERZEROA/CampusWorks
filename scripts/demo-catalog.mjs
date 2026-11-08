@@ -110,7 +110,7 @@ export function createDemoCatalog(referenceTime = new Date(), { primaryCourse = 
     key, code: key === 'intro' ? primaryCourse : code, title, instructorKey, taKeys: [...taKeys], queueState, skills,
     studentKeys: studentNames.map((_, student) => actors[9 + student].key).filter((_, student) => student < 3 || (student + index) % 3 !== 0),
     announcements: [
-      `${title}: ${queueState === 'open' ? 'office hours are open' : queueState === 'paused' ? 'the queue is paused for the next session' : 'the next office-hours session opens tomorrow'}. Please include your question and location.`,
+      `${title}: ${queueState === 'open' ? 'office hours are open' : queueState === 'paused' ? 'the queue is paused for the next session' : 'the next office-hours session opens tomorrow'}. Please include your question and location. Zoom (demo): https://zoom.example.com/j/${key === 'intro' ? primaryCourse : code}-office-hours`,
       ['Bring a small reproducible example so we can focus on your reasoning.', 'We will review the practice worksheet before the next problem set.', 'Use the posted rubric and note which step needs clarification.'][index % 3],
     ],
   }));

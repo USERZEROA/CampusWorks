@@ -683,7 +683,7 @@ const goHelp = () => {
                       {{ a.by }}
                     </td>
                     <td class="ann-message">
-                      {{ a.message }}
+                      <AnnouncementMessage :text="a.message" />
                     </td>
                   </tr>
                 </tbody>
