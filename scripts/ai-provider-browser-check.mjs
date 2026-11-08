@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { MongoClient } from 'mongodb'
 import { chromium, expect, request } from '@playwright/test'
-import { confirmedProviderDefaults, loadAiProviderConfig, providerDialogStatus } from './ai-provider-config.mjs'
+import { confirmedProviderDefaults, loadAiProviderConfig, readLocalEnvironment } from './ai-provider-config.mjs'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 const receiptPath = resolve(root, '.cache/ai-provider-browser-proof.json')
@@ -71,15 +71,15 @@ async function proof() {
   // One UTC-day quota bounds this whole short run, including retry headroom.
   const nextUtcDay = new Date(new Date().toISOString().slice(0, 10) + 'T00:00:00Z').getTime() + 86400000
   assert(nextUtcDay - Date.now() > 10 * 60 * 1000, 'verification_window_crosses_quota_day')
-  const settings = providerDialogStatus()
-  assert(settings.status === 'saved' && settings.encryptedFilePresent, 'saved_key_required')
+  const runtime = readLocalEnvironment()
+  const provider = await loadAiProviderConfig(confirmedProviderDefaults, { environment: runtime, envFile: null })
+  if (!provider) { receipt.status = 'awaiting_key'; return }
+  assert(new URL(provider.AI_BASE_URL).hostname === 'api.openai.com', 'confirmed_openai_configuration_required')
   assert(existsSync(resolve(root, '.output/server/index.mjs')), 'application_build_required')
-  const databaseUri = process.env.AI_PROOF_MONGODB_URI
+  const databaseUri = runtime.AI_PROOF_MONGODB_URI
   let address
   try { address = new URL(databaseUri) } catch { throw new Error('isolated_database_required') }
   assert(address.protocol === 'mongodb:' && ['127.0.0.1', 'localhost', '[::1]'].includes(address.hostname), 'isolated_database_required')
-  const provider = await loadAiProviderConfig(confirmedProviderDefaults)
-  assert(provider?.AI_API_KEY && new URL(provider.AI_BASE_URL).hostname === 'api.openai.com', 'confirmed_openai_configuration_required')
   receipt.provider = { endpoint: provider.AI_BASE_URL, model: provider.AI_MODEL }
   receipt.source = sourceReceipt()
   databaseClient = new MongoClient(databaseUri, { serverSelectionTimeoutMS: 5000 })
@@ -95,7 +95,7 @@ async function proof() {
   const startApplication = async automatic => {
   assert(Date.now() < proofDeadline, 'verification_deadline_reached')
   child = spawn(process.execPath, ['.output/server/index.mjs'], { cwd: root, windowsHide: true, stdio: 'ignore', env: {
-    ...process.env, ...provider, NODE_ENV: 'production', HOST: '127.0.0.1', PORT: new URL(origin).port,
+    ...runtime, ...provider, NODE_ENV: 'production', HOST: '127.0.0.1', PORT: new URL(origin).port,
     PUBLIC_ORIGIN: origin, TRUST_PROXY: 'false', MONGODB_URI: databaseUri, MONGODB_DB: proofDatabase.databaseName,
     SESSION_SECRET: applicationSecret, ENABLE_MOCK_LOGIN: 'true', SEED_DEMO_DATA: 'false',
     GITLAB_BASE_URL: '', GITLAB_CLIENT_ID: '', GITLAB_CLIENT_SECRET: '', API_RATE_LIMIT: '1000', LOGIN_RATE_LIMIT: '1000',
@@ -105,6 +105,7 @@ async function proof() {
     AI_AUTO_SCOPE_SCAN_INTERVAL_MS: '30000', AI_TERM_REVIEW_SCAN_INTERVAL_MS: '60000', AI_AUTO_DEBOUNCE_MS: '750',
     STAFFING_MAINTENANCE_ENABLED: 'true', STAFFING_MAINTENANCE_INTERVAL_MS: '5000',
     AI_DAILY_TOKEN_BUDGET: '100000', AI_GLOBAL_DAILY_TOKEN_BUDGET: '100000',
+    AI_USAGE_DATABASE: '', AI_AUTOMATION_SCOPES: undefined,
   } })
   child.on('error', () => {})
   let ready = false

@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
 import { MongoClient } from 'mongodb'
 import { request } from '@playwright/test'
-import { confirmedProviderDefaults, loadAiProviderConfig, providerDialogStatus } from './ai-provider-config.mjs'
+import { confirmedProviderDefaults, loadAiProviderConfig, readLocalEnvironment } from './ai-provider-config.mjs'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 const receiptPath = resolve(root, '.cache/ai-provider-proof.json')
@@ -46,18 +46,17 @@ async function stop() {
   }
 }
 async function proof() {
-  const status = providerDialogStatus()
-  if (status.status !== 'saved' || !status.encryptedFilePresent) { receipt.status = 'awaiting_key'; return }
-  const baseUrl = process.env.AI_BASE_URL || confirmedProviderDefaults.baseUrl
-  const model = process.env.AI_MODEL || confirmedProviderDefaults.model
+  const runtime = readLocalEnvironment()
+  const baseUrl = runtime.AI_BASE_URL || confirmedProviderDefaults.baseUrl
+  const model = runtime.AI_MODEL || confirmedProviderDefaults.model
   if (!baseUrl || !model) { receipt.status = 'awaiting_confirmed_provider'; return }
-  const databaseUri = process.env.AI_PROOF_MONGODB_URI
+  const provider = await loadAiProviderConfig({ baseUrl, model }, { environment: runtime, envFile: null })
+  if (!provider) { receipt.status = 'awaiting_key'; return }
+  const databaseUri = runtime.AI_PROOF_MONGODB_URI
   let parsedDatabase
   try { parsedDatabase = new URL(databaseUri) } catch { receipt.status = 'awaiting_isolated_database'; return }
   if (parsedDatabase.protocol !== 'mongodb:' || !['127.0.0.1', 'localhost', '[::1]'].includes(parsedDatabase.hostname)) throw new Error('isolated_database_required')
   if (!existsSync(resolve(root, '.output/server/index.mjs'))) { receipt.status = 'awaiting_application_build'; return }
-  const provider = await loadAiProviderConfig({ baseUrl, model })
-  if (!provider) { receipt.status = 'awaiting_key'; return }
   databaseClient = new MongoClient(databaseUri, { serverSelectionTimeoutMS: 5000 })
   await databaseClient.connect()
   const topology = await databaseClient.db('admin').command({ hello: 1 })
@@ -68,12 +67,13 @@ async function proof() {
   const origin = `http://127.0.0.1:${await port()}`
   // The key reaches only this child environment. Neither child stream is persisted.
   child = spawn(process.execPath, ['.output/server/index.mjs'], { cwd: root, windowsHide: true, stdio: 'ignore', env: {
-    ...process.env, ...provider, NODE_ENV: 'production', HOST: '127.0.0.1', PORT: new URL(origin).port,
+    ...runtime, ...provider, NODE_ENV: 'production', HOST: '127.0.0.1', PORT: new URL(origin).port,
     PUBLIC_ORIGIN: origin, TRUST_PROXY: 'false', MONGODB_URI: databaseUri, MONGODB_DB: proofDatabase.databaseName,
     SESSION_SECRET: randomBytes(32).toString('hex'), ENABLE_MOCK_LOGIN: 'true', SEED_DEMO_DATA: 'false',
     GITLAB_BASE_URL: '', GITLAB_CLIENT_ID: '', GITLAB_CLIENT_SECRET: '',
     API_RATE_LIMIT: '1000', LOGIN_RATE_LIMIT: '1000', AI_AUTO_REFRESH_ENABLED: 'false', AI_MAX_CONCURRENT: '1',
     AI_DAILY_REQUEST_LIMIT: '5', AI_GLOBAL_DAILY_REQUEST_LIMIT: '5', AI_DAILY_TOKEN_BUDGET: '100000', AI_GLOBAL_DAILY_TOKEN_BUDGET: '100000',
+    AI_USAGE_DATABASE: '', AI_AUTOMATION_SCOPES: undefined,
   } })
   child.on('error', () => {})
   let ready = false

@@ -2,14 +2,48 @@ import { spawn } from 'node:child_process'
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
+import { parseEnv } from 'node:util'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 export const providerConfigurationPath = resolve(root, '.cache/ai-provider.xml')
 export const confirmedProviderDefaults = Object.freeze({ baseUrl: 'https://api.openai.com/v1', model: 'gpt-5.4-mini' })
 
+/** Local settings stay private; explicit process settings take precedence. */
+export function readLocalEnvironment(environment = process.env, { envFile = resolve(root, '.env') } = {}) {
+  let local = {}
+  if (envFile && existsSync(envFile)) {
+    try { local = parseEnv(readFileSync(envFile, 'utf8')) } catch { throw new Error('Local environment configuration could not be read.') }
+  }
+  return { ...local, ...environment }
+}
+
+function configurationForKey(apiKey, provider) {
+  if (typeof apiKey !== 'string' || /[\r\n]/.test(apiKey)) throw new Error('AI configuration is invalid.')
+  const key = apiKey.trim()
+  if (key.length < 8 || key.length > 8192 || /[\x00-\x20\x7f]/.test(key)) throw new Error('AI configuration is invalid.')
+  if (!provider.baseUrl && !provider.model) return { AI_API_KEY: key }
+  let base
+  try { base = new URL(provider.baseUrl) } catch { throw new Error('A confirmed provider base URL and model are required.') }
+  if (base.username || base.password || base.search || base.hash || (base.protocol !== 'https:' && !(base.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(base.hostname))) || typeof provider.model !== 'string' || !provider.model.trim() || provider.model.length > 200 || /[\r\n]/.test(provider.model)) throw new Error('A confirmed provider base URL and model are required.')
+  return { AI_BASE_URL: base.toString().replace(/\/$/, ''), AI_MODEL: provider.model.trim(), AI_API_KEY: key }
+}
+
+/** A Key alone selects OpenAI; an explicit provider argument stays authoritative. */
+export function providerEnvironmentConfig(environment = {}, provider) {
+  if (environment.AI_API_KEY === undefined || environment.AI_API_KEY === null || environment.AI_API_KEY === '') return null
+  const settings = provider || {
+    baseUrl: environment.AI_BASE_URL || confirmedProviderDefaults.baseUrl,
+    model: environment.AI_MODEL || confirmedProviderDefaults.model,
+  }
+  return configurationForKey(environment.AI_API_KEY, settings)
+}
+
 /** Capture the decrypting child's pipe in memory; never forward either stream. */
-export async function loadAiProviderConfig(provider = confirmedProviderDefaults) {
-  if (process.platform !== 'win32') throw new Error('Local encrypted AI configuration requires the owning Windows account.')
+export async function loadAiProviderConfig(provider, { environment = process.env, envFile = resolve(root, '.env'), platform = process.platform } = {}) {
+  const runtime = readLocalEnvironment(environment, { envFile })
+  const supplied = providerEnvironmentConfig(runtime, provider)
+  if (supplied) return supplied
+  if (platform !== 'win32') return null
   if (!existsSync(providerConfigurationPath)) return null
   const escapedPath = providerConfigurationPath.replaceAll("'", "''")
   const script = `
@@ -46,14 +80,10 @@ try {
   })
   let settings
   try { settings = JSON.parse(encoded) } catch { throw new Error('Encrypted AI configuration is invalid.') }
-  if (typeof settings.apiKey !== 'string' || settings.apiKey.length < 8 || /[\r\n]/.test(settings.apiKey)) throw new Error('Encrypted AI configuration is invalid.')
-  // Provider metadata must be supplied explicitly after the owner identifies it.
-  // A key alone is never probed against a guessed endpoint or model.
-  if (!provider.baseUrl && !provider.model) return { AI_API_KEY: settings.apiKey }
-  let base
-  try { base = new URL(provider.baseUrl) } catch { throw new Error('A confirmed provider base URL and model are required.') }
-  if (base.username || base.password || base.search || base.hash || (base.protocol !== 'https:' && !(base.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(base.hostname))) || typeof provider.model !== 'string' || !provider.model.trim() || provider.model.length > 200 || /[\r\n]/.test(provider.model)) throw new Error('A confirmed provider base URL and model are required.')
-  return { AI_BASE_URL: base.toString().replace(/\/$/, ''), AI_MODEL: provider.model.trim(), AI_API_KEY: settings.apiKey }
+  return configurationForKey(settings.apiKey, provider || {
+    baseUrl: runtime.AI_BASE_URL || confirmedProviderDefaults.baseUrl,
+    model: runtime.AI_MODEL || confirmedProviderDefaults.model,
+  })
 }
 
 export function providerDialogStatus() {

@@ -2,19 +2,20 @@ import { spawn } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
-import { confirmedProviderDefaults, loadAiProviderConfig } from './ai-provider-config.mjs'
+import { loadAiProviderConfig, readLocalEnvironment } from './ai-provider-config.mjs'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 
 /** Prepare an in-memory child environment; never put a credential in arguments. */
-export async function createAiLaunch({ dev = false, environment = process.env, load = () => loadAiProviderConfig(confirmedProviderDefaults) } = {}) {
+export async function createAiLaunch({ dev = false, environment = process.env, envFile, load } = {}) {
+  const runtime = readLocalEnvironment(environment, envFile === undefined ? {} : { envFile })
   let provider
-  try { provider = await load() } catch { throw new Error('The encrypted API key could not be read by this Windows account.') }
-  if (!provider?.AI_API_KEY) throw new Error('Save an API key in the local configuration window first.')
+  try { provider = await (load ? load() : loadAiProviderConfig(undefined, { environment: runtime, envFile: null })) } catch { throw new Error('The API key configuration could not be read.') }
+  if (!provider?.AI_API_KEY) throw new Error('Save an API key in the local configuration window or set AI_API_KEY in your environment or private .env file.')
   return {
     command: process.execPath,
     args: dev ? [resolve(root, 'node_modules/nuxt/bin/nuxt.mjs'), 'dev'] : [resolve(root, '.output/server/index.mjs')],
-    options: { cwd: root, windowsHide: true, stdio: 'inherit', env: { ...environment, ...provider } },
+    options: { cwd: root, windowsHide: true, stdio: 'inherit', env: { ...runtime, ...provider } },
   }
 }
 
@@ -39,7 +40,7 @@ async function main() {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main().catch(() => {
     // Configuration errors are intentionally generic because a child may echo secrets.
-    process.stderr.write('The encrypted API key or local application is not ready.\n')
+    process.stderr.write('The API key configuration or local application is not ready.\n')
     process.exitCode = 1
   })
 }
