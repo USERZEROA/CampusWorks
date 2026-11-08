@@ -78,10 +78,20 @@ test('only site administrators can correct cleared details with a private before
     expect(JSON.stringify(await db.collection('staffingNotifications').find({}).toArray())).not.toContain(correction.reason);
   } finally { await client.close(); }
   const ended = (await json(space.instructor.api.post(`/api/staffing/appointments/${selected.appointment.id}/end`, { data: { reason: 'Synthetic history closeout' } }))).appointment;
-  await ok(space.admin.api.post(path, { data: { ...correction, expectedAdministrativeVersion: 2, reason: 'Synthetic historical correction', administrative: { dukeUniqueId: 'SYNTHETIC-HISTORY-ID' } } }));
-  const historical = await json(space.admin.api.get(`/api/staffing/applications/${application.id}`));
-  expect(historical.appointment).toEqual(ended);
-  expect(historical.administrativeCorrections[0]).toMatchObject({ before: { dukeUniqueId: 'SYNTHETIC-NEW-ID' }, after: { dukeUniqueId: 'SYNTHETIC-HISTORY-ID' }, reason: 'Synthetic historical correction' });
+  expect(ended).not.toHaveProperty('clearedBy');
+  expect(ended).not.toHaveProperty('clearanceReason');
+  const adminBefore = (await json(space.admin.api.get(`/api/staffing/applications/${application.id}`))).appointment;
+  const { client: historyClient, db: historyDb } = await database();
+  try {
+    const storedBefore = await historyDb.collection('staffingAppointments').findOne({ id: selected.appointment.id });
+    expect(storedBefore?.status).toBe('ended');
+    await ok(space.admin.api.post(path, { data: { ...correction, expectedAdministrativeVersion: 2, reason: 'Synthetic historical correction', administrative: { dukeUniqueId: 'SYNTHETIC-HISTORY-ID' } } }));
+    const historical = await json(space.admin.api.get(`/api/staffing/applications/${application.id}`));
+    expect(historical.appointment).toEqual(adminBefore);
+    expect(await historyDb.collection('staffingAppointments').findOne({ id: selected.appointment.id })).toEqual(storedBefore);
+    expect((await json(space.instructor.api.get(`/api/staffing/applications/${application.id}`))).appointment).toEqual(ended);
+    expect(historical.administrativeCorrections[0]).toMatchObject({ before: { dukeUniqueId: 'SYNTHETIC-NEW-ID' }, after: { dukeUniqueId: 'SYNTHETIC-HISTORY-ID' }, reason: 'Synthetic historical correction' });
+  } finally { await historyClient.close(); }
   expect((await space.student.api.post(path, { data: { ...correction, expectedAdministrativeVersion: 3 } })).status()).toBe(403);
 });
 
