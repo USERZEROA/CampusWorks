@@ -4,6 +4,8 @@ CampusWorks connects TA and RA recruitment with course operations: faculty publi
 
 The application uses Nuxt 4, Vue 3, Nitro, MongoDB transactions and Playwright. All demonstration records are synthetic.
 
+Start with the [new-computer quickstart](docs/QUICKSTART.md) for cloning, Docker startup, the six-window presentation and per-device Key setup. Generated files and credentials are not needed from another checkout.
+
 ## Available workflows
 
 | Role          | Workflows                                                                                                                                                                                                                |
@@ -25,13 +27,15 @@ Selection reserves a candidate and vacancy atomically. TA and RA commitments can
 
 ## Local demonstration
 
-Install Docker with Compose:
+Install Git and Docker with Compose, start Docker in Linux-container mode, then:
 
 ```sh
-docker compose up --build
+git clone https://github.com/USERZEROA/CampusWorks.git
+cd CampusWorks
+docker compose up --build -d
 ```
 
-Open <http://localhost:3000>. Compose initializes authenticated MongoDB as a single-node replica set and starts the app after initialization. Ports bind to loopback. The password and session secret are local demonstration defaults; supply private values for other environments.
+Open <http://localhost:3000> after the initial build and database initialization. This Docker path needs no host Node.js, Playwright installation or `.env` file. Compose initializes authenticated MongoDB as a single-node replica set and starts the app after initialization. Ports bind to loopback. The password and session secret are local demonstration defaults; supply private values for other environments.
 
 | Accounts                                                              | Identity                          |
 | --------------------------------------------------------------------- | --------------------------------- |
@@ -51,7 +55,7 @@ npm ci
 docker compose up -d mongo-init
 ```
 
-Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell), generate a session secret, then run `npm run dev`. The example URI uses `directConnection=true` so a host process can reach the local database whose advertised hostname belongs to the Compose network. Nuxt development loads `.env`; the production Node entry point requires process environment variables.
+Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell), generate a session secret, then run `npm run dev`. Set `SEED_DEMO_DATA=true` for populated synthetic courses. The example URI uses `directConnection=true` so a host process can reach the local database whose advertised hostname belongs to the Compose network. Nuxt development and `npm run start:ai` load `.env`; the raw `npm start` entry point requires process environment variables.
 
 | Command                       | Purpose                                                                                                                                                |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -66,6 +70,7 @@ Copy `.env.example` to `.env` (`Copy-Item .env.example .env` in PowerShell), gen
 | `npm run demo:windows`        | Six isolated visible queue demonstration windows; set `DEMO_LAYOUT=staffing` for four roles plus application/recruitment windows                       |
 | `npm run demo:prepare`        | Prepare the complete labelled showcase without browser windows or model calls                                                                          |
 | `npm run demo:showcase`       | Open six prepared role windows; use the encrypted AI configuration when available                                                                      |
+| `npm run demo:loop -- --cycles 1` | Play one approximately five-minute lifecycle with real OpenAI results; omit the cycle limit to repeat                                                |
 | `node scripts/demo-loop.mjs`  | Repeat the 38-step lifecycle with five live OpenAI panels in six visible role windows; Pause/Resume and Stop controls appear only in the demonstration |
 
 Install browsers once with `npx playwright install chromium firefox`. The complete suite requires Docker. Its runner creates a uniquely named, loopback-only disposable database, enables database fault injection only in that test container, starts two production app processes and cleans up its own resources. It uses local synthetic identity and AI providers. No real provider key or institutional login is required. Reports and traces stay in ignored directories. The runner rejects skipped, flaky and failed tests. Set `E2E_HEADED=1` to display browsers.
@@ -109,7 +114,7 @@ AI supports candidate comparisons, background summaries, qualification/question 
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/ai-provider-dialog.ps1
 ```
 
-Only the OpenAI Key is entered. Windows encrypts it for the current account in ignored `.cache/ai-provider.xml`. `npm run start:ai` starts the production build with the saved credential; `npm run dev:ai` starts development. The application uses `https://api.openai.com/v1` and `gpt-5.4-mini` automatically. The chosen model and Chat Completions endpoint are documented by [OpenAI](https://developers.openai.com/api/docs/models/gpt-5.4-mini).
+Only the OpenAI Key is entered. Windows encrypts it for the current account in ignored `.cache/ai-provider.xml`; enter it again on another computer or Windows account. Native launchers also accept `AI_API_KEY` from the environment or an ignored `.env` file on other platforms. `npm run start:ai` starts the production build with the configured credential; `npm run dev:ai` starts development. The application uses `https://api.openai.com/v1` and `gpt-5.4-mini` automatically. The chosen model and Chat Completions endpoint are documented by [OpenAI](https://developers.openai.com/api/docs/models/gpt-5.4-mini).
 
 Other deployments can use server-only `AI_BASE_URL`, `AI_API_KEY` and `AI_MODEL` environment variables. Never expose them through public runtime configuration. Missing configuration disables AI while manual workflows remain usable. `node scripts/ai-provider-check.mjs` performs a capped, isolated synthetic provider check; it does not evaluate hiring quality.
 

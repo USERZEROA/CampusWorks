@@ -9,12 +9,13 @@ import {
   openSync,
   closeSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseEnv } from "node:util";
 import { BSON, MongoClient } from "mongodb";
 import { prepareShowcase } from "./demo-showcase.mjs";
 import { DEMO_CATALOG_VERSION } from "./demo-catalog.mjs";
+import { resolveNpmCli } from "./runtime-tools.mjs";
 import {
   loadAiProviderConfig,
   confirmedProviderDefaults,
@@ -598,9 +599,7 @@ export async function createLoopService({
   try {
     if (build) {
       onProgress("Building the current application.");
-      const npmCli =
-        process.env.npm_execpath ||
-        join(dirname(process.execPath), "node_modules/npm/bin/npm-cli.js");
+      const npmCli = resolveNpmCli();
       await new Promise((resolve, reject) => {
         buildChild = spawn(process.execPath, [npmCli, "run", "build"], {
           cwd: root,
@@ -684,14 +683,14 @@ export async function createLoopService({
     state.referenceTime = manifest.referenceTime;
     if (ai.enabled) {
       onProgress(
-        "Loading the locally encrypted OpenAI configuration; no catalog-wide AI discovery is enabled.",
+        "Loading local OpenAI configuration; no catalog-wide AI discovery is enabled.",
       );
       providerEnvironment = await loadAiProviderConfig(
         confirmedProviderDefaults,
       );
       if (!providerEnvironment?.AI_API_KEY)
         throw new Error(
-          "Save an OpenAI Key in the local configuration window before running the live AI presentation.",
+          "Set AI_API_KEY in your environment or private .env file, or save it in the Windows Key window before running the live presentation.",
         );
       ai.keyLoaded = true;
       state.providerConfigured = true;

@@ -2,8 +2,8 @@ import { spawn } from 'node:child_process';
 import { createServer } from 'node:net';
 import { mkdirSync, openSync, closeSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { join, dirname } from 'node:path';
 import { randomBytes } from 'node:crypto';
+import { resolveNpmCli } from './runtime-tools.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 process.chdir(root);
@@ -11,7 +11,7 @@ process.env.NUXT_TELEMETRY_DISABLED = '1';
 mkdirSync('.cache', { recursive: true });
 const label = `campusworks-local-${Date.now()}-${randomBytes(3).toString('hex')}`;
 const database = 'campusworks_local_tests';
-const npmCli = process.env.npm_execpath || join(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js');
+const npmCli = resolveNpmCli();
 const servers = [];
 let created = false, stopping = false;
 const run = (command, args, options = {}) => new Promise((resolve, reject) => {

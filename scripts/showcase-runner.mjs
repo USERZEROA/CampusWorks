@@ -3,7 +3,7 @@ import { createServer } from 'node:net';
 import { randomBytes } from 'node:crypto';
 import { existsSync, readFileSync, writeFileSync, mkdirSync, openSync, closeSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { resolve, dirname, join } from 'node:path';
+import { resolve } from 'node:path';
 import { parseEnv } from 'node:util';
 import { MongoClient } from 'mongodb';
 import { request } from '@playwright/test';
@@ -11,6 +11,7 @@ import { loadAiProviderConfig, confirmedProviderDefaults } from './ai-provider-c
 import { prepareShowcase, showcaseWindows } from './demo-showcase.mjs';
 import { loadShowcaseManifest } from './demo-showcase-data.mjs';
 import { DEMO_CATALOG_VERSION } from './demo-catalog.mjs';
+import { resolveNpmCli } from './runtime-tools.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 process.chdir(root);
@@ -123,7 +124,7 @@ try {
     socket.listen(port, '127.0.0.1', () => socket.close(done));
   });
   if (!flags.has('--skip-build')) {
-    const npmCli = process.env.npm_execpath || join(dirname(process.execPath), 'node_modules/npm/bin/npm-cli.js');
+    const npmCli = resolveNpmCli();
     await run(process.execPath, [npmCli, 'run', 'build']);
   }
   if (!existsSync('.output/server/index.mjs')) throw new Error('Build the application before preparing a showcase.');
