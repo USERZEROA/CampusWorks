@@ -358,6 +358,7 @@ export async function createDemoStage({
   onStop,
   onStep,
   strictForeground = true,
+  recordVideoDirectory,
 } = {}) {
   const origin = new URL(baseURL);
   if (
@@ -650,6 +651,17 @@ export async function createDemoStage({
         titleToken: actor.titleToken,
       }));
     },
+    async recordings() {
+      const values = [];
+      for (const actor of actors.values()) {
+        if (actor.video) values.push({
+          actor: actor.key,
+          startedAt: actor.videoStartedAt,
+          path: await actor.video.path(),
+        });
+      }
+      return values;
+    },
     page: (key) => getActor(key).page,
     context: (key) => getActor(key).context,
     async ensureForeground(target) {
@@ -735,6 +747,7 @@ export async function createDemoStage({
       )) throw new Error("Use step durations between zero and sixty seconds.");
       await pausePoint();
       const startedActive = clock.elapsedMs;
+      const startedAt = new Date().toISOString();
       const actor = getActor(key);
       if (role) actor.displayRole = roleLabels[role] || role;
       current = {
@@ -773,6 +786,8 @@ export async function createDemoStage({
           actionDurationMs,
           viewHoldMs,
           activeDurationMs: clock.elapsedMs - startedActive,
+          startedAt,
+          completedAt: new Date().toISOString(),
         });
       return result;
     },
@@ -838,6 +853,7 @@ export async function createDemoStage({
       actor.context = await browser.newContext({
         baseURL: origin.origin,
         viewport: headless ? { width: 1440, height: 1000 } : null,
+        ...(recordVideoDirectory ? { recordVideo: { dir: recordVideoDirectory, size: { width: 1440, height: 1000 } } } : {}),
       });
       await actor.context.exposeBinding(
         "__campusworksDemoCommand",
@@ -852,7 +868,9 @@ export async function createDemoStage({
         titleToken: actor.titleToken,
       });
       await login(actor);
+      actor.videoStartedAt = new Date().toISOString();
       actor.page = await actor.context.newPage();
+      actor.video = actor.page.video();
       actor.page.on("close", () => {
         if (!closing) void stop("window-closed");
       });

@@ -20,6 +20,7 @@ export async function runDemoLoop({
   verifyControls = false,
   proofPath = ".cache/demo-loop-proof.json",
   onProgress = (message) => console.log(message),
+  recordVideoDirectory,
 } = {}) {
   if (!["disabled", "openai"].includes(provider))
     throw new Error("Use the disabled or openai demonstration provider.");
@@ -126,6 +127,7 @@ export async function runDemoLoop({
       holdMs: pace === "fast" ? 150 : 0,
       beforeMs: pacing.beforeMs,
       totalSteps: proof.totalSteps,
+      recordVideoDirectory,
       onStop: (reason) => {
         proof.stopReason = reason;
         cancelled = reason !== "page-crashed";
@@ -297,6 +299,7 @@ export async function runDemoLoop({
     proof.foregroundChecks = stage?.foregroundChecks || [];
     try {
       await stage?.close();
+      if (recordVideoDirectory) proof.recordings = await stage?.recordings();
     } catch {
       stageCleanupFailed = true;
     }
