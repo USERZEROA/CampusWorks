@@ -6,6 +6,8 @@ The application uses Nuxt 4, Vue 3, Nitro, MongoDB transactions and Playwright. 
 
 Start with the [new-computer quickstart](docs/QUICKSTART.md) for cloning, Docker startup, the six-window presentation and per-device Key setup. Generated files and credentials are not needed from another checkout.
 
+Try the [four-role browser demo](https://userzeroa.github.io/campusworks-demo/) without installing anything. It uses synthetic data stored on the visitor's device and labeled saved AI examples; the complete application and live OpenAI run locally with private server-side settings. [Submission materials](docs/submission/SUBMISSION_FIELDS.md) include the project story, technology tags, media instructions and public links.
+
 ## Available workflows
 
 | Role          | Workflows                                                                                                                                                                                                                |

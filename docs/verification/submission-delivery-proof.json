@@ -1,0 +1,2077 @@
+{
+  "checkedAt": "2026-11-08T05:13:46.332Z",
+  "status": "passed",
+  "scope": "Submission text, fifteen genuine product image cards, narrated video, and a public browser-local GitHub Pages experience. The original application repository remains private.",
+  "hosting": {
+    "url": "https://userzeroa.github.io/campusworks-demo/",
+    "repository": "https://github.com/USERZEROA/campusworks-demo",
+    "commit": "7c541b127aaedf15abafd718c1ecfe811966991d",
+    "pagesBuildId": 1350717098,
+    "buildStatus": "built",
+    "source": {
+      "branch": "main",
+      "path": "/",
+      "buildType": "legacy"
+    },
+    "public": true,
+    "fullApplicationRepositoryPrivate": true,
+    "http": {
+      "checkedAt": "2026-11-08T04:56:49.492Z",
+      "site": "https://userzeroa.github.io/campusworks-demo/",
+      "files": [
+        {
+          "path": ".nojekyll",
+          "status": 200,
+          "contentType": "application/octet-stream",
+          "bytes": 0,
+          "expectedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "actualSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "passed": true
+        },
+        {
+          "path": "404.html",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 304,
+          "expectedSha256": "fae1c5d266c0b6aaab4eb6a22c71b41d75fbbcb04552893a430fe4650a0f1993",
+          "actualSha256": "fae1c5d266c0b6aaab4eb6a22c71b41d75fbbcb04552893a430fe4650a0f1993",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/index.html",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 48734,
+          "expectedSha256": "5dc559d854f406f0567305afe5456de56bb9fd8d843ec33acb21891f04f7fae3",
+          "actualSha256": "5dc559d854f406f0567305afe5456de56bb9fd8d843ec33acb21891f04f7fae3",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-ai-candidates-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 407947,
+          "expectedSha256": "97d212b0e1c08485922e97bf7520e00fe7dabf2cc622c6c47a909de9e788411a",
+          "actualSha256": "97d212b0e1c08485922e97bf7520e00fe7dabf2cc622c6c47a909de9e788411a",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-ai-course-review-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 109296,
+          "expectedSha256": "db9db39d33997b73da1fdccd219e8462945f0021be10ed3174472d8ec91bf39e",
+          "actualSha256": "db9db39d33997b73da1fdccd219e8462945f0021be10ed3174472d8ec91bf39e",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-ai-requirements-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 114020,
+          "expectedSha256": "dae066e5b499118b9273a64a80c2ba403769188164bd605988f1ea593f739ce3",
+          "actualSha256": "dae066e5b499118b9273a64a80c2ba403769188164bd605988f1ea593f739ce3",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-ai-summary-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 102372,
+          "expectedSha256": "cd567b36a83ba9717024cfd4df8d77033162bfa851eb08f8ef17630fd7b92969",
+          "actualSha256": "cd567b36a83ba9717024cfd4df8d77033162bfa851eb08f8ef17630fd7b92969",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-applicant-applications-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 93597,
+          "expectedSha256": "5917c53ee70d79554174a9e9dbcb01e061515a0837aaa939378767a9eee002b3",
+          "actualSha256": "5917c53ee70d79554174a9e9dbcb01e061515a0837aaa939378767a9eee002b3",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-applicant-offer-mobile.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 145994,
+          "expectedSha256": "286970ecbee177eb7899a21130e8daebca4d89ceb16de991cb16d59262bb641f",
+          "actualSha256": "286970ecbee177eb7899a21130e8daebca4d89ceb16de991cb16d59262bb641f",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-avery-active-application.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 67248,
+          "expectedSha256": "e46c62c241424761c2b6532734078d683c356942cd024e5cd9ba5a6b18378e40",
+          "actualSha256": "e46c62c241424761c2b6532734078d683c356942cd024e5cd9ba5a6b18378e40",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-avery-ta-queue.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 103626,
+          "expectedSha256": "afe82e43a6b06afc5de2e82a0ad7899f54a5bcaa99c019fb86a4faa0625992b6",
+          "actualSha256": "afe82e43a6b06afc5de2e82a0ad7899f54a5bcaa99c019fb86a4faa0625992b6",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-candidate-pool-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 223466,
+          "expectedSha256": "9e9a5280421ee2bd44572d794b13a796d9d6d2629701d868a0ee0e12ac48dd5a",
+          "actualSha256": "9e9a5280421ee2bd44572d794b13a796d9d6d2629701d868a0ee0e12ac48dd5a",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-clearance-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 313503,
+          "expectedSha256": "f126a893ac3d8f1beb6e62e2d5fc444a30d45362b289ef6d7e317eeea9d0b258",
+          "actualSha256": "f126a893ac3d8f1beb6e62e2d5fc444a30d45362b289ef6d7e317eeea9d0b258",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-course-report-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 68673,
+          "expectedSha256": "7e4cbd544d01a198c5ab51744503537e46f6c990a71716037d3daaa0f9bcb4c3",
+          "actualSha256": "7e4cbd544d01a198c5ab51744503537e46f6c990a71716037d3daaa0f9bcb4c3",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-department-insights-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 429730,
+          "expectedSha256": "9d931d9c435eb4fc35d403a0b579c904c22b6b16bf471762bcfc35ba38ab390a",
+          "actualSha256": "9d931d9c435eb4fc35d403a0b579c904c22b6b16bf471762bcfc35ba38ab390a",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-position-catalog-mobile.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 291794,
+          "expectedSha256": "d465848861779170cad0332c016bbf3320f0ee4eb0cbaeda7880e1d2168c0924",
+          "actualSha256": "d465848861779170cad0332c016bbf3320f0ee4eb0cbaeda7880e1d2168c0924",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-recruitment-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 161265,
+          "expectedSha256": "6f7bdb675e69138ce7d9a3220e4437a8885fb97dcb06e9568d7c4de076880cac",
+          "actualSha256": "6f7bdb675e69138ce7d9a3220e4437a8885fb97dcb06e9568d7c4de076880cac",
+          "passed": true
+        },
+        {
+          "path": "docs/demo/screenshots/showcase-ta-queue-desktop.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 125496,
+          "expectedSha256": "75447c55f782addf3f3f7177b176b63a9f0c88981c416d58ca4cef22beb6e606",
+          "actualSha256": "75447c55f782addf3f3f7177b176b63a9f0c88981c416d58ca4cef22beb6e606",
+          "passed": true
+        },
+        {
+          "path": "docs/try/ai-examples.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8",
+          "bytes": 5944,
+          "expectedSha256": "8c0aae3fbc131c2e1415af0e0f43a4c89ab5f1dda2cc1f526f2fbd82c3e3e9b8",
+          "actualSha256": "8c0aae3fbc131c2e1415af0e0f43a4c89ab5f1dda2cc1f526f2fbd82c3e3e9b8",
+          "passed": true
+        },
+        {
+          "path": "docs/try/app.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8",
+          "bytes": 51095,
+          "expectedSha256": "be6731dda961e2a89b91c270621ccf59823cdbb5f13e48ff6bfcdeb825bd0a92",
+          "actualSha256": "be6731dda961e2a89b91c270621ccf59823cdbb5f13e48ff6bfcdeb825bd0a92",
+          "passed": true
+        },
+        {
+          "path": "docs/try/data.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8",
+          "bytes": 505437,
+          "expectedSha256": "6ac7556fcaa8c036d9df8f19db740053b0ab353023478f3d05ee9e3ca0ac8cda",
+          "actualSha256": "6ac7556fcaa8c036d9df8f19db740053b0ab353023478f3d05ee9e3ca0ac8cda",
+          "passed": true
+        },
+        {
+          "path": "docs/try/index.html",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 855,
+          "expectedSha256": "05588eb393384bbda3c5abb697bcb0a07a95a199390669bebbf461a794578282",
+          "actualSha256": "05588eb393384bbda3c5abb697bcb0a07a95a199390669bebbf461a794578282",
+          "passed": true
+        },
+        {
+          "path": "docs/try/model.js",
+          "status": 200,
+          "contentType": "application/javascript; charset=utf-8",
+          "bytes": 48214,
+          "expectedSha256": "61d6e0054d7c750efc56827501630b735694092d4e1a378b5d0b0727c6fab126",
+          "actualSha256": "61d6e0054d7c750efc56827501630b735694092d4e1a378b5d0b0727c6fab126",
+          "passed": true
+        },
+        {
+          "path": "docs/try/style.css",
+          "status": 200,
+          "contentType": "text/css; charset=utf-8",
+          "bytes": 13924,
+          "expectedSha256": "93f1e214c1791f837504036b96ae476e4fc979913e59fd4e9decf2924c063cd9",
+          "actualSha256": "93f1e214c1791f837504036b96ae476e4fc979913e59fd4e9decf2924c063cd9",
+          "passed": true
+        },
+        {
+          "path": "index.html",
+          "status": 200,
+          "contentType": "text/html; charset=utf-8",
+          "bytes": 304,
+          "expectedSha256": "fae1c5d266c0b6aaab4eb6a22c71b41d75fbbcb04552893a430fe4650a0f1993",
+          "actualSha256": "fae1c5d266c0b6aaab4eb6a22c71b41d75fbbcb04552893a430fe4650a0f1993",
+          "passed": true
+        },
+        {
+          "path": "LICENSE",
+          "status": 200,
+          "contentType": "application/octet-stream",
+          "bytes": 905,
+          "expectedSha256": "3303cc656821ce2e6fa083dac00f9765144ad4c6a215891ef14edb07b0ec1a2f",
+          "actualSha256": "3303cc656821ce2e6fa083dac00f9765144ad4c6a215891ef14edb07b0ec1a2f",
+          "passed": true
+        },
+        {
+          "path": "public/campusworks-logo.svg",
+          "status": 200,
+          "contentType": "image/svg+xml",
+          "bytes": 269,
+          "expectedSha256": "005d99ecc9d7e34894ed539c0132f381902e2ed780d269838112bc327c6b6109",
+          "actualSha256": "005d99ecc9d7e34894ed539c0132f381902e2ed780d269838112bc327c6b6109",
+          "passed": true
+        },
+        {
+          "path": "public/duke-cs-logo.png",
+          "status": 200,
+          "contentType": "image/png",
+          "bytes": 10497,
+          "expectedSha256": "f13da47b151485056dee3e755a28e194c6b5e5846bbcb44ce700378de668e1f6",
+          "actualSha256": "f13da47b151485056dee3e755a28e194c6b5e5846bbcb44ce700378de668e1f6",
+          "passed": true
+        },
+        {
+          "path": "README.md",
+          "status": 200,
+          "contentType": "text/markdown; charset=utf-8",
+          "bytes": 1257,
+          "expectedSha256": "a45f0efc4922171d11a94051daaea1943e0535020c08fe26a5f002a3b23ec660",
+          "actualSha256": "a45f0efc4922171d11a94051daaea1943e0535020c08fe26a5f002a3b23ec660",
+          "passed": true
+        }
+      ],
+      "status": "passed"
+    }
+  },
+  "browser": {
+    "localPackaged": {
+      "startedAt": "2026-11-08T04:53:00.156Z",
+      "scope": "Packaged GitHub Pages browser demo under its actual repository URL prefix; local synthetic state only.",
+      "cases": [
+        {
+          "name": "chromium: repository-prefix entry and four-role login",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: student view hides staffing and AI hiring features",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: clearance automatically grants the same student TA access",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: a fresh application, CV metadata and instructor offer",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: offer acceptance and administrative clearance remain explicit decisions",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: queue service, attributed feedback and workload",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: persistent state, staffing restrictions and appointment ending",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: fractional hours preserve model bounds",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: department charts and keyboard-scrollable local tables",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: a separate visitor receives an independent fresh workspace",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: blocked storage permits in-memory use",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: repository-prefix entry and four-role login",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: student view hides staffing and AI hiring features",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: clearance automatically grants the same student TA access",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: a fresh application, CV metadata and instructor offer",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: offer acceptance and administrative clearance remain explicit decisions",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: queue service, attributed feedback and workload",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: persistent state, staffing restrictions and appointment ending",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: fractional hours preserve model bounds",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: department charts and keyboard-scrollable local tables",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: a separate visitor receives an independent fresh workspace",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: blocked storage permits in-memory use",
+          "status": "passed"
+        }
+      ],
+      "geometry": [
+        {
+          "browser": "chromium",
+          "scene": "login",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "login",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "login",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "appointed-ta-queue",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "appointed-ta-queue",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "appointed-ta-queue",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "candidate-review",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "candidate-review",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "candidate-review",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "clearance",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "clearance",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "clearance",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "department",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "department",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "department",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "login",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "login",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "login",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "appointed-ta-queue",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "appointed-ta-queue",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "appointed-ta-queue",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "candidate-review",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "candidate-review",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "candidate-review",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "clearance",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "clearance",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "clearance",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "department",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "department",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "department",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        }
+      ],
+      "accessibility": [
+        {
+          "browser": "chromium",
+          "name": "login-320",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "queue-320",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "candidate-review-320",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "department-1440",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "department-390",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "department-320",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "login-320",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "queue-320",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "candidate-review-320",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "department-1440",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "department-390",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "department-320",
+          "violations": []
+        }
+      ],
+      "errors": [],
+      "external": [],
+      "apiRequests": [],
+      "staticErrors": [],
+      "status": "passed",
+      "finishedAt": "2026-11-08T04:53:16.208Z"
+    },
+    "hosted": {
+      "startedAt": "2026-11-08T04:56:31.335Z",
+      "entry": "https://userzeroa.github.io/campusworks-demo/",
+      "scope": "Hosted GitHub Pages interactive browser demo; actual public HTTPS origin; client-only synthetic state.",
+      "cases": [
+        {
+          "name": "chromium: repository-prefix entry and four-role login",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: student view hides staffing and AI hiring features",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: clearance automatically grants the same student TA access",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: a fresh application, CV metadata and instructor offer",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: offer acceptance and administrative clearance remain explicit decisions",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: queue service, attributed feedback and workload",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: persistent state, staffing restrictions and appointment ending",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: fractional hours preserve model bounds",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: department charts and keyboard-scrollable local tables",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: a separate visitor receives an independent fresh workspace",
+          "status": "passed"
+        },
+        {
+          "name": "chromium: blocked storage permits in-memory use",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: repository-prefix entry and four-role login",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: student view hides staffing and AI hiring features",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: clearance automatically grants the same student TA access",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: a fresh application, CV metadata and instructor offer",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: offer acceptance and administrative clearance remain explicit decisions",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: queue service, attributed feedback and workload",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: persistent state, staffing restrictions and appointment ending",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: fractional hours preserve model bounds",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: department charts and keyboard-scrollable local tables",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: a separate visitor receives an independent fresh workspace",
+          "status": "passed"
+        },
+        {
+          "name": "firefox: blocked storage permits in-memory use",
+          "status": "passed"
+        }
+      ],
+      "geometry": [
+        {
+          "browser": "chromium",
+          "scene": "login",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "login",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "login",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "appointed-ta-queue",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "appointed-ta-queue",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "appointed-ta-queue",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "candidate-review",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "candidate-review",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "candidate-review",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "clearance",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "clearance",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "clearance",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "department",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "department",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "chromium",
+          "scene": "department",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "login",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "login",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "login",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "appointed-ta-queue",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "appointed-ta-queue",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "appointed-ta-queue",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "candidate-review",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "candidate-review",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "candidate-review",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "clearance",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "clearance",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "clearance",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "department",
+          "width": 1440,
+          "body": 1440,
+          "html": 1440,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "department",
+          "width": 390,
+          "body": 390,
+          "html": 390,
+          "logo": true
+        },
+        {
+          "browser": "firefox",
+          "scene": "department",
+          "width": 320,
+          "body": 320,
+          "html": 320,
+          "logo": true
+        }
+      ],
+      "accessibility": [
+        {
+          "browser": "chromium",
+          "name": "login-320",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "queue-320",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "candidate-review-320",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "department-1440",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "department-390",
+          "violations": []
+        },
+        {
+          "browser": "chromium",
+          "name": "department-320",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "login-320",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "queue-320",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "candidate-review-320",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "department-1440",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "department-390",
+          "violations": []
+        },
+        {
+          "browser": "firefox",
+          "name": "department-320",
+          "violations": []
+        }
+      ],
+      "errors": [],
+      "external": [],
+      "apiRequests": [],
+      "staticErrors": [],
+      "status": "passed",
+      "finishedAt": "2026-11-08T04:56:50.894Z"
+    }
+  },
+  "unit": {
+    "command": "node --test tests/*.test.mjs",
+    "tests": 160,
+    "passed": 160,
+    "failed": 0,
+    "logSha256": "d542ad1e7f94e9544dd12ed28493c2ffb55883abbcacc94b902359cf6e49f268"
+  },
+  "publicPackageGuard": {
+    "status": "passed",
+    "unexpectedFileBlocksPublishing": true,
+    "cleanPackageBuilds": true
+  },
+  "images": {
+    "recordedAt": "2026-11-08T04:35:31.089Z",
+    "width": 1800,
+    "height": 1200,
+    "aspectRatio": "3:2",
+    "sourcePolicy": "Actual original screenshots arranged in HTML/CSS; crops show selected sections and original PNG bytes remain unchanged. No model call or invented application UI.",
+    "images": [
+      {
+        "id": "01-connected-lifecycle",
+        "title": "From application to student support.",
+        "role": "Four roles · one connected workflow",
+        "path": ".cache/submission-export/images/01-connected-lifecycle.png",
+        "bytes": 361371,
+        "sha256": "d77a37a28a71fea3527caba2e734fa9c02e8d9b0ea516cf83e73776c58f93752",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-applicant-applications-desktop.png",
+            "sha256": "5917c53ee70d79554174a9e9dbcb01e061515a0837aaa939378767a9eee002b3"
+          },
+          {
+            "path": "docs/demo/screenshots/showcase-avery-active-application.png",
+            "sha256": "e46c62c241424761c2b6532734078d683c356942cd024e5cd9ba5a6b18378e40"
+          },
+          {
+            "path": "docs/demo/screenshots/showcase-avery-ta-queue.png",
+            "sha256": "afe82e43a6b06afc5de2e82a0ad7899f54a5bcaa99c019fb86a4faa0625992b6"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "02-recruitment",
+        "title": "Publish the work that needs doing.",
+        "role": "Administrator + instructor",
+        "path": ".cache/submission-export/images/02-recruitment.png",
+        "bytes": 244190,
+        "sha256": "209ddabbe026d4fc288279e10c3ca4d0f7cf1f306dff6567cb4df901b92790b7",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-recruitment-desktop.png",
+            "sha256": "6f7bdb675e69138ce7d9a3220e4437a8885fb97dcb06e9568d7c4de076880cac"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "03-applicant-workspace",
+        "title": "A clear place to follow every application.",
+        "role": "Student",
+        "path": ".cache/submission-export/images/03-applicant-workspace.png",
+        "bytes": 242141,
+        "sha256": "ff887533491f5089d26edcf70e10ba8f9b5cd591d44c9a577fc5729a17c1440c",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-applicant-applications-desktop.png",
+            "sha256": "5917c53ee70d79554174a9e9dbcb01e061515a0837aaa939378767a9eee002b3"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "04-candidate-review",
+        "title": "Evidence before a decision.",
+        "role": "Instructor",
+        "path": ".cache/submission-export/images/04-candidate-review.png",
+        "bytes": 294230,
+        "sha256": "7e375a3a065a420623b0712eb8125861b93acff7ff2c46bfa0f3130fcb0abe61",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-candidate-pool-desktop.png",
+            "sha256": "9e9a5280421ee2bd44572d794b13a796d9d6d2629701d868a0ee0e12ac48dd5a"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "05-ai-requirements",
+        "title": "Make requirements easier to review.",
+        "role": "Instructor · AI assistance",
+        "path": ".cache/submission-export/images/05-ai-requirements.png",
+        "bytes": 343265,
+        "sha256": "abed0d6daa257e7ae138cd93bb441bfbbb24808a616f2655e9b600c4498a2e70",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-ai-requirements-desktop.png",
+            "sha256": "dae066e5b499118b9273a64a80c2ba403769188164bd605988f1ea593f739ce3"
+          }
+        ],
+        "savedRealAI": true
+      },
+      {
+        "id": "06-ai-qualification-summary",
+        "title": "See preparation and missing evidence.",
+        "role": "Instructor · AI assistance",
+        "path": ".cache/submission-export/images/06-ai-qualification-summary.png",
+        "bytes": 326167,
+        "sha256": "107d9f40216e45aa3f52e1c148700395f7ab5d76332d2c5095a444f1f912aacf",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-ai-summary-desktop.png",
+            "sha256": "cd567b36a83ba9717024cfd4df8d77033162bfa851eb08f8ef17630fd7b92969"
+          }
+        ],
+        "savedRealAI": true
+      },
+      {
+        "id": "07-ai-eligible-alternatives",
+        "title": "Availability changes. Advice updates.",
+        "role": "Second instructor · AI assistance",
+        "path": ".cache/submission-export/images/07-ai-eligible-alternatives.png",
+        "bytes": 331243,
+        "sha256": "b94a81430fb9b6b2ada2ed536536abea386f486ce5bd8465ffb90967424e3535",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-ai-candidates-desktop.png",
+            "sha256": "97d212b0e1c08485922e97bf7520e00fe7dabf2cc622c6c47a909de9e788411a"
+          }
+        ],
+        "savedRealAI": true
+      },
+      {
+        "id": "08-administrative-clearance",
+        "title": "An offer is only the beginning.",
+        "role": "Administrator",
+        "path": ".cache/submission-export/images/08-administrative-clearance.png",
+        "bytes": 259553,
+        "sha256": "73ec34d12440a9e2fdbfea5aac0d9e7f95539146a184295654e4eb998c53f74a",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-clearance-desktop.png",
+            "sha256": "f126a893ac3d8f1beb6e62e2d5fc444a30d45362b289ef6d7e317eeea9d0b258"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "09-student-becomes-ta",
+        "title": "Acceptance. Clearance. The right access.",
+        "role": "Same student account → course TA",
+        "path": ".cache/submission-export/images/09-student-becomes-ta.png",
+        "bytes": 246622,
+        "sha256": "ce1cab0e572c7393511b2ba2f480a01aef0768fa14f8ee1e169bfecdf5fda145",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-avery-active-application.png",
+            "sha256": "e46c62c241424761c2b6532734078d683c356942cd024e5cd9ba5a6b18378e40"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "10-ta-help-session",
+        "title": "The same person now supports a student.",
+        "role": "Avery · appointed CS201 TA",
+        "path": ".cache/submission-export/images/10-ta-help-session.png",
+        "bytes": 341735,
+        "sha256": "ac99f481827a16b753ea26cb4a7e1da01161c6af07efee40b02eadd9081305a7",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-avery-ta-queue.png",
+            "sha256": "afe82e43a6b06afc5de2e82a0ad7899f54a5bcaa99c019fb86a4faa0625992b6"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "11-coordinated-office-hours",
+        "title": "One queue for coordinated office hours.",
+        "role": "TA + student",
+        "path": ".cache/submission-export/images/11-coordinated-office-hours.png",
+        "bytes": 345084,
+        "sha256": "0c2e979bab3171c6f86c679da4b2115342bc7f5c96ea7d2d62c48a825ce1ad7e",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-ta-queue-desktop.png",
+            "sha256": "75447c55f782addf3f3f7177b176b63a9f0c88981c416d58ca4cef22beb6e606"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "12-course-evidence",
+        "title": "Connect staffing with recorded teaching work.",
+        "role": "Instructor",
+        "path": ".cache/submission-export/images/12-course-evidence.png",
+        "bytes": 240184,
+        "sha256": "175388f2d644707dbfb95fd5f159ac8fef75eac7bb579c6936c0e0f10ec1a02f",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-course-report-desktop.png",
+            "sha256": "7e4cbd544d01a198c5ab51744503537e46f6c990a71716037d3daaa0f9bcb4c3"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "13-ai-course-advice",
+        "title": "Plan the next cycle with context.",
+        "role": "Instructor · AI assistance",
+        "path": ".cache/submission-export/images/13-ai-course-advice.png",
+        "bytes": 330291,
+        "sha256": "096e9cd4ff204471015c6a1520b605d049ea883965971d2514b037204f1b075b",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-ai-course-review-desktop.png",
+            "sha256": "db9db39d33997b73da1fdccd219e8462945f0021be10ed3174472d8ec91bf39e"
+          }
+        ],
+        "savedRealAI": true
+      },
+      {
+        "id": "14-department-insights",
+        "title": "Know when students need support.",
+        "role": "Department administrator",
+        "path": ".cache/submission-export/images/14-department-insights.png",
+        "bytes": 292284,
+        "sha256": "c513bf663fff6c42172edcee2c86e75eeee294f2946c9b720b033fcec801f4e5",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-department-insights-desktop.png",
+            "sha256": "9d931d9c435eb4fc35d403a0b579c904c22b6b16bf471762bcfc35ba38ab390a"
+          }
+        ],
+        "savedRealAI": false
+      },
+      {
+        "id": "15-mobile-application",
+        "title": "Keep the candidate’s next step within reach.",
+        "role": "Student · responsive experience",
+        "path": ".cache/submission-export/images/15-mobile-application.png",
+        "bytes": 358496,
+        "sha256": "14149e1852ce95170f7dda3a060af3e54cc7a50304b6a1ab45e00e0379233556",
+        "source": [
+          {
+            "path": "docs/demo/screenshots/showcase-position-catalog-mobile.png",
+            "sha256": "d465848861779170cad0332c016bbf3320f0ee4eb0cbaeda7880e1d2168c0924"
+          },
+          {
+            "path": "docs/demo/screenshots/showcase-applicant-offer-mobile.png",
+            "sha256": "286970ecbee177eb7899a21130e8daebca4d89ceb16de991cb16d59262bb641f"
+          }
+        ],
+        "savedRealAI": false
+      }
+    ]
+  },
+  "video": {
+    "status": "passed",
+    "durationSeconds": 180,
+    "video": {
+      "path": ".cache/submission-export/CampusWorks-demo-3min.mp4",
+      "sha256": "f68f2c0656c60361a229d847c506121bfaba93f5e6cbf7515346d5453269b509",
+      "bytes": 18707730,
+      "codec": "h264",
+      "width": 1920,
+      "height": 1080,
+      "frameRate": "25/1"
+    },
+    "audio": {
+      "codec": "aac",
+      "sampleRate": "48000",
+      "channels": 2,
+      "offlineVoice": "Microsoft Zira Desktop"
+    },
+    "segments": [
+      {
+        "id": "intro",
+        "title": "From application to student support.",
+        "durationSeconds": 8
+      },
+      {
+        "id": "step-01",
+        "title": "Open the shared recruitment cycle",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-02",
+        "title": "Define the course position",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-03",
+        "title": "Set qualifications and publish for approval",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-04",
+        "title": "Approve the course opening",
+        "durationSeconds": 4
+      },
+      {
+        "id": "ai-requirements",
+        "title": "Requirements with evidence",
+        "durationSeconds": 8
+      },
+      {
+        "id": "step-05",
+        "title": "Discover the opportunity",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-06",
+        "title": "Answer the qualification questions",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-07",
+        "title": "Attach a CV and submit",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-08",
+        "title": "Apply to another course as well",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-09",
+        "title": "A second instructor reviews the same applicant",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-10",
+        "title": "Review Alex for CS201",
+        "durationSeconds": 4
+      },
+      {
+        "id": "ai-qualifications",
+        "title": "Preparation and evidence gaps",
+        "durationSeconds": 8
+      },
+      {
+        "id": "step-11",
+        "title": "Shortlist and issue the offer",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-12",
+        "title": "The other instructor sees availability update",
+        "durationSeconds": 4
+      },
+      {
+        "id": "ai-eligible-alternatives",
+        "title": "Current eligible alternatives",
+        "durationSeconds": 8
+      },
+      {
+        "id": "step-13",
+        "title": "Accept the CS201 offer",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-14",
+        "title": "Record the appointment clearance",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-15",
+        "title": "Alex becomes the appointed course TA",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-16",
+        "title": "Start the office-hours shift",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-17",
+        "title": "The existing TA coordinates the session",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-18",
+        "title": "A student enrolls in the course",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-19",
+        "title": "Ask for help through the live queue",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-20",
+        "title": "Alex claims Sam’s request",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-21",
+        "title": "The student sees who is helping",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-22",
+        "title": "Complete the help session",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-23",
+        "title": "Give feedback on the support",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-24",
+        "title": "Record work beyond queue timing",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-25",
+        "title": "Review course operations and feedback",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-26",
+        "title": "Close the course support queue",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-27",
+        "title": "Return to the TA page before closeout",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-28",
+        "title": "End the appointment with a reason",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-29",
+        "title": "TA access disappears automatically",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-30",
+        "title": "See the evidence for the next cycle",
+        "durationSeconds": 4
+      },
+      {
+        "id": "ai-course-advice",
+        "title": "Context for the next cycle",
+        "durationSeconds": 8
+      },
+      {
+        "id": "step-31",
+        "title": "Compare department demand and support",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-32",
+        "title": "Archive the completed opening",
+        "durationSeconds": 4
+      },
+      {
+        "id": "step-33",
+        "title": "One account, a complete lifecycle",
+        "durationSeconds": 4
+      },
+      {
+        "id": "outro",
+        "title": "Explore the complete journey.",
+        "durationSeconds": 8
+      }
+    ],
+    "verification": {
+      "fullDecode": "passed",
+      "browserPlayback": {
+        "duration": 180,
+        "width": 1920,
+        "height": 1080,
+        "currentTime": 72.660048,
+        "paused": false,
+        "error": null,
+        "browser": "156.0.8078.81"
+      },
+      "audioMeanDb": -24.2,
+      "audioPeakDb": -5.9,
+      "sampledFrames": [
+        {
+          "scene": "intro",
+          "time": 4,
+          "path": ".cache/submission-export/video/checks/scene-01-intro.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-intro.png",
+          "title": "From application to student support."
+        },
+        {
+          "scene": "step-01",
+          "time": 11.6,
+          "path": ".cache/submission-export/video/checks/scene-02-step-01.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-01.png",
+          "title": "Open the shared recruitment cycle"
+        },
+        {
+          "scene": "step-02",
+          "time": 15.6,
+          "path": ".cache/submission-export/video/checks/scene-03-step-02.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-02.png",
+          "title": "Define the course position"
+        },
+        {
+          "scene": "step-03",
+          "time": 19.6,
+          "path": ".cache/submission-export/video/checks/scene-04-step-03.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-03.png",
+          "title": "Set qualifications and publish for approval"
+        },
+        {
+          "scene": "step-04",
+          "time": 23.6,
+          "path": ".cache/submission-export/video/checks/scene-05-step-04.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-04.png",
+          "title": "Approve the course opening"
+        },
+        {
+          "scene": "ai-requirements",
+          "time": 28,
+          "path": ".cache/submission-export/video/checks/scene-06-ai-requirements.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-ai-requirements.png",
+          "title": "Requirements with evidence"
+        },
+        {
+          "scene": "step-05",
+          "time": 35.6,
+          "path": ".cache/submission-export/video/checks/scene-07-step-05.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-05.png",
+          "title": "Discover the opportunity"
+        },
+        {
+          "scene": "step-06",
+          "time": 39.6,
+          "path": ".cache/submission-export/video/checks/scene-08-step-06.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-06.png",
+          "title": "Answer the qualification questions"
+        },
+        {
+          "scene": "step-07",
+          "time": 43.6,
+          "path": ".cache/submission-export/video/checks/scene-09-step-07.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-07.png",
+          "title": "Attach a CV and submit"
+        },
+        {
+          "scene": "step-08",
+          "time": 47.6,
+          "path": ".cache/submission-export/video/checks/scene-10-step-08.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-08.png",
+          "title": "Apply to another course as well"
+        },
+        {
+          "scene": "step-09",
+          "time": 51.6,
+          "path": ".cache/submission-export/video/checks/scene-11-step-09.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-09.png",
+          "title": "A second instructor reviews the same applicant"
+        },
+        {
+          "scene": "step-10",
+          "time": 55.6,
+          "path": ".cache/submission-export/video/checks/scene-12-step-10.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-10.png",
+          "title": "Review Alex for CS201"
+        },
+        {
+          "scene": "ai-qualifications",
+          "time": 60,
+          "path": ".cache/submission-export/video/checks/scene-13-ai-qualifications.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-ai-qualifications.png",
+          "title": "Preparation and evidence gaps"
+        },
+        {
+          "scene": "step-11",
+          "time": 67.6,
+          "path": ".cache/submission-export/video/checks/scene-14-step-11.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-11.png",
+          "title": "Shortlist and issue the offer"
+        },
+        {
+          "scene": "step-12",
+          "time": 71.6,
+          "path": ".cache/submission-export/video/checks/scene-15-step-12.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-12.png",
+          "title": "The other instructor sees availability update"
+        },
+        {
+          "scene": "ai-eligible-alternatives",
+          "time": 76,
+          "path": ".cache/submission-export/video/checks/scene-16-ai-eligible-alternatives.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-ai-eligible-alternatives.png",
+          "title": "Current eligible alternatives"
+        },
+        {
+          "scene": "step-13",
+          "time": 83.6,
+          "path": ".cache/submission-export/video/checks/scene-17-step-13.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-13.png",
+          "title": "Accept the CS201 offer"
+        },
+        {
+          "scene": "step-14",
+          "time": 87.6,
+          "path": ".cache/submission-export/video/checks/scene-18-step-14.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-14.png",
+          "title": "Record the appointment clearance"
+        },
+        {
+          "scene": "step-15",
+          "time": 91.6,
+          "path": ".cache/submission-export/video/checks/scene-19-step-15.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-15.png",
+          "title": "Alex becomes the appointed course TA"
+        },
+        {
+          "scene": "step-16",
+          "time": 95.6,
+          "path": ".cache/submission-export/video/checks/scene-20-step-16.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-16.png",
+          "title": "Start the office-hours shift"
+        },
+        {
+          "scene": "step-17",
+          "time": 99.6,
+          "path": ".cache/submission-export/video/checks/scene-21-step-17.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-17.png",
+          "title": "The existing TA coordinates the session"
+        },
+        {
+          "scene": "step-18",
+          "time": 103.6,
+          "path": ".cache/submission-export/video/checks/scene-22-step-18.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-18.png",
+          "title": "A student enrolls in the course"
+        },
+        {
+          "scene": "step-19",
+          "time": 107.6,
+          "path": ".cache/submission-export/video/checks/scene-23-step-19.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-19.png",
+          "title": "Ask for help through the live queue"
+        },
+        {
+          "scene": "step-20",
+          "time": 111.6,
+          "path": ".cache/submission-export/video/checks/scene-24-step-20.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-20.png",
+          "title": "Alex claims Sam’s request"
+        },
+        {
+          "scene": "step-21",
+          "time": 115.6,
+          "path": ".cache/submission-export/video/checks/scene-25-step-21.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-21.png",
+          "title": "The student sees who is helping"
+        },
+        {
+          "scene": "step-22",
+          "time": 119.6,
+          "path": ".cache/submission-export/video/checks/scene-26-step-22.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-22.png",
+          "title": "Complete the help session"
+        },
+        {
+          "scene": "step-23",
+          "time": 123.6,
+          "path": ".cache/submission-export/video/checks/scene-27-step-23.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-23.png",
+          "title": "Give feedback on the support"
+        },
+        {
+          "scene": "step-24",
+          "time": 127.6,
+          "path": ".cache/submission-export/video/checks/scene-28-step-24.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-24.png",
+          "title": "Record work beyond queue timing"
+        },
+        {
+          "scene": "step-25",
+          "time": 131.6,
+          "path": ".cache/submission-export/video/checks/scene-29-step-25.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-25.png",
+          "title": "Review course operations and feedback"
+        },
+        {
+          "scene": "step-26",
+          "time": 135.6,
+          "path": ".cache/submission-export/video/checks/scene-30-step-26.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-26.png",
+          "title": "Close the course support queue"
+        },
+        {
+          "scene": "step-27",
+          "time": 139.6,
+          "path": ".cache/submission-export/video/checks/scene-31-step-27.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-27.png",
+          "title": "Return to the TA page before closeout"
+        },
+        {
+          "scene": "step-28",
+          "time": 143.6,
+          "path": ".cache/submission-export/video/checks/scene-32-step-28.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-28.png",
+          "title": "End the appointment with a reason"
+        },
+        {
+          "scene": "step-29",
+          "time": 147.6,
+          "path": ".cache/submission-export/video/checks/scene-33-step-29.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-29.png",
+          "title": "TA access disappears automatically"
+        },
+        {
+          "scene": "step-30",
+          "time": 151.6,
+          "path": ".cache/submission-export/video/checks/scene-34-step-30.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-30.png",
+          "title": "See the evidence for the next cycle"
+        },
+        {
+          "scene": "ai-course-advice",
+          "time": 156,
+          "path": ".cache/submission-export/video/checks/scene-35-ai-course-advice.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-ai-course-advice.png",
+          "title": "Context for the next cycle"
+        },
+        {
+          "scene": "step-31",
+          "time": 163.6,
+          "path": ".cache/submission-export/video/checks/scene-36-step-31.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-31.png",
+          "title": "Compare department demand and support"
+        },
+        {
+          "scene": "step-32",
+          "time": 167.6,
+          "path": ".cache/submission-export/video/checks/scene-37-step-32.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-32.png",
+          "title": "Archive the completed opening"
+        },
+        {
+          "scene": "step-33",
+          "time": 171.6,
+          "path": ".cache/submission-export/video/checks/scene-38-step-33.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-step-33.png",
+          "title": "One account, a complete lifecycle"
+        },
+        {
+          "scene": "outro",
+          "time": 176,
+          "path": ".cache/submission-export/video/checks/scene-39-outro.png",
+          "thumbnail": ".cache/submission-export/video/checks/thumb-outro.png",
+          "title": "Explore the complete journey."
+        }
+      ],
+      "contactSheet": ".cache/submission-export/video-contact-sheet.png",
+      "sourceCrop": {
+        "x": 0,
+        "y": 112,
+        "width": 1440,
+        "height": 888,
+        "reason": "Remove the redundant recorded presentation banner; the correctly timed role and step are shown in the left caption. Product pixels retain their original size."
+      },
+      "additionalBrowserPlayback": {
+        "status": "passed",
+        "checkedAt": "2026-11-08T05:12:36.497Z",
+        "movieSha256": "f68f2c0656c60361a229d847c506121bfaba93f5e6cbf7515346d5453269b509",
+        "receipts": [
+          {
+            "channel": "chrome",
+            "browserVersion": "156.0.8078.81",
+            "currentTime": 72.860087,
+            "paused": false,
+            "duration": 180,
+            "width": 1920,
+            "height": 1080,
+            "error": null
+          },
+          {
+            "channel": "msedge",
+            "browserVersion": "157.0.4341.42",
+            "currentTime": 72.874136,
+            "paused": false,
+            "duration": 180,
+            "width": 1920,
+            "height": 1080,
+            "error": null
+          }
+        ]
+      },
+      "visualSpotChecks": [
+        {
+          "scene": "step-24",
+          "observed": "Work date (Eastern Time): 2026/11/08; Workload recorded.",
+          "frame": ".cache/submission-export/video/checks/scene-28-step-24.png",
+          "frameSha256": "33eb8018756d2b833fe4b9cc88065f6debf9cea83395eec6aa165159c3a07b81",
+          "method": "Visual inspection of actual encoded movie frame"
+        },
+        {
+          "scene": "step-31",
+          "observed": "Alex Morgan: Reported work 0.5 h, Self-reported.",
+          "frame": ".cache/submission-export/video/checks/scene-36-step-31.png",
+          "frameSha256": "92314130d622732c6526ec43ff5e8b7f3b2a00f37b5c672a62cef52ea92d0e3b",
+          "method": "Visual inspection of actual encoded movie frame"
+        },
+        {
+          "scene": "outro",
+          "observed": "Published URL https://userzeroa.github.io/campusworks-demo/ is legible.",
+          "frame": ".cache/submission-export/video/checks/scene-39-outro.png",
+          "frameSha256": "4f1cd1c02fcc81f83ad42300733624a0c67b1c9bcf806e1ca70404828d28c945",
+          "method": "Visual inspection of actual encoded movie frame"
+        }
+      ],
+      "narrationUnchangedFromPrevious": true
+    },
+    "freshProviderCalls": 0
+  },
+  "actualRecordedLifecycle": {
+    "status": "passed",
+    "steps": 33,
+    "actors": 6,
+    "activeDurationMs": 300323.78140000004,
+    "providerCalls": 0,
+    "providerKeyLoaded": false,
+    "department": {
+      "courses": 10,
+      "personalFeedbackCount": 1,
+      "personalFeedbackAverage": 5,
+      "reviewers": 1,
+      "reportedHours": 0.5
+    },
+    "workload": {
+      "date": "2026-11-08",
+      "hours": 0.5
+    },
+    "cleanup": "complete",
+    "process": {
+      "startedAt": "2026-11-08T05:04:49.788Z",
+      "finishedAt": "2026-11-08T05:10:51.256Z",
+      "exitCode": 0,
+      "signal": null
+    }
+  },
+  "reportingDateRegression": {
+    "recordedAt": "2026-11-08T05:04:28.0719783Z",
+    "files": [
+      {
+        "path": "app/components/WorkloadRecorder.vue",
+        "sha256": "c376550e2b8f94548d63b5ff2b8ec01fca0e5242faeb209a1332fc4c44fb6369"
+      },
+      {
+        "path": "shared/course-time.ts",
+        "sha256": "9db1605ebd7042fc0cc7887541cd15f7f84fb4520b10ce1f09678bf42170f626"
+      },
+      {
+        "path": "server/utils/course-insights.ts",
+        "sha256": "6c5acd4dc1c30609c761f4567bf49de433ad0119ba9cee7eee676bf675ab88c9"
+      },
+      {
+        "path": "server/utils/staffing-reports.ts",
+        "sha256": "1b05edef08dbaedbddd5b90fcfb7e9de96f894352899af27a4f08424fa899bd5"
+      },
+      {
+        "path": "scripts/demo-loop-flow.mjs",
+        "sha256": "0438be6c766466b6306b0e05aa2f86ee5b0ee64fe6287a47a8d18583dc21e05c"
+      },
+      {
+        "path": "tests/course-insights.test.mjs",
+        "sha256": "8058c1d4e8a176c62a88a2b832c88755523a3b7fd476a2f0dbeefebf1c1852b8"
+      },
+      {
+        "path": "tests/workload-date.test.mjs",
+        "sha256": "d37b41e3ad3060a6ede90ab52ef88b2c9571ebfe99eba1e45feaaf3127960b13"
+      },
+      {
+        "path": "docs/COURSE_INSIGHTS.md",
+        "sha256": "31852f5a2059f43bbc4e004e5bfd65f453d5b1b2c2179dbdf5c8b5bd9de50ecf"
+      }
+    ],
+    "relatedUnitTests": 31,
+    "typecheckExit": 0,
+    "lifecycleProof": ".cache/workload-timezone-lifecycle-proof.json",
+    "initialBuildFailure": ".cache/workload-timezone-lifecycle-initial-build-failed.json",
+    "lifecycleStatus": "passed",
+    "lifecycleSteps": 33,
+    "accessibilityScans": 3,
+    "providerCalls": 0,
+    "cleanup": "complete",
+    "outerToolReportedExit": 1,
+    "outerExitExplanation": "The lifecycle receipt and every business assertion passed; the command tool reported an unexpected outer exit of 1 without a final application error.",
+    "status": "passed",
+    "cycles": 1,
+    "steps": 33,
+    "providerKeyLoaded": false,
+    "department": {
+      "courses": 10,
+      "personalFeedbackCount": 1,
+      "personalFeedbackAverage": 5,
+      "reviewers": 1,
+      "reportedHours": 0.5
+    },
+    "workload": {
+      "date": "2026-11-08",
+      "hours": 0.5
+    }
+  },
+  "savedAI": {
+    "sourceReceipt": "docs/verification/staffing-live-ai-proof.json",
+    "freshCallsThisDelivery": 0,
+    "examples": [
+      {
+        "kind": "opportunity_draft",
+        "provider": {
+          "host": "api.openai.com",
+          "model": "gpt-5.4-mini-2026-03-17"
+        },
+        "recordedAt": "2026-11-08T02:37:07.745Z",
+        "freshCall": false,
+        "label": "Saved real OpenAI result"
+      },
+      {
+        "kind": "cv_summary",
+        "provider": {
+          "host": "api.openai.com",
+          "model": "gpt-5.4-mini-2026-03-17"
+        },
+        "recordedAt": "2026-11-08T02:37:16.410Z",
+        "freshCall": false,
+        "label": "Saved real OpenAI result"
+      },
+      {
+        "kind": "candidate_fit",
+        "provider": {
+          "host": "api.openai.com",
+          "model": "gpt-5.4-mini-2026-03-17"
+        },
+        "recordedAt": "2026-11-08T02:37:34.689Z",
+        "freshCall": false,
+        "label": "Saved real OpenAI result"
+      },
+      {
+        "kind": "term_review",
+        "provider": {
+          "host": "api.openai.com",
+          "model": "gpt-5.4-mini-2026-03-17"
+        },
+        "recordedAt": "2026-11-08T02:38:03.059Z",
+        "freshCall": false,
+        "label": "Saved real OpenAI result"
+      }
+    ]
+  },
+  "archive": {
+    "status": "passed",
+    "entries": 28,
+    "uploadImages": 15,
+    "bytes": 25083635,
+    "sha256": "999be0d611a1ce26a05b59840725eeecf4cb055edb4755088be9bbc349c5b862",
+    "checks": [
+      "All entries decompressed successfully.",
+      "All 28 entries equal the ready files.",
+      "ZIP member names use portable forward slashes.",
+      "Exactly fifteen numbered PNG gallery images."
+    ]
+  },
+  "boundaries": [
+    "The public site does not run the full Node/MongoDB service or call OpenAI.",
+    "All visitor changes use browser-local synthetic state, with in-memory fallback when storage is blocked.",
+    "The video uses real local interactions and explicitly labeled saved real OpenAI results; it is not a fresh live-AI recording.",
+    "No credentials, private backend, real applicant records or document bytes are published.",
+    "No submission-platform form, video-service upload or institutional deployment was performed.",
+    "Previous verification receipts and source captures remain unchanged."
+  ]
+}

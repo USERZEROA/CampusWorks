@@ -10,7 +10,7 @@ The cards use genuine browser screenshots. Selected sections of long pages are c
 
 ## Video
 
-The finished video is `.cache/submission-export/CampusWorks-demo-3min.mp4`: **180 seconds, 1920 × 1080, 25 fps, H.264/AAC, English narration**, approximately 18.6 MB. It shows all 33 recorded lifecycle steps and four explicitly labeled saved real OpenAI examples. English subtitles are in `.cache/submission-export/CampusWorks-demo-subtitles.srt`.
+The finished video is `.cache/submission-export/CampusWorks-demo-3min.mp4`: **180 seconds, 1920 × 1080, 25 fps, H.264/AAC, English narration**, approximately 18.7 MB. It shows all 33 recorded lifecycle steps and four explicitly labeled saved real OpenAI examples. English subtitles are in `.cache/submission-export/CampusWorks-demo-subtitles.srt`.
 
 Upload the MP4 to your own YouTube or Vimeo account, add the SRT as English captions, then paste the share URL into **Video demo link**. Check playback and sound after upload. A local file path does not work in that field. No external video upload has been made on your behalf.
 
