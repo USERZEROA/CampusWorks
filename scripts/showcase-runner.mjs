@@ -12,6 +12,7 @@ import { prepareShowcase, showcaseWindows } from './demo-showcase.mjs';
 import { loadShowcaseManifest } from './demo-showcase-data.mjs';
 import { DEMO_CATALOG_VERSION } from './demo-catalog.mjs';
 import { resolveNpmCli } from './runtime-tools.mjs';
+import { openDemoDatabase } from './demo-database.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 process.chdir(root);
@@ -28,13 +29,10 @@ const recentDatabase = previousState?.synthetic === true && previousState?.catal
 const databaseName = flags.has('--fresh') ? `campusworks_showcase_${Date.now().toString(36)}` : process.env.SHOWCASE_DATABASE || recentDatabase || `campusworks_showcase_v${DEMO_CATALOG_VERSION}`;
 if (!/^campusworks_showcase(?:_[a-z0-9]+)*$/.test(databaseName)) throw new Error('Use a dedicated showcase database name.');
 const privateSettings = existsSync('.env') ? parseEnv(readFileSync('.env', 'utf8')) : {};
-const mongoPassword = encodeURIComponent(process.env.MONGO_PASSWORD || privateSettings.MONGO_PASSWORD || 'campusworks-dev');
-const mongoPort = Number(process.env.SHOWCASE_MONGO_PORT || 27017);
-if (mongoPort !== 27017) throw new Error('This local Compose showcase uses MongoDB port 27017.');
-const mongodbUri = `mongodb://campusworks:${mongoPassword}@127.0.0.1:${mongoPort}/?authSource=admin&replicaSet=rs0&directConnection=true`;
+let mongodbUri, demoDatabase;
 const pause = ms => new Promise(done => setTimeout(done, ms));
 const children = new Set();
-let app, mongoStarted = false, databaseClient, cleaning;
+let app, databaseClient, cleaning, startupCleanupComplete = true;
 const capture = (command, args) => new Promise((done, reject) => {
   const child = spawn(command, args, { windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
   let output = '';
@@ -67,7 +65,7 @@ async function cleanup() {
   if (cleaning) return cleaning;
   cleaning = (async () => {
     const stopped = await Promise.allSettled([...children].map(stopChild));
-    let complete = stopped.every(result => result.status === 'fulfilled');
+    let complete = startupCleanupComplete && stopped.every(result => result.status === 'fulfilled');
     let realAiRequestsReservedAtClose;
     if (databaseClient) {
       try {
@@ -76,11 +74,8 @@ async function cleanup() {
       } catch { complete = false; }
     }
     if (databaseClient) await databaseClient.close().catch(() => {});
-    if (mongoStarted) {
-      try {
-        await capture('docker', ['compose', '-p', 'campusworks-demo', '-f', 'docker-compose.yml', 'stop', 'mongo']);
-        if (await capture('docker', ['ps', '--filter', 'label=com.docker.compose.project=campusworks-demo', '--filter', 'name=^/campusworks-demo-mongo-1$', '--format', '{{.ID}}'])) complete = false;
-      } catch { complete = false; }
+    if (demoDatabase) {
+      try { complete = (await demoDatabase.close()) && complete; } catch { complete = false; }
     }
     const path = '.cache/showcase-state.json';
     if (existsSync(path)) {
@@ -128,9 +123,8 @@ try {
     await run(process.execPath, [npmCli, 'run', 'build']);
   }
   if (!existsSync('.output/server/index.mjs')) throw new Error('Build the application before preparing a showcase.');
-  const running = await capture('docker', ['ps', '--filter', 'label=com.docker.compose.project=campusworks-demo', '--filter', 'name=^/campusworks-demo-mongo-1$', '--format', '{{.ID}}']);
-  mongoStarted = !running;
-  await capture('docker', ['compose', '-p', 'campusworks-demo', '-f', 'docker-compose.yml', 'up', '-d', 'mongo-init']);
+  demoDatabase = await openDemoDatabase({ settings: privateSettings, requestedPort: process.env.SHOWCASE_MONGO_PORT || privateSettings.SHOWCASE_MONGO_PORT });
+  mongodbUri = demoDatabase.mongodbUri;
   databaseClient = new MongoClient(mongodbUri, { serverSelectionTimeoutMS: 5000 });
   await databaseClient.connect();
   const db = databaseClient.db(databaseName);
@@ -141,7 +135,7 @@ try {
   const windows = showcaseWindows(prepared.catalog, prepared.manifest);
   const collections = { people: 'users', courses: 'courses', opportunities: 'staffingOpportunities', applications: 'staffingApplications', offers: 'staffingOffers', appointments: 'staffingAppointments', workload: 'staffingWorkload', history: 'helpSessions', feedback: 'feedback', queue: 'queueEntries', notifications: 'staffingNotifications' };
   const counts = Object.fromEntries(await Promise.all(Object.entries(collections).map(async ([key, collection]) => [key, await db.collection(collection).countDocuments()])));
-  const safeState = { synthetic: true, catalogVersion: DEMO_CATALOG_VERSION, origin, database: databaseName, launcherPid: process.pid, appPid: app.pid, referenceTime: prepared.manifest.referenceTime, readyAt: new Date().toISOString(), windows, counts };
+  const safeState = { synthetic: true, catalogVersion: DEMO_CATALOG_VERSION, origin, database: databaseName, mongoPort: demoDatabase.port, launcherPid: process.pid, appPid: app.pid, referenceTime: prepared.manifest.referenceTime, readyAt: new Date().toISOString(), windows, counts };
   writeFileSync('.cache/showcase-state.json', JSON.stringify(safeState, null, 2));
   writeFileSync('.cache/showcase-windows.json', JSON.stringify(windows, null, 2));
   let provider = null;
@@ -200,6 +194,7 @@ try {
     await new Promise((done, reject) => { browser.once('error', reject); browser.once('exit', code => code === 0 ? done() : reject(new Error('The showcase windows did not open.'))); });
   }
 } catch (error) {
+  startupCleanupComplete = error.demoDatabaseCleanupComplete !== false;
   process.stderr.write(`${error instanceof Error && !/key|token|password|mongodb:\/\//i.test(error.message) ? error.message : 'The local showcase could not start; check its private configuration.'}\n`);
   process.exitCode = 1;
 } finally {

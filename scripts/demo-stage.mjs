@@ -225,7 +225,7 @@ function installDemoOverlay({ titleToken }) {
       document.head.append(style);
       banner = document.createElement("section");
       banner.id = elementId;
-      banner.setAttribute("aria-label", "Automatic demonstration controls");
+      banner.setAttribute("aria-label", state.manual ? "Keyboard demonstration controls" : "Automatic demonstration controls");
       banner.setAttribute("data-testid", "demo-stage");
       const copy = document.createElement("div");
       copy.innerHTML =
@@ -284,10 +284,12 @@ function installDemoOverlay({ titleToken }) {
       `Cycle ${state.cycle} · ${state.index} / ${state.totalSteps}`;
     banner.querySelector(".demo-step-title").textContent = state.stopped
       ? "Demonstration stopped"
-      : `${state.reviewing ? "Review · " : state.paused ? "Paused · " : ""}${state.title}`;
+      : `${state.reviewing ? "Review · " : state.paused ? "Paused · " : state.manual && state.waitingForAdvance ? "Ready · " : ""}${state.title}`;
     banner.querySelector(".demo-detail").textContent = state.reviewing
       ? `Visited page · current data. ${state.detail || ""}`
-      : state.detail || "";
+      : state.manual
+        ? `${state.waitingForAdvance ? `Next: ${state.nextTitle}. ` : ""}← Review · → Next step · Space Pause/Resume. ${state.detail || ""}`
+        : state.detail || "";
     banner.querySelector("[data-demo-pause]").textContent = state.paused
       ? "Resume"
       : "Pause";
@@ -299,6 +301,7 @@ function installDemoOverlay({ titleToken }) {
       : "Pause playback (Space or Pause/Break)";
     banner.querySelector("[data-demo-prev]").disabled = !state.canPrevious;
     banner.querySelector("[data-demo-next]").disabled = !state.canNext;
+    banner.querySelector("[data-demo-next]").setAttribute("aria-label", state.manual && !state.reviewing ? "Next step" : "Next visited page");
     const main = document.querySelector("main");
     if (main) main.inert = !!state.reviewing;
     banner.querySelector("progress").max = Math.max(1, state.totalSteps);
@@ -359,6 +362,7 @@ export async function createDemoStage({
   onStep,
   strictForeground = true,
   recordVideoDirectory,
+  manual = false,
 } = {}) {
   const origin = new URL(baseURL);
   if (
@@ -382,6 +386,10 @@ export async function createDemoStage({
   let foregroundCheckCount = 0;
   let foregroundBridge;
   let paused = false;
+  let waitingForAdvance = false;
+  let advanceRequested = false;
+  let advanceGeneration = 0;
+  let nextTitle = "";
   let stopped = false;
   let stopReason = null;
   let closing;
@@ -402,10 +410,15 @@ export async function createDemoStage({
   const stateFor = (actor, page = actor.page) => ({
     ...(review?.page === page ? review.entry : current),
     paused,
+    manual,
+    waitingForAdvance,
+    nextTitle,
     stopped,
     reviewing: review?.page === page,
     canPrevious: review ? review.position > 0 : history.length > (history.at(-1)?.index === current.index ? 1 : 0),
-    canNext: !!review && review.position < history.length - 1,
+    canNext: manual
+      ? (review ? true : waitingForAdvance && !paused && !advanceRequested)
+      : !!review && review.position < history.length - 1,
     active: (review?.page === page ? review.entry.actor : current.actor) === actor.key,
     role: review?.page === page ? review.entry.role : actor.displayRole || roleLabels[actor.win.as],
     person: actor.win.name || actor.win.label || actor.key,
@@ -453,6 +466,21 @@ export async function createDemoStage({
       if (!paused && remaining <= 0) break;
       await wait(Math.min(100, Math.max(1, remaining || 100)));
     }
+  }
+  async function awaitAdvance(title) {
+    advanceGeneration++;
+    nextTitle = title;
+    advanceRequested = false;
+    waitingForAdvance = true;
+    await publish();
+    while (!advanceRequested || paused) {
+      checkStopped();
+      await wait(40);
+    }
+    waitingForAdvance = false;
+    advanceRequested = false;
+    nextTitle = "";
+    await publish();
   }
   const getActor = (key) => {
     const actor = actors.get(key);
@@ -520,9 +548,25 @@ export async function createDemoStage({
     }
   }
   function control(command) {
+    // A queued key is valid only for the step waiting when it was pressed.
+    const requestedAdvance = manual && command === "next" && !review && waitingForAdvance && !paused && !advanceRequested
+      ? advanceGeneration
+      : null;
     const work = controls.then(async () => {
       checkStopped();
-      if (command === "previous" || command === "next") {
+      if (manual && command === "next") {
+        if (review) {
+          if (review.position < history.length - 1) await navigateHistory(1);
+          else {
+            await leaveReview();
+            await setPaused(false);
+          }
+        } else if (requestedAdvance === advanceGeneration && waitingForAdvance && !paused && !advanceRequested) {
+          advanceRequested = true;
+          waitingForAdvance = false;
+          await publish();
+        }
+      } else if (command === "previous" || command === "next") {
         await navigateHistory(command === "previous" ? -1 : 1);
       } else {
         const value = command === "pause" ? true : command === "resume" ? false : !paused;
@@ -670,6 +714,9 @@ export async function createDemoStage({
     },
     pause: () => control("pause"),
     resume: () => control("resume"),
+    next: () => control("next"),
+    previous: () => control("previous"),
+    get waitingForAdvance() { return waitingForAdvance; },
     stop,
     checkpoint: () => pausePoint(),
     hold: (milliseconds) => pausePoint(milliseconds),
@@ -745,6 +792,7 @@ export async function createDemoStage({
       if (![minViewMs, stepHoldMs, ...(durationMs === undefined ? [] : [durationMs])].every(
         (value) => Number.isFinite(value) && value >= 0 && value <= 60000,
       )) throw new Error("Use step durations between zero and sixty seconds.");
+      if (manual) await awaitAdvance(title);
       await pausePoint();
       const startedActive = clock.elapsedMs;
       const startedAt = new Date().toISOString();
@@ -772,7 +820,7 @@ export async function createDemoStage({
         }
       }
       await publish();
-      const viewHoldMs = durationMs === undefined
+      const viewHoldMs = manual ? 0 : durationMs === undefined
         ? stepHoldMs
         : Math.max(minViewMs, durationMs - (clock.elapsedMs - startedActive));
       await pausePoint(viewHoldMs);

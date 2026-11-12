@@ -16,7 +16,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: "${MONGO_PASSWORD:-campusworks-dev}"
     ports:
       # Exposed on localhost only, for tools like MongoDB Compass.
-      - "127.0.0.1:27017:27017"
+      - "127.0.0.1:${MONGO_PORT:-27017}:27017"
     volumes:
       - mongo-data:/data/db
       - mongo-key:/keys:ro

@@ -184,6 +184,136 @@ try {
   receipt.checks.push('Presentation control overlay has zero configured Axe violations');
   receipt.foregroundChecks = stage.foregroundChecks;
   if (!headless) expect(receipt.foregroundChecks.every(check => check.confirmed && check.maximized)).toBe(true);
+
+  await stage.close();
+  stage = await createDemoStage({ windows, baseURL: origin, headless, manual: true, beforeMs: 0, holdMs: 0, totalSteps: 4 });
+  const manualStudent = stage.page('student');
+  const manualTeacher = stage.page('teacher');
+  let manualActions = 0;
+  const firstManual = stage.step({ actor: 'student', title: 'Keyboard first step', index: 1 }, async page => {
+    manualActions++;
+    await page.request.post('/api/business');
+    await page.goto('/manual-first');
+  });
+  await expect.poll(() => stage.waitingForAdvance).toBe(true);
+  await delay(150);
+  expect(manualActions).toBe(0);
+  await manualStudent.locator('#notes').press('ArrowRight');
+  expect(manualActions).toBe(0);
+  await manualStudent.evaluate(() => document.activeElement.blur());
+  await manualStudent.keyboard.press('Pause');
+  await expect.poll(() => stage.paused).toBe(true);
+  await manualStudent.keyboard.press('ArrowRight');
+  await delay(100);
+  expect(manualActions).toBe(0);
+  await manualTeacher.keyboard.press('Space');
+  await expect.poll(() => stage.paused).toBe(false);
+  await delay(100);
+  expect(manualActions).toBe(0);
+  await manualTeacher.keyboard.press('ArrowRight');
+  await firstManual;
+  expect(manualActions).toBe(1);
+  receipt.checks.push('Keyboard mode waits indefinitely; editing arrows and paused Next do not execute; Resume alone never advances');
+
+  let unblock;
+  let entered;
+  const actionReady = new Promise(resolve => { entered = resolve; });
+  const actionHeld = new Promise(resolve => { unblock = resolve; });
+  const secondManual = stage.step({ actor: 'teacher', title: 'Keyboard second step', index: 2 }, async page => {
+    entered();
+    await actionHeld;
+    manualActions++;
+    await page.request.post('/api/business');
+    await page.goto('/manual-second');
+  });
+  await expect.poll(() => stage.waitingForAdvance).toBe(true);
+  await manualStudent.keyboard.press('ArrowRight');
+  await actionReady;
+  await manualStudent.evaluate(async () => {
+    await Promise.all(Array.from({ length: 8 }, () => window.__campusworksDemoCommand('next')));
+  });
+  unblock();
+  await secondManual;
+  const thirdManual = stage.step({ actor: 'student', title: 'Keyboard third step', index: 3 }, async page => {
+    manualActions++;
+    await page.request.post('/api/business');
+    await page.goto('/manual-third');
+  });
+  await expect.poll(() => stage.waitingForAdvance).toBe(true);
+  await delay(150);
+  expect(manualActions).toBe(2);
+  receipt.checks.push('Repeated Next during an action cannot queue or approve a future step');
+
+  let manualReview = await changeHistory(manualTeacher, 'ArrowLeft', '/manual-first', 'Student');
+  manualReview = await changeHistory(manualReview, 'ArrowRight', '/manual-second', 'Instructor');
+  await manualReview.keyboard.press('ArrowRight');
+  await expect.poll(() => reviewPages().length).toBe(0);
+  await expect.poll(() => stage.paused).toBe(false);
+  await delay(150);
+  expect(manualActions).toBe(2);
+  await manualTeacher.keyboard.press('ArrowRight');
+  await thirdManual;
+  expect(manualActions).toBe(3);
+  receipt.checks.push('Previous reviews current authorized pages; returning to the latest page neither replays actions nor advances the pending step');
+
+  let resetRan = false;
+  const resetManual = stage.step({ actor: 'teacher', title: 'Keyboard round reset', index: 0 }, () => { resetRan = true; });
+  await expect.poll(() => stage.waitingForAdvance).toBe(true);
+  await delay(100);
+  expect(resetRan).toBe(false);
+  await manualStudent.keyboard.press('ArrowRight');
+  await resetManual;
+  expect(resetRan).toBe(true);
+  receipt.checks.push('Starting another round also requires a separate keyboard advance');
+
+  const manualAxe = await new AxeBuilder({ page: manualTeacher }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(manualAxe.violations).toEqual([]);
+  const stoppedManual = stage.step({ actor: 'student', title: 'Never run after Stop', index: 4 }, () => { throw new Error('Stopped step ran'); });
+  const stoppedOutcome = stoppedManual.then(() => ({ ran: true }), error => ({ name: error.name }));
+  await expect.poll(() => stage.waitingForAdvance).toBe(true);
+  await stage.stop('verification');
+  expect(await stoppedOutcome).toEqual({ name: 'DemoStopped' });
+  receipt.checks.push('Keyboard overlay passes configured Axe checks; stopping cancels a waiting step');
+
+  await stage.close();
+  stage = await createDemoStage({ windows: [windows[0]], baseURL: origin, headless, manual: true, beforeMs: 0, holdMs: 0, totalSteps: 2 });
+  const racePage = stage.page('student');
+  let finishFirst;
+  let signalFirst;
+  const firstEntered = new Promise(resolve => { signalFirst = resolve; });
+  const firstHeld = new Promise(resolve => { finishFirst = resolve; });
+  const queuedFirst = stage.step({ actor: 'student', title: 'Busy control queue', index: 1 }, async () => {
+    signalFirst();
+    await firstHeld;
+  });
+  await expect(racePage.locator('[data-demo-next]')).toBeEnabled();
+  await racePage.evaluate(() => {
+    const render = window.__campusworksDemoRender;
+    let holdFirst = true;
+    window.__campusworksDemoRender = async state => {
+      if (holdFirst) {
+        holdFirst = false;
+        await new Promise(resolve => { window.releaseDemoRender = resolve; });
+      }
+      return render(state);
+    };
+  });
+  const firstAdvance = stage.next();
+  await firstEntered;
+  const staleAdvance = stage.next();
+  finishFirst();
+  await queuedFirst;
+  let queuedSecondRan = false;
+  const queuedSecond = stage.step({ actor: 'student', title: 'Needs a fresh key', index: 2 }, () => { queuedSecondRan = true; });
+  await expect.poll(() => stage.waitingForAdvance).toBe(true);
+  await racePage.evaluate(() => window.releaseDemoRender());
+  await Promise.all([firstAdvance, staleAdvance]);
+  await delay(150);
+  expect(queuedSecondRan).toBe(false);
+  await racePage.keyboard.press('ArrowRight');
+  await queuedSecond;
+  expect(queuedSecondRan).toBe(true);
+  receipt.checks.push('A key received during an action remains ignored even when its control callback runs after the next step becomes ready');
   receipt.status = 'passed';
 } catch (error) {
   receipt.status = 'failed';

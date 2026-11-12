@@ -39,7 +39,7 @@ For application logs, run `docker compose logs --tail 100 campusworks`. If port 
 
 This path also needs a graphical desktop, Node.js and the bundled Playwright browsers. Use a Node version matching `package.json`: Node 22.21+ within the 22 series, 24.11+ within the 24 series, or 26+. `.nvmrc` selects the 22 series.
 
-If the web application above is running, first stop it with `docker compose down` so the local MongoDB port is free. The presentation starts its own Compose project and generated demonstration database.
+The presentation starts its own Compose project and generated demonstration database, with a free loopback MongoDB port assigned by Docker. The ordinary web application can remain running. Set `DEMO_MONGO_PORT` in the environment or private `.env` only when a fixed demonstration database port is needed.
 
 ```sh
 npm ci

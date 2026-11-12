@@ -21,10 +21,11 @@ export async function runDemoLoop({
   proofPath = ".cache/demo-loop-proof.json",
   onProgress = (message) => console.log(message),
   recordVideoDirectory,
+  manual = false,
 } = {}) {
   if (!["disabled", "openai"].includes(provider))
     throw new Error("Use the disabled or openai demonstration provider.");
-  const pacing = createDemoPacing({ pace, withAi: provider === "openai" });
+  const pacing = createDemoPacing({ pace: manual ? "fast" : pace, withAi: provider === "openai" });
   if (!(
     cycles === Infinity ||
     (Number.isSafeInteger(cycles) && cycles >= 1 && cycles <= 100)
@@ -42,6 +43,7 @@ export async function runDemoLoop({
     synthetic: true,
     headless,
     pace,
+    manual,
     requestedCycles: Number.isFinite(cycles) ? cycles : "continuous",
     providerCalls: 0,
     provider,
@@ -50,7 +52,9 @@ export async function runDemoLoop({
     pacing: {
       targetActiveMs: pacing.targetMs,
       steps: pacing.steps,
-      boundary: "Paused time is excluded. Slow actions may extend a cycle to preserve result-reading time; no remaining time is parked on the final page.",
+      boundary: manual
+        ? "Every step and round reset requires a new Right-arrow command. Waiting has no deadline; Resume alone never advances."
+        : "Paused time is excluded. Slow actions may extend a cycle to preserve result-reading time; no remaining time is parked on the final page.",
     },
     providerUsageBoundary:
       "Shared protected request reservations, not billed usage; persistent daily limits survive database restoration and relaunches.",
@@ -66,6 +70,8 @@ export async function runDemoLoop({
         "scripts/demo-loop.mjs",
         "scripts/demo-loop-flow.mjs",
         "scripts/demo-loop-service.mjs",
+        "scripts/demo-database.mjs",
+        "docker-compose.yml",
         "scripts/demo-pacing.mjs",
         "scripts/demo-stage.mjs",
         "scripts/demo-foreground.ps1",
@@ -97,6 +103,7 @@ export async function runDemoLoop({
           providerCalls: proof.providerCalls,
           completedProviderResults: proof.completedProviderResults,
           provider: proof.provider,
+          manual,
           status: proof.status || "running",
           updatedAt: new Date().toISOString(),
         },
@@ -128,6 +135,7 @@ export async function runDemoLoop({
       beforeMs: pacing.beforeMs,
       totalSteps: proof.totalSteps,
       recordVideoDirectory,
+      manual,
       onStop: (reason) => {
         proof.stopReason = reason;
         cancelled = reason !== "page-crashed";
@@ -150,6 +158,7 @@ export async function runDemoLoop({
         await dialog.accept();
       });
     }
+    if (manual) await stage.ensureForeground("admin");
     if (verifyControls) {
       const admin = stage.page("admin");
       await admin.locator("[data-demo-pause]").click();
@@ -169,13 +178,16 @@ export async function runDemoLoop({
       await new Promise((resolve) => setTimeout(resolve, 200));
       expect(performed).toBe(false);
       await admin.locator("[data-demo-pause]").click();
+      if (manual) await stage.next();
       await blocked;
       expect(performed).toBe(true);
       expect(stage.paused).toBe(false);
       proof.pauseResume = "passed";
     }
     onProgress(
-      `Automatic lifecycle ready at ${service.origin}. Six independent windows; Pause/Resume or Stop demo in the banner.`,
+      manual
+        ? `Keyboard lifecycle ready at ${service.origin}. Right arrow runs one step; Left arrow reviews; Space pauses/resumes. Waiting for your keyboard.`
+        : `Automatic lifecycle ready at ${service.origin}. Six independent windows; Pause/Resume or Stop demo in the banner.`,
     );
     save();
     for (let cycle = 1; cycle <= cycles; cycle++) {
@@ -235,7 +247,7 @@ export async function runDemoLoop({
         dwell: (ms) => stage.hold(ms),
         onStep: (event) => {
           onProgress(
-            `Cycle ${cycle} · ${event.step}/${proof.totalSteps} · ${event.role}: ${event.title}`,
+            `${manual ? "Waiting for → · " : ""}Cycle ${cycle} · ${event.step}/${proof.totalSteps} · ${event.role}: ${event.title}`,
           );
         },
       });
@@ -337,6 +349,7 @@ function options(args) {
     else if (flag === "--skip-build") result.build = false;
     else if (flag === "--verify-controls") result.verifyControls = true;
     else if (flag === "--without-ai") result.provider = "disabled";
+    else if (flag === "--manual") result.manual = true;
     else if (flag === "--provider") result.provider = args[++i];
     else if (flag === "--cycles") result.cycles = Number(args[++i]);
     else if (flag === "--pace") result.pace = args[++i];
@@ -353,12 +366,12 @@ if (
     const chosen = options(process.argv.slice(2));
     if (!chosen)
       console.log(
-        "Usage: node scripts/demo-loop.mjs [--pace normal|fast|detailed] [--cycles N] [--headless] [--skip-build] [--verify-controls] [--without-ai]\nDefault: visible six-window lifecycle with five live OpenAI presentations across four advisory types, including the next eligible candidates after another course issues an offer; about five minutes plus provider latency per round. The locally encrypted Key is loaded only for live AI. Persistent request limits survive each round. --without-ai runs the 33-step deterministic lifecycle without provider calls. Pause/Resume and Stop demo are in the demo-only banner.",
+        "Usage: node scripts/demo-loop.mjs [--manual] [--pace normal|fast|detailed] [--cycles N] [--headless] [--skip-build] [--verify-controls] [--without-ai]\n--manual waits for Right arrow before every step; Left arrow reviews visited pages and Space pauses/resumes. Default: visible six-window automatic lifecycle with five live OpenAI presentations across four advisory types; about five minutes plus provider latency per round. The locally encrypted Key is loaded only for live AI. Persistent request limits survive each round. --without-ai runs the 33-step deterministic lifecycle without provider calls. Pause/Resume and Stop demo are in the demo-only banner.",
       );
     else {
       const proof = await runDemoLoop(chosen);
       console.log(
-        `Automatic demonstration ${proof.status}; cleanup ${proof.cleanup}.`,
+        `${chosen.manual ? "Keyboard" : "Automatic"} demonstration ${proof.status}; cleanup ${proof.cleanup}.`,
       );
       if (proof.status === "failed") {
         console.error(proof.error || "Inspect the local loop receipt.");

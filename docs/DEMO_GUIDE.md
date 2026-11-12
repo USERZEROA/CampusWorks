@@ -43,7 +43,7 @@ npm run demo:showcase -- --no-ai
 npm run demo:showcase -- --serve-only
 ```
 
-Use `SHOWCASE_PORT` when local port 3100 is occupied. The local Compose database uses port 27017. `SHOWCASE_DATABASE` may select another name beginning `campusworks_showcase`; ordinary application databases are refused. An interrupted preparation requires a fresh dataset or explicit `--resume` before any manual changes. Completed preparation never replays later human decisions.
+Use `SHOWCASE_PORT` when local port 3100 is occupied. Docker assigns the demonstration MongoDB service a free loopback port, so an existing database on 27017 can remain running. `DEMO_MONGO_PORT` can select a fixed demonstration database port; `SHOWCASE_MONGO_PORT` remains a showcase-specific override. A running shared demo database is reused at its actual published port. `SHOWCASE_DATABASE` may select another name beginning `campusworks_showcase`; ordinary application databases are refused. An interrupted preparation requires a fresh dataset or explicit `--resume` before any manual changes. Completed preparation never replays later human decisions.
 
 Dated states age normally. Use `--fresh` if the saved recruitment period or featured appointments have ended before a later presentation.
 

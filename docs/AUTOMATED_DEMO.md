@@ -83,11 +83,15 @@ Each live step waits for a newly completed automatic task from `api.openai.com`,
 
 ## Presentation controls
 
+For a presentation controlled entirely from the keyboard, run `npm run demo:loop -- --manual --without-ai --skip-build` after building once. It opens the same six roles and waits before every step, including the first step and each new round. There is no automatic advance or fixed playback duration in this mode.
+
+Press **Right arrow** once to execute the next step. **Left arrow** reviews an already visited page using current authorized data, without undoing or replaying decisions. Right arrow walks forward through reviewed pages; at the latest page, one press returns to the live presentation and a separate press executes the pending step. **Space** or **Pause / Break** pauses/resumes; resuming alone never executes a step. Arrow keys in text fields retain their usual editing behavior. Repeated Next commands during an action do not queue future actions. Add `--manual` without `--without-ai` for manually advanced live AI, subject to the existing saved Key and quotas.
+
 The banner displays **DEMO**, acting role, name, cycle, step and a short explanation. Playwright injects it only into these owned contexts. The same Alex window is labelled Student, Student to TA, TA and TA to Student during the transition.
 
 - **Pause / Resume** is one toggle button in every window: click once to pause and click the same button again to continue. Pausing preserves the remaining reading time and prevents the next automated interaction. A request already submitted and ordinary background synchronization may still finish.
 - The keyboard's **Pause / Break** key toggles pause and resume. **Space** also toggles outside text fields, selection fields and editable content; the banner buttons retain their normal Space activation.
-- **Left / Right arrows** pause playback and reopen already visited pages in a separate read-only tab using their current authorized data. They do not roll back the database, execute future steps or repeat hiring, offer or queue commands. **Resume** closes that review tab, returns to the original automation page and continues from that point.
+- In automatic mode, **Left / Right arrows** pause playback and reopen already visited pages in a separate read-only tab using their current authorized data. They do not roll back the database, execute future steps or repeat hiring, offer or queue commands. **Resume** closes that review tab, returns to the original automation page and continues from that point. Keyboard mode uses the separate one-key-per-step behavior described above.
 - **Stop demo**, closing a presentation window, or Ctrl+C stops the loop and closes its other windows. The browser wait is cancelled before service cleanup.
 - The acting control has a visible outline. The banner reserves space above the page content.
 - On Windows, the native helper locates only the uniquely tagged demonstration window, maximizes it and verifies its foreground handle.
@@ -101,9 +105,11 @@ node scripts/check-demo-presenter.mjs
 node scripts/check-demo-presenter.mjs --headed
 ```
 
+Run `node scripts/check-demo-lifecycle.mjs` after building to verify one automatic round and two keyboard rounds in the background. It uses headless browsers, its own generated application database and no model calls. It checks the complete lifecycle, reset, reauthentication and reuse of the same six windows; it does not drive or overwrite the state of an open presentation. The receipt is `.cache/demo-lifecycle-headless-proof.json`.
+
 ## Data and cleanup
 
-Each launch creates a generated `campusworks_showcase_loop_<random>` database and a free loopback application port. Baseline restoration requires its exact generated name, private ownership marker and exclusively synthetic identities. The app stops before restoration so polling and maintenance cannot write during reset. The six actors authenticate again afterward. Repeated rounds reuse the same application database, and continuous receipt history is bounded.
+Each launch creates a generated `campusworks_showcase_loop_<random>` database and a free loopback application port. Docker also assigns a free loopback MongoDB port, avoiding conflicts with other projects on 27017. Set `DEMO_MONGO_PORT` in the environment or private `.env` for a fixed database port; an already running shared demo service is discovered at its actual port. Baseline restoration requires its exact generated name, private ownership marker and exclusively synthetic identities. The app stops before restoration so polling and maintenance cannot write during reset. The six actors authenticate again afterward. Repeated rounds reuse the same application database, and continuous receipt history is bounded.
 
 Prepared observations use **catalog v6**: uneven weekday office-hour demand, varied declared work and linked helper feedback. Earlier catalog datasets and dated receipts stay separate. Alex and Sam's new journey is added to this baseline without relabelling historical requests as work they just performed.
 

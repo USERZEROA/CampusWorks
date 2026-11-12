@@ -16,6 +16,7 @@ import { BSON, MongoClient } from "mongodb";
 import { prepareShowcase } from "./demo-showcase.mjs";
 import { DEMO_CATALOG_VERSION } from "./demo-catalog.mjs";
 import { resolveNpmCli } from "./runtime-tools.mjs";
+import { openDemoDatabase } from "./demo-database.mjs";
 import {
   loadAiProviderConfig,
   confirmedProviderDefaults,
@@ -136,14 +137,7 @@ export async function createLoopService({
   const settings = existsSync(join(root, ".env"))
     ? parseEnv(readFileSync(join(root, ".env"), "utf8"))
     : {};
-  const mongoPassword = encodeURIComponent(
-    process.env.MONGO_PASSWORD || settings.MONGO_PASSWORD || "campusworks-dev",
-  );
-  const mongodbUri = `mongodb://campusworks:${mongoPassword}@127.0.0.1:27017/?authSource=admin&replicaSet=rs0&directConnection=true`;
-  const client = new MongoClient(mongodbUri, {
-    serverSelectionTimeoutMS: 5000,
-  });
-  const db = client.db(databaseName);
+  let mongodbUri, client, db, demoDatabase;
   const usageStartedDay = new Date().toISOString().slice(0, 10);
   let providerEnvironment;
   let allowedScopes = [];
@@ -557,30 +551,13 @@ export async function createLoopService({
           receipt.complete = false;
         }
       } else if (databaseOwned && connected) receipt.complete = false;
-      await client.close().catch(() => {
+      if (client) await client.close().catch(() => {
         receipt.complete = false;
       });
       connected = false;
       if (mongoStarted) {
         try {
-          await command("docker", [
-            "compose",
-            "-p",
-            "campusworks-demo",
-            "-f",
-            "docker-compose.yml",
-            "stop",
-            "mongo",
-          ]);
-          receipt.ownedMongoStopped = !(await command("docker", [
-            "ps",
-            "--filter",
-            "label=com.docker.compose.project=campusworks-demo",
-            "--filter",
-            "name=^/campusworks-demo-mongo-1$",
-            "--format",
-            "{{.ID}}",
-          ]));
+          receipt.ownedMongoStopped = await demoDatabase.close();
           receipt.complete &&= receipt.ownedMongoStopped;
         } catch {
           receipt.complete = false;
@@ -625,31 +602,13 @@ export async function createLoopService({
       throw new Error(
         "Build the application before opening a continuous demonstration.",
       );
-    const running = await command("docker", [
-      "ps",
-      "--filter",
-      "label=com.docker.compose.project=campusworks-demo",
-      "--filter",
-      "name=^/campusworks-demo-mongo-1$",
-      "--format",
-      "{{.ID}}",
-    ]);
-    if (!running) {
-      mongoStarted = true;
-      onProgress(
-        "Starting the local transaction-capable demonstration database.",
-      );
-      await command("docker", [
-        "compose",
-        "-p",
-        "campusworks-demo",
-        "-f",
-        "docker-compose.yml",
-        "up",
-        "-d",
-        "mongo-init",
-      ]);
-    }
+    onProgress("Starting the local demonstration database on an available loopback port.");
+    demoDatabase = await openDemoDatabase({ settings });
+    mongoStarted = demoDatabase.started;
+    mongodbUri = demoDatabase.mongodbUri;
+    state.mongoPort = demoDatabase.port;
+    client = new MongoClient(mongodbUri, { serverSelectionTimeoutMS: 5000 });
+    db = client.db(databaseName);
     await client.connect();
     connected = true;
     if ((await db.listCollections().toArray()).length)
@@ -711,10 +670,18 @@ export async function createLoopService({
       enableAiScope,
       readAiUsage,
     };
-  } catch {
+  } catch (error) {
     const cleanupReceipt = await close();
+    if (error.demoDatabaseCleanupComplete === false) {
+      cleanupReceipt.complete = false;
+      cleanupReceipt.reusedMongo = false;
+      state.cleanup = "incomplete";
+      saveState();
+    }
     const failure = new Error(
-      "The isolated demonstration service could not start; inspect the local application log or dependency availability.",
+      /^The (demonstration|running demonstration) database|^DEMO_MONGO_PORT/.test(error.message)
+        ? error.message
+        : "The isolated demonstration service could not start; inspect the local application log or dependency availability.",
     );
     failure.cleanupReceipt = cleanupReceipt;
     throw failure;
